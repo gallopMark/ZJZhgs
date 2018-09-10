@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivPic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_nonetwork" />
+
+    <TextView
+        android:id="@+id/tvErrorTips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_20"
+        android:text="@string/nonetwork"
+        android:textColor="@color/gainsboro"
+        android:textSize="@dimen/font_16" />
+
+    <TextView
+        android:id="@+id/tvReload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_20"
+        android:paddingLeft="@dimen/margin_50"
+        android:paddingTop="@dimen/margin_10"
+        android:paddingBottom="@dimen/margin_10"
+        android:paddingRight="@dimen/margin_50"
+        android:background="@drawable/bg_button_corner_30dp"
+        android:text="@string/reload"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_18" />
+</LinearLayout>

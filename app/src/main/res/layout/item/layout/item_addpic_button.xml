@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/margin_80"
+    android:layout_height="@dimen/margin_80"
+    android:scaleType="fitXY"
+    android:src="@mipmap/ic_add_pic" />

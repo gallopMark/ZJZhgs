@@ -1,0 +1,182 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--window color-->
+        <item name="android:windowBackground">@color/white</item>
+        <!--toolbar菜单项图标的颜色-->
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <!-- <item name="android:windowAnimationStyle">@style/ActivityAnimationStyle</item>-->
+    </style>
+    <!--修改searchView样式-->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_search_white_24dp</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
+
+    <style name="ActivityAnimationStyle" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+
+    <style name="AppToolBarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:id">@id/toolbar</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleTextStyle</item>
+        <item name="homeAsUpIndicator">@mipmap/ic_back</item>
+        <item name="navigationIcon">@mipmap/ic_back</item>
+        <!--<item name="android:minHeight">?attr/actionBarSize</item>-->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="actionMenuTextColor">@color/appTextColor</item>
+        <item name="popupTheme">@style/OverflowMenuStyle</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+        <item name="android:actionMenuTextAppearance">@style/ToolbarMenuTextStyle</item>
+        <item name="android:selectableItemBackground">@drawable/toolbar_button_bg</item>
+    </style>
+
+    <style name="ToolbarTitleTextView">
+        <item name="android:id">@id/toolbar_title</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginLeft">@dimen/margin_8</item>
+        <item name="android:layout_marginRight">@dimen/margin_8</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/appTextColor</item>
+        <item name="android:textSize">@dimen/app_title_textsize</item>
+    </style>
+
+    <!--toolbar右边菜单文字-->
+    <style name="ToolbarOptionsView">
+        <item name="android:id">@id/toolbar_options</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">right</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingLeft">@dimen/margin_10</item>
+        <item name="android:paddingRight">@dimen/margin_10</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/app_title_option_textsize</item>
+    </style>
+    <!-- toolbar标题文字大小 -->
+    <style name="ToolbarTitleTextStyle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/app_title_textsize</item>
+        <item name="android:textColor">@color/appTextColor</item>
+    </style>
+    <!-- toolbar菜单文字大小 -->
+    <style name="ToolbarMenuTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="actionMenuTextAppearance">@style/ToolbarMenuTextSize</item>
+    </style>
+
+    <style name="ToolbarMenuTextSize" parent="@style/TextAppearance.AppCompat.Menu">
+        <item name="android:textSize">@dimen/font_16</item>
+    </style>
+    <!--修改toolbar弹出菜单的位置-->
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <!-- 设置Menu菜单的背景色 -->
+        <item name="android:itemBackground">@color/white</item>
+        <!-- 设置Menu菜单的字体颜色 -->
+        <item name="android:textColorPrimary">@color/appTextColor</item>
+        <!-- 设置Menu窗口不覆盖Toolbar视图 -->
+        <item name="overlapAnchor">false</item>
+    </style>
+
+    <style name="baseCustomDialog_margin30" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:layout_margin">@dimen/margin_30</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CompatToast" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <style name="translucentDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
+    <style name="supportDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="transparentDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+    </style>
+
+    <style name="dialog_anim" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/operate_in</item>
+        <item name="android:windowExitAnimation">@anim/operate_out</item>
+    </style>
+
+    <style name="UserEventTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorUserEvent</item>
+        <item name="colorPrimaryDark">@color/colorUserEvent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="UserEventToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/transparent</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleTextStyle</item>
+        <item name="homeAsUpIndicator">@mipmap/ic_back</item>
+        <!--<item name="android:minHeight">?attr/actionBarSize</item>-->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+    </style>
+
+    <style name="SmallTitleToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/transparent</item>
+        <item name="titleTextAppearance">@style/ToolbarSmallTitle</item>
+        <item name="homeAsUpIndicator">@mipmap/ic_back</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+    </style>
+
+    <style name="ToolbarSmallTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/font_14</item>
+    </style>
+
+    <style name="TranslucentStatusTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/transparent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <!--解决启动白屏问题-->
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+</resources>

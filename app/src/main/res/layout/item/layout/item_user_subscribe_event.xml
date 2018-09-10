@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
+
+    <TextView
+        android:id="@+id/tvDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:drawablePadding="@dimen/margin_5"
+        android:drawableTop="@mipmap/ic_delete_red"
+        android:gravity="center"
+        android:padding="@dimen/margin_20"
+        android:text="@string/delete"
+        android:textColor="@color/auntie_red"
+        android:textSize="@dimen/font_16" />
+
+    <LinearLayout
+        android:id="@+id/ll_rowFG"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_10">
+
+            <ImageView
+                android:id="@+id/ivIcon"
+                android:layout_width="@dimen/margin_40"
+                android:layout_height="@dimen/margin_40"
+                android:layout_gravity="center" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvEventName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_16" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_3"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/color_f7" />
+
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:textColor="@color/darkgrey"
+            android:textSize="@dimen/font_14" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llBeginTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvOccTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/font_18"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvOccTimeTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/usersubscribe_beginTime"
+                    android:textColor="@color/darkgrey"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llEndTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/font_18"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvEndTimeTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/usersubscribe_endTime"
+                    android:textColor="@color/darkgrey"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvUpdateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/font_18"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvUpdateTimeTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/usersubscribe_updateTime"
+                    android:textColor="@color/darkgrey"
+                    android:textSize="@dimen/font_14"  />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_15"
+            android:background="@color/color_f7" />
+    </LinearLayout>
+</RelativeLayout>

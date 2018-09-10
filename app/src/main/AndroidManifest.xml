@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.uroad.zhgs">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!--用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--用于写入缓存数据到扩展存储卡-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
+    <application
+        android:name=".common.CurrApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".activity.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".activity.ForgetPasswordActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.UserInfoActivity" />
+        <activity
+            android:name=".activity.PerfectUserInfoActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.SettingsActivity" />
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".activity.FeedbackActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".activity.AboutUsActivity" />
+        <activity android:name=".activity.TermsOfUseActivity" />
+        <activity android:name=".activity.PrivacyStateActivity" />
+        <activity android:name=".activity.MyCarActivity" />
+        <activity android:name=".activity.MyCar2Activity" />
+        <activity android:name=".activity.UserMsgActivity" />
+        <activity android:name=".activity.UserSubscribeActivity" />
+        <activity
+            android:name=".activity.BindCarActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity android:name=".activity.RescueNoticeActivity" />
+        <activity
+            android:name=".activity.RescueMainActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".activity.RescueFeeActivity" />
+        <activity
+            android:name=".activity.RescueRequestActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.RescueBookActivity" />
+        <activity android:name=".activity.RescueSubmissionActivity" />
+        <activity android:name=".activity.RescueDetailActivity" />
+        <activity android:name=".activity.RescueRecordActivity" />
+        <activity android:name=".activity.RescuePayActivity" />
+        <activity android:name=".activity.RescuePaySuccessActivity" />
+        <activity
+            android:name=".activity.RescueEvaluateActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".activity.InvoiceTitleActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".activity.BindInfoActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.WebViewActivity" />
+        <activity
+            android:name=".activity.LocationWebViewActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity android:name=".activity.NewsMainActivity" />
+        <activity android:name=".activity.NewsDetailActivity" />
+
+        <activity
+            android:name=".activity.RoadNavigationMainActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".activity.MapRouteSearchActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".activity.RouteNaviActivity" />
+        <activity android:name=".activity.HighWayListActivty" />
+        <activity
+            android:name=".activity.HighwaySearchActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activity.HighwayPreViewActivity" />
+        <activity
+            android:name=".activity.UserEventListActivity"
+            android:theme="@style/UserEventTheme" />
+        <activity
+            android:name=".activity.UserEventSaveActivity"
+            android:theme="@style/UserEventTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.ShowImageActivity" />
+        <activity android:name=".activity.HighWayHotlineActivity" />
+        <activity
+            android:name=".activity.HighwayHotlineSearchActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.ServiceAreaActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".activity.MyNearByActivity" />
+        <activity android:name=".activity.MyNearByTabActivity" />
+
+        <!--photopicker-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path" />
+        </provider>
+
+        <activity android:name=".photopicker.ui.ImageGridActivity" />
+        <activity android:name=".photopicker.ui.ImagePreViewActivity" />
+        <activity android:name=".photopicker.ui.ImageCropActivity" />
+        <!--高德地图-->
+        <service android:name="com.amap.api.location.APSService" />
+        <activity
+            android:name="com.amap.api.navi.AmapRouteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="@string/gaodemap_key" />
+    </application>
+
+</manifest>

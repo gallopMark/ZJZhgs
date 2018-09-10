@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_corners_white_5dp"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/margin_14">
+
+    <com.uroad.zhgs.widget.CircularProgressView
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="@dimen/margin_40"
+        android:layout_height="@dimen/margin_40"
+        android:layout_gravity="center"
+        app:border_Width="@dimen/margin_4"
+        app:minSweepAngle="60" />
+
+    <TextView
+        android:id="@+id/mLoadingTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginStart="@dimen/margin_16"
+        android:layout_gravity="center"
+        android:text="@string/dialog_loading_tips"
+        android:textColor="@color/appTextColor"
+        android:textSize="@dimen/font_18" />
+
+</LinearLayout>

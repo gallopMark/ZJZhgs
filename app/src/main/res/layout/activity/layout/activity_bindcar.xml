@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_12"
+            android:text="@string/bindcar_top_tips"
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/font_12" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_10">
+
+            <LinearLayout
+                android:id="@+id/llCarNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindcar_carNum"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:id="@+id/tvNumType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableRight="@mipmap/ic_small_arrow_down"
+                    android:padding="@dimen/margin_10"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etCarNum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:hint="@string/bindcar_carNum_hint"
+                    android:padding="@dimen/margin_14"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <LinearLayout
+                android:id="@+id/llCarCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindcar_car_category"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvCarCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_10"
+                    android:orientation="horizontal" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindcar_car_type"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvCarType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_10"
+                    android:orientation="horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/color_f7" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_total_weight"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <EditText
+                        android:id="@+id/etTotalWeight"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:hint="@string/bindcar_total_weight_hint"
+                        android:inputType="number"
+                        android:padding="@dimen/margin_14"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_ton"
+                        android:textSize="@dimen/font_14" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/color_f7" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_fixed_load"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <EditText
+                        android:id="@+id/etFixedLoad"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:hint="@string/bindcar_fixed_load_hint"
+                        android:inputType="number"
+                        android:padding="@dimen/margin_14"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_ton"
+                        android:textSize="@dimen/font_14" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/color_f7" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_length"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <EditText
+                        android:id="@+id/etCarLength"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:hint="@string/bindcar_car_length_hint"
+                        android:inputType="number"
+                        android:padding="@dimen/margin_14"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_rice"
+                        android:textSize="@dimen/font_14" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/color_f7" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_width"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <EditText
+                        android:id="@+id/etCarWidth"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:hint="@string/bindcar_car_width_hint"
+                        android:inputType="number"
+                        android:padding="@dimen/margin_14"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_rice"
+                        android:textSize="@dimen/font_14" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/color_f7" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_high"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <EditText
+                        android:id="@+id/etCarHigh"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:hint="@string/bindcar_car_high_hint"
+                        android:inputType="number"
+                        android:padding="@dimen/margin_14"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_rice"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/color_f7" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/bindcar_car_axis"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rvAxis"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_10"
+                        android:overScrollMode="never" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_15"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/margin_10"
+                android:text="@string/bindcar_car_setdefault"
+                android:textSize="@dimen/font_14" />
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_10"
+                android:button="@drawable/bg_switch_button_selector" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:text="@string/bindcar_bottom_tips"
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/font_12" />
+
+        <Button
+            android:id="@+id/btSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_30"
+            android:layout_marginTop="@dimen/margin_30"
+            android:background="@mipmap/ic_button_corner_bg"
+            android:text="@string/submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_16" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

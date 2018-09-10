@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_4"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/vTab1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorAccent" />
+
+        <View
+            android:id="@+id/vTab2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/vTab3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbTab1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@color/transparent"
+            android:checked="true"
+            android:drawablePadding="@dimen/margin_5"
+            android:drawableTop="@drawable/bg_highway_preview_tab1"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_5"
+            android:paddingTop="@dimen/margin_5"
+            android:text="@string/highwayPreview_tab1"
+            android:textColor="@color/tab_color_selector"
+            android:textSize="@dimen/font_12" />
+
+        <RadioButton
+            android:id="@+id/rbTab2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@color/transparent"
+            android:drawablePadding="@dimen/margin_5"
+            android:drawableTop="@drawable/bg_highway_preview_tab2"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_5"
+            android:paddingTop="@dimen/margin_5"
+            android:text="@string/highwayPreview_tab2"
+            android:textColor="@color/tab_color_selector"
+            android:textSize="@dimen/font_12" />
+
+        <RadioButton
+            android:id="@+id/rbTab3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@color/transparent"
+            android:drawablePadding="@dimen/margin_5"
+            android:drawableTop="@drawable/bg_highway_preview_tab3"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_5"
+            android:paddingTop="@dimen/margin_5"
+            android:text="@string/highwayPreview_tab3"
+            android:textColor="@color/tab_color_selector"
+            android:textSize="@dimen/font_12" />
+    </RadioGroup>
+</LinearLayout>

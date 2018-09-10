@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.uroad.zhgs"
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+        }
+    }
+    /*layout目录分类*/
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layout/activity',
+                    'src/main/res/layout/fragment',
+                    'src/main/res/layout/item',
+                    'src/main/res/layout/menu',
+                    'src/main/res/layout/popwindow',
+                    'src/main/res/layout/dialog',
+                    'src/main/res/layout/photopicker',
+                    'src/main/res/layout/base',
+                    'src/main/res/layout',
+                    'src/main/res'
+            ]
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation project(':uroadlib')
+    implementation project(':HttpLib')
+    implementation project(':AMapLib')
+    implementation project(':Imageloader')
+    implementation project(':mqttandroidclient')
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'
+    implementation 'com.github.warkiz.widget:indicatorseekbar:2.0.9'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    //没有使用特殊Header，可以不加这行
+    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
+    implementation 'com.pl:wheelview:0.7.2'
+    implementation files('libs/alipaySdk-20180601.jar')
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="photopicker_recent_pictures">最近图片</string>
+    <string name="photopicker_selection_of_photos">选择图片</string>
+    <string name="photopicker_take_photo">拍照</string>
+    <string name="photopicker_preview">预览</string>
+    <string name="photopicker_confirm">确定</string>
+    <string name="photopicker_select">选择</string>
+    <string name="photopicker_finish">完成</string>
+</resources>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivTopPic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_50"
+            android:scaleType="center"
+            android:src="@mipmap/ic_back_white" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_8"
+                android:layout_alignLeft="@+id/radioGroup"
+                android:layout_alignRight="@+id/radioGroup"
+                android:layout_below="@+id/radioGroup"
+                android:layout_marginTop="@dimen/minus_18">
+
+                <View
+                    android:id="@+id/vTab1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorAccent" />
+
+                <View
+                    android:id="@+id/vTab2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorAccent"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbTab1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/margin_10"
+                    android:paddingLeft="@dimen/margin_15"
+                    android:paddingRight="@dimen/margin_15"
+                    android:paddingTop="@dimen/margin_10"
+                    android:text="@string/highwayhotline_emergency_rescue"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <RadioButton
+                    android:id="@+id/rbTab2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/margin_10"
+                    android:paddingLeft="@dimen/margin_15"
+                    android:paddingRight="@dimen/margin_15"
+                    android:paddingTop="@dimen/margin_10"
+                    android:text="@string/highwayhotline_insurance"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_14" />
+            </RadioGroup>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:gravity="right"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/ivSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|right"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_10"
+                android:src="@mipmap/ic_home_search" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

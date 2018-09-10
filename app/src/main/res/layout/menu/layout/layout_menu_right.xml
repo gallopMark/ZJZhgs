@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_10"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingTop="@dimen/margin_20">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/roadNavigation_menu_mode"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/llStandard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivStandard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_corners_1dp"
+                        android:padding="@dimen/margin_1"
+                        android:src="@mipmap/ic_map_standard" />
+
+                    <TextView
+                        android:id="@+id/tvStandard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/margin_5"
+                        android:text="@string/roadNavigation_menu_standard"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llDiagram"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivDiagram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_1"
+                        android:src="@mipmap/ic_map_diagram" />
+
+                    <TextView
+                        android:id="@+id/tvDiagram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/margin_5"
+                        android:gravity="center"
+                        android:text="@string/roadNavigation_menu_diagram"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_10"
+            android:background="@color/color_f2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/roadNavigation_menu_event"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <LinearLayout
+                android:id="@+id/llEventLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cbEventSG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_event_sg_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_event_sg"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbEventGZ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_event_gz_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_event_gz"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbEventShiG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_event_shig_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_event_shig"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbEventYD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_event_yd_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_event_yd"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llEventLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/cbEventSG2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_event_sg_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_event_sg"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbEventGZ2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_event_gz_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_event_gz"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbEventShiG2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_event_shig_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_event_shig"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_10"
+            android:background="@color/color_f2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/roadNavigation_menu_jtss"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <CheckBox
+                android:id="@+id/cbTrafficSpot1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:button="@null"
+                android:drawablePadding="@dimen/margin_5"
+                android:drawableTop="@drawable/cb_traffic_spot_selector"
+                android:gravity="center"
+                android:padding="@dimen/margin_5"
+                android:text="@string/roadNavigation_menu_spot"
+                android:textColor="@color/cb_color_selector"
+                android:textSize="@dimen/font_16" />
+
+            <LinearLayout
+                android:id="@+id/llTraffic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/cbTrafficPile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_traffic_pile_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_pile"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/cbTrafficToll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_traffic_toll_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_toll"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbTrafficService"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_traffic_service_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_service"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbTrafficSpot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_traffic_spot_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_spot"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llOther"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_10"
+                android:background="@color/color_f2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/roadNavigation_menu_other"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_16" />
+
+                <CheckBox
+                    android:id="@+id/cbOtherWeather"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:drawableTop="@drawable/cb_other_weather_selector"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/roadNavigation_menu_weather"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

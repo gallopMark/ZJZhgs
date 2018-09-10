@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_5"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingTop="@dimen/margin_5">
+
+            <TextView
+                android:id="@+id/tvRoadName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <TextView
+                android:id="@+id/tvMile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/font_14" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rescue_request_direction"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="@string/rescue_request_asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvDirection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:overScrollMode="never" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/rescue_request_destination"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etDestination"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/rescue_request_destination_hint"
+                    android:maxLines="1"
+                    android:padding="@dimen/margin_12"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/rescue_request_username"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/rescue_request_username_hint"
+                    android:maxLines="1"
+                    android:padding="@dimen/margin_12"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/rescue_request_userphone"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="@string/rescue_request_asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/rescue_request_userphone_hint"
+                    android:maxLines="1"
+                    android:padding="@dimen/margin_12"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/rescue_request_carNum"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|top"
+                        android:text="@string/rescue_request_asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <EditText
+                        android:id="@+id/etMyCarNum"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="@string/rescue_request_carNum_hint"
+                        android:maxLines="1"
+                        android:padding="@dimen/margin_12"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvChangeCarNum"
+                        android:layout_width="@dimen/margin_60"
+                        android:layout_height="@dimen/margin_30"
+                        android:background="@mipmap/ic_report_bg_default"
+                        android:gravity="center"
+                        android:text="@string/rescue_request_changeCar"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/font_14"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/color_f7" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rescue_request_car_category"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="@string/rescue_request_asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvCarCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:overScrollMode="never" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rescue_request_car_type"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="@string/rescue_request_asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvCarType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:overScrollMode="always" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rescue_request_rescue_type"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="@string/rescue_request_asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvRescueType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:overScrollMode="never" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:background="@color/color_f2"
+            android:padding="@dimen/margin_10"
+            android:text="@string/rescue_request_selection_tips"
+            android:textSize="@dimen/font_12" />
+
+        <TextView
+            android:id="@+id/tvSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawableRight="@mipmap/ic_arrow_right"
+            android:gravity="center|left"
+            android:paddingBottom="@dimen/margin_12"
+            android:paddingLeft="@dimen/margin_12"
+            android:paddingRight="@dimen/margin_12"
+            android:paddingTop="@dimen/margin_12"
+            android:text="@string/rescue_request_selection"
+            android:textSize="@dimen/font_14" />
+
+        <LinearLayout
+            android:id="@+id/llSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:text="@string/rescue_request_fault_type"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/font_14" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvFaultType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:overScrollMode="never" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/rescue_request_upload_pic"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:id="@+id/tvPicCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:padding="@dimen/margin_5"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvPics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/rescue_request_remark"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etRemark"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/rescue_request_remark_hint"
+                    android:maxLines="1"
+                    android:padding="@dimen/margin_12"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/transparent"
+            android:button="@null"
+            android:drawableLeft="@drawable/bg_circle_checkbox_selector"
+            android:drawablePadding="@dimen/margin_5"
+            android:text="@string/rescue_request_agreement"
+            android:textColor="@color/appTextColor"
+            android:textSize="@dimen/font_14" />
+
+        <Button
+            android:id="@+id/btSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_25"
+            android:background="@mipmap/ic_button_corner_bg"
+            android:text="@string/rescue_request_submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_18" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:layout_marginTop="@dimen/margin_5"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/margin_3"
+            android:text="@string/rescue_request_submit_tips"
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/font_14" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

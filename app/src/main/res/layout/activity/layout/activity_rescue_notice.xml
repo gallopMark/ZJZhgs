@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:src="@mipmap/ic_rescue_notice_pic1" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:src="@mipmap/ic_rescue_notice_pic2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:src="@mipmap/ic_rescue_notice_pic3" />
+
+    <Button
+        android:id="@+id/btApply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_20"
+        android:background="@mipmap/ic_button_corner_bg"
+        android:gravity="center"
+        android:text="@string/rescue_notice_button_apply"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_18" />
+</LinearLayout>

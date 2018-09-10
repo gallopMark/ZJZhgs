@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_14"
+            android:text="@string/dialog_button_cancel"
+            android:textColor="@color/darkgrey"
+            android:textSize="@dimen/font_16" />
+
+        <TextView
+            android:id="@+id/tvConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:padding="@dimen/margin_14"
+            android:text="@string/dialog_button_confirm"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/font_16" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_1"
+        android:background="@color/divider" />
+
+    <com.pl.wheelview.WheelView
+        android:id="@+id/wheelView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:isCyclic="false"
+        app:itemNumber="7"
+        app:lineColor="@color/color_f7"
+        app:lineHeight="@dimen/margin_1"
+        app:normalTextColor="@color/grey"
+        app:normalTextSize="@dimen/font_16"
+        app:selectedTextColor="@color/appTextColor"
+        app:selectedTextSize="@dimen/font_16"
+        app:unitHeight="@dimen/margin_40" />
+</LinearLayout>

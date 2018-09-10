@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_10">
+
+            <TextView
+                android:id="@+id/tvRescuePerson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rescue_detail_request_num"
+                android:textColor="@color/gary"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:id="@+id/tvRescueCarNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:text="@string/rescue_detail_rescue_carNum"
+                android:textColor="@color/gary"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:id="@+id/tvRescueUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:text="@string/rescue_detail_rescue_unit"
+                android:textColor="@color/gary"
+                android:textSize="@dimen/font_14" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_10"
+            android:background="@color/color_f7" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_10"
+                android:text="@string/rescue_evaluate_service_tips"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/font_14" />
+
+            <com.uroad.zhgs.widget.StarBar
+                android:id="@+id/starBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:starDistance="@dimen/margin_12"
+                app:isIntMark="true"
+                app:starEmpty="@mipmap/ic_star_default"
+                app:starFill="@mipmap/ic_star_selected"
+                app:starSize="@dimen/margin_45" />
+
+            <TextView
+                android:id="@+id/tvTips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_10"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
+
+            <LinearLayout
+                android:id="@+id/llEvaluate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_20"
+                android:orientation="vertical" />
+
+            <EditText
+                android:id="@+id/etContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_50"
+                android:layout_marginRight="@dimen/margin_50"
+                android:layout_marginTop="@dimen/margin_15"
+                android:background="@color/transparent"
+                android:hint="@string/rescue_evaluate_hint"
+                android:maxLines="2"
+                android:padding="@dimen/margin_10"
+                android:textSize="@dimen/font_16" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:layout_marginLeft="@dimen/margin_50"
+                android:layout_marginRight="@dimen/margin_50"
+                android:background="@color/divider" />
+
+            <Button
+                android:id="@+id/btSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_20"
+                android:background="@mipmap/ic_button_corner_bg"
+                android:text="@string/rescue_evaluate_submit"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_18" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

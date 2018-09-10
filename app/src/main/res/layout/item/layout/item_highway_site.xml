@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/margin_5"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="@dimen/margin_20"
+        android:layout_height="@dimen/margin_20"
+        android:scaleType="center"
+        android:layout_gravity="center|left"
+        android:src="@mipmap/ic_highway_interflow" />
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_3"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/font_12" />
+</LinearLayout>

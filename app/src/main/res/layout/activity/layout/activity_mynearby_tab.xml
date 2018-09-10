@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_8"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/margin_15"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/vTab1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_5"
+                android:layout_weight="1"
+                android:background="@color/colorAccent" />
+
+            <View
+                android:id="@+id/vTab2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_5"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/vTab3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_5"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/vTab4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_5"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/vTab5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_5"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbToll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingBottom="@dimen/margin_14"
+                android:paddingTop="@dimen/margin_14"
+                android:text="@string/mynearby_tab_toll"
+                android:textColor="@color/cb_color_selector"
+                android:textSize="@dimen/font_16" />
+
+            <RadioButton
+                android:id="@+id/rbService"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/mynearby_tab_service"
+                android:textColor="@color/cb_color_selector"
+                android:textSize="@dimen/font_14" />
+
+            <RadioButton
+                android:id="@+id/rbScenic"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/mynearby_tab_scenic"
+                android:textColor="@color/cb_color_selector"
+                android:textSize="@dimen/font_14" />
+
+            <RadioButton
+                android:id="@+id/rbGas"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/mynearby_tab_gas"
+                android:textColor="@color/cb_color_selector"
+                android:textSize="@dimen/font_14" />
+
+            <RadioButton
+                android:id="@+id/rbRepair"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/mynearby_tab_repair"
+                android:textColor="@color/cb_color_selector"
+                android:textSize="@dimen/font_14" />
+        </RadioGroup>
+    </FrameLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

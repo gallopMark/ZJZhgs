@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7"
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindinfo_name"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center|top"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_weight="1"
+                    android:hint="@string/bindinfo_name_hint"
+                    android:padding="@dimen/margin_12"
+                    android:singleLine="true"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindinfo_phone"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center|top"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_weight="1"
+                    android:hint="@string/bindinfo_phone_hint"
+                    android:padding="@dimen/margin_12"
+                    android:singleLine="true"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindinfo_IDCard"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etIDCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_weight="1"
+                    android:hint="@string/bindinfo_IDCard_hint"
+                    android:padding="@dimen/margin_12"
+                    android:singleLine="true"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindinfo_car_num"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center|top"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_22"
+                    android:drawablePadding="@dimen/margin_4"
+                    android:drawableRight="@mipmap/ic_small_arrow_down"
+                    android:text="浙"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etCarNum"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/margin_12"
+                    android:singleLine="true"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindinfo_car_category"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center|top"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <RadioGroup
+                    android:id="@+id/rgCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_22"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/margin_5"
+                    android:paddingTop="@dimen/margin_5">
+
+                    <RadioButton
+                        android:layout_width="@dimen/margin_70"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_defbutton_selector"
+                        android:button="@null"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/margin_10"
+                        android:paddingTop="@dimen/margin_10"
+                        android:text="客车"
+                        android:textColor="@color/button_color_selector"
+                        android:textSize="@dimen/font_14" />
+
+                    <RadioButton
+                        android:layout_width="@dimen/margin_70"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:background="@drawable/bg_defbutton_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/margin_10"
+                        android:paddingTop="@dimen/margin_10"
+                        android:text="货车"
+                        android:textColor="@color/button_color_selector"
+                        android:textSize="@dimen/font_14" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindinfo_car_type"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center|top"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/margin_22"
+                    android:paddingBottom="@dimen/margin_5"
+                    android:paddingTop="@dimen/margin_5"
+                    android:scrollbars="none">
+
+                    <RadioGroup
+                        android:id="@+id/rgCarType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="≤7座"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="8~19座"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="20~39座"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="≥40座"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+                    </RadioGroup>
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindinfo_car_color"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center|top"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/margin_22"
+                    android:paddingBottom="@dimen/margin_5"
+                    android:paddingTop="@dimen/margin_5"
+                    android:scrollbars="none">
+
+                    <RadioGroup
+                        android:id="@+id/rgColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="黑"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="白"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="银"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+
+                        <RadioButton
+                            android:layout_width="@dimen/margin_70"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:background="@drawable/bg_defbutton_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="@dimen/margin_10"
+                            android:paddingTop="@dimen/margin_10"
+                            android:text="其他"
+                            android:textColor="@color/button_color_selector"
+                            android:textSize="@dimen/font_14" />
+                    </RadioGroup>
+                </HorizontalScrollView>
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_30"
+            android:background="@mipmap/ic_button_corner_bg"
+            android:text="@string/submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_18" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

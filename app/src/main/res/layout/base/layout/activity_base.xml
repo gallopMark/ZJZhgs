@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/baseParent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/AppToolBarStyle">
+
+        <TextView
+            android:id="@+id/tvBaseTitle"
+            style="@style/ToolbarTitleTextView" />
+
+        <TextView
+            android:id="@+id/tvBaseOption"
+            style="@style/ToolbarOptionsView"
+            android:visibility="gone" />
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/baseLine"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_5"
+        android:background="@color/color_f7" />
+
+    <FrameLayout
+        android:id="@+id/baseContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/flBaseLoad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</LinearLayout>

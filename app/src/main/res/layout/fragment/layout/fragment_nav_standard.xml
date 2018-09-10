@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.uroad.zhgs.widget.MyMapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/llSearch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_margin="@dimen/margin_10"
+        android:background="@drawable/bg_corners_white_5dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingLeft="@dimen/margin_20"
+            android:paddingRight="@dimen/margin_20"
+            android:src="@mipmap/ic_back" />
+
+        <View
+            android:layout_width="@dimen/margin_1"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/margin_8"
+            android:layout_marginTop="@dimen/margin_8"
+            android:background="@color/divider" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvSearchTips"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/transparent"
+                android:drawableLeft="@mipmap/ic_gaode_search"
+                android:drawablePadding="@dimen/margin_5"
+                android:gravity="center"
+                android:hint="@string/roadNavigation_gaodesearch_hint"
+                android:maxLines="1"
+                android:textSize="@dimen/font_16" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.uroad.zhgs.widget.MyMapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_10">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/appTextColor"
+                android:text="@string/mynearby_tab_toll"
+                android:textSize="@dimen/font_16" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_30"
+                android:text="@string/mynearby_range"
+                android:textColor="@color/darkgrey"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:id="@+id/tvDistance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:textColor="@color/darkgrey"
+                android:textSize="@dimen/font_14" />
+
+            <ImageView
+                android:id="@+id/ivArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_expand_more_24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llOption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_f7"
+                android:paddingBottom="@dimen/margin_15"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:text="@string/mynearby_title"
+                    android:textSize="@dimen/font_14" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_40"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cbToll"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_defbutton_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="@string/mynearby_tab_toll"
+                        android:textColor="@color/button_color_selector"
+                        android:textSize="@dimen/font_14" />
+
+                    <CheckBox
+                        android:id="@+id/cbService"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_defbutton_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="@string/mynearby_tab_service"
+                        android:textColor="@color/button_color_selector"
+                        android:textSize="@dimen/font_14" />
+
+                    <CheckBox
+                        android:id="@+id/cbScenic"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_defbutton_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="@string/mynearby_tab_scenic"
+                        android:textColor="@color/button_color_selector"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_15"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/mynearby_range"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvDistance2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <com.warkiz.widget.IndicatorSeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_10"
+                    app:isb_tick_texts_array="@array/tick_below_text_length_5"
+                    app:isb_show_tick_marks_type="oval"
+                    app:isb_show_tick_texts="true"
+                    app:isb_show_indicator="none"
+                    app:isb_max="5"
+                    app:isb_min="1"
+                    app:isb_progress="4"
+                    app:isb_thumb_size="@dimen/margin_16"
+                    app:isb_tick_marks_size="@dimen/margin_10"
+                    app:isb_tick_texts_size="@dimen/font_14"
+                    app:isb_tick_texts_color="@color/grey"
+                    app:isb_thumb_color="@color/colorAccent"
+                    app:isb_tick_marks_color="@color/bg_tick_marks_color"
+                    app:isb_ticks_count="5"
+                    app:isb_tick_texts_typeface="sans"
+                    app:isb_track_progress_color="@color/colorAccent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_45"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvReset"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.3"
+                    android:background="@drawable/bg_stroke_1dp"
+                    android:gravity="center"
+                    android:text="@string/mynearby_range_reset"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:id="@+id/tvConfirm"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@mipmap/ic_button_default"
+                    android:gravity="center"
+                    android:text="@string/dialog_button_confirm"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/flOutSide"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/translucence" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

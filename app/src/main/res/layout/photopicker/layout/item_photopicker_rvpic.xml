@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/flSelect"
+    android:layout_width="@dimen/margin_50"
+    android:layout_height="@dimen/margin_50"
+    android:layout_marginLeft="@dimen/margin_12"
+    android:background="@drawable/bg_photopicker_corner_2dp"
+    android:padding="@dimen/margin_2">
+
+    <ImageView
+        android:id="@+id/ivPic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/vUnSelect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#b3ffffff"
+        android:visibility="gone" />
+</FrameLayout>

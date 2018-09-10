@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_20"
+        android:paddingRight="@dimen/margin_20">
+
+        <FrameLayout
+            android:layout_width="@dimen/margin_30"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/transparent"
+            android:clipToPadding="false">
+
+            <View
+                android:id="@+id/vColor"
+                android:layout_width="@dimen/margin_15"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/colorAccent" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_road_direction_arraw" />
+
+            <ImageView
+                android:id="@+id/ivStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:maxHeight="@dimen/margin_30"
+                android:maxWidth="@dimen/margin_30"
+                android:minHeight="@dimen/margin_20"
+                android:minWidth="@dimen/margin_20"
+                android:src="@mipmap/ic_road_traffic_normal" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/font_16" />
+
+                <TextView
+                    android:id="@+id/tvRoadName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:layout_marginRight="@dimen/margin_5"
+                    android:background="@drawable/bg_highway_roadname"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:paddingBottom="@dimen/margin_2"
+                    android:paddingLeft="@dimen/margin_10"
+                    android:paddingRight="@dimen/margin_10"
+                    android:paddingTop="@dimen/margin_2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_12"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_20"
+                android:minHeight="@dimen/margin_20"
+                android:overScrollMode="never" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <com.uroad.library.widget.banner.BannerView
+        android:id="@+id/bannerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:bannerAnimScroll="false"
+        app:bannerAutoScroll="false"
+        app:bannerPageAlpha="0.6"
+        app:bannerPageMargin="@dimen/margin_10"
+        app:bannerPagePercent="0.9"
+        app:bannerPageScale="1" />
+
+    <TextView
+        android:id="@+id/tvCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_5"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_14" />
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_20"
+        android:src="@mipmap/ic_close_white" />
+</LinearLayout>

@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/invoice_type"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="@string/rescue_request_asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvInvoiceType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal"
+                android:overScrollMode="never" />
+
+            <LinearLayout
+                android:id="@+id/llHeadType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/invoice_rise_type"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|top"
+                        android:text="@string/rescue_request_asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvRiseType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:overScrollMode="never" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/invoice_rise_name"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|top"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:ellipsize="start"
+                    android:hint="@string/invoice_rise_name_hint_c"
+                    android:padding="@dimen/margin_12"
+                    android:singleLine="true"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:id="@+id/llDutyNum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/invoice_rise_dutyNum"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|top"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14" />
+
+                    <EditText
+                        android:id="@+id/etDutyNum"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:ellipsize="start"
+                        android:hint="@string/invoice_rise_dutyNum_hint"
+                        android:padding="@dimen/margin_12"
+                        android:singleLine="true"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/invoice_rise_unit"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvStar1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|top"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14"
+                        android:visibility="invisible" />
+
+                    <EditText
+                        android:id="@+id/etUnit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:ellipsize="start"
+                        android:hint="@string/invoice_rise_unit_hint"
+                        android:padding="@dimen/margin_12"
+                        android:singleLine="true"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/invoice_rise_phone"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvStar2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|top"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14"
+                        android:visibility="invisible" />
+
+                    <EditText
+                        android:id="@+id/etPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:ellipsize="start"
+                        android:hint="@string/invoice_rise_phone_hint"
+                        android:padding="@dimen/margin_12"
+                        android:singleLine="true"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/invoice_rise_bank"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvStar3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|top"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14"
+                        android:visibility="invisible" />
+
+                    <EditText
+                        android:id="@+id/etBank"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:ellipsize="start"
+                        android:hint="@string/invoice_rise_bank_hint"
+                        android:padding="@dimen/margin_12"
+                        android:singleLine="true"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/invoice_rise_bank_account"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvStar4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|top"
+                        android:text="@string/asterisk"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/font_14"
+                        android:visibility="invisible" />
+
+                    <EditText
+                        android:id="@+id/etAccount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:ellipsize="start"
+                        android:hint="@string/invoice_rise_bank_account_hint_c"
+                        android:padding="@dimen/margin_12"
+                        android:singleLine="true"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/invoice_rise_contacts"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|top"
+                android:text="@string/asterisk"
+                android:textColor="@color/colorOrange"
+                android:textSize="@dimen/font_14" />
+
+            <EditText
+                android:id="@+id/etContants"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:ellipsize="start"
+                android:hint="@string/invoice_rise_contacts_hint"
+                android:padding="@dimen/margin_12"
+                android:singleLine="true"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/invoice_rise_telPhone"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|top"
+                android:text="@string/asterisk"
+                android:textColor="@color/colorOrange"
+                android:textSize="@dimen/font_14" />
+
+            <EditText
+                android:id="@+id/etTelPhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:ellipsize="start"
+                android:hint="@string/invoice_rise_telPhone_hint"
+                android:padding="@dimen/margin_12"
+                android:singleLine="true"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/invoice_rise_address"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|top"
+                android:text="@string/asterisk"
+                android:textColor="@color/colorOrange"
+                android:textSize="@dimen/font_14" />
+
+            <EditText
+                android:id="@+id/etAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:ellipsize="start"
+                android:hint="@string/invoice_rise_address_hint"
+                android:padding="@dimen/margin_12"
+                android:singleLine="true"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_20"
+            android:background="@mipmap/ic_button_corner_bg"
+            android:text="@string/submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_18" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:layout_marginLeft="@dimen/margin_50"
+            android:layout_marginRight="@dimen/margin_50"
+            android:layout_marginTop="@dimen/margin_4"
+            android:gravity="center"
+            android:text="@string/invoice_rise_tips"
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/font_15" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

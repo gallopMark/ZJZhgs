@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="tick_below_text_length_5">
+        <item>@string/mynearby_range_1km</item>
+        <item>@string/mynearby_range_5km</item>
+        <item>@string/mynearby_range_10km</item>
+        <item>@string/mynearby_range_15km</item>
+        <item>@string/mynearby_range_20km</item>
+    </array>
+</resources>

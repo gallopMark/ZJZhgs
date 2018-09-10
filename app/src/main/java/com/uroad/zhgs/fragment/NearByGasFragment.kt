@@ -1,0 +1,102 @@
+package com.uroad.zhgs.fragment
+
+import android.view.View
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Poi
+import com.uroad.zhgs.R
+import com.uroad.zhgs.adapteRv.NearByGasAdapter
+import com.uroad.zhgs.common.BasePageRefreshRvFragment
+import com.uroad.zhgs.enumeration.MapDataType
+import com.uroad.zhgs.model.GasStationMDL
+import com.uroad.zhgs.rv.BaseRecyclerAdapter
+import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.webservice.HttpRequestCallback
+import com.uroad.zhgs.webservice.WebApiService
+
+/**
+ *Created by MFB on 2018/8/23.
+ */
+class NearByGasFragment : BasePageRefreshRvFragment() {
+    private var longitude: Double = 120.2
+    private var latitude: Double = 30.3
+    private var isFirstLoad = true
+    private val mDatas = ArrayList<GasStationMDL>()
+    private lateinit var adapter: NearByGasAdapter
+
+    override fun initViewData(view: View) {
+//        arguments?.let {
+//            longitude = it.getDouble("longitude")
+//            latitude = it.getDouble("latitude")
+//        }
+        refreshLayout.isEnableLoadMore = false
+        adapter = NearByGasAdapter(context, mDatas)
+        recyclerView.adapter = adapter
+        adapter.setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
+            override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                when (view.id) {
+                    R.id.ivNav -> {
+                        if (position in 0 until mDatas.size) {   //进入导航页面
+                            var poiName = ""
+                            mDatas[position].name?.let { poiName = it }
+                            val end = Poi(poiName, LatLng(mDatas[position].latitude(), mDatas[position].longitude()), "")
+                            openNaviPage(null, end)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    override fun initData() {
+        doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.GAS_STATION.code,
+                longitude, latitude, "", ""), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                if (isFirstLoad) setPageLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                finishLoad()
+                setPageEndLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, GasStationMDL::class.java)
+                    updateData(mdLs)
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+                if (isFirstLoad) isFirstLoad = false
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                finishLoad()
+                if (isFirstLoad) setPageError()
+                else {
+                    onHttpError(e)
+                }
+            }
+        })
+    }
+
+    private fun updateData(mdLs: MutableList<GasStationMDL>) {
+        mDatas.clear()
+        for (item in mdLs) {
+            item.setDistance(longitude, latitude, item.longitude(), item.latitude())
+        }
+        mDatas.addAll(mdLs)
+        adapter.notifyDataSetChanged()
+        if (mDatas.size == 0) {
+            setPageNoData()
+        }
+    }
+
+    override fun onReLoad(view: View) {
+        initData()
+    }
+
+    override fun pullToRefresh() {
+        initData()
+    }
+
+    override fun pullToLoadMore() {
+    }
+
+}

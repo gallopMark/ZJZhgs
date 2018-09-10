@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularProgressView">
+        <attr name="border_Width" format="dimension" />
+        <attr name="colorSequence" format="reference" />
+        <attr name="sweepAnimationDurationMillis" format="integer" />
+        <attr name="angleAnimationDurationMillis" format="integer" />
+        <attr name="minSweepAngle" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="StarBar">
+        <!-- 星星间距 -->
+        <attr name="starDistance" format="dimension" />
+        <!-- 星星大小 -->
+        <attr name="starSize" format="dimension" />
+        <!-- 星星个数 -->
+        <attr name="starNumber" format="integer" />
+        <!-- 星星空图 -->
+        <attr name="starEmpty" format="reference" />
+        <!-- 星星满图 -->
+        <attr name="starFill" format="reference" />
+        <!-- 星星是否可编辑 -->
+        <attr name="isEdit" format="boolean" />
+        <!-- 评分是否是整形 -->
+        <attr name="isIntMark" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CropImageView">
+        <attr name="cropMaskColor" format="color" />
+        <attr name="cropBorderColor" format="color" />
+        <attr name="cropBorderWidth" format="dimension" />
+        <attr name="cropFocusWidth" format="dimension" />
+        <attr name="cropFocusHeight" format="dimension" />
+        <attr name="cropStyle" format="enum">
+            <enum name="rectangle" value="0" />
+            <enum name="circle" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>

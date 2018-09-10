@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.RoadNavigationMainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/ivDiagramBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_margin="@dimen/margin_10"
+            android:src="@mipmap/ic_back_grey"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_70"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvLayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_corners_white_5dp"
+                android:drawablePadding="@dimen/margin_3"
+                android:drawableTop="@mipmap/ic_drawabletop_layer"
+                android:paddingBottom="@dimen/margin_4"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_10"
+                android:paddingTop="@dimen/margin_4"
+                android:text="@string/roadNavigation_layer"
+                android:textSize="@dimen/font_12" />
+
+            <TextView
+                android:id="@+id/tvList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_15"
+                android:background="@drawable/bg_corners_white_5dp"
+                android:drawablePadding="@dimen/margin_3"
+                android:drawableTop="@mipmap/ic_drawabletop_list"
+                android:paddingBottom="@dimen/margin_4"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_10"
+                android:paddingTop="@dimen/margin_4"
+                android:text="@string/roadNavigation_list"
+                android:textSize="@dimen/font_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_corners_white_5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvPlus"
+                            android:layout_width="@dimen/margin_50"
+                            android:layout_height="@dimen/margin_50"
+                            android:gravity="center"
+                            android:text="@string/roadNavigation_plus"
+                            android:textSize="@dimen/font_30" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/margin_1"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_10"
+                            android:background="@color/divider" />
+
+                        <TextView
+                            android:id="@+id/tvMinus"
+                            android:layout_width="@dimen/margin_50"
+                            android:layout_height="@dimen/margin_50"
+                            android:gravity="center"
+                            android:text="@string/roadNavigation_minus"
+                            android:textSize="@dimen/font_30" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ivLocation"
+                        android:layout_width="@dimen/margin_50"
+                        android:layout_height="@dimen/margin_50"
+                        android:layout_marginTop="@dimen/margin_20"
+                        android:background="@drawable/bg_corners_white_5dp"
+                        android:scaleType="center"
+                        android:src="@mipmap/ic_gaode_location_blue" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/flBottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/bg_road_navigation_bottom_corner"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/margin_5"
+                    android:paddingTop="@dimen/margin_5">
+
+                    <ImageView
+                        android:layout_width="@dimen/margin_12"
+                        android:layout_height="@dimen/margin_12"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_arrow_up_icon" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_30"
+                        android:layout_marginTop="@dimen/margin_5"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/userEvent_title"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/margin_40"
+                            android:text="@string/userEvent_burst"
+                            android:textColor="@color/whitetransparent"
+                            android:textSize="@dimen/font_14" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="@dimen/margin_20"
+                    android:src="@mipmap/ic_userevent_icon" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlAddBill"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucence"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="130dp"
+                android:layout_marginRight="@dimen/margin_28"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvMenuList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/margin_10"
+                    android:drawableRight="@mipmap/ic_menu_list_p"
+                    android:gravity="center"
+                    android:text="@string/roadNavigation_menu_list"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_16" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/rbRepair"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:button="@null"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:drawableRight="@drawable/cb_menu_repair_selector"
+                        android:gravity="center"
+                        android:text="@string/roadNavigation_menu_repair"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_16" />
+
+                    <RadioButton
+                        android:id="@+id/rbGas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:button="@null"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:drawableRight="@drawable/cb_menu_gas_selector"
+                        android:gravity="center"
+                        android:text="@string/roadNavigation_menu_gas"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_16" />
+
+                    <RadioButton
+                        android:id="@+id/rbScenic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:button="@null"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:drawableRight="@drawable/cb_menu_scenic_selector"
+                        android:gravity="center"
+                        android:text="@string/roadNavigation_menu_scenic"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_16" />
+
+                    <RadioButton
+                        android:id="@+id/rbService"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:button="@null"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:drawableRight="@drawable/cb_traffic_service_selector"
+                        android:gravity="center"
+                        android:text="@string/roadNavigation_menu_service"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_16" />
+
+                    <RadioButton
+                        android:id="@+id/rbToll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_15"
+                        android:button="@null"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:drawableRight="@drawable/cb_traffic_toll_selector"
+                        android:gravity="center"
+                        android:text="@string/roadNavigation_menu_toll"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_16" />
+                </RadioGroup>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/ivNearBy"
+            android:layout_width="@dimen/margin_60"
+            android:layout_height="@dimen/margin_60"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="@dimen/margin_60"
+            android:layout_marginRight="@dimen/margin_15"
+            android:src="@mipmap/ic_nearby_icon" />
+    </FrameLayout>
+
+    <include
+        android:id="@+id/rightMenu"
+        layout="@layout/layout_menu_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end" />
+</android.support.v4.widget.DrawerLayout>

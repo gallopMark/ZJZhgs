@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="@dimen/margin_10">
+
+    <View
+        android:id="@+id/vUnderLine"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/margin_6"
+        android:layout_alignLeft="@+id/tvTabName"
+        android:layout_alignRight="@+id/tvTabName"
+        android:layout_below="@+id/tvTabName"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/minus_8"
+        android:background="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/tvTabName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="@dimen/margin_4"
+        android:paddingRight="@dimen/margin_4"
+        android:textSize="@dimen/font_16" />
+</RelativeLayout>

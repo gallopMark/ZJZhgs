@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_8"
+                android:layout_alignLeft="@+id/radioGroup"
+                android:layout_alignRight="@+id/radioGroup"
+                android:layout_below="@+id/radioGroup"
+                android:layout_marginTop="@dimen/minus_18">
+
+                <View
+                    android:id="@+id/vTab1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorAccent" />
+
+                <View
+                    android:id="@+id/vTab2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorAccent"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbTab1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/margin_10"
+                    android:paddingLeft="@dimen/margin_25"
+                    android:paddingRight="@dimen/margin_25"
+                    android:paddingTop="@dimen/margin_10"
+                    android:text="@string/mycar_tab_coach"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_16" />
+
+                <RadioButton
+                    android:id="@+id/rbTab2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/margin_10"
+                    android:paddingLeft="@dimen/margin_25"
+                    android:paddingRight="@dimen/margin_25"
+                    android:paddingTop="@dimen/margin_10"
+                    android:text="@string/mycar_tab_truck"
+                    android:textColor="@color/cb_color_selector"
+                    android:textSize="@dimen/font_14" />
+            </RadioGroup>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/ivBindCar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_margin="@dimen/margin_15"
+                android:src="@mipmap/ic_add_car" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

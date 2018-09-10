@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_8"
+        android:text="@string/rescue_main_guide_topTips"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_22" />
+
+    <com.uroad.library.widget.banner.BannerView
+        android:id="@+id/banneriew"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:bannerAnimScroll="false"
+        app:bannerAutoScroll="false"
+        app:bannerPageAlpha="0.6"
+        app:bannerPageMargin="@dimen/margin_10"
+        app:bannerPagePercent="0.8"
+        app:bannerPageScale="1" />
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_8">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="@dimen/margin_100"
+            android:layout_height="@dimen/margin_5"
+            android:layout_gravity="top|center"
+            android:max="3"
+            android:progressDrawable="@drawable/bg_progressdrawable_corner10dp" />
+
+        <Button
+            android:id="@+id/btApply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@mipmap/ic_button_corner_bg"
+            android:text="@string/rescue_main_guide_apply"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_18"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+
+</LinearLayout>

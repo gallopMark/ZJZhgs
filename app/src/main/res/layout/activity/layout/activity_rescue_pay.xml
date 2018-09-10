@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f7"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_5"
+        android:paddingLeft="@dimen/margin_10"
+        android:paddingRight="@dimen/margin_10"
+        android:paddingTop="@dimen/margin_5">
+
+        <TextView
+            android:id="@+id/tvRequestNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rescue_detail_request_num"
+            android:textColor="@color/gary"
+            android:textSize="@dimen/font_14" />
+
+        <TextView
+            android:id="@+id/tvRescueType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:text="@string/rescue_detail_rescue_type"
+            android:textColor="@color/gary"
+            android:textSize="@dimen/font_14" />
+
+        <TextView
+            android:id="@+id/tvRescueAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:text="@string/rescue_detail_rescue_address"
+            android:textColor="@color/gary"
+            android:textSize="@dimen/font_14" />
+
+        <View
+            android:layout_width="@dimen/margin_35"
+            android:layout_height="@dimen/margin_4"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_2"
+            android:layout_marginTop="@dimen/margin_4"
+            android:background="@color/gary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_10"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_15"
+            android:text="@string/rescue_pay_need_pay"
+            android:textColor="@color/gary"
+            android:textSize="@dimen/font_14" />
+
+        <TextView
+            android:id="@+id/tvMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_3"
+            android:textColor="@color/appTextColor"
+            android:textSize="@dimen/font_16" />
+
+        <LinearLayout
+            android:id="@+id/llDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="@dimen/margin_3"
+                android:drawableRight="@mipmap/ic_arrow_down"
+                android:text="@string/rescue_pay_charges_detail"
+                android:textColor="@color/gary"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:id="@+id/tvDetailContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:textColor="@color/gary"
+                android:textSize="@dimen/font_14"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:layout_marginStart="@dimen/margin_30"
+            android:layout_marginTop="@dimen/margin_20"
+            android:text="@string/rescue_pay_type"
+            android:textColor="@color/gary"
+            android:textSize="@dimen/font_14" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginStart="@dimen/margin_30"
+            android:background="@color/transparent"
+            android:button="@null"
+            android:drawableLeft="@mipmap/ic_pay_alipay"
+            android:drawablePadding="@dimen/margin_10"
+            android:drawableRight="@mipmap/ic_circle_button_checked"
+            android:paddingBottom="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_5"
+            android:paddingTop="@dimen/margin_10"
+            android:text="@string/rescue_pay_alipay"
+            android:textColor="@color/appTextColor"
+            android:textSize="@dimen/font_16" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginStart="@dimen/margin_30"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/rbWechat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:button="@null"
+                android:drawableLeft="@mipmap/ic_pay_wechat"
+                android:drawablePadding="@dimen/margin_10"
+                android:drawableRight="@drawable/bg_circle_button_selector"
+                android:paddingBottom="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_5"
+                android:paddingTop="@dimen/margin_10"
+                android:text="@string/rescue_pay_wechat"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/rbAlipay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:button="@null"
+                android:drawableLeft="@mipmap/ic_pay_alipay"
+                android:drawablePadding="@dimen/margin_10"
+                android:drawableRight="@drawable/bg_circle_button_selector"
+                android:paddingBottom="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_5"
+                android:paddingTop="@dimen/margin_10"
+                android:text="@string/rescue_pay_alipay"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/divider"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/rbCash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:button="@null"
+                android:drawableLeft="@mipmap/ic_pay_cash"
+                android:drawablePadding="@dimen/margin_10"
+                android:drawableRight="@drawable/bg_circle_button_selector"
+                android:paddingBottom="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_5"
+                android:paddingTop="@dimen/margin_10"
+                android:text="@string/rescue_pay_cash"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16"
+                android:visibility="gone" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btPay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_30"
+            android:background="@mipmap/ic_button_corner_bg"
+            android:text="@string/rescue_pay_confirm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_18" />
+    </LinearLayout>
+</LinearLayout>

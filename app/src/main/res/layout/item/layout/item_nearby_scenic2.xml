@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_10"
+        android:paddingLeft="@dimen/margin_15"
+        android:paddingRight="@dimen/font_15"
+        android:paddingTop="@dimen/margin_10">
+
+        <ImageView
+            android:layout_width="@dimen/margin_45"
+            android:layout_height="@dimen/margin_45"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_menu_scenic_p" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_3"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+
+                <View
+                    android:layout_width="@dimen/margin_1"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/margin_3"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:layout_marginRight="@dimen/margin_5"
+                    android:layout_marginTop="@dimen/margin_3"
+                    android:background="@color/darkgrey" />
+
+                <TextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivNav"
+            android:layout_width="@dimen/margin_30"
+            android:layout_height="@dimen/margin_30"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_navigation_icon" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_1"
+        android:layout_marginLeft="@dimen/margin_15"
+        android:layout_marginRight="@dimen/margin_15"
+        android:background="@color/divider" />
+</LinearLayout>

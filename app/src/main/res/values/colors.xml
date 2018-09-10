@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFFFF</color>
+    <!--顶部标题栏底线-->
+    <color name="colorUnderLine">#45BAFF</color>
+    <color name="colorPrimaryDark">#B1B1B1</color>
+    <color name="colorAccent">#45BAFF</color>
+
+    <color name="appTextColor">#2F2F2F</color>
+    <color name="divider">#efefef</color>
+    <color name="colorOrange">#ff8800</color>
+    <color name="color_f7">#f7f7f7</color>
+    <color name="color_f2">#f2f2f2</color>
+    <color name="color_e6">#e6e6e6</color>
+
+    <color name="colorUserEvent">#4c80b0</color>
+    <color name="colorUser_comment">#f4f7fa</color>
+    <color name="colorTransparent">#80ffffff</color>
+    <color name="colorWhiteTrans">#1affffff</color>
+    <color name="color_33">#333333</color>
+    <color name="color_66">#666666</color>
+
+    <color name="eventReport">#569DDE</color>
+
+    <color name="buttonComment_default">#F0F1EC</color>
+    <color name="buttonComment_default_textColor">#D8D9D4</color>
+    <color name="buttonComment_enable">@color/colorAccent</color>
+    <color name="buttonComment_pressed">#1a94ff</color>
+
+    <color name="car_default_bgcolor">#E9F7F7</color>
+    <color name="auntie_red">#F73E73</color>
+    <color name="status_normal">#1eb244</color>
+    <color name="status_close">#f03c3c</color>
+    <color name="roadline_color">#31ce4c</color>
+    <color name="roadName_bgColor">#00c260</color>
+
+    <color name="route_color_selected">#00bf31</color>
+    <color name="route_color_default">#9ed6e5</color>
+    <color name="service_area_bg">#dbf8fc</color>
+    <color name="service_area_text">#1dd1e7</color>
+</resources>
