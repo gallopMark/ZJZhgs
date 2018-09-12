@@ -11,7 +11,9 @@ import com.uroad.library.utils.SecurityUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.enumeration.VerificationCode
+import com.uroad.zhgs.utils.CheckUtils
 import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.utils.InputMethodUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_register.*
@@ -45,6 +47,8 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
                 val phone = etPhone.text.toString()
                 if (TextUtils.isEmpty(phone)) {
                     showShortToast(resources.getString(R.string.login_phone_hint))
+                } else if (!CheckUtils.isMobile(phone)) {
+                    showShortToast(getString(R.string.error_phone_tips))
                 } else {
                     getCode(phone)
                 }
@@ -120,6 +124,10 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
             showShortToast(resources.getString(R.string.register_phone_hint))
             return
         }
+        if (!CheckUtils.isMobile(phone)) {
+            showShortToast(getString(R.string.error_phone_tips))
+            return
+        }
         val password1 = etPassword1.text.toString()
         if (TextUtils.isEmpty(password1)) {
             showShortToast(resources.getString(R.string.register_password_hint))
@@ -172,6 +180,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
 
     override fun onDestroy() {
         handler?.removeCallbacksAndMessages(null)
+        InputMethodUtils.hideSoftInput(this)
         super.onDestroy()
     }
 }

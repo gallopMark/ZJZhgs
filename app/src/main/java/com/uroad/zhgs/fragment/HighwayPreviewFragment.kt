@@ -15,7 +15,6 @@ import com.uroad.zhgs.dialog.EventDetailPageDialog
 import com.uroad.zhgs.model.CCTVMDL
 import com.uroad.zhgs.model.EventMDL
 import com.uroad.zhgs.model.HighwayPreViewMDL
-import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
@@ -59,15 +58,19 @@ class HighwayPreviewFragment : BasePageFragment() {
             }
         })
         tvChange.setOnClickListener { _ ->
+            val text = tvPoiname.text.split(" - ")
+            if (text.size >= 2) {
+                val name = "${text[1]} - ${text[0]}"
+                tvPoiname.text = name
+            }
             direction = if (direction == 1) {
                 2
             } else {
                 1
             }
-            if (map[direction] == null)
-                initData()
-            else
-                map[direction]?.let { updateData(it) }
+            val mdl = map[direction]
+            if (mdl == null) initData()
+            else updateData(mdl)
         }
     }
 

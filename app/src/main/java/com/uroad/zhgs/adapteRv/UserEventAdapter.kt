@@ -33,8 +33,7 @@ class UserEventAdapter(private val context: Context, mDatas: MutableList<UserEve
     private var onAdapterChildClickListener: OnAdapterChildClickListener? = null
 
     override fun onBindHoder(holder: RecyclerHolder, t: UserEventMDL, position: Int) {
-        val ivIco = holder.obtainView<ImageView>(R.id.ivIco)
-        ImageLoaderV4.getInstance().displayImage(context, t.iconfile, ivIco, R.mipmap.ic_user_default)
+        holder.displayImage(R.id.ivIco, t.iconfile, R.mipmap.ic_user_default)
         holder.setText(R.id.tvUserName, t.username)
         holder.setText(R.id.tvShortname, t.shortname)
         holder.setText(R.id.tvRemark, t.remark)

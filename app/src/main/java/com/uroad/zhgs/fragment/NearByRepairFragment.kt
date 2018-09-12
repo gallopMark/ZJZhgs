@@ -6,6 +6,7 @@ import com.amap.api.maps.model.Poi
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.NearByRepairAdapter
 import com.uroad.zhgs.common.BasePageRefreshRvFragment
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.RepairShopMDL
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
@@ -17,17 +18,17 @@ import com.uroad.zhgs.webservice.WebApiService
  *Created by MFB on 2018/8/23.
  */
 class NearByRepairFragment : BasePageRefreshRvFragment() {
-    private var longitude: Double = 120.2
-    private var latitude: Double = 30.3
+    private var longitude: Double = CurrApplication.APP_LATLNG.longitude
+    private var latitude: Double = CurrApplication.APP_LATLNG.latitude
     private var isFirstLoad = true
     private val mDatas = ArrayList<RepairShopMDL>()
     private lateinit var adapter: NearByRepairAdapter
 
     override fun initViewData(view: View) {
-//        arguments?.let {
-//            longitude = it.getDouble("longitude")
-//            latitude = it.getDouble("latitude")
-//        }
+        arguments?.let {
+            longitude = it.getDouble("longitude")
+            latitude = it.getDouble("latitude")
+        }
         refreshLayout.isEnableLoadMore = false
         adapter = NearByRepairAdapter(context, mDatas)
         recyclerView.adapter = adapter

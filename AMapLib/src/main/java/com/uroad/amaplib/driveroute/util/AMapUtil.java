@@ -37,11 +37,7 @@ public class AMapUtil {
     }
 
     public static String colorFont(String src, String color) {
-        StringBuffer strBuf = new StringBuffer();
-
-        strBuf.append("<font color=").append(color).append(">").append(src)
-                .append("</font>");
-        return strBuf.toString();
+        return "<font color=" + color + ">" + src + "</font>";
     }
 
     public static String makeHtmlNewLine() {
@@ -63,24 +59,20 @@ public class AMapUtil {
             int dis = lenMeter / 1000;
             return dis + ChString.Kilometer;
         }
-
         if (lenMeter > 1000) {
             float dis = (float) lenMeter / 1000;
             DecimalFormat fnum = new DecimalFormat("##0.0");
             String dstr = fnum.format(dis);
             return dstr + ChString.Kilometer;
         }
-
         if (lenMeter > 100) {
             int dis = lenMeter / 50 * 50;
             return dis + ChString.Meter;
         }
-
         int dis = lenMeter / 10 * 10;
         if (dis == 0) {
             dis = 10;
         }
-
         return dis + ChString.Meter;
     }
 
@@ -106,7 +98,7 @@ public class AMapUtil {
      * 把集合体的LatLonPoint转化为集合体的LatLng
      */
     public static ArrayList<LatLng> convertArrList(List<LatLonPoint> shapes) {
-        ArrayList<LatLng> lineShapes = new ArrayList<LatLng>();
+        ArrayList<LatLng> lineShapes = new ArrayList<>();
         for (LatLonPoint point : shapes) {
             LatLng latLngTemp = AMapUtil.convertToLatLng(point);
             lineShapes.add(latLngTemp);
@@ -222,28 +214,25 @@ public class AMapUtil {
         if (busSetps == null) {
             return String.valueOf("");
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (BusStep busStep : busSetps) {
-            StringBuffer title = new StringBuffer();
+            StringBuilder title = new StringBuilder();
             if (busStep.getBusLines().size() > 0) {
                 for (RouteBusLineItem busline : busStep.getBusLines()) {
                     if (busline == null) {
                         continue;
                     }
-
                     String buslineName = getSimpleBusLineName(busline.getBusLineName());
                     title.append(buslineName);
                     title.append(" / ");
                 }
 //					RouteBusLineItem busline = busStep.getBusLines().get(0);
-
                 sb.append(title.substring(0, title.length() - 3));
                 sb.append(" > ");
             }
             if (busStep.getRailway() != null) {
                 RouteRailwayItem railway = busStep.getRailway();
-                sb.append(railway.getTrip() + "(" + railway.getDeparturestop().getName()
-                        + " - " + railway.getArrivalstop().getName() + ")");
+                sb.append(railway.getTrip()).append("(").append(railway.getDeparturestop().getName()).append(" - ").append(railway.getArrivalstop().getName()).append(")");
                 sb.append(" > ");
             }
         }

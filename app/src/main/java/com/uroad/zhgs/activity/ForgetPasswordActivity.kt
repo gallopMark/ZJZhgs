@@ -10,7 +10,9 @@ import com.uroad.library.utils.SecurityUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.enumeration.VerificationCode
+import com.uroad.zhgs.utils.CheckUtils
 import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.utils.InputMethodUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_forget_password.*
@@ -38,6 +40,8 @@ class ForgetPasswordActivity : BaseActivity() {
         val phone = etPhone.text.toString()
         if (TextUtils.isEmpty(phone.trim())) {
             showShortToast(etPhone.hint)
+        } else if (!CheckUtils.isMobile(phone)) {
+            showShortToast(getString(R.string.error_phone_tips))
         } else {
             getCode(phone)
         }
@@ -105,6 +109,10 @@ class ForgetPasswordActivity : BaseActivity() {
             showShortToast(etPhone.hint)
             return
         }
+        if (!CheckUtils.isMobile(phone)) {
+            showShortToast(getString(R.string.error_phone_tips))
+            return
+        }
         val password = etPassword.text.toString()
         if (TextUtils.isEmpty(password)) {
             showShortToast(etPassword.hint)
@@ -148,5 +156,11 @@ class ForgetPasswordActivity : BaseActivity() {
                 onHttpError(e)
             }
         })
+    }
+
+    override fun onDestroy() {
+        handler?.removeCallbacksAndMessages(null)
+        InputMethodUtils.hideSoftInput(this)
+        super.onDestroy()
     }
 }

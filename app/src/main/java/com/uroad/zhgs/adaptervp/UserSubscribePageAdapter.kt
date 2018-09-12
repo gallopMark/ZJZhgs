@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.uroad.zhgs.R
-import com.uroad.zhgs.R.id.tvOverTime
 import com.uroad.zhgs.model.SubscribeMDL
 
 /**
@@ -122,8 +121,8 @@ class UserSubscribePageAdapter(private val context: Context,
     private fun convertTraffic(view: View, item: SubscribeMDL) {
         val ivIcon = view.findViewById<ImageView>(R.id.ivIcon)
         val tvEventName = view.findViewById<TextView>(R.id.tvEventName)
-        val tvStatus = view.findViewById<TextView>(R.id.tvStatus)
-        val tvUpdateTime = view.findViewById<TextView>(R.id.tvUpdateTime)
+//        val tvStatus = view.findViewById<TextView>(R.id.tvStatus)
+//        val tvUpdateTime = view.findViewById<TextView>(R.id.tvUpdateTime)
         val tvTitle = view.findViewById<TextView>(R.id.tvTitle)
         val tvContent = view.findViewById<TextView>(R.id.tvContent)
         val tvOccTime = view.findViewById<TextView>(R.id.tvOccTime)
@@ -132,14 +131,14 @@ class UserSubscribePageAdapter(private val context: Context,
         val tvDuration = view.findViewById<TextView>(R.id.tvDuration)
         ivIcon.setImageResource(R.mipmap.ic_menu_event_yd_p)
         tvEventName.text = item.eventstatus
-        if (TextUtils.isEmpty(item.statusname)) {
-            tvStatus.visibility = View.GONE
-        } else {
-            tvStatus.visibility = View.VISIBLE
-            tvStatus.text = item.statusname
-            tvStatus.setBackgroundColor(item.getStatusColor(context))
-        }
-        tvUpdateTime.text = item.getUpdateTime()
+//        if (TextUtils.isEmpty(item.statusname)) {
+//            tvStatus.visibility = View.GONE
+//        } else {
+//            tvStatus.visibility = View.VISIBLE
+//            tvStatus.text = item.statusname
+//            tvStatus.setBackgroundColor(item.getStatusColor(context))
+//        }
+//        tvUpdateTime.text = item.getUpdateTime()
         tvTitle.text = item.roadtitle
         tvContent.text = item.content
         if (TextUtils.isEmpty(item.getPubTime())) {

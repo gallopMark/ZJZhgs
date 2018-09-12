@@ -147,7 +147,7 @@
                     android:layout_gravity="center"
                     android:text="@string/usersubscribe_updateTime"
                     android:textColor="@color/darkgrey"
-                    android:textSize="@dimen/font_14" />
+                    android:textSize="@dimen/font_12" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

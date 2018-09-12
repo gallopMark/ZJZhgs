@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rescue_detail_request_num"
-            android:textColor="@color/gary"
+            android:textColor="@color/blow_gray"
             android:textSize="@dimen/font_14" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_5"
             android:text="@string/rescue_detail_rescue_type"
-            android:textColor="@color/gary"
+            android:textColor="@color/blow_gray"
             android:textSize="@dimen/font_14" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_5"
             android:text="@string/rescue_detail_rescue_address"
-            android:textColor="@color/gary"
+            android:textColor="@color/blow_gray"
             android:textSize="@dimen/font_14" />
 
         <View
@@ -47,7 +47,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_2"
             android:layout_marginTop="@dimen/margin_4"
-            android:background="@color/gary" />
+            android:background="@color/blow_gray" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +63,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_15"
             android:text="@string/rescue_pay_need_pay"
-            android:textColor="@color/gary"
+            android:textColor="@color/blow_gray"
             android:textSize="@dimen/font_14" />
 
         <TextView
@@ -92,7 +92,7 @@
                 android:drawablePadding="@dimen/margin_3"
                 android:drawableRight="@mipmap/ic_arrow_down"
                 android:text="@string/rescue_pay_charges_detail"
-                android:textColor="@color/gary"
+                android:textColor="@color/blow_gray"
                 android:textSize="@dimen/font_14" />
 
             <TextView
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_5"
-                android:textColor="@color/gary"
+                android:textColor="@color/blow_gray"
                 android:textSize="@dimen/font_14"
                 android:visibility="gone" />
         </LinearLayout>
@@ -113,7 +113,7 @@
             android:layout_marginStart="@dimen/margin_30"
             android:layout_marginTop="@dimen/margin_20"
             android:text="@string/rescue_pay_type"
-            android:textColor="@color/gary"
+            android:textColor="@color/blow_gray"
             android:textSize="@dimen/font_14" />
 
         <TextView

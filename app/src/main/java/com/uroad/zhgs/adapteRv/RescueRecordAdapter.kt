@@ -67,6 +67,11 @@ class RescueRecordAdapter(context: Context, mDatas: MutableList<RescueItemMDL>) 
             holder.setVisibility(R.id.tvEvaluate, false)
             holder.setVisibility(R.id.tvInvoice, false)
         }
+        if (!holder.isVisibility(R.id.tvEvaluate) && !holder.isVisibility(R.id.tvInvoice) && !holder.isVisibility(R.id.tvPay)) {
+            holder.setVisibility(R.id.llBottom, false)
+        } else {
+            holder.setVisibility(R.id.llBottom, true)
+        }
         holder.setText(R.id.tvStatus, t.statusname)
         holder.bindChildClick(R.id.tvEvaluate)
         holder.bindChildClick(R.id.tvInvoice)

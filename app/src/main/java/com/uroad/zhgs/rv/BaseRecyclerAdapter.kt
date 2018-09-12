@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.uroad.imageloader_v4.ImageLoaderV4
 
 
@@ -116,12 +117,32 @@ abstract class BaseRecyclerAdapter(private val context: Context) : RecyclerView.
             ImageLoaderV4.getInstance().displayImage(context, url, imageView, defRes)
         }
 
+        fun displayImage(id: Int, url: String?, defRes: Int, transformations: BitmapTransformation) {
+            val imageView = obtainView<ImageView>(id)
+            ImageLoaderV4.getInstance().displayImage(context, url, imageView, defRes, transformations)
+        }
+
+        fun displayImageThumbnail(id: Int, url: String?, thumbUrl: String?, thumbnailSize: Int) {
+            val imageView = obtainView<ImageView>(id)
+            ImageLoaderV4.getInstance().displayImageThumbnail(context, url, thumbUrl, thumbnailSize, imageView)
+        }
+
         fun setImageResource(id: Int, resId: Int) {
             obtainView<ImageView>(id).setImageResource(resId)
         }
 
         fun setVisibility(id: Int, visibile: Boolean) {
             obtainView<View>(id).visibility = if (visibile) View.VISIBLE else View.GONE
+        }
+
+        fun setInVisibility(id: Int) {
+            obtainView<View>(id).visibility = View.INVISIBLE
+        }
+
+        fun isVisibility(id: Int): Boolean {
+            val view = obtainView<View>(id)
+            if (view.visibility == View.VISIBLE) return true
+            return false
         }
 
         fun setBackgroundColor(id: Int, color: Int) {

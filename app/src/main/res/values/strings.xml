@@ -4,6 +4,8 @@
     <string name="msc_appId">5b7e9b7c</string>
     <!--支付宝支付appid-->
     <string name="alipay_appid">2018081561077511</string>
+    <!--bugly appId-->
+    <string name="bugly_appid">02386c6b12</string>
 
     <string name="action_settings">设置</string>
     <string name="dialog_default_title">温馨提示</string>
@@ -19,6 +21,8 @@
     <string name="modify">修改</string>
     <string name="delete">删除</string>
     <string name="immediate_experience">立即体验</string>
+    <string name="error_phone_tips">请输入正确的手机号</string>
+    <string name="error_idCard_tips">请输入正确的身份证号码</string>
 
     <!--首页 start-->
     <string name="home_tab_home">首页</string>
@@ -118,6 +122,9 @@
     <string name="rescue_detail_progress">救援进展</string>
     <string name="rescue_detail_dialog_msg">救援车辆已经出发，取消救援申请将收取空驶费</string>
     <string name="rescue_record_title">救援记录</string>
+    <string name="rescue_record_evaluate">去评价</string>
+    <string name="rescue_record_invoice">申请发票</string>
+    <string name="rescue_record_pay">去支付</string>
     <!--救援详情 end-->
 
     <!--救援支付 start-->
@@ -395,7 +402,7 @@
     <string name="usersubscribe_arriveTime">到达时间</string>
     <string name="usersubscribe_overTime">结束时间</string>
     <string name="usersubscribe_planEndTime">计划结束时间</string>
-    <string name="usersubscribe_updateTime">更新事件</string>
+    <string name="usersubscribe_updateTime">更新时间</string>
     <!--关于我们 start-->
     <string name="aboutUs_title">关于我们</string>
     <string name="aboutUs_goto_score">去评分</string>

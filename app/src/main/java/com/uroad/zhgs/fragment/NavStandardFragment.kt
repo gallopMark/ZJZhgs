@@ -16,7 +16,7 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.LoginActivity
-import com.uroad.zhgs.activity.MapRouteSearchActivity
+import com.uroad.zhgs.activity.AMapNaviSearchActivity
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
@@ -56,7 +56,7 @@ class NavStandardFragment : BaseFragment() {
         arguments?.let { fromHome = it.getBoolean("fromHome", false) }
         mapView.onCreate(savedInstanceState)
         initMapView()
-        llSearch.setOnClickListener { openActivity(MapRouteSearchActivity::class.java) }
+        llSearch.setOnClickListener { openActivity(AMapNaviSearchActivity::class.java) }
         requestLocationPermissions(object : RequestLocationPermissionCallback {
             override fun doAfterGrand() {
                 openLocation()

@@ -20,8 +20,8 @@ import com.amap.api.navi.model.AMapNaviPath
 import com.amap.api.navi.model.NaviLatLng
 import com.amap.api.navi.model.RouteOverlayOptions
 import com.amap.api.navi.view.RouteOverLay
-import com.uroad.amaplib.Interface.MyAMapNaviListener
 import com.uroad.amaplib.driveroute.util.AMapUtil
+import com.uroad.amaplib.navi.simple.SimpleNavigationListener
 import com.uroad.library.utils.DeviceUtils
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.library.utils.PhoneUtils
@@ -106,7 +106,7 @@ class RescueDetailActivity : BaseActivity() {
     /*初始化导航*/
     private fun initNavi() {
         mAMapNavi = AMapNavi.getInstance(applicationContext)
-        mAMapNavi.addAMapNaviListener(object : MyAMapNaviListener() {
+        mAMapNavi.addAMapNaviListener(object : SimpleNavigationListener() {
             override fun onCalculateRouteSuccess(result: AMapCalcRouteResult?) {
                 mAMapNavi.naviPath?.let { addRouteOverLay(it) }
             }

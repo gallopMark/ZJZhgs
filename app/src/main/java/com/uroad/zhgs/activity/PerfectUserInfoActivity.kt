@@ -2,6 +2,7 @@ package com.uroad.zhgs.activity
 
 import android.os.Bundle
 import android.text.TextUtils
+import com.uroad.library.utils.IdCardUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_perfect_userinfo.*
  * 完善个人信息
  */
 class PerfectUserInfoActivity : BaseActivity() {
-
+    private var isAlert = false
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_perfect_userinfo)
         withTitle(resources.getString(R.string.perfect_userinfo_title))
@@ -34,18 +35,21 @@ class PerfectUserInfoActivity : BaseActivity() {
         }
         if (!TextUtils.isEmpty(getRealName()) || !TextUtils.isEmpty(getCardNo())) {
             btSave.text = resources.getString(R.string.perfect_userinfo_change)
+            isAlert = true
         } else {
             btSave.text = resources.getString(R.string.perfect_userinfo_save)
+            isAlert = false
         }
     }
 
     private fun onSave() {
         val name = etName.text.toString()
-        val cardno = etCardNo.text.toString()
+        val cardNo = etCardNo.text.toString()
         when {
             TextUtils.isEmpty(name.trim()) -> showShortToast(etName.hint)
-            TextUtils.isEmpty(cardno) -> showShortToast(etCardNo.hint)
-            else -> save(name, cardno)
+            TextUtils.isEmpty(cardNo) -> showShortToast(etCardNo.hint)
+            !IdCardUtil.isRealIDCard(cardNo) -> showShortToast(getString(R.string.error_idCard_tips))
+            else -> save(name, cardNo)
         }
     }
 
@@ -53,7 +57,8 @@ class PerfectUserInfoActivity : BaseActivity() {
         doRequest(WebApiService.PERFECT_DATA, WebApiService.perfectDataParams(getUserId(), name, cardno), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
-                    showShortToast("保存成功")
+                    if (isAlert) showShortToast("修改成功")
+                    else showShortToast("保存成功")
                     UserPreferenceHelper.saveRealName(this@PerfectUserInfoActivity, name)
                     UserPreferenceHelper.saveCardNo(this@PerfectUserInfoActivity, cardno)
                     setResult(RESULT_OK)

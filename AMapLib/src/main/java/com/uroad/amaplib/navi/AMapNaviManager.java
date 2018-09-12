@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.location.Location;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
 import com.amap.api.navi.NaviSetting;
@@ -50,7 +51,7 @@ public class AMapNaviManager {
         mAMapNavi = AMapNavi.getInstance(context);
     }
 
-    public AMapNaviManager getInstance(Context context) {
+    public static AMapNaviManager getInstance(Context context) {
         if (instance == null) {
             synchronized (AMapNaviManager.class) {
                 if (instance == null) {
@@ -103,7 +104,7 @@ public class AMapNaviManager {
      * @param wayPoints 途径点id集合
      * @param strateg   路径的计算策略
      */
-    public void calculateDriveRoute(String fromPoiId, String toPoiId, List<java.lang.String> wayPoints, int strateg) {
+    public void calculateDriveRoute(String fromPoiId, String toPoiId, List<String> wayPoints, int strateg) {
         mAMapNavi.calculateDriveRoute(fromPoiId, toPoiId, wayPoints, strateg);
     }
 
@@ -339,94 +340,6 @@ public class AMapNaviManager {
 
     public void removeAMapNaviListener(AMapNaviListener aMapNaviListener) {
         mAMapNavi.removeAMapNaviListener(aMapNaviListener);
-    }
-
-    public static class OverlayOptionsBuilder {
-        private Bitmap smoothTraffic = null;
-        private Bitmap unknownTraffic = null;
-        private Bitmap slowTraffic = null;
-        private Bitmap jamTraffic = null;
-        private Bitmap veryJamTraffic = null;
-        private Bitmap arrowOnTrafficRoute = null;
-        private Bitmap normalRoute = null;
-        private Bitmap passRoute = null;
-        private float mLineWidth;
-        private int arrowColor = Color.parseColor("#4DF6CC");
-        private boolean isShowCameOnRoute = true;
-
-        public OverlayOptionsBuilder setSmoothTraffic(Bitmap smoothTraffic) {
-            this.smoothTraffic = smoothTraffic;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setUnknownTraffic(Bitmap unknownTraffic) {
-            this.unknownTraffic = unknownTraffic;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setSlowTraffic(Bitmap slowTraffic) {
-            this.slowTraffic = slowTraffic;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setJamTraffic(Bitmap jamTraffic) {
-            this.jamTraffic = jamTraffic;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setVeryJamTraffic(Bitmap veryJamTraffic) {
-            this.veryJamTraffic = veryJamTraffic;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setArrowOnTrafficRoute(Bitmap arrowOnTrafficRoute) {
-            this.arrowOnTrafficRoute = arrowOnTrafficRoute;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setNormalRoute(Bitmap normalRoute) {
-            this.normalRoute = normalRoute;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setPassRoute(Bitmap passRoute) {
-            this.passRoute = passRoute;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setLineWidth(float mLineWidth) {
-            this.mLineWidth = mLineWidth;
-            return this;
-        }
-
-        public OverlayOptionsBuilder setOnRouteCameShow(boolean isShowCameOnRoute) {
-            this.isShowCameOnRoute = isShowCameOnRoute;
-            return this;
-        }
-
-        RouteOverlayOptions create() {
-            RouteOverlayOptions options = new RouteOverlayOptions();
-            options.setLineWidth(mLineWidth);
-            options.setNormalRoute(normalRoute);
-            options.setArrowOnTrafficRoute(arrowOnTrafficRoute);
-            options.setUnknownTraffic(unknownTraffic);
-            options.setVeryJamTraffic(veryJamTraffic);
-            options.setSlowTraffic(slowTraffic);
-            options.setSmoothTraffic(smoothTraffic);
-            options.setJamTraffic(jamTraffic);
-            options.setPassRoute(passRoute);
-            options.setArrowColor(arrowColor);
-            options.setOnRouteCameShow(isShowCameOnRoute);
-            return options;
-        }
-    }
-
-    public RouteOverlayOptions createRouteOverlayOptions(OverlayOptionsBuilder builder) {
-        return builder.create();
-    }
-
-    public static class RouteOverLayBuilder {
-
     }
 
     /*

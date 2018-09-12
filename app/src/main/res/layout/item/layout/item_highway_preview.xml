@@ -18,12 +18,24 @@
             android:background="@color/transparent"
             android:clipToPadding="false">
 
-            <View
-                android:id="@+id/vColor"
+            <LinearLayout
                 android:layout_width="@dimen/margin_15"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@color/colorAccent" />
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/vColorTop"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_10" />
+
+                <View
+                    android:id="@+id/vColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/colorAccent" />
+            </LinearLayout>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -66,11 +78,11 @@
                     android:id="@+id/tvRoadName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_5"
                     android:layout_marginRight="@dimen/margin_5"
                     android:background="@drawable/bg_highway_roadname"
                     android:gravity="center"
-                    android:layout_gravity="center"
                     android:paddingBottom="@dimen/margin_2"
                     android:paddingLeft="@dimen/margin_10"
                     android:paddingRight="@dimen/margin_10"

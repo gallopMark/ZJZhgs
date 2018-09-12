@@ -6,7 +6,6 @@ package com.uroad.library.utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.text.TextUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -83,14 +82,14 @@ public class DataCleanManager {
      */
     public static String getFormatSize(double size) {
         double kiloByte = size / 1024;
-        if (kiloByte < 1) {
-            return "0K";
-        }
+//        if (kiloByte < 1) {
+//            return "0K";
+//        }
         double megaByte = kiloByte / 1024;
-        if (megaByte < 1) {
-            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
-            return result1.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "K";
-        }
+//        if (megaByte < 1) {
+//            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
+//            return result1.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "K";
+//        }
         double gigaByte = megaByte / 1024;
         if (gigaByte < 1) {
             BigDecimal result2 = new BigDecimal(Double.toString(megaByte));

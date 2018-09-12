@@ -13,8 +13,8 @@
         android:padding="@dimen/margin_10">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/margin_40"
+            android:layout_height="@dimen/margin_40"
             android:layout_gravity="center"
             android:src="@mipmap/ic_rescue_msg_icon" />
 
@@ -67,7 +67,6 @@
         android:id="@+id/tvContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:lineSpacingExtra="@dimen/margin_3"
         android:padding="@dimen/margin_10"
         android:textColor="@color/gainsboro"
         android:textSize="@dimen/font_14" />
@@ -101,7 +100,7 @@
                 android:gravity="center"
                 android:text="@string/usersubscribe_acceptTime"
                 android:textColor="@color/darkgrey"
-                android:textSize="@dimen/font_14" />
+                android:textSize="@dimen/font_12" />
         </LinearLayout>
 
         <LinearLayout
@@ -126,7 +125,7 @@
                 android:gravity="center"
                 android:text="@string/usersubscribe_startTime"
                 android:textColor="@color/darkgrey"
-                android:textSize="@dimen/font_14" />
+                android:textSize="@dimen/font_12" />
         </LinearLayout>
 
         <LinearLayout
@@ -151,7 +150,7 @@
                 android:gravity="center"
                 android:text="@string/usersubscribe_arriveTime"
                 android:textColor="@color/darkgrey"
-                android:textSize="@dimen/font_14" />
+                android:textSize="@dimen/font_12" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

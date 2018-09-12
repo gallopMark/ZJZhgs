@@ -44,7 +44,9 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
         }
         val rvSite = holder.obtainView<RecyclerView>(R.id.rvSite)
         rvSite.isNestedScrollingEnabled = false
-        rvSite.layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) { override fun canScrollHorizontally(): Boolean = false }
+        rvSite.layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
+            override fun canScrollHorizontally(): Boolean = false
+        }
         rvSite.adapter = SiteAdapter(context, t.getRoadUp())
         val rvUp = holder.obtainView<RecyclerView>(R.id.rvUp)
         rvUp.isNestedScrollingEnabled = false
@@ -75,7 +77,7 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
         val dp5 = DisplayUtils.dip2px(context, 5f)
 
         init {
-            var count = 0
+            var count = 0   //第一个默认显示
             for (item in mDatas) {
                 if (item.isshow == 1) count++
             }
@@ -87,22 +89,38 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
         }
 
         override fun onBindHoder(holder: RecyclerHolder, t: HighwayMDL.State, position: Int) {
-            val tvText = holder.obtainView<TextView>(R.id.tvText)
-            val ivIcon = holder.obtainView<ImageView>(R.id.ivIcon)
             if (t.isHinge()) {
-                ivIcon.setImageResource(R.mipmap.ic_highway_interflow)
+                holder.setImageResource(R.id.ivIcon, R.mipmap.ic_highway_interflow)
             } else {
-                ivIcon.setImageResource(R.mipmap.ic_highway_site)
+                holder.setImageResource(R.id.ivIcon, R.mipmap.ic_highway_site)
             }
             val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+//            if (position == 0) {
+//                holder.setText(R.id.tvText, t.name)
+//                holder.setVisibility(R.id.ivIcon, true)
+//                params.rightMargin = dp5
+//                params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+//            } else {
+//                if (t.isshow == 1) {
+//                    holder.setText(R.id.tvText, t.name)
+//                    holder.setVisibility(R.id.ivIcon, true)
+//                    params.rightMargin = dp5
+//                    params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+//                } else {
+//                    holder.setText(R.id.tvText, "")
+//                    holder.setInVisibility(R.id.ivIcon)
+//                    params.width = width
+//                    params.rightMargin = 0
+//                }
+//            }
             if (t.isshow == 1) {
-                tvText.text = t.name
-                ivIcon.visibility = View.VISIBLE
+                holder.setText(R.id.tvText, t.name)
+                holder.setVisibility(R.id.ivIcon, true)
                 params.rightMargin = dp5
                 params.width = LinearLayout.LayoutParams.WRAP_CONTENT
             } else {
-                tvText.text = ""
-                ivIcon.visibility = View.INVISIBLE
+                holder.setText(R.id.tvText, "")
+                holder.setInVisibility(R.id.ivIcon)
                 params.width = width
                 params.rightMargin = 0
             }

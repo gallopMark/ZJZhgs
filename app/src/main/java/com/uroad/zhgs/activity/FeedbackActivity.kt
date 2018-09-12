@@ -89,7 +89,7 @@ class FeedbackActivity : BaseActivity() {
     }
 
     private fun initRv() {
-        rvPics.addItemDecoration(GridSpacingItemDecoration(3, DisplayUtils.dip2px(this, 10f), true))
+        rvPics.addItemDecoration(GridSpacingItemDecoration(3, DisplayUtils.dip2px(this, 10f), false))
         rvPics.layoutManager = GridLayoutManager(this, 3).apply { orientation = GridLayoutManager.VERTICAL }
         picData.add(addItem)
         picAdapter = AddPicAdapter(this, picData)

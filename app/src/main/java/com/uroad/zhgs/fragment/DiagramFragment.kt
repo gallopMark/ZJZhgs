@@ -143,29 +143,29 @@ class DiagramFragment : BaseFragment() {
         dialog.setOnSubscribeListener(object : EventDetailRvDialog.OnSubscribeListener {
             override fun onSubscribe(dataMDL: EventMDL, position: Int) {
                 if (!isLogin()) openActivity(LoginActivity::class.java)
-                else dataMDL.eventid?.let {
-                    saveSubscribe(dataMDL.getSubType(), it)
-                    doRequest(WebApiService.SAVE_SUBSCRIBE,
-                            WebApiService.saveSubscribeParams(getUserId(), dataMDL.getSubType(), it),
-                            object : HttpRequestCallback<String>() {
-                                override fun onPreExecute() {
-                                    showLoading("保存订阅…")
-                                }
+                else {
+                    dataMDL.eventid?.let {
+                        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), dataMDL.getSubType(), it),
+                                object : HttpRequestCallback<String>() {
+                                    override fun onPreExecute() {
+                                        showLoading("保存订阅…")
+                                    }
 
-                                override fun onSuccess(data: String?) {
-                                    endLoading()
-                                    if (GsonUtils.isResultOk(data)) {
-                                        showShortToast("订阅成功")
-                                        dataMDL.subscribestatus = 1
-                                        dialog.notifyItemChanged(position, dataMDL)
-                                    } else showShortToast(GsonUtils.getMsg(data))
-                                }
+                                    override fun onSuccess(data: String?) {
+                                        endLoading()
+                                        if (GsonUtils.isResultOk(data)) {
+                                            showShortToast("订阅成功")
+                                            dataMDL.subscribestatus = 1
+                                            dialog.notifyItemChanged(position, dataMDL)
+                                        } else showShortToast(GsonUtils.getMsg(data))
+                                    }
 
-                                override fun onFailure(e: Throwable, errorMsg: String?) {
-                                    endLoading()
-                                    onHttpError(e)
-                                }
-                            })
+                                    override fun onFailure(e: Throwable, errorMsg: String?) {
+                                        endLoading()
+                                        onHttpError(e)
+                                    }
+                                })
+                    }
                 }
             }
         })
@@ -210,26 +210,6 @@ class DiagramFragment : BaseFragment() {
         dialog.show()
     }
 
-    private fun saveSubscribe(subType: String, eventid: String) {
-        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), subType, eventid), object : HttpRequestCallback<String>() {
-            override fun onPreExecute() {
-                showLoading("保存订阅…")
-            }
-
-            override fun onSuccess(data: String?) {
-                endLoading()
-                if (GsonUtils.isResultOk(data)) {
-                    showShortToast("订阅成功")
-                } else showShortToast(GsonUtils.getMsg(data))
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                endLoading()
-                onHttpError(e)
-            }
-        })
-    }
-
     private inner class MWebViewClient : WebViewClient() {
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
@@ -239,16 +219,6 @@ class DiagramFragment : BaseFragment() {
                 webView.loadUrl(request?.toString())
             }
             return true
-        }
-
-        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-            ivLoading.visibility = View.VISIBLE
-            animationDrawable.start()
-        }
-
-        override fun onPageFinished(view: WebView?, url: String?) {
-            ivLoading.visibility = View.GONE
-            animationDrawable.stop()
         }
 
         override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
@@ -262,13 +232,13 @@ class DiagramFragment : BaseFragment() {
 
     inner class MWebChromeClient : WebChromeClient() {
         override fun onProgressChanged(view: WebView?, newProgress: Int) {
-//            if (newProgress == 100) {
-//                ivLoading.visibility = View.GONE
-//                animationDrawable.stop()
-//            } else {
-//                ivLoading.visibility = View.VISIBLE
-//                animationDrawable.start()
-//            }
+            if (newProgress >= 96) {
+                ivLoading.visibility = View.GONE
+                animationDrawable.stop()
+            } else {
+                ivLoading.visibility = View.VISIBLE
+                animationDrawable.start()
+            }
         }
 
         override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {

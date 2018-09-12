@@ -178,11 +178,6 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         addDisposable(disposable)
     }
 
-    open fun <T> doSVGRequest(method: String, params: HashMap<String, String>, callBack: HttpRequestCallback<in T>?) {
-        val body = ApiService.createRequestBody(params, method)
-        doRequest(RxHttpManager.createApi(ApiService::class.java).doSVGPost(body), callBack)
-    }
-
     open fun <T> doRequest(flowable: Flowable<String>, callBack: HttpRequestCallback<in T>?) {
         val disposable = flowable.compose(Transformer.transSchedulers())
                 .subscribe({ onHttpSuccess(it, callBack) }, { onHttpError(it, callBack) }, { callBack?.onComplete() }, {

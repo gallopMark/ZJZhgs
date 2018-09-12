@@ -12,6 +12,7 @@ import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Poi
+import com.uroad.zhgs.common.CurrApplication
 
 
 /**
@@ -19,17 +20,17 @@ import com.amap.api.maps.model.Poi
  * 我的附近收费站
  */
 class NearByTollFragment : BasePageRefreshRvFragment() {
-    private var longitude: Double = 120.2
-    private var latitude: Double = 30.3
+    private var longitude: Double = CurrApplication.APP_LATLNG.longitude
+    private var latitude: Double = CurrApplication.APP_LATLNG.latitude
     private var isFirstLoad = true
     private val mDatas = ArrayList<TollGateMDL>()
     private lateinit var adapter: NearByToll2Adapter
 
     override fun initViewData(view: View) {
-//        arguments?.let {
-//            longitude = it.getDouble("longitude")
-//            latitude = it.getDouble("latitude")
-//        }
+        arguments?.let {
+            longitude = it.getDouble("longitude")
+            latitude = it.getDouble("latitude")
+        }
         refreshLayout.isEnableLoadMore = false
         adapter = NearByToll2Adapter(context, mDatas)
         recyclerView.adapter = adapter

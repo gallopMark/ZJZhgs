@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_corners_white_5dp"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
@@ -28,6 +28,8 @@
                 android:id="@+id/tvEventName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/appTextColor"
                 android:textSize="@dimen/font_16" />
 
@@ -56,6 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_10"
         android:layout_marginRight="@dimen/margin_10"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@color/darkgrey"
         android:textSize="@dimen/font_14" />
 
@@ -90,7 +94,7 @@
                 android:gravity="center"
                 android:text="@string/usersubscribe_beginTime"
                 android:textColor="@color/darkgrey"
-                android:textSize="@dimen/font_14" />
+                android:textSize="@dimen/font_12" />
         </LinearLayout>
 
         <LinearLayout
@@ -116,7 +120,7 @@
                 android:gravity="center"
                 android:text="@string/usersubscribe_endTime"
                 android:textColor="@color/darkgrey"
-                android:textSize="@dimen/font_14" />
+                android:textSize="@dimen/font_12" />
         </LinearLayout>
 
         <LinearLayout
@@ -141,7 +145,7 @@
                 android:layout_gravity="center"
                 android:text="@string/usersubscribe_updateTime"
                 android:textColor="@color/darkgrey"
-                android:textSize="@dimen/font_14"  />
+                android:textSize="@dimen/font_12" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

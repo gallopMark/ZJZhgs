@@ -32,12 +32,13 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import com.uroad.zhgs.activity.*
 import com.uroad.zhgs.adapteRv.NewsAdapter
-import com.uroad.zhgs.common.CurrApplication
-import com.uroad.zhgs.eventbus.MessageEvent
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import com.uroad.zhgs.rxbus.MessageEvent
+import io.reactivex.android.schedulers.AndroidSchedulers
+import com.uroad.library.rxbus.RxBus
+import com.uroad.zhgs.common.CurrApplication
+import io.reactivex.disposables.Disposable
+
 
 /**
  *Created by MFB on 2018/7/28.
@@ -61,6 +62,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private lateinit var newsAdapter: NewsAdapter   //资讯列表适配器
     private val subscribeMDLs = ArrayList<SubscribeMDL>()   //我的订阅数据集（已登录状态）
     private lateinit var subscribeAdapter: UserSubscribePageAdapter
+    private var disposable: Disposable? = null
+    private var isDestroyView = false
 
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
@@ -72,11 +75,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         const val CODE_WEATHER = 0x0006
     }
 
-    override fun setBaseLayoutResID(): Int {
-        return R.layout.fragment_main
-    }
+    override fun setBaseLayoutResID(): Int = R.layout.fragment_main
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
+        initRfv()
         btNavigation.setOnClickListener { openActivity(RoadNavigationMainActivity::class.java) }
         btRescue.setOnClickListener {
             if (!isLogin()) openActivity(LoginActivity::class.java)
@@ -97,8 +99,23 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                 }
             })
         handler = MHandler(this)
-        //注册eventBus 接收订阅取消的消息，将我的订阅列表中的相关信息移除
-        EventBus.getDefault().register(this)
+        //注册rxBus 接收订阅取消的消息，将我的订阅列表中的相关信息移除
+        disposable = RxBus.getDefault().toObservable(MessageEvent::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { event -> onEvent(event) }
+    }
+
+    private fun onEvent(event: MessageEvent?) {
+        event?.obj.let {
+            if (it is SubscribeMDL) {
+                if (subscribeMDLs.contains(it)) subscribeMDLs.remove(it)
+                if (subscribeMDLs.size > 0) {
+                    flSubscribe.visibility = View.VISIBLE
+                } else {
+                    flSubscribe.visibility = View.GONE
+                }
+            }
+        }
     }
 
     //点击救援先检查是否存在救援工单
@@ -135,6 +152,14 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             mdl.status == 2 -> //存在进行中救援
                 openActivity(RescueDetailActivity::class.java, Bundle().apply { putString("rescueid", mdl.rescueid) })
             else -> openActivity(RescueNoticeActivity::class.java)
+        }
+    }
+
+    private fun initRfv() {
+        refreshLayout.isEnableLoadMore = false
+        refreshLayout.setOnRefreshListener {
+            if (hasLocationPermissions()) openLocation()
+            initData()
         }
     }
 
@@ -237,7 +262,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     if (mdl.getSubType() == SubscribeMDL.SubType.TrafficJam.code) {
                         bundle.putSerializable("mdl", mdl.getTrafficJamMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
                         openActivity(RoadNavigationMainActivity::class.java, bundle)
-                    } else if (mdl.getSubType() == SubscribeMDL.SubType.TrafficJam.code
+                    } else if (mdl.getSubType() == SubscribeMDL.SubType.Control.code
                             || mdl.getSubType() == SubscribeMDL.SubType.Emergencies.code
                             || mdl.getSubType() == SubscribeMDL.SubType.Planned.code) {
                         bundle.putSerializable("mdl", mdl.getEventMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
@@ -300,7 +325,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     }
 
     override fun initData() {
-        getSubscribe()
+//        getSubscribe()
         getNewsList()
     }
 
@@ -340,6 +365,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private fun getNewsList() {
         doRequest(WebApiService.HOME_NEWS, HashMap(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
+                refreshLayout.finishRefresh()
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, NewsMDL::class.java)
                     updateNews(mdLs)
@@ -349,6 +375,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
+                refreshLayout.finishRefresh()
                 handler.sendEmptyMessageDelayed(CODE_NEWS, 3000)
             }
         })
@@ -373,6 +400,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         val latitude = location.latitude
         val longitude = location.longitude
         getNearbyData(latitude, longitude)
+        closeLocation()  //定位成功，关闭定位；用户下拉刷新再次打开
     }
 
     override fun locationFailure() {
@@ -408,6 +436,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     }
 
     override fun onWeatherLiveSearched(weatherLiveResult: LocalWeatherLiveResult?, rCode: Int) {
+        if (isDestroyView) return
         if (rCode == 1000 && weatherLiveResult != null && weatherLiveResult.liveResult != null) {
             val result = weatherLiveResult.liveResult
             llWeather.visibility = View.VISIBLE
@@ -430,8 +459,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         this.latitude = latitude
         this.longitude = longitude
         /*测试经纬度*/
-        val latitude = CurrApplication.APP_LATLNG.latitude
-        val longitude = CurrApplication.APP_LATLNG.longitude
+//        val latitude = CurrApplication.APP_LATLNG.latitude
+//        val longitude = CurrApplication.APP_LATLNG.longitude
         getNearByToll(latitude, longitude)
         getNearByService(latitude, longitude)
         getNearByScenic(latitude, longitude)
@@ -565,22 +594,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         getSubscribe()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MessageEvent?) {
-        event?.obj.let {
-            if (it is SubscribeMDL) {
-                if (subscribeMDLs.contains(it)) subscribeMDLs.remove(it)
-                if (subscribeMDLs.size > 0) {
-                    flSubscribe.visibility = View.VISIBLE
-                } else {
-                    flSubscribe.visibility = View.GONE
-                }
-            }
-        }
-    }
-
     override fun onDestroyView() {
-        EventBus.getDefault().unregister(this)
+        isDestroyView = true
+        disposable?.dispose()
+        handler.removeCallbacksAndMessages(null)
         super.onDestroyView()
     }
 }

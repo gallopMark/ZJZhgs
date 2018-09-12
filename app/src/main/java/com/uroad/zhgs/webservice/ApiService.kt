@@ -3,6 +3,7 @@ package com.uroad.zhgs.webservice
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.uroad.zhgs.utils.AndroidBase64Utils
 import io.reactivex.Observable
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -32,16 +33,13 @@ interface ApiService {
             val jsonObject1 = JsonParser().parse(param).asJsonObject
             val jsonObject2 = JsonParser().parse(Gson().toJson(map)).asJsonObject
             jsonObject2.add("data", jsonObject1)
-            val content = Base64.encodeToString(jsonObject2.toString().toByteArray(), Base64.DEFAULT)
+            val content = AndroidBase64Utils.encodeToString(jsonObject2.toString())
             return RequestBody.create(MediaType.parse("application/json"), content)
         }
     }
 
     @POST("ApiIndex")
     fun doPost(@Body body: RequestBody): Observable<String>
-
-    @POST("SvgApi")  //SvgApi/getEventDataByType
-    fun doSVGPost(@Body body: RequestBody): Observable<String>
 
     /**
      * 上传

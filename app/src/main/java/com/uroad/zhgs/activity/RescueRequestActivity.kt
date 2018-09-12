@@ -17,6 +17,7 @@ import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.dialog.WheelViewDialog
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.photopicker.data.ImagePicker
+import com.uroad.zhgs.utils.CheckUtils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -84,6 +85,7 @@ class RescueRequestActivity : BaseActivity() {
         initSelection()
         initCheckBox()
         initEditCarNum()
+        etPhone.setText(getPhone())
         tvPicCount.text = "0/3"
         btSubmit.setOnClickListener { commit() }
     }
@@ -373,6 +375,10 @@ class RescueRequestActivity : BaseActivity() {
 //            }
             TextUtils.isEmpty(etPhone.text.toString()) -> {
                 showShortToast(resources.getString(R.string.rescue_request_userphone_hint))
+                return false
+            }
+            !CheckUtils.isMobile(etPhone.text.toString()) -> {
+                showShortToast(getString(R.string.error_phone_tips))
                 return false
             }
             TextUtils.isEmpty(carcategory) -> {

@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
@@ -108,6 +107,7 @@ class ImageGridActivity : BaseActivity() {
     private fun hasPermission(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -121,7 +121,7 @@ class ImageGridActivity : BaseActivity() {
                 override fun doAfterDenied(vararg permission: String?) {
                     afterDenied()
                 }
-            }, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            }, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
     }
 
@@ -243,30 +243,37 @@ class ImageGridActivity : BaseActivity() {
         try {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            val uri = getMediaFileUri()
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-            openActivityForResult(intent, REQUEST_CAMERA)
+            intent.resolveActivity(packageManager)?.let {
+                var takeImageFile = File(getExternalStorageDir())
+                takeImageFile = createFile(takeImageFile, "IMG_", ".jpg")
+                cameraPath = takeImageFile.absolutePath
+                val imageUri: Uri
+                val authority = BuildConfig.APPLICATION_ID + ".provider"
+                imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    FileProvider.getUriForFile(this, authority, takeImageFile)//通过FileProvider创建一个content类型的Uri
+                } else {
+                    Uri.fromFile(takeImageFile)
+                }
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                startActivityForResult(intent, REQUEST_CAMERA)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun getMediaFileUri(): Uri? {
-        val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath)
-        if (!dir.exists()) {
-            if (!dir.mkdirs()) {
-                return null
-            }
-        }
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(Date())
-        val file = File(dir.path + File.separator + "IMG_" + timeStamp + ".jpg")
-        cameraPath = file.absolutePath
-        val authority = BuildConfig.APPLICATION_ID + ".provider"
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FileProvider.getUriForFile(this, authority, file)//通过FileProvider创建一个content类型的Uri
-        } else {
-            Uri.fromFile(file)
-        }
+    private fun getExternalStorageDir(): String {
+        val path = if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+            Environment.getExternalStorageDirectory().absolutePath
+        } else Environment.getRootDirectory().absolutePath
+        return "$path${File.separator}${getString(R.string.app_name)}"
+    }
+
+    private fun createFile(folder: File, prefix: String, suffix: String): File {
+        if (!folder.exists() || !folder.isDirectory) folder.mkdirs()
+        val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA)
+        val filename = prefix + dateFormat.format(Date(System.currentTimeMillis())) + suffix
+        return File(folder, filename)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -277,14 +284,14 @@ class ImageGridActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
-            if (File(cameraPath).exists()) {
-                if (isCrop) {
-                    val intent = Intent(this@ImageGridActivity, ImageCropActivity::class.java).apply { putExtra("imagePath", cameraPath) }
-                    openActivityForResult(intent, getBundle(), REQUEST_CROP)
-                } else {
-                    onResult(ArrayList<ImageItem>().apply {
-                        add(ImageItem().apply { path = cameraPath })
-                    })
+            cameraPath?.let {
+                if (File(cameraPath).exists()) {
+                    if (isCrop) {
+                        val intent = Intent(this@ImageGridActivity, ImageCropActivity::class.java).apply { putExtra("imagePath", cameraPath) }
+                        openActivityForResult(intent, getBundle(), REQUEST_CROP)
+                    } else {
+                        onResult(ArrayList<ImageItem>().apply { add(ImageItem().apply { path = cameraPath }) })
+                    }
                 }
             }
         } else if (requestCode == REQUEST_PREVIEW) {
@@ -292,9 +299,7 @@ class ImageGridActivity : BaseActivity() {
             images?.let { dealWith(it) }
             when (resultCode) {
                 RESULT_OK -> images?.let { onResult(it) }
-                RESULT_CANCELED -> images?.let {
-                    adapter.setSelects(it)
-                }
+                RESULT_CANCELED -> images?.let { adapter.setSelects(it) }
             }
         } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
             onResult(ArrayList<ImageItem>().apply { add(ImageItem().apply { path = data?.getStringExtra("crop_image") }) })

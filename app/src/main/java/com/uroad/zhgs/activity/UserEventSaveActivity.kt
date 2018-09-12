@@ -18,6 +18,7 @@ import com.uroad.library.utils.PermissionHelper
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.enumeration.EventType
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.photopicker.data.ImagePicker
@@ -27,10 +28,12 @@ import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.GridSpacingItemDecoration
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_userevent_save.*
+import top.zibin.luban.Luban
 import java.io.File
 
 /**
@@ -39,8 +42,8 @@ import java.io.File
 class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
     private lateinit var permissionHelper: PermissionHelper
     private var eventtype = EventType.TRAFFIC_JAM.code
-    private var longitude: Double = 0.0
-    private var latitude: Double = 0.0
+    private var longitude: Double = CurrApplication.APP_LATLNG.longitude
+    private var latitude: Double = CurrApplication.APP_LATLNG.latitude
     private val roads = ArrayList<RoadMDL>()
     private var currIndex = 0
     private var roadoldid: String = ""
@@ -251,15 +254,24 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             val items = data?.getStringArrayListExtra(ImagePicker.EXTRA_PATHS)
-            items?.let {
-                picData.remove(addItem)
-                for (i in 0 until it.size) {
-                    picData.add(PicMDL().apply { path = it[i] })
-                }
-                if (picData.size < 3) {
-                    picData.add(addItem)
-                }
-                picAdapter.notifyDataSetChanged()
+            items?.let { list ->
+                /*图片压缩处理*/
+                showLoading()
+                addDisposable(Flowable.fromArray(list).map { items ->
+                    Luban.with(this@UserEventSaveActivity)
+                            .load(items).get()
+                }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            endLoading()
+                            picData.remove(addItem)
+                            for (item in it) {
+                                picData.add(PicMDL().apply { path = item.absolutePath })
+                            }
+                            if (picData.size < 3) {
+                                picData.add(addItem)
+                            }
+                            picAdapter.notifyDataSetChanged()
+                        }, { endLoading() }))
             }
         }
     }

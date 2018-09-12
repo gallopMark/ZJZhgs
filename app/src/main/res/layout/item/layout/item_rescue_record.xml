@@ -53,6 +53,7 @@
         android:background="@color/color_f2" />
 
     <LinearLayout
+        android:id="@+id/llBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -70,7 +71,7 @@
             android:paddingLeft="@dimen/margin_20"
             android:paddingRight="@dimen/margin_20"
             android:paddingTop="@dimen/margin_5"
-            android:text="评价"
+            android:text="@string/rescue_record_evaluate"
             android:textColor="@color/appTextColor" />
 
         <TextView
@@ -84,7 +85,7 @@
             android:paddingLeft="@dimen/margin_10"
             android:paddingRight="@dimen/margin_10"
             android:paddingTop="@dimen/margin_5"
-            android:text="申请发票"
+            android:text="@string/rescue_record_invoice"
             android:textColor="@color/appTextColor" />
 
         <TextView
@@ -98,7 +99,7 @@
             android:paddingLeft="@dimen/margin_15"
             android:paddingRight="@dimen/margin_15"
             android:paddingTop="@dimen/margin_5"
-            android:text="去支付"
+            android:text="@string/rescue_record_pay"
             android:textColor="@color/appTextColor" />
 
         <TextView

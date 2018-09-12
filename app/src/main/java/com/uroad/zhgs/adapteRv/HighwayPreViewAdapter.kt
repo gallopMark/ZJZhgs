@@ -1,6 +1,7 @@
 package com.uroad.zhgs.adapteRv
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
@@ -23,11 +24,6 @@ class HighwayPreViewAdapter(private val context: Context, mDatas: MutableList<Hi
     }
 
     override fun onBindHoder(holder: RecyclerHolder, t: HighwayPreViewMDL.Traffic, position: Int) {
-        val vColor = holder.obtainView<View>(R.id.vColor)
-        val params = vColor.layoutParams as FrameLayout.LayoutParams
-        if (position == 0) params.topMargin = DisplayUtils.dip2px(context, 2f)
-        else params.topMargin = 0
-        vColor.layoutParams = params
         if (t.isHinge()) {
             holder.setImageResource(R.id.ivStatus, R.mipmap.ic_road_traffic_interflow)
             if (!TextUtils.isEmpty(t.getRoadName())) {
@@ -42,6 +38,11 @@ class HighwayPreViewAdapter(private val context: Context, mDatas: MutableList<Hi
             holder.setVisibility(R.id.tvRoadName, false)
         }
         holder.setText(R.id.tvName, t.name)
+        if (position in 1 until itemCount) {
+            holder.setBackgroundColor(R.id.vColorTop, mDatas[position - 1].getColor(context))
+        } else {
+            holder.setBackgroundColor(R.id.vColorTop, ContextCompat.getColor(context, R.color.transparent))
+        }
         holder.setBackgroundColor(R.id.vColor, t.getColor(context))
         val rvEvent = holder.obtainView<RecyclerView>(R.id.rvEvent)
         rvEvent.isNestedScrollingEnabled = false

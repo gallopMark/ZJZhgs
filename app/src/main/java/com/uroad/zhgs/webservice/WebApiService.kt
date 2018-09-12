@@ -1,7 +1,5 @@
 package com.uroad.zhgs.webservice
 
-import android.text.TextUtils
-
 
 /**
  *Created by MFB on 2018/7/27.

@@ -13,6 +13,7 @@ import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.enumeration.VerificationCode
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.model.UserMDL
+import com.uroad.zhgs.utils.CheckUtils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.InputMethodUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -54,6 +55,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 val phone = etPhone.text.toString()
                 if (TextUtils.isEmpty(phone)) {
                     showShortToast(resources.getString(R.string.login_phone_hint))
+                } else if (!CheckUtils.isMobile(phone)) {
+                    showShortToast(getString(R.string.error_phone_tips))
                 } else {
                     getCode(phone)
                 }
@@ -141,6 +144,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             val password = etPassword.text.toString().trim()
             when {
                 TextUtils.isEmpty(phone) -> showShortToast(resources.getString(R.string.login_phone_hint))
+                !CheckUtils.isMobile(phone) -> showShortToast(getString(R.string.error_phone_tips))
                 TextUtils.isEmpty(password) -> showShortToast(resources.getString(R.string.login_password_hint))
                 else -> loginWithType(phone, "1", SecurityUtil.EncoderByMd5(password))
             }
@@ -200,6 +204,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         InputMethodUtils.hideSoftInput(this)
         super.finish()
     }
+
     override fun onDestroy() {
         handler?.removeCallbacksAndMessages(null)
         super.onDestroy()

@@ -2,10 +2,11 @@ package com.uroad.zhgs.activity
 
 import android.support.v4.content.ContextCompat
 import android.view.MotionEvent
+import com.uroad.library.rxbus.RxBus
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.UserSubscribeAdapter
 import com.uroad.zhgs.common.BaseRefreshRvActivity
-import com.uroad.zhgs.eventbus.MessageEvent
+import com.uroad.zhgs.rxbus.MessageEvent
 import com.uroad.zhgs.model.SubscribeMDL
 import com.uroad.zhgs.rv.OnActivityTouchListener
 import com.uroad.zhgs.rv.RecyclerTouchListener
@@ -13,7 +14,6 @@ import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_base_refreshrv.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  *Created by MFB on 2018/8/15.
@@ -92,9 +92,9 @@ class UserSubscribeActivity : BaseRefreshRvActivity(), RecyclerTouchListener.Rec
                 override fun onSuccess(data: String?) {
                     endLoading()
                     if (GsonUtils.isResultOk(data)) {
+                        RxBus.getDefault().post(MessageEvent().apply { obj = mDatas[position] })
                         mDatas.removeAt(position)
                         adapter.notifyDataSetChanged()
-                        EventBus.getDefault().post(MessageEvent().apply { obj = mDatas[position] })
                         if (mDatas.size == 0) setPageNoData()
                     } else {
                         showShortToast(GsonUtils.getMsg(data))

@@ -62,6 +62,7 @@ class EditDialog(private val context: Activity) : AlertDialog(context, R.style.s
                 editText.setSelection(editText.text.length)
             }
             val mButton = contentView.findViewById<Button>(R.id.mButton)
+            if (!TextUtils.isEmpty(buttonText)) mButton.text = buttonText
             mButton.isEnabled = !TextUtils.isEmpty(editText.text)
             if (mButton.isEnabled) {
                 mButton.setBackgroundResource(R.drawable.bg_button_comment_selector)

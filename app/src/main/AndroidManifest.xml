@@ -122,7 +122,7 @@
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name=".activity.MapRouteSearchActivity"
+            android:name=".activity.AMapNaviSearchActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activity.RouteNaviActivity" />

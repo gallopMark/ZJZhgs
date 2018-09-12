@@ -14,6 +14,7 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.EventMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
+import com.uroad.zhgs.rv.BaseRecyclerAdapter
 
 /**
  *Created by MFB on 2018/9/5.
@@ -42,7 +43,14 @@ class EventDetailRvDialog(private val context: Activity,
             recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
             val helper = PagerSnapHelper()
             helper.attachToRecyclerView(recyclerView)
-            adapter = EventAdapter(context, mDatas)
+            adapter = EventAdapter(context, mDatas).apply {
+                setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
+                    override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                        if (position in 0 until mDatas.size)
+                            onSubscribeListener?.onSubscribe(mDatas[position], position)
+                    }
+                })
+            }
             recyclerView.adapter = adapter
             ivClose.setOnClickListener { dismiss() }
             window.setContentView(contentView)
@@ -88,8 +96,8 @@ class EventDetailRvDialog(private val context: Activity,
             } else {
                 holder.setText(R.id.tvSubscribe, context.resources.getString(R.string.usersubscribe_subscribe))
                 holder.setEnabled(R.id.tvSubscribe, true)
-                holder.setOnClickListener(R.id.tvSubscribe, View.OnClickListener { onSubscribeListener?.onSubscribe(t, position) })
             }
+            holder.bindChildClick(R.id.tvSubscribe)
         }
     }
 

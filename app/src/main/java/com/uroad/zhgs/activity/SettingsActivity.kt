@@ -30,19 +30,17 @@ class SettingsActivity : BaseActivity() {
         }
         setCache()
         llClearCache.setOnClickListener {
-            if (!TextUtils.isEmpty(tvCacheSize.text)) {
-                showDialog("清除缓存", "清除缓存会导致下载的内容删除，确定清除吗?",
-                        "取消", "确定", object : MaterialDialog.ButtonClickListener {
-                    override fun onClick(v: View, dialog: AlertDialog) {
-                        dialog.dismiss()
-                    }
-                }, object : MaterialDialog.ButtonClickListener {
-                    override fun onClick(v: View, dialog: AlertDialog) {
-                        dialog.dismiss()
-                        clearCache()
-                    }
-                })
-            }
+            showDialog("清除缓存", "清除缓存会导致下载的内容删除，确定清除吗?",
+                    "取消", "确定", object : MaterialDialog.ButtonClickListener {
+                override fun onClick(v: View, dialog: AlertDialog) {
+                    dialog.dismiss()
+                }
+            }, object : MaterialDialog.ButtonClickListener {
+                override fun onClick(v: View, dialog: AlertDialog) {
+                    dialog.dismiss()
+                    clearCache()
+                }
+            })
         }
     }
 
@@ -65,12 +63,7 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun setCache() {
-        val fileSize = DataCleanManager.getAppCacheSize(this)
-        if (fileSize > 1024) {
-            tvCacheSize.text = DataCleanManager.getTotalCacheSize(this)
-        } else {
-            tvCacheSize.text = ""
-        }
+        tvCacheSize.text = DataCleanManager.getTotalCacheSize(this)
     }
 
     override fun setListener() {

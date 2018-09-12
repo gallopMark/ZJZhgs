@@ -4,12 +4,14 @@ import android.app.Application
 import android.os.Handler
 import android.text.TextUtils
 import com.amap.api.maps.model.LatLng
+import com.tencent.bugly.crashreport.CrashReport
 import com.uroad.library.utils.VersionUtils
 import com.uroad.library.utils.ZipUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.rxhttp.RxHttpManager.addDisposable
 import com.uroad.rxhttp.download.DownloadListener
 import com.uroad.rxhttp.interceptor.Transformer
+import com.uroad.zhgs.R
 import com.uroad.zhgs.model.DiagramMDL
 import com.uroad.zhgs.utils.AndroidBase64Utils
 import com.uroad.zhgs.utils.DiagramUtils
@@ -26,14 +28,17 @@ class CurrApplication : Application() {
     companion object {
         val APP_LATLNG = LatLng(30.3, 120.2)   //杭州经纬度
         lateinit var DIAGRAM_PATH: String
+        lateinit var COMPRESSOR_PATH: String
     }
 
     override fun onCreate() {
         super.onCreate()
         initHttpService()
         //    initXunFei()
+//        initCompressorPath()
         initDiagramPath()
         downloadDragram()
+        initBugly()
     }
 
     /*配置接口地址*/
@@ -45,6 +50,11 @@ class CurrApplication : Application() {
     /*初始化讯飞语音*/
     private fun initXunFei() {
         //SpeechUtility.createUtility(this, "${SpeechConstant.APPID}=${resources.getString(R.string.msc_appId)}")
+    }
+
+    private fun initCompressorPath() {
+        COMPRESSOR_PATH = "${filesDir.absolutePath}${File.separator}compressor"
+        File(COMPRESSOR_PATH).apply { if (!exists()) this.mkdir() }
     }
 
     //简图路径
@@ -93,5 +103,10 @@ class CurrApplication : Application() {
                 Handler().postDelayed({ doDownload(url) }, 3000)
             }
         }))
+    }
+
+    /*初始化tencent bugly*/
+    private fun initBugly() {
+        CrashReport.initCrashReport(this, resources.getString(R.string.bugly_appid), false)
     }
 }

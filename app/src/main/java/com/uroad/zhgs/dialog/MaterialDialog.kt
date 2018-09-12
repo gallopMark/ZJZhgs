@@ -16,7 +16,7 @@ import com.uroad.zhgs.R
 
 /**
  * 创建日期：2017/4/6 on 17:24
- * 描述:
+ * 描述:统一风格的dialog
  * 作者:马飞奔 Administrator
  */
 class MaterialDialog(mContext: Context) : AlertDialog(mContext, R.style.baseCustomDialog_margin30) {

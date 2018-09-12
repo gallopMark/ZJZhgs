@@ -1,10 +1,9 @@
 package com.uroad.zhgs.adapteRv
 
 import android.app.Activity
-import android.widget.ImageView
+import android.view.Gravity
 import android.widget.LinearLayout
-import com.uroad.imageloader_v4.ImageLoaderV4
-import com.uroad.imageloader_v4.listener.ImageSize
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.NewsMDL
@@ -19,19 +18,16 @@ class NewsAdapter(private val context: Activity, mDatas: MutableList<NewsMDL>)
     : BaseArrayRecyclerAdapter<NewsMDL>(context, mDatas) {
     private val imageWith = DisplayUtils.getWindowWidth(context) / 3
     private val imageHeight = imageWith * 3 / 4
+    private val params = LinearLayout.LayoutParams(imageWith, imageHeight).apply { gravity = Gravity.CENTER }
+    private val dp4 = DisplayUtils.dip2px(context, 4f)
     override fun onBindHoder(holder: BaseRecyclerAdapter.RecyclerHolder, t: NewsMDL, position: Int) {
-        val ivPic = holder.obtainView<ImageView>(R.id.ivPic)
-        val params = (ivPic.layoutParams as LinearLayout.LayoutParams).apply {
-            width = imageWith
-            height = imageHeight
-        }
-        ivPic.layoutParams = params
-        ImageLoaderV4.getInstance().displayImage(context, t.jpgurl, ivPic)
+        holder.setLayoutParams(R.id.ivPic, params)
+        holder.displayImage(R.id.ivPic, t.jpgurl, R.color.color_f2, RoundedCorners(dp4))
         holder.setText(R.id.tvTitle, t.title)
         holder.setText(R.id.tvTypeName, t.newstypename)
         holder.setText(R.id.tvTime, t.getTime())
-        holder.setBackgroundColor(R.id.tvTypeName,t.getBgColor(context))
-        holder.setTextColor(R.id.tvTypeName,t.getTextColor(context))
+        holder.setBackgroundColor(R.id.tvTypeName, t.getBgColor(context))
+        holder.setTextColor(R.id.tvTypeName, t.getTextColor(context))
     }
 
     override fun bindView(viewType: Int): Int {

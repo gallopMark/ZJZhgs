@@ -3,8 +3,6 @@ package com.uroad.library.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -43,7 +41,7 @@ public class DeviceUtils {
      * @return 设备系统版本号
      */
     public static int getSDKVersion() {
-        return android.os.Build.VERSION.SDK_INT;
+        return Build.VERSION.SDK_INT;
     }
 
 
