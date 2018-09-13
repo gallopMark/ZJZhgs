@@ -36,7 +36,6 @@ import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.rxbus.MessageEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import com.uroad.library.rxbus.RxBus
-import com.uroad.zhgs.common.CurrApplication
 import io.reactivex.disposables.Disposable
 
 
@@ -79,7 +78,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         initRfv()
-        btNavigation.setOnClickListener { openActivity(RoadNavigationMainActivity::class.java) }
+        btNavigation.setOnClickListener { openActivity(RoadNavigationActivity::class.java) }
         btRescue.setOnClickListener {
             if (!isLogin()) openActivity(LoginActivity::class.java)
             else checkRescue()
@@ -261,12 +260,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     bundle.putBoolean("fromHome", true)
                     if (mdl.getSubType() == SubscribeMDL.SubType.TrafficJam.code) {
                         bundle.putSerializable("mdl", mdl.getTrafficJamMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
-                        openActivity(RoadNavigationMainActivity::class.java, bundle)
+                        openActivity(RoadNavigationActivity::class.java, bundle)
                     } else if (mdl.getSubType() == SubscribeMDL.SubType.Control.code
                             || mdl.getSubType() == SubscribeMDL.SubType.Emergencies.code
                             || mdl.getSubType() == SubscribeMDL.SubType.Planned.code) {
                         bundle.putSerializable("mdl", mdl.getEventMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
-                        openActivity(RoadNavigationMainActivity::class.java, bundle)
+                        openActivity(RoadNavigationActivity::class.java, bundle)
                     } else if (mdl.getSubType() == SubscribeMDL.SubType.RescuePay.code) {
                         openActivity(RescuePayActivity::class.java, Bundle().apply { putString("rescueid", mdl.rescueid) })
                     } else if (mdl.getSubType() == SubscribeMDL.SubType.RescueProgress.code) {

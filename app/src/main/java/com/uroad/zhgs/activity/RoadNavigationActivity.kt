@@ -20,7 +20,7 @@ import com.uroad.zhgs.helper.AppLocalHelper
  *Created by MFB on 2018/8/9.
  * 路况导航首页
  */
-class RoadNavigationMainActivity : BaseActivity() {
+class RoadNavigationActivity : BaseActivity() {
 
     private var standardFragment: NavStandardFragment? = null
     private var diagramFragment: DiagramFragment? = null
@@ -68,9 +68,9 @@ class RoadNavigationMainActivity : BaseActivity() {
                 cbEventYD.visibility = View.VISIBLE
                 llOther.visibility = View.VISIBLE
                 ivNearBy.visibility = View.VISIBLE
-                AppLocalHelper.saveLayer(this@RoadNavigationMainActivity, 1)
+                AppLocalHelper.saveLayer(this@RoadNavigationActivity, 1)
                 ivStandard.setBackgroundResource(R.drawable.bg_corners_1dp)
-                tvStandard.setTextColor(ContextCompat.getColor(this@RoadNavigationMainActivity, R.color.colorAccent))
+                tvStandard.setTextColor(ContextCompat.getColor(this@RoadNavigationActivity, R.color.colorAccent))
                 llEventLayout1.visibility = View.VISIBLE
                 cbTrafficSpot1.visibility = View.VISIBLE
                 ivLocation.visibility = View.VISIBLE
@@ -82,9 +82,9 @@ class RoadNavigationMainActivity : BaseActivity() {
                 } else {
                     diagramFragment?.let { transaction.show(it) }
                 }
-                AppLocalHelper.saveLayer(this@RoadNavigationMainActivity, 2)
+                AppLocalHelper.saveLayer(this@RoadNavigationActivity, 2)
                 ivDiagram.setBackgroundResource(R.drawable.bg_corners_1dp)
-                tvDiagram.setTextColor(ContextCompat.getColor(this@RoadNavigationMainActivity, R.color.colorAccent))
+                tvDiagram.setTextColor(ContextCompat.getColor(this@RoadNavigationActivity, R.color.colorAccent))
                 ivDiagramBack.visibility = View.VISIBLE
                 llEventLayout2.visibility = View.VISIBLE
                 llTraffic.visibility = View.VISIBLE
@@ -95,9 +95,9 @@ class RoadNavigationMainActivity : BaseActivity() {
 
     private fun resetTab() {
         ivStandard.setBackgroundResource(0)
-        tvStandard.setTextColor(ContextCompat.getColor(this@RoadNavigationMainActivity, R.color.grey))
+        tvStandard.setTextColor(ContextCompat.getColor(this@RoadNavigationActivity, R.color.grey))
         ivDiagram.setBackgroundResource(0)
-        tvDiagram.setTextColor(ContextCompat.getColor(this@RoadNavigationMainActivity, R.color.grey))
+        tvDiagram.setTextColor(ContextCompat.getColor(this@RoadNavigationActivity, R.color.grey))
         llEventLayout1.visibility = View.GONE
         llEventLayout2.visibility = View.GONE
         cbTrafficSpot1.visibility = View.GONE

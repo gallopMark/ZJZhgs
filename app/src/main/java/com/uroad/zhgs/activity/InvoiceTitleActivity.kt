@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.enumeration.InvoiceType
 import com.uroad.zhgs.model.InvoiceTypeMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
@@ -99,6 +100,7 @@ class InvoiceTitleActivity : BaseActivity() {
         setBaseContentLayout(R.layout.activity_invoice_title)
         intent.extras?.let { rescueId = it.getString("rescueid") }
         initRv()
+        initRvData()
         btSubmit.setOnClickListener { onSubmit() }
     }
 
@@ -159,47 +161,80 @@ class InvoiceTitleActivity : BaseActivity() {
         tvStar4.visibility = View.VISIBLE
     }
 
-    override fun initData() {
-        doRequest(WebApiService.INVOICE_TYPE, WebApiService.invoiceTypeParams("115"), object : HttpRequestCallback<String>() {
-            override fun onPreExecute() {
-                setPageLoading()
-            }
-
-            override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) {
-                    val mdl = GsonUtils.fromDataBean(data, InvoiceTypeMDL::class.java)
-                    if (mdl == null) showShortToast("数据解析异常")
-                    else {
-                        setPageEndLoading()
-                        updateData(mdl)
-                    }
-                } else {
-                    showShortToast(GsonUtils.getMsg(data))
+    private fun initRvData() {
+        val mdLs = ArrayList<InvoiceTypeMDL.Type>().apply {
+            add(InvoiceTypeMDL.Type().apply {
+                dictcode = InvoiceType.INVOICE_COMMON.code
+                dictname = getString(R.string.invoice_common)
+                sontype = ArrayList<InvoiceTypeMDL.Type.SonType>().apply {
+                    add(InvoiceTypeMDL.Type.SonType().apply {
+                        dictcode = InvoiceType.INVOICE_HEAD_COMPANY.code
+                        dictname = getString(R.string.invoice_rise_company)
+                    })
+                    add(InvoiceTypeMDL.Type.SonType().apply {
+                        dictcode = InvoiceType.INVOICE_HEAD_PERSONAL.code
+                        dictname = getString(R.string.invoice_rise_personal)
+                    })
                 }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                setPageError()
-            }
-        })
-    }
-
-    private fun updateData(typeMDL: InvoiceTypeMDL) {
-        typeMDL.type?.let { list ->
-            typeList.addAll(list)
-            typeAdapter.notifyDataSetChanged()
-            if (typeList.size > 0) {
-                typeList[0].dictcode?.let { fpType = it }
-                typeList[0].sontype?.let { sonList ->
-                    titleList.addAll(sonList)
-                    titleAdapter.notifyDataSetChanged()
-                    if (titleList.size > 0) {
-                        titleList[0].dictcode?.let { headtype = it }
-                    }
-                }
+            })
+            add(InvoiceTypeMDL.Type().apply {
+                dictcode = InvoiceType.INVOICE_SPECIAL.code
+                dictname = getString(R.string.invoice_special)
+            })
+        }
+        typeList.addAll(mdLs)
+        typeList[0].dictcode?.let { fpType = it }
+        typeAdapter.notifyDataSetChanged()
+        typeList[0].sontype?.let { sonList ->
+            titleList.addAll(sonList)
+            titleAdapter.notifyDataSetChanged()
+            if (titleList.size > 0) {
+                titleList[0].dictcode?.let { headtype = it }
             }
         }
     }
+
+//    override fun initData() {
+//        doRequest(WebApiService.INVOICE_TYPE, WebApiService.invoiceTypeParams("115"), object : HttpRequestCallback<String>() {
+//            override fun onPreExecute() {
+//                setPageLoading()
+//            }
+//
+//            override fun onSuccess(data: String?) {
+//                if (GsonUtils.isResultOk(data)) {
+//                    val mdl = GsonUtils.fromDataBean(data, InvoiceTypeMDL::class.java)
+//                    if (mdl == null) showShortToast("数据解析异常")
+//                    else {
+//                        setPageEndLoading()
+//                        updateData(mdl)
+//                    }
+//                } else {
+//                    showShortToast(GsonUtils.getMsg(data))
+//                }
+//            }
+//
+//            override fun onFailure(e: Throwable, errorMsg: String?) {
+//                setPageError()
+//            }
+//        })
+//    }
+//
+//    private fun updateData(typeMDL: InvoiceTypeMDL) {
+//        typeMDL.type?.let { list ->
+//            typeList.addAll(list)
+//            typeAdapter.notifyDataSetChanged()
+//            if (typeList.size > 0) {
+//                typeList[0].dictcode?.let { fpType = it }
+//                typeList[0].sontype?.let { sonList ->
+//                    titleList.addAll(sonList)
+//                    titleAdapter.notifyDataSetChanged()
+//                    if (titleList.size > 0) {
+//                        titleList[0].dictcode?.let { headtype = it }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private fun onSubmit() {
         if (TextUtils.isEmpty(fpType)) {

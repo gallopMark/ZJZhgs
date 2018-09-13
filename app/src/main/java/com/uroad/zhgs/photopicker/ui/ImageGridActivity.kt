@@ -17,10 +17,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.KeyEvent
 import android.view.View
 import com.uroad.library.utils.DisplayUtils
-import com.uroad.library.utils.PermissionHelper
 import com.uroad.zhgs.BuildConfig
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.photopicker.adapter.ImageFolderAdapter
 import com.uroad.zhgs.photopicker.adapter.ImageGridAdapter
@@ -33,10 +33,12 @@ import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.widget.CurrencyLoadView
 import com.uroad.zhgs.widget.GridSpacingItemDecoration
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_photopicker_imagegrid.*
+import top.zibin.luban.Luban
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,18 +57,20 @@ class ImageGridActivity : BaseActivity() {
     private var cameraPath: String? = null
     private var isMutily: Boolean = false
     private var limit: Int = 1
+    private var isCompress = false //是否需要对图片压缩处理（非剪裁图片的情况下）
     private var isCrop = false    //是否需要裁剪
     private var isSaveRectangle = true  //裁剪后的图片是否是矩形，否者跟随裁剪框的形状
     private var outPutX = 800           //裁剪保存宽度
     private var outPutY = 800           //裁剪保存高度
     private var focusWidth = 280         //焦点框的宽度
     private var focusHeight = 280        //焦点框的高度
-    private var permissionHelper: PermissionHelper? = null
 
     companion object {
         private const val REQUEST_CAMERA = 0x0001
         private const val REQUEST_PREVIEW = 0x0002
         private const val REQUEST_CROP = 0x0003
+        private const val PERMISSION_SDCARD = 0x0004
+        private const val PERMISSION_CAMERA = 0x0005
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -78,6 +82,7 @@ class ImageGridActivity : BaseActivity() {
         bundle?.let {
             isMutily = it.getBoolean("mMutilyMode", false)
             limit = it.getInt("limit", 1)
+            isCompress = it.getBoolean("isCompress", false)
             isCrop = it.getBoolean("isCrop", false)
             outPutX = it.getInt("outPutX", outPutX)
             outPutY = it.getInt("outPutY", outPutY)
@@ -112,17 +117,7 @@ class ImageGridActivity : BaseActivity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun applyPermissions() {
-        permissionHelper = PermissionHelper(this).apply {
-            requestPermissions(object : PermissionHelper.PermissionListener {
-                override fun doAfterGrand(vararg permission: String?) {
-                    initFolders()
-                }
-
-                override fun doAfterDenied(vararg permission: String?) {
-                    afterDenied()
-                }
-            }, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSION_SDCARD)
     }
 
     private fun initFolders() {
@@ -148,28 +143,28 @@ class ImageGridActivity : BaseActivity() {
         isLoadData = true
     }
 
-    private fun afterDenied() {
+    private fun afterDenied(type: Int) {
         var isOpen = false
         val dialog = MaterialDialog(this@ImageGridActivity)
-        dialog.setTitle("温馨提示")
-        dialog.setMessage("存储权限已被禁止，请重新打开存储权限！")
         dialog.setCanceledOnTouchOutside(false)
-        dialog.setNegativeButton("取消", object : MaterialDialog.ButtonClickListener {
+        dialog.setTitle(getString(R.string.dialog_default_title))
+        val message = if (type == 1) getString(R.string.photopicker_noSdcard) else getString(R.string.photopicker_dismiss_sdcard)
+        dialog.setMessage(message)
+        val positive = if (type == 1) getString(R.string.dialog_button_confirm) else getString(R.string.dialog_button_open)
+        dialog.setNegativeButton(getString(R.string.dialog_button_cancel), object : MaterialDialog.ButtonClickListener {
             override fun onClick(v: View, dialog: AlertDialog) {
                 dialog.dismiss()
-                finish()
             }
         })
-        dialog.setPositiveButton("打开", object : MaterialDialog.ButtonClickListener {
+        dialog.setPositiveButton(positive, object : MaterialDialog.ButtonClickListener {
             override fun onClick(v: View, dialog: AlertDialog) {
                 isOpen = true
                 openSettings()
                 dialog.dismiss()
             }
         })
-        dialog.setOnDismissListener {
-            if (!isOpen) finish()
-        }
+        dialog.setOnDismissListener { if (!isOpen) finish() }
+        dialog.show()
     }
 
     override fun setListener() {
@@ -188,7 +183,7 @@ class ImageGridActivity : BaseActivity() {
         })
         adapter.setOnImageItemClickListener(object : ImageGridAdapter.OnImageItemClickListener {
             override fun onCamera() {
-                if (hasCameara()) takePhoto()
+                if (hasCamera()) takePhoto()
                 else {
                     requestCamera()
                 }
@@ -221,22 +216,13 @@ class ImageGridActivity : BaseActivity() {
         }
     }
 
-    private fun hasCameara(): Boolean {
+    private fun hasCamera(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestCamera() {
-        permissionHelper = PermissionHelper(this).apply {
-            requestPermissions(object : PermissionHelper.PermissionListener {
-                override fun doAfterGrand(vararg permission: String?) {
-                    takePhoto()
-                }
-
-                override fun doAfterDenied(vararg permission: String?) {
-                }
-            }, android.Manifest.permission.CAMERA)
-        }
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), PERMISSION_CAMERA)
     }
 
     private fun takePhoto() {
@@ -278,7 +264,71 @@ class ImageGridActivity : BaseActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissionHelper?.handleRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_SDCARD -> {
+                var allGranted = true
+                for (grant in grantResults) {
+                    if (grant != PackageManager.PERMISSION_GRANTED) {
+                        allGranted = false
+                        break
+                    }
+                }
+                if (allGranted) {
+                    initFolders()
+                } else {
+                    for (permission in permissions) {
+                        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                            afterDenied(1)
+                            break
+                        } else {
+                            afterDenied(2)
+                            break
+                        }
+                    }
+                }
+            }
+            PERMISSION_CAMERA -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takePhoto()
+                } else {
+                    if (permissions.isNotEmpty() && !ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
+                        dismissCamera(1)
+                    } else {
+                        dismissCamera(2)
+                    }
+                }
+            }
+        }
+    }
+
+    //用户点击禁止相机或点击不再提示
+    private fun dismissCamera(type: Int) {
+        when (type) {
+            1 -> {
+                showDialog(getString(R.string.dialog_default_title), getString(R.string.photopicker_noCamera), object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        dialog.dismiss()
+                    }
+                }, object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        openSettings()
+                        dialog.dismiss()
+                    }
+                })
+            }
+            else -> {
+                showDialog(getString(R.string.dialog_default_title), getString(R.string.photopicker_dismiss_camera), object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        dialog.dismiss()
+                    }
+                }, object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        requestCamera()
+                        dialog.dismiss()
+                    }
+                })
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -342,14 +392,34 @@ class ImageGridActivity : BaseActivity() {
     }
 
     private fun onResult(mDatas: MutableList<ImageItem>) {
-        val intent = Intent()
-        val paths = ArrayList<String>()
-        for (item in mDatas) {
-            item.path?.let { paths.add(it) }
+        if (!isCrop && isCompress) {   //非剪裁情况下，对图片压缩
+            addDisposable(Observable.fromArray(mDatas).map { items ->
+                val paths = ArrayList<String>().apply { for (item in items) item.path?.let { add(it) } }
+                if (File(CurrApplication.COMPRESSOR_PATH).exists())
+                    Luban.with(this@ImageGridActivity).setTargetDir(CurrApplication.COMPRESSOR_PATH).load(paths).get()
+                else
+                    Luban.with(this@ImageGridActivity).load(paths).get()
+            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        endLoading()
+                        val intent = Intent()
+                        val paths = ArrayList<String>()
+                        for (item in it) paths.add(item.absolutePath)
+                        intent.putStringArrayListExtra(ImagePicker.EXTRA_PATHS, paths)
+                        setResult(RESULT_OK, intent)
+                        finish()
+                    }, {
+                        endLoading()
+                        showShortToast("图片处理异常，请稍后再试")
+                    }, { endLoading() }, { showLoading() }))
+        } else {
+            val intent = Intent()
+            val paths = ArrayList<String>()
+            for (item in mDatas) item.path?.let { paths.add(it) }
+            intent.putStringArrayListExtra(ImagePicker.EXTRA_PATHS, paths)
+            setResult(RESULT_OK, intent)
+            finish()
         }
-        intent.putStringArrayListExtra(ImagePicker.EXTRA_PATHS, paths)
-        setResult(RESULT_OK, intent)
-        finish()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

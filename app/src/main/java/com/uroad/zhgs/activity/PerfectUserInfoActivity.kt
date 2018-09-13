@@ -6,6 +6,7 @@ import com.uroad.library.utils.IdCardUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
+import com.uroad.zhgs.utils.CheckUtils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
@@ -48,7 +49,7 @@ class PerfectUserInfoActivity : BaseActivity() {
         when {
             TextUtils.isEmpty(name.trim()) -> showShortToast(etName.hint)
             TextUtils.isEmpty(cardNo) -> showShortToast(etCardNo.hint)
-            !IdCardUtil.isRealIDCard(cardNo) -> showShortToast(getString(R.string.error_idCard_tips))
+            !CheckUtils.isIDCard(cardNo) -> showShortToast(getString(R.string.error_idCard_tips))
             else -> save(name, cardNo)
         }
     }

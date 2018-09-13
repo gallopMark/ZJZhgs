@@ -84,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textSize="@dimen/font_18" />
+                android:textSize="@dimen/font_18"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvOccTimeTips"
@@ -110,7 +111,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textSize="@dimen/font_18" />
+                android:textSize="@dimen/font_18"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvEndTimeTips"

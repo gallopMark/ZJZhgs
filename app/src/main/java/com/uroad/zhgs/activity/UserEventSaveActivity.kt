@@ -9,10 +9,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
+import com.amap.api.col.sln3.it
 import com.amap.api.location.AMapLocation
-import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.library.utils.PermissionHelper
 import com.uroad.rxhttp.RxHttpManager
@@ -52,7 +51,7 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
     private val addItem = AddPicItem()
     private lateinit var picAdapter: AddPicAdapter
 
-    class AddPicAdapter(private val context: Activity, mDatas: MutableList<MutilItem>)
+    class AddPicAdapter(context: Activity, mDatas: MutableList<MutilItem>)
         : BaseArrayRecyclerAdapter<MutilItem>(context, mDatas) {
         private val size = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 44f)) / 3
         private var onItemOptionListener: OnItemOptionListener? = null
@@ -62,14 +61,12 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
                 holder.itemView.setOnClickListener { onItemOptionListener?.onAddPic() }
             } else {
                 val mdl = t as PicMDL
-                val ivPic = holder.obtainView<ImageView>(R.id.ivPic)
-                val ivCancel = holder.obtainView<ImageView>(R.id.ivCancel)
-                ImageLoaderV4.getInstance().displayImage(context, mdl.path, ivPic)
-                ivCancel.setOnClickListener {
+                holder.displayImage(R.id.ivPic, mdl.path)
+                holder.setOnClickListener(R.id.ivCancel, View.OnClickListener {
                     mDatas.removeAt(position)
                     notifyDataSetChanged()
                     onItemOptionListener?.onItemRemove(mDatas)
-                }
+                })
             }
         }
 
@@ -153,6 +150,7 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
             override fun onAddPic() {
                 ImagePicker.from(this@UserEventSaveActivity)
                         .isMutilyChoice(4 - picData.size)
+                        .isCompress(true)
                         .requestCode(1)
                         .start()
             }
@@ -255,23 +253,10 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
         if (resultCode == RESULT_OK) {
             val items = data?.getStringArrayListExtra(ImagePicker.EXTRA_PATHS)
             items?.let { list ->
-                /*图片压缩处理*/
-                showLoading()
-                addDisposable(Flowable.fromArray(list).map { items ->
-                    Luban.with(this@UserEventSaveActivity)
-                            .load(items).get()
-                }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            endLoading()
-                            picData.remove(addItem)
-                            for (item in it) {
-                                picData.add(PicMDL().apply { path = item.absolutePath })
-                            }
-                            if (picData.size < 3) {
-                                picData.add(addItem)
-                            }
-                            picAdapter.notifyDataSetChanged()
-                        }, { endLoading() }))
+                picData.remove(addItem)
+                for (item in list) picData.add(PicMDL().apply { path = item })
+                if (picData.size < 3) picData.add(addItem)
+                picAdapter.notifyDataSetChanged()
             }
         }
     }

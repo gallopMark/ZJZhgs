@@ -114,17 +114,26 @@ class HighwaySearchActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.VERTICAL }
         adapter = HighwayListAdapter(this, mDatas)
         recyclerView.adapter = adapter
-        adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until mDatas.size) {
-                    openActivity(HighwayPreViewActivity::class.java, Bundle().apply {
-                        putString("roadoldid", mDatas[position].roadoldid)
-                        putString("shortname", mDatas[position].shortname)
-                        putString("poiname", mDatas[position].poiname)
-                    })
-                }
+        adapter.setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
+            override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                openPreViewActivity(position)
             }
         })
+        adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
+            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                openPreViewActivity(position)
+            }
+        })
+    }
+
+    private fun openPreViewActivity(position: Int) {
+        if (position in 0 until mDatas.size) {
+            openActivity(HighwayPreViewActivity::class.java, Bundle().apply {
+                putString("roadoldid", mDatas[position].roadoldid)
+                putString("shortname", mDatas[position].shortname)
+                putString("poiname", mDatas[position].poiname)
+            })
+        }
     }
 
     private fun initSearch() {

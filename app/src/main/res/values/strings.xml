@@ -11,6 +11,7 @@
     <string name="dialog_default_title">温馨提示</string>
     <string name="dialog_button_cancel">取消</string>
     <string name="dialog_button_confirm">确定</string>
+    <string name="dialog_button_open">打开</string>
     <string name="dialog_loading_tips">正在加载…</string>
     <string name="nonetwork">网络出错了~</string>
     <string name="reload">重新加载</string>
@@ -21,8 +22,9 @@
     <string name="modify">修改</string>
     <string name="delete">删除</string>
     <string name="immediate_experience">立即体验</string>
-    <string name="error_phone_tips">请输入正确的手机号</string>
-    <string name="error_idCard_tips">请输入正确的身份证号码</string>
+    <string name="error_phone_tips">手机号码有误，请重新输入</string>
+    <string name="error_idCard_tips">身份证号有误，请重新输入</string>
+    <string name="error_carNo_tips">车牌号码有误，请重新输入</string>
 
     <!--首页 start-->
     <string name="home_tab_home">首页</string>
@@ -151,6 +153,8 @@
     <!--发票 start-->
     <string name="invoice_title">发票抬头</string>
     <string name="invoice_type">发票类型</string>
+    <string name="invoice_common">普票</string>
+    <string name="invoice_special">专票</string>
     <string name="invoice_rise_type">抬头类型</string>
     <string name="invoice_rise_company">企业</string>
     <string name="invoice_rise_personal">个人</string>

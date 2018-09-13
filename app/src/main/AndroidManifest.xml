@@ -118,7 +118,7 @@
         <activity android:name=".activity.NewsDetailActivity" />
 
         <activity
-            android:name=".activity.RoadNavigationMainActivity"
+            android:name=".activity.RoadNavigationActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity

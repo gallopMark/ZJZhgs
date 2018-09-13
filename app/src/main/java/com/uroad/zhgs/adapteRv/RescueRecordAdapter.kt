@@ -33,13 +33,12 @@ class RescueRecordAdapter(context: Context, mDatas: MutableList<RescueItemMDL>) 
         var rescueAddress = ""
         t.rescue_address?.let { rescueAddress = it }
         holder.setText(R.id.tvRequestAddress, SpannableString("$textAddress\u3000\u2000$rescueAddress").apply { setSpan(ForegroundColorSpan(colorGrey), 0, textAddress.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) })
-        if (TextUtils.isEmpty(t.paymoney)) {
-            holder.setVisibility(R.id.tvMoney, false)
-            holder.setVisibility(R.id.tvPay, false)
-        } else {
-            if (t.ispay == 1) {
-                holder.setVisibility(R.id.tvPay, false)
+        if (t.ispay == 1) {
+            holder.setVisibility(R.id.tvPay, true)
+            holder.setVisibility(R.id.tvMoney, true)
+            if (TextUtils.isEmpty(t.paymoney)) {
                 holder.setVisibility(R.id.tvMoney, false)
+                holder.setVisibility(R.id.tvPay, false)
                 holder.setTextColor(R.id.tvStatus, colorGrey)
                 holder.setTextColor(R.id.tvMoney, colorGrey)
             } else {
@@ -51,20 +50,18 @@ class RescueRecordAdapter(context: Context, mDatas: MutableList<RescueItemMDL>) 
                 holder.setTextColor(R.id.tvStatus, colorOrange)
                 holder.setTextColor(R.id.tvMoney, colorOrange)
             }
+        } else {
+            holder.setVisibility(R.id.tvMoney, false)
+            holder.setVisibility(R.id.tvPay, false)
         }
-        if (t.ispay == 1) {
-            if (t.iscomment == 1) {
-                holder.setVisibility(R.id.tvEvaluate, false)
-            } else {
-                holder.setVisibility(R.id.tvEvaluate, true)
-            }
-            if (t.isinvoice == 1) {
-                holder.setVisibility(R.id.tvInvoice, false)
-            } else {
-                holder.setVisibility(R.id.tvInvoice, true)
-            }
+        if (t.iscomment == 1) {
+            holder.setVisibility(R.id.tvEvaluate, true)
         } else {
             holder.setVisibility(R.id.tvEvaluate, false)
+        }
+        if (t.isinvoice == 1) {
+            holder.setVisibility(R.id.tvInvoice, true)
+        } else {
             holder.setVisibility(R.id.tvInvoice, false)
         }
         if (!holder.isVisibility(R.id.tvEvaluate) && !holder.isVisibility(R.id.tvInvoice) && !holder.isVisibility(R.id.tvPay)) {

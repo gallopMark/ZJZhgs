@@ -98,6 +98,7 @@ class FeedbackActivity : BaseActivity() {
             override fun onAddPic() {
                 ImagePicker.from(this@FeedbackActivity)
                         .isMutilyChoice(4 - picData.size)
+                        .isCompress(true)
                         .requestCode(1)
                         .start()
             }

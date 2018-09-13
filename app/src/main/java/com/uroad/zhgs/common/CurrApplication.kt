@@ -1,7 +1,9 @@
 package com.uroad.zhgs.common
 
 import android.app.Application
+import android.content.Context
 import android.os.Handler
+import android.support.multidex.MultiDex
 import android.text.TextUtils
 import com.amap.api.maps.model.LatLng
 import com.tencent.bugly.crashreport.CrashReport
@@ -31,11 +33,16 @@ class CurrApplication : Application() {
         lateinit var COMPRESSOR_PATH: String
     }
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(base)
+    }
+
     override fun onCreate() {
         super.onCreate()
         initHttpService()
         //    initXunFei()
-//        initCompressorPath()
+        initCompressorPath()
         initDiagramPath()
         downloadDragram()
         initBugly()
@@ -54,7 +61,7 @@ class CurrApplication : Application() {
 
     private fun initCompressorPath() {
         COMPRESSOR_PATH = "${filesDir.absolutePath}${File.separator}compressor"
-        File(COMPRESSOR_PATH).apply { if (!exists()) this.mkdir() }
+        File(COMPRESSOR_PATH).apply { if (!exists()) this.mkdirs() }
     }
 
     //简图路径

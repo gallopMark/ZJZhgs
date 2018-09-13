@@ -7,4 +7,8 @@
     <string name="photopicker_confirm">确定</string>
     <string name="photopicker_select">选择</string>
     <string name="photopicker_finish">完成</string>
+    <string name="photopicker_dismiss_sdcard">禁止存储权限应用无法读取系统相册，请重新打开</string>
+    <string name="photopicker_noSdcard">存储权限已被禁止，应用无法读取系统相册,如需打开请点“确定”</string>
+    <string name="photopicker_noCamera">相机权限已被禁止，应用无法启动照相机，如需打开请点“确定”</string>
+    <string name="photopicker_dismiss_camera">禁止相机权限应用无法启动相机，请重新打开</string>
 </resources>

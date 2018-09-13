@@ -9,11 +9,13 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import com.amap.api.col.sln3.it
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.*
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.WheelViewDialog
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.photopicker.data.ImagePicker
@@ -23,10 +25,12 @@ import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.GridSpacingItemDecoration
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_rescue_request.*
+import top.zibin.luban.Luban
 import java.io.File
 
 /**
@@ -294,6 +298,7 @@ class RescueRequestActivity : BaseActivity() {
             override fun onAddPic() {
                 ImagePicker.from(this@RescueRequestActivity)
                         .isMutilyChoice(4 - picData.size)
+                        .isCompress(true)
                         .requestCode(1)
                         .start()
             }
@@ -316,15 +321,11 @@ class RescueRequestActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             val items = data?.getStringArrayListExtra(ImagePicker.EXTRA_PATHS)
-            items?.let {
+            items?.let { paths ->
                 picData.remove(addItem)
-                for (i in 0 until it.size) {
-                    picData.add(PicMDL().apply { path = it[i] })
-                }
+                for (item in paths) picData.add(PicMDL().apply { path = item })
                 setPicCount()
-                if (picData.size < 3) {
-                    picData.add(addItem)
-                }
+                if (picData.size < 3) picData.add(addItem)
                 picAdapter.notifyDataSetChanged()
             }
         }

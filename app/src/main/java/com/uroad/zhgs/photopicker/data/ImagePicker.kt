@@ -16,6 +16,7 @@ class ImagePicker private constructor(private val context: Activity) {
     private var limit = 1   //最大图片选择数量
     private var crop = false    //是否需要裁剪
     private var isSaveRectangle = true  //裁剪后的图片是否是矩形，否者跟随裁剪框的形状
+    private var isCompress = false   //是否对图片压缩处理
     private var outPutX = 800           //裁剪保存宽度
     private var outPutY = 800           //裁剪保存高度
     private var focusWidth = 280         //焦点框的宽度
@@ -33,6 +34,11 @@ class ImagePicker private constructor(private val context: Activity) {
         this.mMutilyMode = true
         if (limit <= 1) this.limit = 1
         else this.limit = limit
+        return this
+    }
+
+    fun isCompress(isCompress: Boolean): ImagePicker {
+        this.isCompress = isCompress
         return this
     }
 
@@ -78,6 +84,7 @@ class ImagePicker private constructor(private val context: Activity) {
         val bundle = Bundle().apply {
             putBoolean("mMutilyMode", mMutilyMode)
             putInt("limit", limit)
+            putBoolean("isCompress", isCompress)
             putBoolean("isCrop", crop)
             putBoolean("isSaveRectangle", isSaveRectangle)
             putInt("outPutX", outPutX)

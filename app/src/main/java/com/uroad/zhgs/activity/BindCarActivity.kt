@@ -24,6 +24,7 @@ import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.dialog.WheelViewDialog
 import com.uroad.zhgs.enumeration.Carcategory
 import com.uroad.zhgs.model.CarDetailMDL
+import com.uroad.zhgs.utils.CheckUtils
 
 
 /**
@@ -385,24 +386,33 @@ class BindCarActivity : BaseActivity() {
     private fun onSubmit() {
         if (TextUtils.isEmpty(etCarNum.text.toString().trim())) {
             showShortToast(etCarNum.hint)
-        } else if (TextUtils.isEmpty(carcategory)) {
+            return
+        }
+        val carNo = "${tvNumType.text}${etCarNum.text.toString().trim()}"
+        if (!CheckUtils.isCarNum(carNo)) {
+            showShortToast(getString(R.string.error_carNo_tips))
+            return
+        }
+        if (TextUtils.isEmpty(carcategory)) {
             showShortToast("请选择车辆类别")
-        } else if (TextUtils.isEmpty(cartype)) {
+            return
+        }
+        if (TextUtils.isEmpty(cartype)) {
             showShortToast("请选择车辆类型")
-        } else {
-            if (isTruck) {  //如果选择了货车，则需要填如下信息
-                when {
-                    TextUtils.isEmpty(etTotalWeight.text.toString().trim()) -> showShortToast(etTotalWeight.hint)
-                    TextUtils.isEmpty(etFixedLoad.text.toString().trim()) -> showShortToast(etFixedLoad.hint)
-                    TextUtils.isEmpty(etCarLength.text.toString().trim()) -> showShortToast(etCarLength.hint)
-                    TextUtils.isEmpty(etCarWidth.text.toString().trim()) -> showShortToast(etCarWidth.hint)
-                    TextUtils.isEmpty(etCarHigh.text.toString().trim()) -> showShortToast(etCarHigh.hint)
-                    TextUtils.isEmpty(axisnum) -> showShortToast("请选择轴数")
-                    else -> bindCar()
-                }
-            } else {
-                bindCar()
+            return
+        }
+        if (isTruck) {  //如果选择了货车，则需要填如下信息
+            when {
+                TextUtils.isEmpty(etTotalWeight.text.toString().trim()) -> showShortToast(etTotalWeight.hint)
+                TextUtils.isEmpty(etFixedLoad.text.toString().trim()) -> showShortToast(etFixedLoad.hint)
+                TextUtils.isEmpty(etCarLength.text.toString().trim()) -> showShortToast(etCarLength.hint)
+                TextUtils.isEmpty(etCarWidth.text.toString().trim()) -> showShortToast(etCarWidth.hint)
+                TextUtils.isEmpty(etCarHigh.text.toString().trim()) -> showShortToast(etCarHigh.hint)
+                TextUtils.isEmpty(axisnum) -> showShortToast("请选择轴数")
+                else -> bindCar()
             }
+        } else {
+            bindCar()
         }
     }
 
