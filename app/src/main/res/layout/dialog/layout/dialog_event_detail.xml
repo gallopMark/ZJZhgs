@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_18"
+                    android:textSize="@dimen/font_16"
                     android:textStyle="bold" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_18"
+                    android:textSize="@dimen/font_16"
                     android:textStyle="bold" />
 
                 <TextView
@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_18"
+                    android:textSize="@dimen/font_16"
                     android:textStyle="bold" />
 
                 <TextView

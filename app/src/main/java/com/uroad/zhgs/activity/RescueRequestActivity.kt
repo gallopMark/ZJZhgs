@@ -9,13 +9,11 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import com.amap.api.col.sln3.it
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.*
 import com.uroad.zhgs.common.BaseActivity
-import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.WheelViewDialog
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.photopicker.data.ImagePicker
@@ -25,12 +23,10 @@ import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.GridSpacingItemDecoration
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_rescue_request.*
-import top.zibin.luban.Luban
 import java.io.File
 
 /**
@@ -368,6 +364,10 @@ class RescueRequestActivity : BaseActivity() {
             }
             TextUtils.isEmpty(etMyCarNum.text.toString()) -> {
                 showShortToast(etMyCarNum.hint)
+                return false
+            }
+            !CheckUtils.isCarNum(etMyCarNum.text.toString().trim()) -> {
+                showShortToast(getString(R.string.error_carNo_tips))
                 return false
             }
 //            TextUtils.isEmpty(etName.text.toString()) -> {

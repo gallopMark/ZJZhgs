@@ -39,8 +39,8 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_5"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_5">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -84,6 +84,19 @@
         android:layout_gravity="end|top"
         android:layout_marginTop="@dimen/margin_65"
         android:src="@mipmap/ic_rescue_button_postage" />
+
+    <Button
+        android:id="@+id/btRescueCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="@dimen/margin_20"
+        android:background="@mipmap/ic_button_corner_bg"
+        android:gravity="center"
+        android:text="@string/rescue_main_rescue_call"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_18"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -238,7 +251,6 @@
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/llPhone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">

@@ -86,22 +86,24 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         initTab()
         initRv()
         /*未申请位置权限，则申请*/
-        if (!hasLocationPermissions())
-            requestLocationPermissions(object : RequestLocationPermissionCallback {
-                override fun doAfterGrand() {
-                    openLocation()
-                }
-
-                override fun doAfterDenied() {
-                    showDismissLocationDialog()
-                    onLocationFailure()
-                }
-            })
+        if (!hasLocationPermissions()) applyLocationPermissions()
         handler = MHandler(this)
         //注册rxBus 接收订阅取消的消息，将我的订阅列表中的相关信息移除
         disposable = RxBus.getDefault().toObservable(MessageEvent::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { event -> onEvent(event) }
+    }
+
+    private fun applyLocationPermissions() {
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+                onLocationFailure()
+            }
+        })
     }
 
     private fun onEvent(event: MessageEvent?) {
@@ -267,7 +269,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                         bundle.putSerializable("mdl", mdl.getEventMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
                         openActivity(RoadNavigationActivity::class.java, bundle)
                     } else if (mdl.getSubType() == SubscribeMDL.SubType.RescuePay.code) {
-                        openActivity(RescuePayActivity::class.java, Bundle().apply { putString("rescueid", mdl.rescueid) })
+                        openActivity(RescuePayActivity::class.java, Bundle().apply { putString("rescueid", mdl.dataid) })
                     } else if (mdl.getSubType() == SubscribeMDL.SubType.RescueProgress.code) {
                         openActivity(RescueDetailActivity::class.java, Bundle().apply { putString("rescueid", mdl.rescueid) })
                     }
@@ -415,8 +417,14 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         val end = text.length
         val clickSpan = object : ClickableSpan() {
             override fun onClick(p0: View?) {
-                if (!hasLocationPermissions()) openSettings()
-                else {
+                if (!hasLocationPermissions()) {
+                    //申请位置权限时用户点击了“禁止不再提示”按钮 则引导用户到app设置页面重新打开
+                    if (!isShouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_COARSE_LOCATION) || !isShouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        openSettings()
+                    } else {  //重新申请权限
+                        applyLocationPermissions()
+                    }
+                } else {
                     flNearby.visibility = View.VISIBLE
                     tvLocationFailure.visibility = View.GONE
                     openLocation()

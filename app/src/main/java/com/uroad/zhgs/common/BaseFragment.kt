@@ -558,9 +558,11 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         }
     }
 
+    fun isShouldShowRequestPermissionRationale(permission: String): Boolean = shouldShowRequestPermissionRationale(permission)
+
     fun showDismissLocationDialog() {
-        showDialog(resources.getString(R.string.rescue_main_without_location_title),
-                "检测到您还没有打开定位权限", "取消", "去开启"
+        showDialog(getString(R.string.rescue_main_without_location_title), getString(R.string.rescue_main_location_ban),
+                getString(R.string.dialog_button_cancel), getString(R.string.gotoSettings)
                 , object : MaterialDialog.ButtonClickListener {
             override fun onClick(v: View, dialog: AlertDialog) {
                 dialog.dismiss()

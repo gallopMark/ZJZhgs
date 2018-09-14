@@ -32,10 +32,16 @@ class UserEventListActivity : BaseActivity() {
     private val size = 10
     private val hashMap = ArrayMap<Int, String>()
     private var isAnim = false
+    private var isMy = false
+    private var type = WebApiService.REPORT_TYPE_DEFAULT
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_userevent_list)
-        intent.extras?.let { isAnim = it.getBoolean("anim", false) }
+        intent.extras?.let {
+            isAnim = it.getBoolean("anim", false)
+            isMy = it.getBoolean("isMy", false)
+        }
+        if (isMy) type = WebApiService.REPORT_TYPE_MY
         customToolbar.title = resources.getString(R.string.userEvent_title)
         tvTitle.text = resources.getString(R.string.userEvent_burst)
         customToolbar.setNavigationOnClickListener { onBackPressed() }
@@ -57,7 +63,7 @@ class UserEventListActivity : BaseActivity() {
     }
 
     override fun initData() {
-        doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), index, size),
+        doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), type, index, size),
                 object : HttpRequestCallback<String>() {
                     override fun onSuccess(data: String?) {
                         finishLoad()

@@ -14,6 +14,8 @@ import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.utils.TimeUtil
 import java.text.SimpleDateFormat
 import java.util.*
+import android.text.format.DateFormat.getDateFormat
+
 
 /**
  *Created by MFB on 2018/8/15.
@@ -254,9 +256,17 @@ eventtype	事件类型
     private fun parseDate(timeStr: String?): String {
         if (TextUtils.isEmpty(timeStr)) return ""
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
         return try {
             val time = format.parse(timeStr).time
+            val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            val calendar = Calendar.getInstance()
+            calendar.time = Date(time)
+            val thisDay = calendar.get(Calendar.DAY_OF_MONTH)
+            val dateFormat = if (thisDay == currentDay) {
+                SimpleDateFormat("HH:mm", Locale.getDefault())
+            } else {
+                SimpleDateFormat("MM.dd HH:mm", Locale.getDefault())
+            }
             return dateFormat.format(time)
         } catch (e: Exception) {
             ""

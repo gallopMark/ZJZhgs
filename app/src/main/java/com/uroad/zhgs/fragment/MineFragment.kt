@@ -59,7 +59,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             return
         }
         when (v.id) {
-            R.id.tvMyBurst -> openActivity(UserEventListActivity::class.java)  //我的报料
+            R.id.tvMyBurst -> openActivity(UserEventListActivity::class.java, Bundle().apply { putBoolean("isMy", true) })  //我的报料
             R.id.tvMySubscribe -> openActivity(UserSubscribeActivity::class.java)  //我的订阅
             R.id.tvRescueRecord -> openActivity(RescueRecordActivity::class.java)  //救援记录
             R.id.rlMessage -> openActivity(UserMsgActivity::class.java) //消息中心

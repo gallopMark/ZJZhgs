@@ -237,14 +237,10 @@ class RescueDetailActivity : BaseActivity() {
                 withOption(resources.getString(R.string.cancel))
                 getOptionView().setOnClickListener {
                     if (TextUtils.equals(detail.status, RescueDetailMDL.Detail.Status.DOING.code))
-                        onCancel()
-                    else
-                        cancel()
-                }
-                if (detail.status == RescueDetailMDL.Detail.Status.DOING.code) {
-                    tvTips.visibility = View.VISIBLE
-                } else {
-                    tvTips.visibility = View.GONE
+                        onCancel(1)
+                    else {
+                        onCancel(2)
+                    }
                 }
             }
             calculateDriveRoute(NaviLatLng(detail.getLatitude(), detail.getLongitude()), NaviLatLng(detail.getUserLatitude(), detail.getUserLongitude()))
@@ -294,9 +290,10 @@ class RescueDetailActivity : BaseActivity() {
 //        overlay.zoomToSpan()
 //    }
 
-    private fun onCancel() {
+    private fun onCancel(type: Int) {
         val title = resources.getString(R.string.dialog_default_title)
-        val message = resources.getString(R.string.rescue_detail_dialog_msg)
+        val message = if (type == 1) getString(R.string.rescue_detail_dialog_msg)
+        else getString(R.string.rescue_detail_cancel_tips)
         showDialog(title, message, object : MaterialDialog.ButtonClickListener {
             override fun onClick(v: View, dialog: AlertDialog) {
                 dialog.dismiss()

@@ -1,8 +1,5 @@
 package com.uroad.zhgs.model
 
-import android.content.Context
-import android.graphics.Color
-import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.enumeration.MapDataType
@@ -75,11 +72,6 @@ class EventMDL : MutilItem, Serializable {
         return ""
     }
 
-    fun getEventType(): String {
-        eventtype?.let { return it }
-        return ""
-    }
-
     fun getIcon(): Int {
         eventtype?.let {
             if (it == MapDataType.ACCIDENT.code) return R.mipmap.ic_menu_event_sg_p
@@ -95,10 +87,6 @@ class EventMDL : MutilItem, Serializable {
         return parseDate(occtime)
     }
 
-    fun getHandleTime(): String {
-        return parseDate(handletime)
-    }
-
     fun getRealoverTime(): String {
         if (TextUtils.isEmpty(parseDate(realovertime)))
             return "待定"
@@ -108,24 +96,21 @@ class EventMDL : MutilItem, Serializable {
     private fun parseDate(timeStr: String?): String {
         if (TextUtils.isEmpty(timeStr)) return ""
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
         return try {
             val time = format.parse(timeStr).time
+            val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            val calendar = Calendar.getInstance()
+            calendar.time = Date(time)
+            val thisDay = calendar.get(Calendar.DAY_OF_MONTH)
+            val dateFormat = if (thisDay == currentDay) {
+                SimpleDateFormat("HH:mm", Locale.getDefault())
+            } else {
+                SimpleDateFormat("MM.dd HH:mm", Locale.getDefault())
+            }
             return dateFormat.format(time)
         } catch (e: Exception) {
             ""
         }
-    }
-
-    fun getStatusColor(context: Context): Int {
-        statuscolor?.let {
-            return try {
-                Color.parseColor(it)
-            } catch (e: Exception) {
-                ContextCompat.getColor(context, R.color.status_normal)
-            }
-        }
-        return ContextCompat.getColor(context, R.color.status_normal)
     }
 
     fun getUpdateTime(): String {

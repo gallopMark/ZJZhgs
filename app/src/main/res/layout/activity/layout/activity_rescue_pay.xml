@@ -47,7 +47,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_2"
             android:layout_marginTop="@dimen/margin_4"
-            android:background="@color/blow_gray" />
+            android:background="@color/color_f2" />
     </LinearLayout>
 
     <LinearLayout

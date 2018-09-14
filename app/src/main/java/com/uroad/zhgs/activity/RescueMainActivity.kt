@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Spannable
@@ -37,17 +38,19 @@ import com.uroad.zhgs.webservice.WebApiService
  * Copyright  2018年 浙江综合交通大数据开发有限公司.
  * 说明：救援首页
  */
-class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraChangeListener {
+class RescueMainActivity : BaseActivity(), AMap.OnCameraChangeListener {
     /*高德地图类*/
     private lateinit var amap: AMap
+    private var isFirstMove = true
     private var currLocation: AMapLocation? = null
     private var targetPos: LatLng? = null
     private var locationMDL: LocationMDL? = null
     private lateinit var animationDrawable: AnimationDrawable
+    private lateinit var handler: Handler
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_rescue_main)
-        customTitle.text = resources.getString(R.string.rescue_main_rescue)
+        customTitle.text = getString(R.string.rescue_main_rescue)
         customToolbar.setNavigationOnClickListener { onBackPressed() }
         animationDrawable = ivDiffuse.drawable as AnimationDrawable
         mapView.onCreate(savedInstanceState)
@@ -57,24 +60,36 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
             animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(CurrApplication.APP_LATLNG, this.cameraPosition.zoom, 0f, 0f)))
             setOnCameraChangeListener(this@RescueMainActivity)
         }
+        initRv()
+        applyLocationPermissions()
+        handler = Handler(Looper.getMainLooper())
+    }
+
+    /*申请位置权限*/
+    private fun applyLocationPermissions() {
         requestLocationPermissions(object : RequestLocationPermissionCallback {
             override fun doAfterGrand() {
+                btRescueCall.visibility = View.GONE
                 openLocation()
             }
 
             override fun doAfterDenied() {
-                showDialog(resources.getString(R.string.rescue_main_without_location_title),
-                        resources.getString(R.string.rescue_main_without_location_message), "电话求助", "去开启"
+                btRescueCall.visibility = View.VISIBLE
+                showDialog(getString(R.string.rescue_main_without_location_title),
+                        getString(R.string.rescue_main_without_location_message),
+                        getString(R.string.rescue_main_rescue_call),
+                        getString(R.string.gotoSettings)
                         , object : MaterialDialog.ButtonClickListener {
                     override fun onClick(v: View, dialog: AlertDialog) {
                         //电话求助
+                        PhoneUtils.call(this@RescueMainActivity, getString(R.string.rescue_default_phone))
                         dialog.dismiss()
                     }
                 }, object : MaterialDialog.ButtonClickListener {
                     override fun onClick(v: View, dialog: AlertDialog) {
-                        //去开启
+                        //去开启  用户没有点击“不再提示”按钮
                         dialog.dismiss()
-                        openSettings()
+                        applyLocationPermissions()  //回调方法重新申请位置权限
                     }
                 })
             }
@@ -87,6 +102,10 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
 
     //地图停止移动获取屏幕中心经纬度
     override fun onCameraChangeFinish(position: CameraPosition) {
+        if (isFirstMove) {   //地图的第一次移动不做请求（默认定位到杭州也会回调这个方法）
+            isFirstMove = false
+            return
+        }
         position.target?.let {
             targetPos = position.target
             request(it.longitude, it.latitude)
@@ -104,34 +123,16 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
         animationDrawable.stop()
     }
 
-    override fun setListener() {
-        ivLocation.setOnClickListener(this)
-        btTopPostage.setOnClickListener(this)
+    private fun initRv() {
+        rvPhone.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.VERTICAL }
+        rvPhone.isNestedScrollingEnabled = false
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-//            R.id.btTopPosition -> {
-//                openActivity(BindInfoActivity::class.java)
-//            }
-            R.id.btTopPostage -> {
-                openActivity(RescueFeeActivity::class.java)
-            }
-            R.id.ivLocation -> { //点击定位按钮
-                currLocation?.let {
-                    amap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.latitude, it.longitude), amap.cameraPosition.zoom, 0f, 0f)))
-                }
-            }
-//            R.id.btRequest -> {
-//                locationMDL?.let {
-//                    val intent = Intent(this@RescueMainActivity, RescueRequestActivity::class.java)
-//                    intent.putExtra("roadid", it.roadid)
-//                    intent.putExtra("mile", it.mile)
-//                    intent.putExtra("roadname", it.roadname)
-//                    openActivity(intent)
-//                }
-//            }
-        }
+    override fun setListener() {
+        ivLocation.setOnClickListener { _ -> currLocation?.let { amap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.latitude, it.longitude), amap.cameraPosition.zoom, 0f, 0f))) } }
+        btTopPostage.setOnClickListener { openActivity(RescueFeeActivity::class.java) }
+        btRescueCall.setOnClickListener { PhoneUtils.call(this@RescueMainActivity, getString(R.string.rescue_default_phone)) }
+        tvMorePhone.setOnClickListener { openActivity(HighWayHotlineActivity::class.java) }
     }
 
     override fun onResume() {
@@ -148,7 +149,7 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
     }
 
     override fun onLocationFail(errorInfo: String?) {
-        Handler().postDelayed({ if (!isFinishing) openLocation() }, 3000)
+        handler.postDelayed({ if (!isFinishing) openLocation() }, 3000)
     }
 
     private fun request(longitude: Double, latitude: Double) {
@@ -192,7 +193,7 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
             tvCurrLocation.text = currPos
             ivQuestion.setOnClickListener { getHelpNews() }
             //电话求助
-            btCallHelp.setOnClickListener { PhoneUtils.call(this@RescueMainActivity, resources.getString(R.string.rescue_default_phone)) }
+            btCallHelp.setOnClickListener { PhoneUtils.call(this@RescueMainActivity, getString(R.string.rescue_default_phone)) }
             //自助救援
             btRescue.setOnClickListener { _ ->
                 openActivityForResult(RescueRequestActivity::class.java, Bundle().apply {
@@ -259,10 +260,7 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
         tvOutLineTips.text = ss
         val list = ArrayList<LocationMDL.Phone>()
         mdl.phone?.let { list.addAll(it) }
-        rvPhone.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.VERTICAL }
         rvPhone.adapter = PhoneAdapter(this, list)
-        rvPhone.isNestedScrollingEnabled = false
-        tvMorePhone.setOnClickListener { openActivity(HighWayHotlineActivity::class.java) }
     }
 
     private class HelpMDL {
@@ -277,6 +275,8 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
             holder.setText(R.id.tvPhoneName, t.phonename)
             holder.setText(R.id.tvPhone, t.phone)
             holder.setOnClickListener(R.id.ivCall, View.OnClickListener { if (!TextUtils.isEmpty(t.phone)) PhoneUtils.call(this@RescueMainActivity, t.phone) })
+            if (position == itemCount - 1) holder.setVisibility(R.id.vUnderLine, false)
+            else holder.setVisibility(R.id.vUnderLine, true)
         }
     }
 
@@ -299,6 +299,7 @@ class RescueMainActivity : BaseActivity(), View.OnClickListener, AMap.OnCameraCh
     }
 
     override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
         mapView.onDestroy()
         super.onDestroy()
     }

@@ -21,7 +21,6 @@ class RescueRecordAdapter(context: Context, mDatas: MutableList<RescueItemMDL>) 
     private val textRescueType = context.resources.getString(R.string.rescue_detail_rescue_type)
     private val textAddress = context.resources.getString(R.string.rescue_detail_rescue_address)
     private val colorGrey = ContextCompat.getColor(context, R.color.grey)
-    private val colorOrange = ContextCompat.getColor(context, R.color.colorOrange)
 
     override fun onBindHoder(holder: RecyclerHolder, t: RescueItemMDL, position: Int) {
         var rescueNo = ""
@@ -33,26 +32,19 @@ class RescueRecordAdapter(context: Context, mDatas: MutableList<RescueItemMDL>) 
         var rescueAddress = ""
         t.rescue_address?.let { rescueAddress = it }
         holder.setText(R.id.tvRequestAddress, SpannableString("$textAddress\u3000\u2000$rescueAddress").apply { setSpan(ForegroundColorSpan(colorGrey), 0, textAddress.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) })
-        if (t.ispay == 1) {
+        holder.setText(R.id.tvStatus, t.statusname)
+        if (t.ispay == 1 && !TextUtils.isEmpty(t.paymoney)) { //待支付
             holder.setVisibility(R.id.tvPay, true)
-            holder.setVisibility(R.id.tvMoney, true)
-            if (TextUtils.isEmpty(t.paymoney)) {
-                holder.setVisibility(R.id.tvMoney, false)
-                holder.setVisibility(R.id.tvPay, false)
-                holder.setTextColor(R.id.tvStatus, colorGrey)
-                holder.setTextColor(R.id.tvMoney, colorGrey)
-            } else {
-                holder.setVisibility(R.id.tvPay, true) //待支付
-                holder.setVisibility(R.id.tvMoney, true)
-                var payMoney = "¥"
-                t.paymoney?.let { payMoney += it }
-                holder.setText(R.id.tvMoney, SpannableString(payMoney).apply { setSpan(AbsoluteSizeSpan(20, true), 1, payMoney.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE) })
-                holder.setTextColor(R.id.tvStatus, colorOrange)
-                holder.setTextColor(R.id.tvMoney, colorOrange)
-            }
         } else {
-            holder.setVisibility(R.id.tvMoney, false)
             holder.setVisibility(R.id.tvPay, false)
+        }
+        if (TextUtils.isEmpty(t.paymoney)) {
+            holder.setVisibility(R.id.tvMoney, false)
+        } else {
+            holder.setVisibility(R.id.tvMoney, true)
+            var payMoney = "¥"
+            t.paymoney?.let { payMoney += it }
+            holder.setText(R.id.tvMoney, SpannableString(payMoney).apply { setSpan(AbsoluteSizeSpan(20, true), 1, payMoney.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE) })
         }
         if (t.iscomment == 1) {
             holder.setVisibility(R.id.tvEvaluate, true)
@@ -69,7 +61,6 @@ class RescueRecordAdapter(context: Context, mDatas: MutableList<RescueItemMDL>) 
         } else {
             holder.setVisibility(R.id.llBottom, true)
         }
-        holder.setText(R.id.tvStatus, t.statusname)
         holder.bindChildClick(R.id.tvEvaluate)
         holder.bindChildClick(R.id.tvInvoice)
         holder.bindChildClick(R.id.tvPay)

@@ -71,7 +71,7 @@ class TrafficJamMDL : MutilItem, Serializable {
     }
 
     fun getPubTime(): String {
-        return parseDate2(pubtime)
+        return parseDate(pubtime)
     }
 
     fun getLongTime(): SpannableString {
@@ -122,15 +122,23 @@ class TrafficJamMDL : MutilItem, Serializable {
     }
 
 
-    private fun parseDate2(timeStr: String?): String {
+    private fun parseDate(timeStr: String?): String {
         if (TextUtils.isEmpty(timeStr)) return ""
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
-        try {
+        return try {
             val time = format.parse(timeStr).time
+            val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            val calendar = Calendar.getInstance()
+            calendar.time = Date(time)
+            val thisDay = calendar.get(Calendar.DAY_OF_MONTH)
+            val dateFormat = if (thisDay == currentDay) {
+                SimpleDateFormat("HH:mm", Locale.getDefault())
+            } else {
+                SimpleDateFormat("MM.dd HH:mm", Locale.getDefault())
+            }
             return dateFormat.format(time)
         } catch (e: Exception) {
-            return ""
+            ""
         }
     }
 }

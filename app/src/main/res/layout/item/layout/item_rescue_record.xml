@@ -43,71 +43,78 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_5"
+        android:layout_marginBottom="@dimen/margin_10"
         android:textColor="@color/appTextColor"
         android:textSize="@dimen/font_14" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_1"
-        android:layout_marginTop="@dimen/margin_10"
-        android:background="@color/color_f2" />
-
     <LinearLayout
         android:id="@+id/llBottom"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="@dimen/margin_5"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvEvaluate"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/color_f2" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_10"
-            android:background="@drawable/bg_corners_color_e6_25dp"
-            android:gravity="center"
-            android:paddingBottom="@dimen/margin_5"
-            android:paddingLeft="@dimen/margin_20"
-            android:paddingRight="@dimen/margin_20"
-            android:paddingTop="@dimen/margin_5"
-            android:text="@string/rescue_record_evaluate"
-            android:textColor="@color/appTextColor" />
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/margin_5"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tvInvoice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_10"
-            android:background="@drawable/bg_corners_color_e6_25dp"
-            android:gravity="center"
-            android:paddingBottom="@dimen/margin_5"
-            android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
-            android:paddingTop="@dimen/margin_5"
-            android:text="@string/rescue_record_invoice"
-            android:textColor="@color/appTextColor" />
+            <TextView
+                android:id="@+id/tvEvaluate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:background="@drawable/bg_corners_color_e6_25dp"
+                android:gravity="center"
+                android:paddingBottom="@dimen/margin_5"
+                android:paddingLeft="@dimen/margin_20"
+                android:paddingRight="@dimen/margin_20"
+                android:paddingTop="@dimen/margin_5"
+                android:text="@string/rescue_record_evaluate"
+                android:textColor="@color/appTextColor" />
 
-        <TextView
-            android:id="@+id/tvPay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_10"
-            android:background="@drawable/bg_corners_color_e6_25dp"
-            android:gravity="center"
-            android:paddingBottom="@dimen/margin_5"
-            android:paddingLeft="@dimen/margin_15"
-            android:paddingRight="@dimen/margin_15"
-            android:paddingTop="@dimen/margin_5"
-            android:text="@string/rescue_record_pay"
-            android:textColor="@color/appTextColor" />
+            <TextView
+                android:id="@+id/tvInvoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:background="@drawable/bg_corners_color_e6_25dp"
+                android:gravity="center"
+                android:paddingBottom="@dimen/margin_5"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_10"
+                android:paddingTop="@dimen/margin_5"
+                android:text="@string/rescue_record_invoice"
+                android:textColor="@color/appTextColor" />
 
-        <TextView
-            android:id="@+id/tvMoney"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/appTextColor"
-            android:textSize="@dimen/font_14" />
+            <TextView
+                android:id="@+id/tvPay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:background="@drawable/bg_corners_color_e6_25dp"
+                android:gravity="center"
+                android:paddingBottom="@dimen/margin_5"
+                android:paddingLeft="@dimen/margin_15"
+                android:paddingRight="@dimen/margin_15"
+                android:paddingTop="@dimen/margin_5"
+                android:text="@string/rescue_record_pay"
+                android:textColor="@color/appTextColor" />
+
+            <TextView
+                android:id="@+id/tvMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

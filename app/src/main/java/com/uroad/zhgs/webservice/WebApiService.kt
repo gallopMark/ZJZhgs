@@ -157,9 +157,17 @@ class WebApiService {
 
         //1.18 用户报料-列表
         const val USER_EVELT_LIST = "getUserEventList"
-
-        fun userEventListParams(userid: String?, index: Int, size: Int) = getBaseParams().apply {
+        const val REPORT_TYPE_DEFAULT = ""
+        const val REPORT_TYPE_MY = "my"
+        /**
+         * userid	用户ID	否
+        index	当前页	否	1 开始
+        size	每页显示的数量	否
+        type	类型	否	默认全部；传 my 获取我的报料
+         */
+        fun userEventListParams(userid: String?, type: String?, index: Int, size: Int) = getBaseParams().apply {
             put("userid", userid)
+            put("type", type)
             put("index", index.toString())
             put("size", size.toString())
         }

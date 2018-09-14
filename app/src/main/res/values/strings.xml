@@ -25,6 +25,7 @@
     <string name="error_phone_tips">手机号码有误，请重新输入</string>
     <string name="error_idCard_tips">身份证号有误，请重新输入</string>
     <string name="error_carNo_tips">车牌号码有误，请重新输入</string>
+    <string name="gotoSettings">去开启</string>
 
     <!--首页 start-->
     <string name="home_tab_home">首页</string>
@@ -62,10 +63,12 @@
     <string name="mine_settings">设置</string>
     <!--我的 end-->
     <string name="rescue_main_rescue">高速救援</string>
+    <string name="rescue_main_rescue_call">电话求助</string>
     <string name="rescue_main_guide_topTips">等待救援\u2000注意事项</string>
     <string name="rescue_main_guide_apply">继续申请</string>
     <string name="rescue_main_without_location_title">获取位置信息失败</string>
     <string name="rescue_main_without_location_message">检测到您还没有打开定位权限\n地图无法正常定位</string>
+    <string name="rescue_main_location_ban">位置权限已被禁止，应用无法获取您的位置信息，请点击“去开启”按钮重新打开</string>
     <string name="rescue_main_outline_tips">您所在的位置\n不在高速上，如需\n求助请拨打救援电话</string>
     <string name="rescue_main_outline_service_tips">您所在的位置不在服务范围内，如需求助请拨打救援电话</string>
     <string name="rescue_main_mylocation">我的位置</string>
@@ -122,7 +125,9 @@
     <string name="rescue_detail_rescue_unit">救援单位：</string>
     <string name="rescue_detail_marquee_tips">请求提交成功后，如救援车辆已经出发，取消救援将收取空驶费</string>
     <string name="rescue_detail_progress">救援进展</string>
+    <string name="rescue_detail_under_tips">如救援车辆已经出发，取消救援将收取空驶费</string>
     <string name="rescue_detail_dialog_msg">救援车辆已经出发，取消救援申请将收取空驶费</string>
+    <string name="rescue_detail_cancel_tips">确定取消本次救援？</string>
     <string name="rescue_record_title">救援记录</string>
     <string name="rescue_record_evaluate">去评价</string>
     <string name="rescue_record_invoice">申请发票</string>
