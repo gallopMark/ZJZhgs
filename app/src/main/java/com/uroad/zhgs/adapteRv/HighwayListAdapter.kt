@@ -81,7 +81,7 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
             for (item in mDatas) {
                 if (item.isshow == 1) count++
             }
-            width = DisplayUtils.getWindowWidth(context) / (mDatas.size + count)
+            width = DisplayUtils.getWindowWidth(context) / (mDatas.size + count) / 2
         }
 
         override fun bindView(viewType: Int): Int {
@@ -89,38 +89,30 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
         }
 
         override fun onBindHoder(holder: RecyclerHolder, t: HighwayMDL.State, position: Int) {
-            if (t.isHinge()) {
-                holder.setImageResource(R.id.ivIcon, R.mipmap.ic_highway_interflow)
+            val ivIcon = holder.obtainView<ImageView>(R.id.ivIcon)
+            val tvText = holder.obtainView<TextView>(R.id.tvText)
+            val params0 = ivIcon.layoutParams as LinearLayout.LayoutParams
+            holder.setLayoutParams(R.id.ivIcon, params0)
+            if (position == itemCount - 1) {
+                params0.gravity = Gravity.END
             } else {
-                holder.setImageResource(R.id.ivIcon, R.mipmap.ic_highway_site)
+                params0.gravity = Gravity.START
+            }
+            ivIcon.layoutParams = params0
+            if (t.isHinge()) {
+                ivIcon.setImageResource(R.mipmap.ic_highway_interflow)
+            } else {
+                ivIcon.setImageResource(R.mipmap.ic_highway_site)
             }
             val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-//            if (position == 0) {
-//                holder.setText(R.id.tvText, t.name)
-//                holder.setVisibility(R.id.ivIcon, true)
-//                params.rightMargin = dp5
-//                params.width = LinearLayout.LayoutParams.WRAP_CONTENT
-//            } else {
-//                if (t.isshow == 1) {
-//                    holder.setText(R.id.tvText, t.name)
-//                    holder.setVisibility(R.id.ivIcon, true)
-//                    params.rightMargin = dp5
-//                    params.width = LinearLayout.LayoutParams.WRAP_CONTENT
-//                } else {
-//                    holder.setText(R.id.tvText, "")
-//                    holder.setInVisibility(R.id.ivIcon)
-//                    params.width = width
-//                    params.rightMargin = 0
-//                }
-//            }
             if (t.isshow == 1) {
-                holder.setText(R.id.tvText, t.name)
-                holder.setVisibility(R.id.ivIcon, true)
+                tvText.text = t.name
+                ivIcon.visibility = View.VISIBLE
                 params.rightMargin = dp5
                 params.width = LinearLayout.LayoutParams.WRAP_CONTENT
             } else {
-                holder.setText(R.id.tvText, "")
-                holder.setInVisibility(R.id.ivIcon)
+                tvText.text = ""
+                ivIcon.visibility = View.INVISIBLE
                 params.width = width
                 params.rightMargin = 0
             }

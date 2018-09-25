@@ -32,13 +32,13 @@ class NearByRepairFragment : BasePageRefreshRvFragment() {
         refreshLayout.isEnableLoadMore = false
         adapter = NearByRepairAdapter(context, mDatas)
         recyclerView.adapter = adapter
-        adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until mDatas.size) {
-                    openLocationWebActivity(mDatas[position].detailurl, mDatas[position].name)
-                }
-            }
-        })
+//        adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
+//            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+//                if (position in 0 until mDatas.size) {
+//                    openLocationWebActivity(mDatas[position].detailurl, mDatas[position].name)
+//                }
+//            }
+//        })
         adapter.setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
             override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
                 when (view.id) {

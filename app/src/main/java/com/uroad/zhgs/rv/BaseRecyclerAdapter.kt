@@ -1,6 +1,7 @@
 package com.uroad.zhgs.rv
 
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -86,6 +87,10 @@ abstract class BaseRecyclerAdapter(private val context: Context) : RecyclerView.
             obtainView<TextView>(id).text = text
         }
 
+        fun setTypeface(id: Int, tf: Typeface) {
+            obtainView<TextView>(id).typeface = tf
+        }
+
         fun setDrawableLeft(id: Int, drawable: Drawable?) {
             obtainView<TextView>(id).setCompoundDrawables(drawable, null, null, null)
         }
@@ -129,6 +134,10 @@ abstract class BaseRecyclerAdapter(private val context: Context) : RecyclerView.
 
         fun setImageResource(id: Int, resId: Int) {
             obtainView<ImageView>(id).setImageResource(resId)
+        }
+
+        fun setVisibility(id: Int, visibility: Int) {
+            obtainView<View>(id).visibility = visibility
         }
 
         fun setVisibility(id: Int, visibile: Boolean) {

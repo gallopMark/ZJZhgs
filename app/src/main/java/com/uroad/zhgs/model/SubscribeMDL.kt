@@ -148,31 +148,31 @@ eventtype	事件类型
 
     fun getRealoverTime(): String {
         if (TextUtils.isEmpty(parseDate(realovertime)))
-            return "待定"
+            return "--"
         return parseDate(realovertime)
     }
 
     fun getAcceptTime(): String {
         if (TextUtils.isEmpty(parseDate(accepttime)))
-            return "待定"
+            return "--"
         return parseDate(accepttime)
     }
 
     fun getStartTime(): String {
         if (TextUtils.isEmpty(parseDate(starttime)))
-            return "待定"
+            return "--"
         return parseDate(starttime)
     }
 
     fun getArriveTime(): String {
         if (TextUtils.isEmpty(parseDate(arrivetime)))
-            return "待定"
+            return "--"
         return parseDate(arrivetime)
     }
 
     fun getOverTime(): String {
         if (TextUtils.isEmpty(parseDate(overtime)))
-            return "待定"
+            return "--"
         return parseDate(overtime)
     }
 

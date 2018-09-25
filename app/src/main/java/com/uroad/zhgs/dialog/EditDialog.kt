@@ -2,6 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -44,8 +45,8 @@ class EditDialog(private val context: Activity) : AlertDialog(context, R.style.s
         return this
     }
 
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 

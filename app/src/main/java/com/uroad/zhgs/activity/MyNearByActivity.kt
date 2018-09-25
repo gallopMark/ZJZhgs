@@ -61,15 +61,7 @@ class MyNearByActivity : BaseActivity() {
         initMapView()
         intent.extras?.let { type = it.getInt("type", 1) }
         setCheck()
-        requestLocationPermissions(object : RequestLocationPermissionCallback {
-            override fun doAfterGrand() {
-                openLocation(AMapLocationClientOption().apply { isOnceLocation = true })
-            }
-
-            override fun doAfterDenied() {
-                showDismissLocationDialog()
-            }
-        })
+        applyLocationPermission(true)
     }
 
     private fun initMapView() {

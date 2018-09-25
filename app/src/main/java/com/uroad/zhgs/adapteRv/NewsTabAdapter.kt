@@ -14,7 +14,8 @@ import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
  */
 class NewsTabAdapter(context: Activity, mDatas: MutableList<NewsTabMDL.Type>)
     : BaseArrayRecyclerAdapter<NewsTabMDL.Type>(context, mDatas) {
-    private val width = DisplayUtils.getWindowWidth(context) / 4
+    private val width = if (mDatas.size >= 4) DisplayUtils.getWindowWidth(context) / 4
+    else DisplayUtils.getWindowHeight(context) / mDatas.size
     private val colorDefault = ContextCompat.getColor(context, R.color.gainsboro)
     private val colorSelected = ContextCompat.getColor(context, R.color.appTextColor)
     private var selectPos = 0

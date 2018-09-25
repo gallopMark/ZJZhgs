@@ -2,6 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -45,11 +46,9 @@ class WheelViewDialog(private val context: Activity)
         return this
     }
 
-    override fun show() {
-        data?.let {
-            super.show()
-            initView(it)
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        data?.let { initView(it) }
     }
 
     private fun initView(data: ArrayList<String>) {

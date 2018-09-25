@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_16"
+                    android:textSize="@dimen/font_18"
                     android:textStyle="bold" />
 
                 <TextView
@@ -109,32 +109,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/usersubscribe_beginTime"
-                    android:textColor="@color/darkgrey"
-                    android:textSize="@dimen/font_12" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llEndTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvEndTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textSize="@dimen/font_16"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvEndTimeTips"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/usersubscribe_endTime"
                     android:textColor="@color/darkgrey"
                     android:textSize="@dimen/font_12" />
             </LinearLayout>
@@ -151,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_16"
+                    android:textSize="@dimen/font_18"
                     android:textStyle="bold" />
 
                 <TextView
@@ -161,7 +135,33 @@
                     android:layout_gravity="center"
                     android:text="@string/usersubscribe_updateTime"
                     android:textColor="@color/darkgrey"
-                    android:textSize="@dimen/font_14"  />
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llEndTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/font_18"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvEndTimeTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/usersubscribe_endTime"
+                    android:textColor="@color/darkgrey"
+                    android:textSize="@dimen/font_12" />
             </LinearLayout>
         </LinearLayout>
 

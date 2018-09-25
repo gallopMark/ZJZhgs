@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -139,6 +140,10 @@
             android:theme="@style/UserEventTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activity.ShowImageActivity" />
+        <activity android:name=".activity.RoadTollActivity" />
+        <activity
+            android:name=".activity.RoadTollSearchActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activity.HighWayHotlineActivity" />
         <activity
             android:name=".activity.HighwayHotlineSearchActivity"
@@ -146,9 +151,17 @@
         <activity
             android:name=".activity.ServiceAreaActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".activity.BreakRulesActivity" />
+        <activity android:name=".activity.MoreActivity" />
         <activity android:name=".activity.MyNearByActivity" />
         <activity android:name=".activity.MyNearByTabActivity" />
+        <activity
+            android:name=".activity.VideoPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor" />
+        <activity android:name=".activity.CarInquiryActivity" />
 
+        <service android:name=".service.DownloadService" />
         <!--photopicker-->
         <provider
             android:name="android.support.v4.content.FileProvider"

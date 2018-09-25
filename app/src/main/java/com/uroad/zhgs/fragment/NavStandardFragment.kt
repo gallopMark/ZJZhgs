@@ -128,6 +128,7 @@ class NavStandardFragment : BaseFragment() {
             getMapDataByType(MapDataType.CONTROL.code)
 //            getMapDataByType(MapDataType.CONSTRUCTION.code)  //默认关闭施工
             getMapDataByType(MapDataType.TRAFFIC_JAM.code)
+            getMapDataByType(MapDataType.SNAPSHOT.code)
         }
         closeLocation()
     }
@@ -534,6 +535,11 @@ class NavStandardFragment : BaseFragment() {
                 val mdl = marker.`object` as SnapShotMDL
                 marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
                 val dialog = SnapShotDialog(context, mdl)
+                dialog.setOnItemClickListener(object : SnapShotDialog.OnItemClickListener {
+                    override fun onItemClick(position: Int, photos: ArrayList<String>) {
+                        showBigPic(position, photos)
+                    }
+                })
                 dialog.show()
                 dialog.setOnDismissListener { restoreMarker(marker) }
             }
@@ -542,11 +548,6 @@ class NavStandardFragment : BaseFragment() {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
                 val dialog = RepairShopDialog(context, mdl)
                 dialog.setOnButtonClickListener(object : RepairShopDialog.OnButtonClickListener {
-                    override fun onDetail(dataMDL: RepairShopMDL) {
-                        openLocationWebActivity(dataMDL.detailurl, dataMDL.name)
-                        dialog.dismiss()
-                    }
-
                     override fun onNavigation(dataMDL: RepairShopMDL) {
                         var poiName = ""
                         dataMDL.name?.let { poiName = it }

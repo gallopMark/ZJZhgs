@@ -5,11 +5,15 @@ import android.support.v4.util.ArrayMap
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.Gravity
+import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
+import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
@@ -26,6 +30,8 @@ class ServiceAreaActivity : BaseActivity() {
     private lateinit var aMap: AMap
     private var keyword = ""
     private val arrayMap = ArrayMap<Int, ArrayList<Marker>>()
+    private var paddingTop: Int = 0
+    private var paddingBottom: Int = 0
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_service_area)
@@ -33,6 +39,7 @@ class ServiceAreaActivity : BaseActivity() {
         mapView.onCreate(savedInstanceState)
         initMapView()
         initSearch()
+        initPadding()
         setTab(1)
     }
 
@@ -51,6 +58,25 @@ class ServiceAreaActivity : BaseActivity() {
             //移动到浙江省 120.226989,30.283935 30.3, 120.2
             animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(CurrApplication.APP_LATLNG, this.cameraPosition.zoom, 0f, 0f)))
             maxZoomLevel = 10f
+        }
+        aMap.setOnMarkerClickListener {
+            it.showInfoWindow()
+            return@setOnMarkerClickListener true
+        }
+        aMap.setInfoWindowAdapter(object : AMap.InfoWindowAdapter {
+            override fun getInfoContents(marker: Marker?): View? = null
+
+            override fun getInfoWindow(marker: Marker?): View {
+                val tv = TextView(this@ServiceAreaActivity)
+                tv.gravity = Gravity.CENTER
+                tv.text = marker?.title
+                return tv
+            }
+
+        })
+        aMap.setOnInfoWindowClickListener {
+            val mdl = it.`object` as ServiceMDL
+            openLocationWebActivity(mdl.detailurl, mdl.name)
         }
     }
 
@@ -83,6 +109,11 @@ class ServiceAreaActivity : BaseActivity() {
         })
     }
 
+    private fun initPadding() {
+        paddingTop = DisplayUtils.getStatusHeight(this) + DisplayUtils.dip2px(this, 70f)
+        paddingBottom = DisplayUtils.dip2px(this, 10f)
+    }
+
     private fun setTab(tab: Int) {
         val transaction = supportFragmentManager.beginTransaction()
         if (tab == 1) {
@@ -93,7 +124,6 @@ class ServiceAreaActivity : BaseActivity() {
                         addMarkers(position, serviceList)
                     } else {
                         removeMarkers(position)
-                        moveCamera()
                     }
                 }
             })
@@ -113,20 +143,21 @@ class ServiceAreaActivity : BaseActivity() {
 
     private fun addMarkers(position: Int, serviceList: MutableList<ServiceMDL>) {
         val markers = ArrayList<Marker>()
-        for (i in 0 until serviceList.size) {
-            serviceList[i].markerBigIco = R.mipmap.ic_marker_service_big_icon
-            val option = MarkerOptions().anchor(0.5f, 1f)
-                    .position(LatLng(serviceList[i].latitude(), serviceList[i].longitude()))
-                    .title(serviceList[i].name)
+        val builder = LatLngBounds.Builder()
+        for (item in serviceList) {
+            val latLng = LatLng(item.latitude(), item.longitude())
+            builder.include(latLng)
+            val option = MarkerOptions()
+                    .position(latLng)
+                    .title(item.name)
                     .visible(true)
                     .autoOverturnInfoWindow(true)
                     .infoWindowEnable(true)
                     .draggable(false)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_service_icon))
-            markers.add(aMap.addMarker(option).apply { `object` = serviceList[i] })
-            if (i == 0) aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(serviceList[i].latitude(),
-                    serviceList[i].longitude()), aMap.cameraPosition.zoom, 0f, 0f)))
+            markers.add(aMap.addMarker(option).apply { `object` = item })
         }
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(builder.build(), 0, 0, paddingTop, paddingBottom))
         arrayMap[position] = markers
     }
 

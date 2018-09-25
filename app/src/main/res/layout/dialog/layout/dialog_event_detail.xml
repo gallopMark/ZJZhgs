@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_16"
+                    android:textSize="@dimen/font_18"
                     android:textStyle="bold" />
 
                 <TextView
@@ -108,19 +108,19 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvEndTime"
+                    android:id="@+id/tvUpdateTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_16"
+                    android:textSize="@dimen/font_18"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvEndTimeTips"
+                    android:id="@+id/tvUpdateTimeTips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/usersubscribe_endTime"
+                    android:text="@string/usersubscribe_updateTime"
                     android:textColor="@color/darkgrey"
                     android:textSize="@dimen/font_12" />
             </LinearLayout>
@@ -133,19 +133,19 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvUpdateTime"
+                    android:id="@+id/tvEndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/font_16"
+                    android:textSize="@dimen/font_18"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvUpdateTimeTips"
+                    android:id="@+id/tvEndTimeTips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/usersubscribe_updateTime"
+                    android:text="@string/usersubscribe_endTime"
                     android:textColor="@color/darkgrey"
                     android:textSize="@dimen/font_12" />
             </LinearLayout>
@@ -155,7 +155,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_1"
-        android:layout_marginTop="@dimen/margin_15"
+        android:layout_marginTop="@dimen/margin_10"
         android:background="@color/color_f7" />
 
     <TextView

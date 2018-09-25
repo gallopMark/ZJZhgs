@@ -1,11 +1,13 @@
 package com.uroad.zhgs.activity
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import com.uroad.library.utils.BitmapUtils
 import com.uroad.library.utils.DisplayUtils
@@ -23,6 +25,9 @@ class HighWayHotlineActivity : BaseActivity() {
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_highway_hotline)
+        requestWindowFullScreen()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            ivBack.layoutParams = (ivBack.layoutParams as FrameLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@HighWayHotlineActivity) }
         ivBack.setOnClickListener { onBackPressed() }
         setTopImage()
         radioGroup.setOnCheckedChangeListener { _, checkId ->

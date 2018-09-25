@@ -2,6 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.*
@@ -20,8 +21,8 @@ import com.uroad.zhgs.model.CCTVMDL
 class CCTVDetailPageDialog(private val context: Activity,
                            private val mDatas: MutableList<CCTVMDL>)
     : Dialog(context, R.style.translucentDialog) {
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 

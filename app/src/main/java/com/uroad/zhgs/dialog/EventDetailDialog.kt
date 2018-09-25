@@ -2,10 +2,10 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -14,7 +14,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.EventMDL
-import com.uroad.zhgs.model.SubscribeMDL
+import com.uroad.zhgs.utils.TypefaceUtils
 
 /**
  *Created by MFB on 2018/8/15.
@@ -27,8 +27,8 @@ class EventDetailDialog(private val context: Activity, private val dataMDL: Even
         this.onSubscribeListener = onSubscribeListener
     }
 
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 
@@ -51,6 +51,10 @@ class EventDetailDialog(private val context: Activity, private val dataMDL: Even
             tvEventName.text = dataMDL.eventtypename
             tvTitle.text = dataMDL.roadtitle
             tvContent.text = dataMDL.reportout
+            val typeface = TypefaceUtils.dinCondensed(context)
+            tvOccTime.typeface = typeface
+            tvUpdateTime.typeface = typeface
+            tvEndTime.typeface = typeface
             if (TextUtils.isEmpty(dataMDL.getOccTime())) {
                 tvOccTime.text = "--"
             } else {

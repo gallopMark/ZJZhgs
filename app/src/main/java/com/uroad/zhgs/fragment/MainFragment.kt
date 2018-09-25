@@ -1,12 +1,12 @@
 package com.uroad.zhgs.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.amap.api.location.AMapLocation
-import com.uroad.zhgs.*
 import com.uroad.zhgs.common.BaseFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 import com.amap.api.services.weather.WeatherSearch
@@ -27,15 +27,25 @@ import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextPaint
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.widget.RelativeLayout
 import com.uroad.zhgs.activity.*
 import com.uroad.zhgs.adapteRv.NewsAdapter
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.rxbus.MessageEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import com.uroad.library.rxbus.RxBus
+import com.uroad.library.utils.DisplayUtils
+import com.uroad.library.utils.VersionUtils
+import com.uroad.zhgs.R
+import com.uroad.zhgs.dialog.BindCarDialog
+import com.uroad.zhgs.dialog.VersionDialog
+import com.uroad.zhgs.enumeration.Carcategory
+import com.uroad.zhgs.service.DownloadService
+import com.uroad.zhgs.utils.PackageInfoUtils
 import io.reactivex.disposables.Disposable
 
 
@@ -63,21 +73,24 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private lateinit var subscribeAdapter: UserSubscribePageAdapter
     private var disposable: Disposable? = null
     private var isDestroyView = false
+    private var serviceIntent: Intent? = null
+    private var onMenuClickListener: OnMenuClickListener? = null
 
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
+        const val CODE_VERSION = 0x0000
         const val CODE_SUBSCRIBE = 0x0001
         const val CODE_TOLL = 0x0002
         const val CODE_SERVICE = 0x0003
         const val CODE_SCENIC = 0x0004
         const val CODE_NEWS = 0x0005
         const val CODE_WEATHER = 0x0006
+        const val DELAY_MILLIS = 3000L
     }
 
     override fun setBaseLayoutResID(): Int = R.layout.fragment_main
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
-        initRfv()
         btNavigation.setOnClickListener { openActivity(RoadNavigationActivity::class.java) }
         btRescue.setOnClickListener {
             if (!isLogin()) openActivity(LoginActivity::class.java)
@@ -153,14 +166,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             mdl.status == 2 -> //存在进行中救援
                 openActivity(RescueDetailActivity::class.java, Bundle().apply { putString("rescueid", mdl.rescueid) })
             else -> openActivity(RescueNoticeActivity::class.java)
-        }
-    }
-
-    private fun initRfv() {
-        refreshLayout.isEnableLoadMore = false
-        refreshLayout.setOnRefreshListener {
-            if (hasLocationPermissions()) openLocation()
-            initData()
         }
     }
 
@@ -286,6 +291,11 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         })
     }
 
+    override fun onPause() {
+        super.onPause()
+        bannerView.stopAutoScroll()
+    }
+
     override fun setListener() {
         tvLJLF.setOnClickListener(this)
         tvService.setOnClickListener(this)
@@ -294,40 +304,116 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         tvShare.setOnClickListener(this)
         tvWFCX.setOnClickListener(this)
         tvGSZX.setOnClickListener(this)
-        tvMore.setOnClickListener(this)
+        tvCXCX.setOnClickListener(this)
         tvInfoMore.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.tvLJLF -> {   //路径路费
-
-            }
+            R.id.tvLJLF -> openActivity(RoadTollActivity::class.java)  //路径路费
             R.id.tvService -> openActivity(ServiceAreaActivity::class.java) //服务区
             R.id.tvGSRX -> openActivity(HighWayHotlineActivity::class.java) //高速热线
-            R.id.tvZXSC -> { //在线商城
-
+            R.id.tvCXCX -> { //诚信查询
+                if (!isLogin()) openActivity(LoginActivity::class.java)
+                else getMyCar()
+//                openActivity(OnlineShoppingActivity::class.java)
             }
             R.id.tvShare -> { //车友报料
                 if (!isLogin()) openActivity(LoginActivity::class.java)
                 else openActivity(UserEventListActivity::class.java)
             }
             R.id.tvWFCX -> {  //违法查询
-
+                openActivity(BreakRulesActivity::class.java)
             }
             R.id.tvGSZX -> { //高速资讯
                 openActivity(NewsMainActivity::class.java)
             }
-            R.id.tvMore -> {  //更多
-
+            R.id.tvZXSC -> {  //在线商城
+                onMenuClickListener?.onMenuClick()
+//                openActivity(MoreActivity::class.java)
             }
             R.id.tvInfoMore -> openActivity(NewsMainActivity::class.java) //更多资讯
         }
     }
 
+    /*获取用户车辆（仅客车）*/
+    private fun getMyCar() {
+        doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), Carcategory.COACH.code), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
+                    if (mdLs.size > 0) {
+                        openActivity(CarInquiryActivity::class.java)
+                    } else {
+                        BindCarDialog(context).setOnConfirmClickListener(object : BindCarDialog.OnConfirmClickListener {
+                            override fun onConfirm(dialog: BindCarDialog) {
+                                dialog.dismiss()
+                                openActivity(BindCarActivity::class.java)
+                            }
+                        }).show()
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
+    }
+
     override fun initData() {
 //        getSubscribe()
+        getVersionByType()
         getNewsList()
+    }
+
+    /*获取app版本号*/
+    private fun getVersionByType() {
+        doRequest(WebApiService.APP_VERSION, WebApiService.appVersionParams(PackageInfoUtils.getVersionName(context)), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, VersionMDL::class.java)
+                    mdl?.let { versionTips(it) }
+                } else {
+                    handler.sendEmptyMessageDelayed(CODE_VERSION, DELAY_MILLIS)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.sendEmptyMessageDelayed(CODE_VERSION, DELAY_MILLIS)
+            }
+        })
+    }
+
+    /*版本检测是否更新*/
+    private fun versionTips(mdl: VersionMDL) {
+        if (VersionUtils.isNeedUpdate(mdl.conf_ver, PackageInfoUtils.getVersionName(context))) {
+            VersionDialog(context, mdl).setOnConfirmClickListener(object : VersionDialog.OnConfirmClickListener {
+                override fun onConfirm(mdl: VersionMDL, dialog: VersionDialog) {
+                    dialog.dismiss()
+                    if (TextUtils.isEmpty(mdl.url)) showShortToast(context.getString(R.string.version_update_error))
+                    else {
+                        serviceIntent = Intent(context, DownloadService::class.java).apply {
+                            putExtra("downloadUrl", mdl.url)
+                            if (mdl.isforce == 1) {
+                                putExtra("isForce", true)
+                            } else {
+                                putExtra("isForce", false)
+                            }
+                            context.startService(this)
+                        }
+                    }
+                }
+            }).show()
+        }
     }
 
     /*获取我的订阅*/
@@ -339,13 +425,13 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     val mdLs = GsonUtils.fromDataToList(data, SubscribeMDL::class.java)
                     updateSubscribe(mdLs)
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_SUBSCRIBE, 3000)
+                    handler.sendEmptyMessageDelayed(CODE_SUBSCRIBE, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
                 //加载失败，延迟三秒重新加载
-                handler.sendEmptyMessageDelayed(CODE_SUBSCRIBE, 3000)
+                handler.sendEmptyMessageDelayed(CODE_SUBSCRIBE, DELAY_MILLIS)
             }
         })
     }
@@ -366,18 +452,16 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private fun getNewsList() {
         doRequest(WebApiService.HOME_NEWS, HashMap(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
-                refreshLayout.finishRefresh()
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, NewsMDL::class.java)
                     updateNews(mdLs)
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_NEWS, 3000)
+                    handler.sendEmptyMessageDelayed(CODE_NEWS, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                refreshLayout.finishRefresh()
-                handler.sendEmptyMessageDelayed(CODE_NEWS, 3000)
+                handler.sendEmptyMessageDelayed(CODE_NEWS, DELAY_MILLIS)
             }
         })
     }
@@ -453,7 +537,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             tv_temperature.text = temperature
             tv_city.text = result.city
         } else {
-            handler.sendEmptyMessageDelayed(CODE_WEATHER, 3000)
+            handler.sendEmptyMessageDelayed(CODE_WEATHER, DELAY_MILLIS)
         }
     }
 
@@ -483,12 +567,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     tollList.addAll(list)
                     updateToll(list)
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_TOLL, 3000)
+                    handler.sendEmptyMessageDelayed(CODE_TOLL, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_TOLL, 3000)
+                handler.sendEmptyMessageDelayed(CODE_TOLL, DELAY_MILLIS)
             }
         })
     }
@@ -502,12 +586,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     val list = GsonUtils.fromDataToList(data, ServiceMDL::class.java)
                     updateService(list)
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_SERVICE, 3000)
+                    handler.sendEmptyMessageDelayed(CODE_SERVICE, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_SERVICE, 3000)
+                handler.sendEmptyMessageDelayed(CODE_SERVICE, DELAY_MILLIS)
             }
         })
     }
@@ -521,12 +605,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     val list = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
                     updateScenic(list)
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_SCENIC, 3000)
+                    handler.sendEmptyMessageDelayed(CODE_SCENIC, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_SCENIC, 3000)
+                handler.sendEmptyMessageDelayed(CODE_SCENIC, DELAY_MILLIS)
             }
         })
     }
@@ -578,6 +662,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         override fun handleMessage(msg: Message) {
             val fragment = weakReference.get() ?: return
             when (msg.what) {
+                CODE_VERSION -> fragment.getVersionByType()
                 CODE_SUBSCRIBE -> fragment.getSubscribe()
                 CODE_TOLL -> fragment.getNearByToll(fragment.latitude, fragment.longitude)
                 CODE_SERVICE -> fragment.getNearByService(fragment.latitude, fragment.longitude)
@@ -599,12 +684,22 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             flSubscribe.visibility = View.GONE
         }
         getSubscribe()
+        bannerView.startAutoScroll()
     }
 
     override fun onDestroyView() {
         isDestroyView = true
         disposable?.dispose()
         handler.removeCallbacksAndMessages(null)
+        serviceIntent?.let { context.stopService(it) }
         super.onDestroyView()
+    }
+
+    interface OnMenuClickListener {
+        fun onMenuClick()
+    }
+
+    fun setOnMenuClickListener(onMenuClickListener: OnMenuClickListener) {
+        this.onMenuClickListener = onMenuClickListener
     }
 }

@@ -25,8 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_16"
         android:layout_marginBottom="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_16"
         android:gravity="center"
         android:lineSpacingExtra="@dimen/margin_2"
         android:overScrollMode="never"
@@ -61,9 +61,11 @@
             android:paddingTop="@dimen/margin_8"
             android:text="@string/dialog_button_cancel"
             android:textColor="@color/colorAccent"
-            android:textSize="@dimen/font_16" />
+            android:textSize="@dimen/font_16"
+            android:visibility="gone" />
 
         <TextView
+            android:id="@+id/tvDivider"
             android:layout_width="@dimen/margin_1"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/margin_8"
@@ -79,6 +81,7 @@
             android:paddingBottom="@dimen/margin_8"
             android:paddingLeft="@dimen/margin_12"
             android:paddingRight="@dimen/margin_12"
+            android:visibility="gone"
             android:paddingTop="@dimen/margin_8"
             android:text="@string/dialog_button_confirm"
             android:textColor="@color/colorAccent"

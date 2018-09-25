@@ -27,7 +27,14 @@ class MainActivity : BaseActivity() {
         hideFragments(transaction)
         when (tab) {
             1 -> {
-                if (mainFragment == null) mainFragment = MainFragment().apply { if (!this.isAdded) transaction.add(R.id.content, this) }
+                if (mainFragment == null) mainFragment = MainFragment().apply {
+                    setOnMenuClickListener(object : MainFragment.OnMenuClickListener {
+                        override fun onMenuClick() {
+                            this@MainActivity.radioGroup.check(R.id.rbShop)
+                        }
+                    })
+                    if (!this.isAdded) transaction.add(R.id.content, this)
+                }
                 else mainFragment?.let { transaction.show(it) }
             }
             2 -> {

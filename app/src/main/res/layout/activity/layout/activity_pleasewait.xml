@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableTop="@mipmap/ic_please_wait"
+        android:gravity="center"
+        android:drawablePadding="@dimen/margin_15"
+        android:text="@string/developing"
+        android:textSize="@dimen/font_16" />
+</FrameLayout>

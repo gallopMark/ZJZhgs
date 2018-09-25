@@ -20,15 +20,7 @@ class MyNearByTabActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         withTitle(resources.getString(R.string.mynearby_title))
         setBaseContentLayout(R.layout.activity_mynearby_tab)
-        requestLocationPermissions(object : RequestLocationPermissionCallback {
-            override fun doAfterGrand() {
-                openLocation()
-            }
-
-            override fun doAfterDenied() {
-                showDismissLocationDialog()
-            }
-        })
+        applyLocationPermission(true)
     }
 
     private fun initTab() {

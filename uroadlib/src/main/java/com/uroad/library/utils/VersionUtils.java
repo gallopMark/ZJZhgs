@@ -24,6 +24,15 @@ public class VersionUtils {
         }
     }
 
+    public static String getVersionName(Context context) {
+        try {
+            PackageInfo packageInfo = context.getApplicationContext().getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (Exception e) {
+            return "1.0";
+        }
+    }
+
     /**
      * @return if version1 > version2, return 1, if equal, return 0, else return -1
      */

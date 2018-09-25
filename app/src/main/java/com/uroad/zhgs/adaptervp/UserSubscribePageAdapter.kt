@@ -14,12 +14,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.SubscribeMDL
+import com.uroad.zhgs.utils.TypefaceUtils
 
 /**
  *Created by MFB on 2018/8/22.
  */
 class UserSubscribePageAdapter(private val context: Context,
                                private val mDatas: MutableList<SubscribeMDL>) : PagerAdapter() {
+    private val typeface = TypefaceUtils.dinCondensed(context)
     private var mDownTime: Long = 0
     private var mListener: OnPageTouchListener? = null
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
@@ -99,10 +101,18 @@ class UserSubscribePageAdapter(private val context: Context,
         tvEventName.text = item.eventtypename
         tvTitle.text = item.roadtitle
         tvContent.text = item.reportout
+        tvOccTime.typeface = typeface
+        tvUpdateTime.typeface = typeface
+        tvEndTime.typeface = typeface
         if (TextUtils.isEmpty(item.getOccTime())) {
             tvOccTime.text = "--"
         } else {
             tvOccTime.text = item.getOccTime()
+        }
+        if (TextUtils.isEmpty(item.getUpdateTime())) {
+            tvUpdateTime.text = "--"
+        } else {
+            tvUpdateTime.text = item.getUpdateTime()
         }
         if (item.getSubType() == SubscribeMDL.SubType.Planned.code) {
             tvEndTimeTips.text = context.resources.getString(R.string.usersubscribe_planEndTime)
@@ -110,19 +120,12 @@ class UserSubscribePageAdapter(private val context: Context,
             tvEndTimeTips.text = context.resources.getString(R.string.usersubscribe_endTime)
         }
         tvEndTime.text = item.getRealoverTime()
-        if (TextUtils.isEmpty(item.getUpdateTime())) {
-            tvUpdateTime.text = "--"
-        } else {
-            tvUpdateTime.text = item.getUpdateTime()
-        }
     }
 
     /*拥堵类型*/
     private fun convertTraffic(view: View, item: SubscribeMDL) {
         val ivIcon = view.findViewById<ImageView>(R.id.ivIcon)
         val tvEventName = view.findViewById<TextView>(R.id.tvEventName)
-//        val tvStatus = view.findViewById<TextView>(R.id.tvStatus)
-//        val tvUpdateTime = view.findViewById<TextView>(R.id.tvUpdateTime)
         val tvTitle = view.findViewById<TextView>(R.id.tvTitle)
         val tvContent = view.findViewById<TextView>(R.id.tvContent)
         val tvOccTime = view.findViewById<TextView>(R.id.tvOccTime)
@@ -131,16 +134,12 @@ class UserSubscribePageAdapter(private val context: Context,
         val tvDuration = view.findViewById<TextView>(R.id.tvDuration)
         ivIcon.setImageResource(R.mipmap.ic_menu_event_yd_p)
         tvEventName.text = item.eventstatus
-//        if (TextUtils.isEmpty(item.statusname)) {
-//            tvStatus.visibility = View.GONE
-//        } else {
-//            tvStatus.visibility = View.VISIBLE
-//            tvStatus.text = item.statusname
-//            tvStatus.setBackgroundColor(item.getStatusColor(context))
-//        }
-//        tvUpdateTime.text = item.getUpdateTime()
         tvTitle.text = item.roadtitle
         tvContent.text = item.content
+        tvOccTime.typeface = typeface
+        tvJamSpeed.typeface = typeface
+        tvDistance.typeface = typeface
+        tvDuration.typeface = typeface
         if (TextUtils.isEmpty(item.getPubTime())) {
             tvOccTime.text = "--"
         } else {
@@ -171,6 +170,9 @@ class UserSubscribePageAdapter(private val context: Context,
         tvRoadname.text = item.roadname
         tvContent.text = if (TextUtils.isEmpty(item.content)) "待定"
         else item.content
+        tvAcceptTime.typeface = typeface
+        tvStartTime.typeface = typeface
+        tvArriveTime.typeface = typeface.also {  }
         tvAcceptTime.text = item.getAcceptTime()
         tvStartTime.text = item.getStartTime()
         tvArriveTime.text = item.getArriveTime()

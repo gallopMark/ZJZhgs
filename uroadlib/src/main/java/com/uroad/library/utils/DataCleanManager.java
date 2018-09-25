@@ -44,7 +44,8 @@ public class DataCleanManager {
     }
 
     private static boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
+        if(dir == null) return true;
+        if (dir.isDirectory()) {
             String[] children = dir.list();
             for (String aChildren : children) {
                 boolean success = deleteDir(new File(dir, aChildren));

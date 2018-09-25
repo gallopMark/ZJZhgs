@@ -2,6 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -31,8 +32,8 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
         this.onPhotoClickListener = onPhotoClickListener
     }
 
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 
@@ -79,7 +80,7 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
                                 pics.add(t.getPicUrls()[i])
                             }
                         }
-                        onPhotoClickListener?.onPhotoClick(position,pics)
+                        onPhotoClickListener?.onPhotoClick(position, pics)
                     }
                 })
             } else {

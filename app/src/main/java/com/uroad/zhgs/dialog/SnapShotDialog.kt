@@ -2,7 +2,6 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
@@ -26,6 +25,12 @@ import com.uroad.zhgs.widget.GridSpacingItemDecoration
  */
 class SnapShotDialog(private val context: Activity, private val dataMDL: SnapShotMDL)
     : Dialog(context, R.style.transparentDialog) {
+
+    private var onItemClickListener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.onItemClickListener = onItemClickListener
+    }
 
     override fun show() {
         super.show()
@@ -61,10 +66,7 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
                                 pics.add(dataMDL.getPicUrls()[i])
                             }
                         }
-                        context.startActivity(Intent(context, ShowImageActivity::class.java).apply {
-                            putExtra("position", position)
-                            putStringArrayListExtra("photos", pics)
-                        })
+                        onItemClickListener?.onItemClick(position, pics)
                     }
                 })
             } else {
@@ -89,5 +91,9 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
             }
             holder.displayImage(R.id.ivPic, t, R.color.whitesmoke)
         }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int, photos: ArrayList<String>)
     }
 }

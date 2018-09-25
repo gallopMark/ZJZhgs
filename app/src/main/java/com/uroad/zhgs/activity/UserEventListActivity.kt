@@ -33,7 +33,7 @@ class UserEventListActivity : BaseActivity() {
     private val hashMap = ArrayMap<Int, String>()
     private var isAnim = false
     private var isMy = false
-    private var type = WebApiService.REPORT_TYPE_DEFAULT
+    private var type: String? = null
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_userevent_list)

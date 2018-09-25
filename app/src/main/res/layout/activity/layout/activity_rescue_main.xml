@@ -1,14 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/translucence">
 
-    <com.uroad.zhgs.widget.MyMapView
-        android:id="@+id/mapView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.uroad.zhgs.widget.MyMapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btRescueCall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_margin="@dimen/margin_20"
+            android:background="@mipmap/ic_button_corner_bg"
+            android:gravity="center"
+            android:text="@string/rescue_main_rescue_call"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_18"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/transparent">
+
+            <ImageView
+                android:id="@+id/ivLocation"
+                android:layout_width="@dimen/margin_50"
+                android:layout_height="@dimen/margin_50"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_20"
+                android:background="@drawable/bg_corners_white_3dp"
+                android:scaleType="center"
+                android:src="@mipmap/ic_gaode_location_blue" />
+
+            <LinearLayout
+                android:id="@+id/llInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivLocation"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_corners_white_3dp"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_10"
+                android:visibility="invisible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rescue_main_mylocation"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/margin_10"
+                    android:paddingTop="@dimen/margin_10">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rescue_main_name"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvHighWayName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_1"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/margin_10"
+                    android:paddingTop="@dimen/margin_10">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/rescue_main_pilenum"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/font_14" />
+
+                    <TextView
+                        android:id="@+id/tvPileNum"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginRight="@dimen/margin_10"
+                        android:layout_weight="1"
+                        android:textColor="@color/appTextColor"
+                        android:textSize="@dimen/font_14" />
+
+                    <ImageView
+                        android:id="@+id/ivQuestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_question_icon" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/btCallHelp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_rescue_button_callphone" />
+
+                    <Button
+                        android:id="@+id/btRescue"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/margin_5"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_weight="2"
+                        android:background="@drawable/bg_gray_corners_30dp"
+                        android:text="@string/rescue_main_selfHelp_rescue"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_16" />
+                    <!--android:background="@mipmap/ic_button_corner_bg"-->
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlOutLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/llInfo"
+                android:layout_alignTop="@+id/llInfo"
+                android:layout_below="@+id/ivLocation"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_corners_white_5dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvOutLineTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:gravity="center|start"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/tvOutLineTips"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rvPhone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_10"
+                            android:overScrollMode="never" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/margin_1"
+                            android:background="@color/color_f7" />
+
+                        <TextView
+                            android:id="@+id/tvMorePhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:padding="@dimen/margin_10"
+                            android:text="@string/rescue_main_more_phone"
+                            android:textColor="@color/darkgrey"
+                            android:textSize="@dimen/font_14" />
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/customToolbar"
@@ -20,265 +224,65 @@
             style="@style/ToolbarTitleTextView" />
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvCurrLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/margin_60"
-            android:background="@mipmap/ic_mapview_position_tipsbg"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_14"
-            android:visibility="gone" />
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin_5">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@mipmap/ic_location_circle_black" />
-
-                    <ImageView
-                        android:id="@+id/ivDiffuse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/anim_location" />
-
-                </FrameLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/ic_location_underline" />
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
-
     <ImageView
         android:id="@+id/btTopPostage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|top"
-        android:layout_marginTop="@dimen/margin_65"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/customToolbar"
+        android:layout_marginTop="@dimen/margin_10"
         android:src="@mipmap/ic_rescue_button_postage" />
 
-    <Button
-        android:id="@+id/btRescueCall"
+    <TextView
+        android:id="@+id/tvCurrLocation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="@dimen/margin_20"
-        android:background="@mipmap/ic_button_corner_bg"
+        android:layout_height="@dimen/margin_60"
+        android:layout_above="@+id/flPos"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/ic_mapview_position_tipsbg"
         android:gravity="center"
-        android:text="@string/rescue_main_rescue_call"
         android:textColor="@color/white"
-        android:textSize="@dimen/font_18"
+        android:textSize="@dimen/font_14"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/flPos"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/transparent">
-
-        <ImageView
-            android:id="@+id/ivLocation"
-            android:layout_width="@dimen/margin_50"
-            android:layout_height="@dimen/margin_50"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginTop="@dimen/margin_20"
-            android:background="@drawable/bg_corners_white_3dp"
-            android:scaleType="center"
-            android:src="@mipmap/ic_gaode_location_blue" />
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/margin_5">
 
         <LinearLayout
-            android:id="@+id/llInfo"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ivLocation"
             android:layout_gravity="center"
-            android:background="@drawable/bg_corners_white_3dp"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_10"
-            android:visibility="invisible">
+            android:orientation="vertical">
 
-            <TextView
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rescue_main_mylocation"
-                android:textColor="@color/appTextColor"
-                android:textSize="@dimen/font_14" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/margin_10"
-                android:paddingTop="@dimen/margin_10">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rescue_main_name"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/font_14" />
-
-                <TextView
-                    android:id="@+id/tvHighWayName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:textColor="@color/appTextColor"
-                    android:textSize="@dimen/font_14" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_1"
-                android:background="@color/divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/margin_10"
-                android:paddingTop="@dimen/margin_10">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/rescue_main_pilenum"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/font_14" />
-
-                <TextView
-                    android:id="@+id/tvPileNum"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:layout_weight="1"
-                    android:textColor="@color/appTextColor"
-                    android:textSize="@dimen/font_14" />
+                android:layout_gravity="center">
 
                 <ImageView
-                    android:id="@+id/ivQuestion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_question_icon" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_5"
-                android:orientation="horizontal">
+                    android:src="@mipmap/ic_location_circle_black" />
 
                 <ImageView
-                    android:id="@+id/btCallHelp"
+                    android:id="@+id/ivDiffuse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_rescue_button_callphone" />
+                    android:layout_gravity="center"
+                    android:src="@drawable/anim_location" />
 
-                <Button
-                    android:id="@+id/btRescue"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_weight="2"
-                    android:background="@mipmap/ic_button_corner_bg"
-                    android:text="@string/rescue_main_selfHelp_rescue"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_16" />
-            </LinearLayout>
-        </LinearLayout>
+            </FrameLayout>
 
-        <RelativeLayout
-            android:id="@+id/rlOutLine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/llInfo"
-            android:layout_alignTop="@+id/llInfo"
-            android:layout_below="@+id/ivLocation"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_corners_white_5dp"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tvOutLineTips"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
-                android:layout_marginTop="@dimen/margin_10"
-                android:gravity="center|start"
-                android:textColor="@color/appTextColor"
-                android:textSize="@dimen/font_14" />
-
-            <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/tvOutLineTips"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rvPhone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_marginRight="@dimen/margin_10"
-                        android:overScrollMode="never" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/margin_1"
-                        android:background="@color/color_f7" />
-
-                    <TextView
-                        android:id="@+id/tvMorePhone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:padding="@dimen/margin_10"
-                        android:text="@string/rescue_main_more_phone"
-                        android:textColor="@color/darkgrey"
-                        android:textSize="@dimen/font_14" />
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
-        </RelativeLayout>
-    </RelativeLayout>
-</FrameLayout>
+                android:src="@mipmap/ic_location_underline" />
+        </LinearLayout>
+    </FrameLayout>
+</RelativeLayout>

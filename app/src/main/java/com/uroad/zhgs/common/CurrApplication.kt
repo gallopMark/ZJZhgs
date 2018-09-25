@@ -2,6 +2,8 @@ package com.uroad.zhgs.common
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Typeface
+import android.os.Build
 import android.os.Handler
 import android.support.multidex.MultiDex
 import android.text.TextUtils
@@ -21,6 +23,7 @@ import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.WebApiService
 import java.io.File
+import java.nio.file.Files.exists
 
 /**
  *Created by MFB on 2018/7/26.
@@ -60,7 +63,7 @@ class CurrApplication : Application() {
     }
 
     private fun initCompressorPath() {
-        COMPRESSOR_PATH = "${filesDir.absolutePath}${File.separator}compressor"
+        COMPRESSOR_PATH = "${cacheDir.absolutePath}${File.separator}compressor"
         File(COMPRESSOR_PATH).apply { if (!exists()) this.mkdirs() }
     }
 

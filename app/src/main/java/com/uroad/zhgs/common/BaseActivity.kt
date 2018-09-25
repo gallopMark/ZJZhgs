@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -38,7 +39,6 @@ import com.amap.api.maps.model.Poi
 import com.amap.api.navi.AmapNaviPage
 import com.amap.api.navi.AmapNaviParams
 import com.amap.api.navi.AmapNaviType
-import com.uroad.library.utils.DisplayUtils
 import com.uroad.library.utils.NetworkUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.activity.LocationWebViewActivity
@@ -85,8 +85,9 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
     private var permissionCallback: RequestLocationPermissionCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
+        requestWindow()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT //强制竖屏
         setContentView(R.layout.activity_base)
 //        initStatusBar()
@@ -95,6 +96,8 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         initData()
         setListener()
     }
+
+    open fun requestWindow() {}
 
     open fun initStatusBar() {
 //        // 系统 6.0 以上 状态栏白底黑字的实现方法
@@ -105,20 +108,27 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         StatuBarUtils.statusBarFlymeLightMode(window, true)
     }
 
-    //全屏显示
-    fun requestWindowFullScreen() {
-        //透明状态栏
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        //透明导航栏
-        //     window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-    }
-
-    //android7.0沉浸式需要将布局挪到状态栏下面
-    fun requsetWindowUnderStatuBar() {
-        // baseParent.fitsSystemWindows = true
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val paddingTop = DisplayUtils.getStatusHeight(this)
-            baseParent.setPadding(0, paddingTop, 0, 0)
+    /**
+     * 通过设置全屏，设置状态栏透明
+     */
+    open fun requestWindowFullScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
+                val decorView = window.decorView
+                //两个 flag 要结合使用，表示让应用的主体内容占用系统状态栏的空间
+                val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                decorView.systemUiVisibility = option
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                window.statusBarColor = Color.TRANSPARENT
+                //导航栏颜色也可以正常设置
+//                window.setNavigationBarColor(Color.TRANSPARENT);
+            } else {
+                val attributes = window.attributes
+                val flagTranslucentStatus = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                attributes.flags = flagTranslucentStatus
+                window.attributes = attributes
+            }
         }
     }
 
@@ -468,6 +478,7 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         val dialog = MaterialDialog(this)
         dialog.setTitle(title)
         dialog.setMessage(message)
+        dialog.hideDivider()
         dialog.setPositiveButton(textConfirm, listener)
         dialog.show()
     }
@@ -504,7 +515,7 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         showShortToast("数据解析错误")
     }
 
-    fun showShortToast(text: CharSequence) {
+    fun showShortToast(text: CharSequence?) {
         if (TextUtils.isEmpty(text)) return
         val v = LayoutInflater.from(this).inflate(R.layout.layout_base_toast, LinearLayout(this), false)
         val textView = v.findViewById<TextView>(R.id.tv_text)
@@ -520,7 +531,7 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         }
     }
 
-    fun showLongToast(text: CharSequence) {
+    fun showLongToast(text: CharSequence?) {
         if (TextUtils.isEmpty(text)) return
         val v = LayoutInflater.from(this).inflate(R.layout.layout_base_toast, LinearLayout(this), false)
         val textView = v.findViewById<TextView>(R.id.tv_text)
@@ -580,7 +591,7 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
                     for (permission in permissions) {
                         //可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                            showDismissLocationDialog()
+                            showProhibitLocationDialog()
                             break
                         } else {
                             permissionCallback?.doAfterDenied()
@@ -594,7 +605,37 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
 
     fun isShouldShowRequestPermissionRationale(permission: String): Boolean = ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
 
-    fun showDismissLocationDialog() {
+    fun applyLocationPermission(finishAfterDenied: Boolean) {
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+                var isOpen = false
+                val dialog = MaterialDialog(this@BaseActivity)
+                dialog.setTitle(getString(R.string.dialog_default_title))
+                dialog.setMessage(getString(R.string.dismiss_location_message))
+                dialog.setNegativeButton(getString(R.string.dialog_button_cancel), object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        dialog.dismiss()
+                    }
+                })
+                dialog.setPositiveButton(getString(R.string.reopen), object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        isOpen = true
+                        dialog.dismiss()
+                        applyLocationPermission(finishAfterDenied)
+                    }
+                })
+                dialog.show()
+                dialog.setOnDismissListener { if (!isOpen && finishAfterDenied) finish() }
+            }
+        })
+    }
+
+    /*用户选择了禁止不再提示 则显示此对话框，引导用户到app应用设置页面打开*/
+    fun showProhibitLocationDialog() {
         showDialog(getString(R.string.rescue_main_without_location_title), getString(R.string.rescue_main_location_ban),
                 getString(R.string.dialog_button_cancel), getString(R.string.gotoSettings)
                 , object : MaterialDialog.ButtonClickListener {

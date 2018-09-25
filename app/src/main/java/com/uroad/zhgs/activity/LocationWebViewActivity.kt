@@ -1,12 +1,15 @@
 package com.uroad.zhgs.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Poi
 import com.uroad.zhgs.common.BaseWebViewActivity
+import com.uroad.zhgs.dialog.MaterialDialog
 import kotlinx.android.synthetic.main.activity_base_webview.*
 
 
@@ -41,15 +44,7 @@ class LocationWebViewActivity : BaseWebViewActivity() {
         //12．	主动获取经纬度
         @android.webkit.JavascriptInterface
         fun uroadplus_lnglat() {
-            requestLocationPermissions(object : RequestLocationPermissionCallback {
-                override fun doAfterGrand() {
-                    openLocation()
-                }
-
-                override fun doAfterDenied() {
-                    showDismissLocationDialog()
-                }
-            })
+            applyLocationPermission(false)
         }
 
         //h5调用app导航

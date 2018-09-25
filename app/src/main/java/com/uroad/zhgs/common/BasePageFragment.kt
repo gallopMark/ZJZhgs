@@ -417,7 +417,8 @@ abstract class BasePageFragment : Fragment() {
         dialog.show()
     }
 
-    fun showShortToast(text: String) {
+    fun showShortToast(text: CharSequence?) {
+        if (TextUtils.isEmpty(text)) return
         val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, null)
         val textView = v.findViewById<TextView>(R.id.tv_text)
         textView.text = text
@@ -432,7 +433,8 @@ abstract class BasePageFragment : Fragment() {
         }
     }
 
-    fun showLongToast(text: String) {
+    fun showLongToast(text: CharSequence?) {
+        if (TextUtils.isEmpty(text)) return
         val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, null)
         val textView = v.findViewById<TextView>(R.id.tv_text)
         textView.text = text

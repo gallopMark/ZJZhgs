@@ -157,17 +157,16 @@ class WebApiService {
 
         //1.18 用户报料-列表
         const val USER_EVELT_LIST = "getUserEventList"
-        const val REPORT_TYPE_DEFAULT = ""
         const val REPORT_TYPE_MY = "my"
         /**
-         * userid	用户ID	否
-        index	当前页	否	1 开始
-        size	每页显示的数量	否
-        type	类型	否	默认全部；传 my 获取我的报料
+         * userid	用户ID
+        index	当前页		1 开始
+        size	每页显示的数量
+        type	类型		默认全部；传 my 获取我的报料
          */
         fun userEventListParams(userid: String?, type: String?, index: Int, size: Int) = getBaseParams().apply {
             put("userid", userid)
-            put("type", type)
+            type?.let { put("type", it) }
             put("index", index.toString())
             put("size", size.toString())
         }
@@ -470,11 +469,29 @@ class WebApiService {
 
         //首页资讯
         const val HOME_NEWS = "getHomeNews"
+        //路径路费
+        const val TOLL_GATE_LIST = "getTollGateList"
 
-        //简图事件详情
-        const val JT_EVENT_DATA = "getEventDataByType"
+        fun tollGateListParams(keyword: String) = getBaseParams().apply { put("keyword", keyword) }
 
-        fun jtEventDataParams(eventtype: String?) = getBaseParams().apply { put("eventtype", eventtype) }
+        const val QUERY_ROAD_TOLL = "getRouteFee"
+        //路径路费查询
+        /**
+        startpoiid	开始站点ID
+        endpoiid	结束站点ID
+         */
+        fun queryRoadTollParmas(startpoiid: String?, endpoiid: String?) = getBaseParams().apply {
+            put("startpoiid", startpoiid)
+            put("endpoiid", endpoiid)
+        }
+
+        //1.50 获取最新版本号
+        const val APP_VERSION = "getVersionByType"
+
+        fun appVersionParams(ver: String) = getBaseParams().apply {
+            put("type", "android")
+            put("ver", ver)
+        }
     }
 
 }

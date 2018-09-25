@@ -8,6 +8,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 
 import com.uroad.library.utils.ScreenUtils
@@ -20,20 +21,22 @@ import com.uroad.zhgs.R
  * 作者:马飞奔 Administrator
  */
 class MaterialDialog(mContext: Context) : AlertDialog(mContext, R.style.baseCustomDialog_margin30) {
-    private val view: View = LayoutInflater.from(mContext).inflate(R.layout.dialog_material, null)
-    private val tv_tips: TextView // 提示框标题
-    private val tv_message: TextView // 提示内容
-    private val bt_makesure: Button // 确定按钮
-    private val bt_cancel: Button // 取消按钮
+    private val view: View = LayoutInflater.from(mContext).inflate(R.layout.dialog_material, LinearLayout(mContext), false)
+    private val tvTips: TextView // 提示框标题
+    private val tvMessage: TextView // 提示内容
+    private val btMakeSure: Button // 确定按钮
+    private val tvDivider: TextView
+    private val btCancel: Button // 取消按钮
 
     init {
-        tv_tips = view.findViewById(R.id.tv_tips)
-        tv_message = view.findViewById(R.id.tv_message)
-        bt_makesure = view.findViewById(R.id.bt_makesure)
-        bt_cancel = view.findViewById(R.id.bt_cancel)
+        tvTips = view.findViewById(R.id.tv_tips)
+        tvMessage = view.findViewById(R.id.tv_message)
+        btMakeSure = view.findViewById(R.id.bt_makesure)
+        tvDivider = view.findViewById(R.id.tvDivider)
+        btCancel = view.findViewById(R.id.bt_cancel)
         val maxHeight = (ScreenUtils.getScreenHeight(mContext) * 0.6).toInt()
-        tv_message.maxHeight = maxHeight
-        tv_message.movementMethod = ScrollingMovementMethod.getInstance()
+        tvMessage.maxHeight = maxHeight
+        tvMessage.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,51 +46,55 @@ class MaterialDialog(mContext: Context) : AlertDialog(mContext, R.style.baseCust
 
     override fun setTitle(title: CharSequence?) {
         if (TextUtils.isEmpty(title)) {
-            tv_tips.visibility = View.GONE
+            tvTips.visibility = View.GONE
         } else {
-            tv_tips.text = title
-            tv_tips.visibility = View.VISIBLE
+            tvTips.text = title
+            tvTips.visibility = View.VISIBLE
         }
     }
 
-    override fun setMessage(message: CharSequence) {
-        tv_message.text = message
+    override fun setMessage(message: CharSequence?) {
+        tvMessage.text = message
+    }
+
+    fun hideDivider() {
+        tvDivider.visibility = View.GONE
     }
 
     /* 确定按钮 */
-    fun setPositiveButton(text: CharSequence, listener: ButtonClickListener?) {
+    fun setPositiveButton(text: CharSequence?, listener: ButtonClickListener?) {
         if (!TextUtils.isEmpty(text)) {
-            bt_makesure.text = text
-            bt_makesure.visibility = View.VISIBLE
-            bt_makesure.setOnClickListener {
-                if (listener != null) listener.onClick(bt_makesure, this@MaterialDialog)
+            btMakeSure.text = text
+            btMakeSure.visibility = View.VISIBLE
+            btMakeSure.setOnClickListener {
+                if (listener != null) listener.onClick(btMakeSure, this@MaterialDialog)
                 else dismiss()
             }
         } else {
-            bt_makesure.visibility = View.GONE
+            btMakeSure.visibility = View.GONE
         }
     }
 
     /* 取消按钮 */
-    fun setNegativeButton(text: CharSequence, listener: ButtonClickListener?) {
+    fun setNegativeButton(text: CharSequence?, listener: ButtonClickListener?) {
         if (!TextUtils.isEmpty(text)) {
-            bt_cancel.text = text
-            bt_cancel.visibility = View.VISIBLE
-            bt_cancel.setOnClickListener {
-                if (listener != null) listener.onClick(bt_cancel, this@MaterialDialog)
+            btCancel.text = text
+            btCancel.visibility = View.VISIBLE
+            btCancel.setOnClickListener {
+                if (listener != null) listener.onClick(btCancel, this@MaterialDialog)
                 else dismiss()
             }
         } else {
-            bt_cancel.visibility = View.GONE
+            btCancel.visibility = View.GONE
         }
     }
 
     fun setNegativeTextColor(color: Int) {
-        bt_cancel.setTextColor(color)
+        btCancel.setTextColor(color)
     }
 
     fun setPositiveTextColor(color: Int) {
-        bt_makesure.setTextColor(color)
+        btMakeSure.setTextColor(color)
     }
 
     interface ButtonClickListener {

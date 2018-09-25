@@ -2,6 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.text.TextUtils
@@ -9,13 +10,11 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.uroad.library.widget.banner.BannerBaseAdapter
 import com.uroad.library.widget.banner.BannerView
 import com.uroad.zhgs.R
-import com.uroad.zhgs.R.id.*
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.EventMDL
-import com.uroad.zhgs.model.SubscribeMDL
+import com.uroad.zhgs.utils.TypefaceUtils
 
 /**
  *Created by MFB on 2018/8/25.
@@ -24,8 +23,8 @@ class EventDetailPageDialog(private val context: Activity,
                             private val mDatas: MutableList<EventMDL>)
     : Dialog(context, R.style.translucentDialog) {
 
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 
@@ -91,6 +90,10 @@ class EventDetailPageDialog(private val context: Activity,
             tvEventName.text = data.eventtypename
             tvTitle.text = data.roadtitle
             tvContent.text = data.reportout
+            val typeface = TypefaceUtils.dinCondensed(context)
+            tvOccTime.typeface = typeface
+            tvUpdateTime.typeface = typeface
+            tvEndTime.typeface = typeface
             if (TextUtils.isEmpty(data.getOccTime())) {
                 tvOccTime.text = "--"
             } else {

@@ -6,9 +6,12 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.AbsoluteSizeSpan
 import com.uroad.zhgs.R
+import com.uroad.zhgs.R.id.*
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.model.SubscribeMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
+import com.uroad.zhgs.utils.TypefaceUtils
 
 /**
  *Created by MFB on 2018/8/15.
@@ -16,6 +19,8 @@ import com.uroad.zhgs.rv.BaseRecyclerAdapter
  */
 class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<SubscribeMDL>)
     : BaseArrayRecyclerAdapter<SubscribeMDL>(context, mDatas) {
+    private val typeface = TypefaceUtils.dinCondensed(context)
+
     companion object {
         const val TYPE_EVENT = 1
         const val TYPE_TRAFFIC = 2
@@ -61,10 +66,18 @@ class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<Sub
         holder.setText(R.id.tvEventName, t.eventtypename)
         holder.setText(R.id.tvTitle, t.roadtitle)
         holder.setText(R.id.tvContent, t.reportout)
+        holder.setTypeface(R.id.tvOccTime, typeface)
+        holder.setTypeface(R.id.tvUpdateTime, typeface)
+        holder.setTypeface(R.id.tvEndTime, typeface)
         if (TextUtils.isEmpty(t.getOccTime())) {
             holder.setText(R.id.tvOccTime, "--")
         } else {
             holder.setText(R.id.tvOccTime, t.getOccTime())
+        }
+        if (TextUtils.isEmpty(t.getUpdateTime())) {
+            holder.setText(R.id.tvUpdateTime, "--")
+        } else {
+            holder.setText(R.id.tvUpdateTime, t.getUpdateTime())
         }
         if (t.getSubType() == SubscribeMDL.SubType.Planned.code) {
             holder.setText(R.id.tvEndTimeTips, context.resources.getString(R.string.usersubscribe_planEndTime))
@@ -72,11 +85,6 @@ class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<Sub
             holder.setText(R.id.tvEndTimeTips, context.resources.getString(R.string.usersubscribe_endTime))
         }
         holder.setText(R.id.tvEndTime, t.getRealoverTime())
-        if (TextUtils.isEmpty(t.getUpdateTime())) {
-            holder.setText(R.id.tvUpdateTime, "--")
-        } else {
-            holder.setText(R.id.tvUpdateTime, t.getUpdateTime())
-        }
     }
 
     /*拥堵类型*/
@@ -93,6 +101,10 @@ class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<Sub
         holder.setText(R.id.tvUpdateTime, t.getUpdateTime())
         holder.setText(R.id.tvTitle, t.roadtitle)
         holder.setText(R.id.tvContent, t.content)
+        holder.setTypeface(R.id.tvOccTime, typeface)
+        holder.setTypeface(R.id.tvJamSpeed, typeface)
+        holder.setTypeface(R.id.tvDistance, typeface)
+        holder.setTypeface(R.id.tvDuration, typeface)
         if (TextUtils.isEmpty(t.getPubTime())) {
             holder.setText(R.id.tvOccTime, "--")
         } else {
@@ -115,6 +127,9 @@ class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<Sub
         holder.setText(R.id.tvTime, t.getCreateTime())
         holder.setText(R.id.tvRoadname, t.roadname)
         holder.setText(R.id.tvContent, t.content)
+        holder.setTypeface(R.id.tvStartTime, typeface)
+        holder.setTypeface(R.id.tvArriveTime, typeface)
+        holder.setTypeface(R.id.tvOverTime, typeface)
         if (TextUtils.isEmpty(t.getStartTime())) {
             holder.setText(R.id.tvStartTime, "--")
         } else {

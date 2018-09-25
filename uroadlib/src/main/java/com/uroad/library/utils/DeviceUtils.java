@@ -173,9 +173,9 @@ public class DeviceUtils {
         byte[] digest = messageDigest.digest(text.getBytes());
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < digest.length; i++) {
+        for (byte aDigest : digest) {
             //循环每个字符 将计算结果转化为正整数;
-            int digestInt = digest[i] & 0xff;
+            int digestInt = aDigest & 0xff;
             //将10进制转化为较短的16进制
             String hexString = Integer.toHexString(digestInt);
             //转化结果如果是个位数会省略0,因此判断并补0

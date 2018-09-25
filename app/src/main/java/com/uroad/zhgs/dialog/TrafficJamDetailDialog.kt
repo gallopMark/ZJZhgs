@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.text.style.AbsoluteSizeSpan
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -16,6 +15,7 @@ import android.widget.TextView
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.TrafficJamMDL
+import com.uroad.zhgs.utils.TypefaceUtils
 
 /**
  *Created by MFB on 2018/8/22.
@@ -57,6 +57,11 @@ class TrafficJamDetailDialog(private val context: Activity, private val dataMDL:
             tvEventName.text = "拥堵"
             tvTitle.text = dataMDL.roadtitle
             tvContent.text = dataMDL.content
+            val typeface = TypefaceUtils.dinCondensed(context)
+            tvOccTime.typeface = typeface
+            tvJamSpeed.typeface = typeface
+            tvDistance.typeface = typeface
+            tvDuration.typeface = typeface
             if (TextUtils.isEmpty(dataMDL.getPubTime())) {
                 tvOccTime.text = "--"
             } else {

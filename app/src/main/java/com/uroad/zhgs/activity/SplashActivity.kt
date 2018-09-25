@@ -116,7 +116,7 @@ class SplashActivity : BaseActivity() {
         doRequest(RxHttpManager.getSInstance()
                 .baseUrl(ApiService.BASE_URL)
                 .connectTimeout(5 * 1000)
-                .readTimeout(10 * 1000)
+                .readTimeout(5 * 1000)
                 .createSApi(ApiService::class.java)
                 .doPost(ApiService.createRequestBody(HashMap(), WebApiService.WELCOME_JPG)), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {

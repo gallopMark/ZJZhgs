@@ -24,7 +24,6 @@ class ShowImageActivity : BaseActivity() {
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_showbig_image)
-        requestWindowFullScreen()
         intent.getStringArrayListExtra("photos")?.let { photos.addAll(it) }
         val position = intent.getIntExtra("position", 0)
         setCurrent(position)

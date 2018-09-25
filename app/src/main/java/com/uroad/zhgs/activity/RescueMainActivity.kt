@@ -196,16 +196,18 @@ class RescueMainActivity : BaseActivity(), AMap.OnCameraChangeListener {
             btCallHelp.setOnClickListener { PhoneUtils.call(this@RescueMainActivity, getString(R.string.rescue_default_phone)) }
             //自助救援
             btRescue.setOnClickListener { _ ->
-                openActivityForResult(RescueRequestActivity::class.java, Bundle().apply {
-                    putString("roadid", mdl.roadid)
-                    putString("roadname", mdl.shortname)
-                    putString("mile", mdl.mile)
-                    putString("n_code", mdl.n_code)
-                    targetPos?.let {
-                        putDouble("longitude", it.longitude)
-                        putDouble("latitude", it.latitude)
-                    }
-                }, 1)
+                showTipsDialog(getString(R.string.dialog_default_title),
+                        "本功能预计年底开放，敬请期待", getString(R.string.i_got_it))
+//                openActivityForResult(RescueRequestActivity::class.java, Bundle().apply {
+//                    putString("roadid", mdl.roadid)
+//                    putString("roadname", mdl.shortname)
+//                    putString("mile", mdl.mile)
+//                    putString("n_code", mdl.n_code)
+//                    targetPos?.let {
+//                        putDouble("longitude", it.longitude)
+//                        putDouble("latitude", it.latitude)
+//                    }
+//                }, 1)
             }
         } else {
             llInfo.visibility = View.INVISIBLE

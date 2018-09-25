@@ -10,10 +10,8 @@ import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
-import com.amap.api.col.sln3.it
 import com.amap.api.location.AMapLocation
 import com.uroad.library.utils.DisplayUtils
-import com.uroad.library.utils.PermissionHelper
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
@@ -39,7 +37,6 @@ import java.io.File
  *Created by MFB on 2018/8/8.
  */
 class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
-    private lateinit var permissionHelper: PermissionHelper
     private var eventtype = EventType.TRAFFIC_JAM.code
     private var longitude: Double = CurrApplication.APP_LATLNG.longitude
     private var latitude: Double = CurrApplication.APP_LATLNG.latitude
@@ -97,17 +94,7 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
         customToolbar.setNavigationOnClickListener { onBackPressed() }
         llYD.isSelected = true
         initRv()
-        permissionHelper = PermissionHelper(this).apply {
-            requestPermissions(object : PermissionHelper.PermissionListener {
-                override fun doAfterGrand(vararg permission: String?) {
-                    openLocation()
-                }
-
-                override fun doAfterDenied(vararg permission: String?) {
-                    showShortToast(resources.getString(R.string.rescue_main_without_location_title))
-                }
-            }, android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-        }
+        applyLocationPermission(true)
         ivPos.setOnClickListener {
             if (roads.size > 0) {
                 showRoadDialog()
@@ -196,11 +183,6 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
                 eventtype = EventType.CONTROL.code
             }
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissionHelper.handleRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun afterLocation(location: AMapLocation) {

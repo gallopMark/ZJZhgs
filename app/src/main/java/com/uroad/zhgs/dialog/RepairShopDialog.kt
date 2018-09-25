@@ -2,6 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -23,8 +24,8 @@ class RepairShopDialog(private val context: Activity, private val dataMDL: Repai
         this.onButtonClickListener = onButtonClickListener
     }
 
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 
@@ -37,7 +38,6 @@ class RepairShopDialog(private val context: Activity, private val dataMDL: Repai
             val tvName = contentView.findViewById<TextView>(R.id.tvName)
             val tvDistance = contentView.findViewById<TextView>(R.id.tvDistance)
             val tvAddress = contentView.findViewById<TextView>(R.id.tvAddress)
-            val llDetail = contentView.findViewById<LinearLayout>(R.id.llDetail)
             val llNavigation = contentView.findViewById<LinearLayout>(R.id.llNavigation)
             ivClose.setOnClickListener { dismiss() }
             ivIcon.setImageResource(R.mipmap.ic_menu_jtss_repair_p)
@@ -47,7 +47,6 @@ class RepairShopDialog(private val context: Activity, private val dataMDL: Repai
             distance += "km"
             tvDistance.text = distance
             tvAddress.text = dataMDL.address
-            llDetail.setOnClickListener { onButtonClickListener?.onDetail(dataMDL) }
             llNavigation.setOnClickListener { onButtonClickListener?.onNavigation(dataMDL) }
             window.setLayout(DisplayUtils.getWindowWidth(context), WindowManager.LayoutParams.WRAP_CONTENT)
             window.setWindowAnimations(R.style.dialog_anim)
@@ -56,7 +55,6 @@ class RepairShopDialog(private val context: Activity, private val dataMDL: Repai
     }
 
     interface OnButtonClickListener {
-        fun onDetail(dataMDL: RepairShopMDL)
         fun onNavigation(dataMDL: RepairShopMDL)
     }
 }

@@ -89,7 +89,7 @@ class EventMDL : MutilItem, Serializable {
 
     fun getRealoverTime(): String {
         if (TextUtils.isEmpty(parseDate(realovertime)))
-            return "待定"
+            return "--"
         return parseDate(realovertime)
     }
 

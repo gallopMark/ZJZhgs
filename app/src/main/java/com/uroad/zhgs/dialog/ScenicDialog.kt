@@ -2,6 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -10,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
-import com.uroad.zhgs.model.RepairShopMDL
 import com.uroad.zhgs.model.ScenicMDL
 
 /**
@@ -24,8 +24,8 @@ class ScenicDialog(private val context: Activity, private val dataMDL: ScenicMDL
         this.onButtonClickListener = onButtonClickListener
     }
 
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 

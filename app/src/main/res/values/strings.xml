@@ -12,6 +12,9 @@
     <string name="dialog_button_cancel">取消</string>
     <string name="dialog_button_confirm">确定</string>
     <string name="dialog_button_open">打开</string>
+    <string name="dismiss_location_message">检测到您还没有打开定位权限，无法获取您的位置信息，请重新打开</string>
+    <string name="prohibit_location_message">位置权限已被禁止，应用无法获取您的位置信息，请点击“去开启”按钮重新打开</string>
+    <string name="reopen">重新打开</string>
     <string name="dialog_loading_tips">正在加载…</string>
     <string name="nonetwork">网络出错了~</string>
     <string name="reload">重新加载</string>
@@ -26,7 +29,23 @@
     <string name="error_idCard_tips">身份证号有误，请重新输入</string>
     <string name="error_carNo_tips">车牌号码有误，请重新输入</string>
     <string name="gotoSettings">去开启</string>
+    <string name="developing">程序员努力开发中哦~</string>
+    <string name="please_wait">敬请等待</string>
+    <string name="search_history">历史搜索</string>
+    <string name="clear_history">清空记录</string>
+    <string name="search_empty">抱歉，暂无搜索结果</string>
+    <string name="version_update_title">版本更新</string>
+    <string name="version_update_defContent">新版本来临，为您带来更好的体验</string>
+    <string name="version_update_cancel">用用再说</string>
+    <string name="version_update_confirm">立即去升级</string>
+    <string name="version_update_notification_wait">等待更新</string>
+    <string name="version_update_notification_content">安装包：%1$s\u3000已下载：%2$s</string>
+    <string name="version_update_error">下载地址错误！</string>
+    <string name="version_update_explain">更新说明</string>
 
+    <string name="new_functions">新功能</string>
+    <string name="new_functions_msg">•全新版本升级\n•新增高速救援服务，一键救援提交，救援进展实时查询\n•高速导航功能升级，简图/地图模式随心切换。\n•其他功能优化</string>
+    <string name="i_got_it">我知道了</string>
     <!--首页 start-->
     <string name="home_tab_home">首页</string>
     <string name="home_tab_shopping">商城</string>
@@ -35,6 +54,7 @@
     <string name="home_menu_service">服务区</string>
     <string name="home_menu_gsrx">高速热线</string>
     <string name="home_menu_zxsc">在线商城</string>
+    <string name="home_menu_cxcx">诚信查询</string>
     <string name="home_menu_share">车友报料</string>
     <string name="home_menu_wfcx">违法查询</string>
     <string name="home_menu_gszx">高速资讯</string>
@@ -327,8 +347,8 @@
     <string name="highwayhotline_emergency_rescue">应急救援</string>
     <string name="highwayhotline_insurance">保险</string>
     <string name="highwayhotline_search_hint">搜索</string>
-    <string name="higiwayhotline_search_history">历史搜索</string>
-    <string name="highwayhotline_clear_history">清空记录</string>
+    <string name="higiwayhotline_search_history">@string/search_history</string>
+    <string name="highwayhotline_clear_history">@string/clear_history</string>
     <string name="highwayhotline_empty_history">暂无搜索记录</string>
     <string name="highwayhotline_search_empty">抱歉，暂无搜索结果</string>
     <!--高速热线 start-->
@@ -445,5 +465,24 @@
     <string name="mynearby_range_reset">重置</string>
 
     <!--我的附近 end-->
+
+    <string name="roadToll_title">路径路费</string>
+    <string name="roadToll_top_tips">输入收费站名称，快速计算路费</string>
+    <string name="roadToll_shortest_length">最短行驶距离</string>
+    <string name="roadToll_carType">客车类型</string>
+    <string name="roadToll_bottom_tips">以上费用仅供参考，实际发生费用以收费站收取金额为准</string>
+    <string name="roadToll_search">查询</string>
+    <string name="roadToll_startPoi_hint">请输入起点收费站名称</string>
+    <string name="roadToll_select_startPoi_hint">请选择起点收费站</string>
+    <string name="roadToll_endPoi_hint">请输入终点收费站名称</string>
+    <string name="roadToll_select_endPoi_hint">请选择终点收费站</string>
+
+    <string name="dialog_bindcar_title">绑定车辆</string>
+    <string name="dialog_bindcar_content">暂仅支持客车车型诚信查询，使用本功能，请先绑定车辆</string>
+    <string name="dialog_bindcar_confirm">绑定车辆</string>
+    <string name="dialog_bindcar_cancel">以后再说</string>
+
+    <string name="carInquiry_your">您的车辆</string>
+
 </resources>
 

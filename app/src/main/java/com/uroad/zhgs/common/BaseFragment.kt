@@ -391,7 +391,8 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         dialog.show()
     }
 
-    fun showShortToast(text: String) {
+    fun showShortToast(text: CharSequence?) {
+        if (TextUtils.isEmpty(text)) return
         val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, LinearLayout(context), false)
         val textView = v.findViewById<TextView>(R.id.tv_text)
         textView.text = text
@@ -406,7 +407,8 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         }
     }
 
-    fun showLongToast(text: String) {
+    fun showLongToast(text: CharSequence?) {
+        if (TextUtils.isEmpty(text)) return
         val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, LinearLayout(context), false)
         val textView = v.findViewById<TextView>(R.id.tv_text)
         textView.text = text

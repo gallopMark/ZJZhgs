@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_road_navigation_main.*
 import kotlinx.android.synthetic.main.layout_menu_right.*
 import android.widget.*
 import com.uroad.zhgs.R
+import com.uroad.zhgs.dialog.NewFunctionDialog
 import com.uroad.zhgs.helper.AppLocalHelper
 
 /**
@@ -44,6 +45,9 @@ class RoadNavigationActivity : BaseActivity() {
             } else {
                 setCurrentTab(2)
             }
+        }
+        if (AppLocalHelper.isFirstNav(this)) {
+            NewFunctionDialog(this).show()
         }
     }
 
@@ -170,11 +174,12 @@ class RoadNavigationActivity : BaseActivity() {
             cbEventShiG.isChecked = false
             cbEventYD.isChecked = false
         } else {
-            //路况导航-地图模式默认开启图层：事故、管制、施工、拥堵
+            //路况导航-地图模式默认开启图层：事故、管制、拥堵、快拍
             cbEventSG.isChecked = true
             cbEventGZ.isChecked = true
             cbEventShiG.isChecked = false
             cbEventYD.isChecked = true
+            cbTrafficSpot1.isChecked = true
         }
     }
 

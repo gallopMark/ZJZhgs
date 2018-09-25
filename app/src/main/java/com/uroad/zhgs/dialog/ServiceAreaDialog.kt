@@ -3,6 +3,7 @@ package com.uroad.zhgs.dialog
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
@@ -30,8 +31,8 @@ class ServiceAreaDialog(private val context: Activity, private val dataMDL: Serv
         this.onButtonClickListener = onButtonClickListener
     }
 
-    override fun show() {
-        super.show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initView()
     }
 

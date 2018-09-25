@@ -1,5 +1,6 @@
 package com.uroad.zhgs.activity
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
@@ -37,6 +38,7 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.PoiItemAdapter
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
+import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.helper.RouteSearchHelper
 import com.uroad.zhgs.model.PoiItemMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
@@ -120,15 +122,7 @@ class AMapNaviSearchActivity : BaseActivity() {
             }
         }
         handler = Handler(Looper.getMainLooper())
-        requestLocationPermissions(object : RequestLocationPermissionCallback {
-            override fun doAfterGrand() {
-                openLocation()
-            }
-
-            override fun doAfterDenied() {
-                showDismissLocationDialog()
-            }
-        })
+        applyLocationPermission(false)
     }
 
     private fun initHistoryRv() {

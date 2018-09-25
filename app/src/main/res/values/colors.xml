@@ -12,6 +12,9 @@
     <color name="color_f7">#f7f7f7</color>
     <color name="color_f2">#f2f2f2</color>
     <color name="color_e6">#e6e6e6</color>
+    <color name="color_fc">#fcfcfc</color>
+    <color name="color_e9">#e9e9e9</color>
+    <color name="color_99">#999999</color>
 
     <color name="colorUserEvent">#4c80b0</color>
     <color name="colorUser_comment">#f4f7fa</color>
@@ -38,4 +41,5 @@
     <color name="route_color_default">#9ed6e5</color>
     <color name="service_area_bg">#dbf8fc</color>
     <color name="service_area_text">#1dd1e7</color>
+    <color name="car_select_bgColor">#eaf6ff</color>
 </resources>

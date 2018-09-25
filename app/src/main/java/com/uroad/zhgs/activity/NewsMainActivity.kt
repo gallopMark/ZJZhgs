@@ -22,14 +22,11 @@ import kotlinx.android.synthetic.main.activity_news_main.*
  */
 class NewsMainActivity : BaseActivity() {
     private val mDatas = ArrayList<NewsTabMDL.Type>()
-    private lateinit var adapter: NewsTabAdapter
 
     override fun setUp(savedInstanceState: Bundle?) {
         withTitle(resources.getString(R.string.news_title))
         setBaseContentLayout(R.layout.activity_news_main)
         rvTab.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.HORIZONTAL }
-        adapter = NewsTabAdapter(this, mDatas)
-        rvTab.adapter = adapter
     }
 
     override fun initData() {
@@ -51,15 +48,12 @@ class NewsMainActivity : BaseActivity() {
     }
 
     private fun updateData(mdl: NewsTabMDL) {
-        mdl.type?.let {
-            mDatas.addAll(it)
-            adapter.notifyDataSetChanged()
-        }
+        mdl.type?.let { mDatas.addAll(it) }
+        val adapter = NewsTabAdapter(this, mDatas)
+        rvTab.adapter = adapter
         val fragments = ArrayList<Fragment>()
         for (i in 0 until mDatas.size) {
-            val fragment = NewsFragment().apply {
-                arguments = Bundle().apply { putString("dictcode", mDatas[i].dictcode) }
-            }
+            val fragment = NewsFragment().apply { arguments = Bundle().apply { putString("dictcode", mDatas[i].dictcode) } }
             fragments.add(fragment)
         }
         val pagerAdapter = FragmentAdapter(supportFragmentManager, fragments)
@@ -84,13 +78,7 @@ class NewsMainActivity : BaseActivity() {
 
     private class FragmentAdapter(fm: FragmentManager, private val fragments: MutableList<Fragment>)
         : FragmentPagerAdapter(fm) {
-        override fun getItem(p0: Int): Fragment {
-            return fragments[p0]
-        }
-
-        override fun getCount(): Int {
-            return fragments.size
-        }
-
+        override fun getItem(position: Int): Fragment = fragments[position]
+        override fun getCount(): Int = fragments.size
     }
 }
