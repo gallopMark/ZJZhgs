@@ -1,6 +1,7 @@
 package com.uroad.zhgs.adapteRv
 
 import android.content.Context
+import android.util.TypedValue
 import android.widget.TextView
 import com.uroad.zhgs.model.RescueFeeMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
@@ -14,9 +15,10 @@ class RFCarTypeAdapter(context: Context, mDatas: MutableList<RescueFeeMDL.Type.S
 
     private var onItemSelectedListener: OnItemSelectedListener? = null
     private var selectIndex = -1
+    private val ts12 = context.resources.getDimension(R.dimen.font_12)
     override fun onBindHoder(holder: RecyclerHolder, t: RescueFeeMDL.Type.SonType, position: Int) {
         val tv = holder.obtainView<TextView>(R.id.tv)
-        tv.textSize = 12f
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
         tv.text = t.dictname
         tv.isSelected = selectIndex == position
         holder.itemView.setOnClickListener { setSelectIndex(position) }

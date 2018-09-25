@@ -492,6 +492,12 @@ class WebApiService {
             put("type", "android")
             put("ver", ver)
         }
+
+        //获取请求流地址
+        const val ROAD_VIDEO = "getRoadVideo"
+
+        //resid	视频的resid
+        fun roadVideoParams(resid: String?) = getBaseParams().apply { put("resid", resid) }
     }
 
 }

@@ -20,7 +20,6 @@ import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -207,12 +206,7 @@ public class ZPlayer extends RelativeLayout {
     private long newPosition = -1;
     private long defaultRetryTime = 5000;
     private OnErrorListener onErrorListener;
-    private Runnable oncomplete = new Runnable() {
-        @Override
-        public void run() {
-
-        }
-    };
+    private OnCompleteListener onCompleteListener;
     private OnInfoListener onInfoListener;
     private OnPreparedListener onPreparedListener;
 
@@ -374,7 +368,6 @@ public class ZPlayer extends RelativeLayout {
         }
     };
 
-    @SuppressWarnings("HandlerLeak")
     private static class MHandler extends Handler {
         private WeakReference<ZPlayer> weakReference;
 
@@ -425,7 +418,6 @@ public class ZPlayer extends RelativeLayout {
             IjkMediaPlayer.native_profileBegin("libijkplayer.so");
             playerSupport = true;
         } catch (Throwable e) {
-            Log.e("GiraffePlayer", "loadLibraries error", e);
         }
         int width = activity.getResources().getDisplayMetrics().widthPixels;
         int height = activity.getResources().getDisplayMetrics().heightPixels;
@@ -439,7 +431,8 @@ public class ZPlayer extends RelativeLayout {
             @Override
             public void onCompletion(IMediaPlayer iMediaPlayer) {
                 statusChange(STATUS_COMPLETED);
-                oncomplete.run();
+                if (onCompleteListener != null)
+                    onCompleteListener.onComplete();
             }
         });
         videoView.setOnErrorListener(new IMediaPlayer.OnErrorListener() {
@@ -954,7 +947,6 @@ public class ZPlayer extends RelativeLayout {
                 brightness = 0.01f;
             }
         }
-        Log.d(this.getClass().getSimpleName(), "brightness:" + brightness + ",percent:" + percent);
         $.id(R.id.app_video_brightness_box).visible();
         WindowManager.LayoutParams lpa = activity.getWindow().getAttributes();
         lpa.screenBrightness = brightness + percent;
@@ -1346,13 +1338,17 @@ public class ZPlayer extends RelativeLayout {
         void onPrepared();
     }
 
+    public interface OnCompleteListener {
+        void onComplete();
+    }
+
     public ZPlayer onError(OnErrorListener onErrorListener) {
         this.onErrorListener = onErrorListener;
         return this;
     }
 
-    public ZPlayer onComplete(Runnable complete) {
-        this.oncomplete = complete;
+    public ZPlayer onComplete(OnCompleteListener onCompleteListener) {
+        this.onCompleteListener = onCompleteListener;
         return this;
     }
 

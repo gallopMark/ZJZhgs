@@ -5,11 +5,13 @@ import android.text.TextUtils
 /**
  *Created by MFB on 2018/8/22.
  * 监控快拍
-"roadoldid": "6",
-"latitude": "29.2186850",
-"longitude": "119.9622870",
-"shortname": "甬金高速",
-"picurl": ""
+"roadoldid": "21",
+"latitude": "30.5291070",
+"longitude": "120.5430270",
+"shortname": "沪昆高速(沪杭)",
+"picurl": "http:\/\/zhgs.u-road.com\/screamshot\/95053ba453154f29befb27551bff438c20180925182403.png,http:\/\/zhgs.u-road.com\/screamshot\/95053ba453154f29befb27551bff438c20180925182904.png,http:\/\/zhgs.u-road.com\/screamshot\/95053ba453154f29befb27551bff438c20180925183404.png",
+"resname": "K135+701杭向",
+"resid": "95053ba453154f29befb27551bff438c"
  */
 class SnapShotMDL : MutilItem {
     override fun getItemType(): Int = 3
@@ -19,6 +21,8 @@ class SnapShotMDL : MutilItem {
     var longitude: Double? = 0.0
     var shortname: String? = null
     var picurl: String? = null
+    var resname: String? = null
+    var resid: String? = null
 
     var markerIcon: Int = 0
     var markerBigIco: Int = 0
@@ -45,5 +49,13 @@ class SnapShotMDL : MutilItem {
             return data
         }
         return ArrayList()
+    }
+
+    fun getLastPicUrl(): String {
+        picurl?.let {
+            val list = it.split(",").toMutableList()
+            if (list.size > 0) return list[list.size - 1]
+        }
+        return ""
     }
 }

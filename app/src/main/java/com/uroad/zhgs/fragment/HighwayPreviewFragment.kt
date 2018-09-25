@@ -1,5 +1,6 @@
 package com.uroad.zhgs.fragment
 
+import android.os.Bundle
 import android.support.v4.util.ArrayMap
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,13 +9,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.zhgs.R
+import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.adapteRv.HighwayPreViewAdapter
 import com.uroad.zhgs.common.BasePageFragment
 import com.uroad.zhgs.dialog.CCTVDetailPageDialog
 import com.uroad.zhgs.dialog.EventDetailPageDialog
-import com.uroad.zhgs.model.CCTVMDL
 import com.uroad.zhgs.model.EventMDL
 import com.uroad.zhgs.model.HighwayPreViewMDL
+import com.uroad.zhgs.model.RtmpMDL
+import com.uroad.zhgs.model.SnapShotMDL
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
@@ -148,11 +151,45 @@ class HighwayPreviewFragment : BasePageFragment() {
             override fun onSuccess(data: String?) {
                 endLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    val mdLs = GsonUtils.fromDataToList(data, CCTVMDL::class.java)
+                    val mdLs = GsonUtils.fromDataToList(data, SnapShotMDL::class.java)
                     if (mdLs.size > 0) {
-                        CCTVDetailPageDialog(context, mdLs).show()
+                        CCTVDetailPageDialog(context, mdLs).setOnItemClickListener(object : CCTVDetailPageDialog.OnItemClickListener {
+                            override fun onItemClick(position: Int, mdl: SnapShotMDL) {
+                                getRoadVideo(mdl.resid, mdl.shortname)
+                            }
+                        }).show()
                     } else {
                         showShortToast("暂无相关数据~")
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
+    }
+
+    /*获取快拍请求流地址*/
+    private fun getRoadVideo(resId: String?, shortName: String?) {
+        doRequest(WebApiService.ROAD_VIDEO, WebApiService.roadVideoParams(resId), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
+                    mdl?.rtmpIp?.let {
+                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                            putBoolean("isLive", true)
+                            putString("url", it)
+                            putString("title", shortName)
+                        })
                     }
                 } else {
                     showShortToast(GsonUtils.getMsg(data))

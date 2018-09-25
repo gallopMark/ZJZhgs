@@ -107,9 +107,6 @@
         <activity
             android:name=".activity.InvoiceTitleActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".activity.BindInfoActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activity.WebViewActivity" />
         <activity
             android:name=".activity.LocationWebViewActivity"

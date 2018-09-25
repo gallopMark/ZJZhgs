@@ -2,19 +2,41 @@ package com.uroad.zhgs.activity
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.widget.FrameLayout
 import com.uroad.ijkplayer.ZPlayer
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import kotlinx.android.synthetic.main.activity_videoplay.*
-import kotlinx.android.synthetic.main.activity_videoplay.view.*
+import java.lang.ref.WeakReference
 
 /*视频播放页面*/
 class VideoPlayerActivity : BaseActivity() {
     /*rtmp://live.hkstv.hk.lxdns.com/live/hks 测试链接*/
     private var isLive = false
     private var url: String? = null
+    private var times = 10
+
+    companion object {
+        private const val CODE_MSG = 0x0001
+    }
+
+    private lateinit var handler: MHandler
+
+    private class MHandler(activity: VideoPlayerActivity) : Handler() {
+        private val weakReference = WeakReference<VideoPlayerActivity>(activity)
+        override fun handleMessage(msg: Message?) {
+            val activity = weakReference.get() ?: return
+            if (activity.times > 0) {
+                activity.times--
+                sendEmptyMessageDelayed(CODE_MSG, 1000)
+            } else {
+                activity.finish()
+            }
+        }
+    }
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_videoplay)
@@ -24,14 +46,16 @@ class VideoPlayerActivity : BaseActivity() {
             url = it.getString("url")
             title = it.getString("title", "")
         }
+        handler = MHandler(this)
         val videoHeight = DisplayUtils.getWindowHeight(this) / 2
         zPlayer.layoutParams = (zPlayer.layoutParams as FrameLayout.LayoutParams).apply { height = videoHeight }
         zPlayer.setLive(isLive)
+                .setTitle(title)
                 .setShowCenterControl(true)
+                .onPrepared { handler.sendEmptyMessageDelayed(CODE_MSG, 1000) }
                 .setScaleType(ZPlayer.SCALETYPE_FITXY)
                 .setPlayerWH(0, videoHeight)
-        //设置竖屏的时候屏幕的高度，如果不设置会切换后按照16:9的高度重置
-        zPlayer.setTitle(title).play(url)
+                .play(url)
     }
 
     override fun onResume() {
@@ -45,6 +69,7 @@ class VideoPlayerActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
         zPlayer.onDestroy()
         super.onDestroy()
     }

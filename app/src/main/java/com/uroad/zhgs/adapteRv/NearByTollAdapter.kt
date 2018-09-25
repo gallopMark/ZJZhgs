@@ -1,6 +1,6 @@
 package com.uroad.zhgs.adapteRv
 
-import android.content.Context
+import android.app.Activity
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.widget.ImageView
@@ -13,7 +13,7 @@ import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 /**
  *Created by MFB on 2018/8/22.
  */
-class NearByTollAdapter(private val context: Context, mDatas: MutableList<TollGateMDL>)
+class NearByTollAdapter(private val context: Activity, mDatas: MutableList<TollGateMDL>)
     : BaseArrayRecyclerAdapter<TollGateMDL>(context, mDatas) {
     override fun bindView(viewType: Int): Int = R.layout.item_nearby_toll
 

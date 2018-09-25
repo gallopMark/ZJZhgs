@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.util.TypedValue
 import android.view.View
 import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.R
@@ -26,29 +27,30 @@ class MyNearByTabActivity : BaseActivity() {
     private fun initTab() {
         radioGroup.setOnCheckedChangeListener { _, checkId ->
             restore()
+            val ts16 = resources.getDimension(R.dimen.font_16)
             when (checkId) {
                 R.id.rbToll -> {
-                    rbToll.textSize = 16f
+                    rbToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     vTab1.visibility = View.VISIBLE
                     viewPager.setCurrentItem(0, false)
                 }
                 R.id.rbService -> {
-                    rbService.textSize = 16f
+                    rbService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     vTab2.visibility = View.VISIBLE
                     viewPager.setCurrentItem(1, false)
                 }
                 R.id.rbScenic -> {
-                    rbScenic.textSize = 16f
+                    rbScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     vTab3.visibility = View.VISIBLE
                     viewPager.setCurrentItem(2, false)
                 }
                 R.id.rbGas -> {
-                    rbGas.textSize = 16f
+                    rbGas.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     vTab4.visibility = View.VISIBLE
                     viewPager.setCurrentItem(3, false)
                 }
                 R.id.rbRepair -> {
-                    rbRepair.textSize = 16f
+                    rbRepair.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     vTab5.visibility = View.VISIBLE
                     viewPager.setCurrentItem(4, false)
                 }
@@ -57,11 +59,12 @@ class MyNearByTabActivity : BaseActivity() {
     }
 
     private fun restore() {
-        rbToll.textSize = 14f
-        rbService.textSize = 14f
-        rbScenic.textSize = 14f
-        rbGas.textSize = 14f
-        rbRepair.textSize = 14f
+        val ts14 = resources.getDimension(R.dimen.font_14)
+        rbToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        rbService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        rbScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        rbGas.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        rbRepair.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
         vTab1.visibility = View.INVISIBLE
         vTab2.visibility = View.INVISIBLE
         vTab3.visibility = View.INVISIBLE

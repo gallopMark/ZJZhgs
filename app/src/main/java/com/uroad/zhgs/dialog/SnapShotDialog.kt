@@ -60,13 +60,13 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
                 recyclerView.adapter = adapter
                 adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
                     override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                        val pics = ArrayList<String>()
-                        for (i in 0 until dataMDL.getPicUrls().size) {
-                            if (!TextUtils.isEmpty(dataMDL.getPicUrls()[i])) {
-                                pics.add(dataMDL.getPicUrls()[i])
-                            }
-                        }
-                        onItemClickListener?.onItemClick(position, pics)
+//                        val pics = ArrayList<String>()
+//                        for (i in 0 until dataMDL.getPicUrls().size) {
+//                            if (!TextUtils.isEmpty(dataMDL.getPicUrls()[i])) {
+//                                pics.add(dataMDL.getPicUrls()[i])
+//                            }
+//                        }
+                        onItemClickListener?.onItemClick(dataMDL)
                     }
                 })
             } else {
@@ -94,6 +94,6 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
     }
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int, photos: ArrayList<String>)
+        fun onItemClick(dataMDL: SnapShotMDL)
     }
 }

@@ -60,9 +60,9 @@ public class ZListPlayer extends RelativeLayout {
         rlFullScreenLay = findViewById(R.id.rl_full_screen);
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        player.onComplete(new Runnable() {
+        player.onComplete(new ZPlayer.OnCompleteListener() {
             @Override
-            public void run() {
+            public void onComplete() {
                 if (player.isFullScreen()) {
                     player.toggleFullScreen();
                 } else {

@@ -73,7 +73,6 @@ class BindCarActivity : BaseActivity() {
         private var selectIndex = 0
         override fun onBindHoder(holder: RecyclerHolder, t: EvaluateMDL.Type.SonType, position: Int) {
             val tv = holder.obtainView<TextView>(R.id.tv)
-            tv.textSize = 12f
             tv.text = t.dictname
             tv.isSelected = selectIndex == position
             holder.itemView.setOnClickListener {
@@ -107,7 +106,6 @@ class BindCarActivity : BaseActivity() {
         private var selectIndex = 0
         override fun onBindHoder(holder: RecyclerHolder, t: EvaluateMDL.Type, position: Int) {
             val tv = holder.obtainView<TextView>(R.id.tv)
-            tv.textSize = 12f
             tv.text = t.dictname
             tv.isSelected = selectIndex == position
             holder.itemView.setOnClickListener {

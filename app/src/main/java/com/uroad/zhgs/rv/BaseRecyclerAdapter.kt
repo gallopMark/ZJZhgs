@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -101,6 +102,10 @@ abstract class BaseRecyclerAdapter(private val context: Context) : RecyclerView.
 
         fun setTextSize(id: Int, size: Float) {
             obtainView<TextView>(id).textSize = size
+        }
+
+        fun setTextSize(id: Int, unit: Int, size: Float) {
+            obtainView<TextView>(id).setTextSize(unit, size)
         }
 
         //可以直接引用 R.color.xxx

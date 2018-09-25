@@ -74,13 +74,13 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
                 recyclerView.adapter = adapter
                 adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
                     override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                        val pics = ArrayList<String>()
-                        for (i in 0 until t.getPicUrls().size) {
-                            if (!TextUtils.isEmpty(t.getPicUrls()[i])) {
-                                pics.add(t.getPicUrls()[i])
-                            }
-                        }
-                        onPhotoClickListener?.onPhotoClick(position, pics)
+//                        val pics = ArrayList<String>()
+//                        for (i in 0 until t.getPicUrls().size) {
+//                            if (!TextUtils.isEmpty(t.getPicUrls()[i])) {
+//                                pics.add(t.getPicUrls()[i])
+//                            }
+//                        }
+                        onPhotoClickListener?.onPhotoClick(position, t)
                     }
                 })
             } else {
@@ -105,6 +105,6 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
     }
 
     interface OnPhotoClickListener {
-        fun onPhotoClick(position: Int, photos: ArrayList<String>)
+        fun onPhotoClick(position: Int, mdl: SnapShotMDL)
     }
 }

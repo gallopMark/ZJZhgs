@@ -157,6 +157,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_15"
             android:text="@string/register_bottom_text"
+            android:textSize="@dimen/font_14"
             android:textColor="@color/grey" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

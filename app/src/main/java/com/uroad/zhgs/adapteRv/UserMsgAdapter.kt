@@ -1,9 +1,8 @@
 package com.uroad.zhgs.adapteRv
 
-import android.content.Context
+import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
-import android.widget.FrameLayout
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.UserMsgMDL
@@ -12,7 +11,7 @@ import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 /**
  *Created by MFB on 2018/8/15.
  */
-class UserMsgAdapter(private val context: Context, mDatas: MutableList<UserMsgMDL>)
+class UserMsgAdapter(private val context: Activity, mDatas: MutableList<UserMsgMDL>)
     : BaseArrayRecyclerAdapter<UserMsgMDL>(context, mDatas) {
     override fun onBindHoder(holder: RecyclerHolder, t: UserMsgMDL, position: Int) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams

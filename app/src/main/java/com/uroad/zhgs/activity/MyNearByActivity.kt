@@ -9,7 +9,6 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.amap.api.location.AMapLocation
-import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
@@ -36,8 +35,7 @@ class MyNearByActivity : BaseActivity() {
 
     private var location: AMapLocation? = null
     private lateinit var aMap: AMap
-    private lateinit var myLocationView: View
-    private lateinit var animationDrawable: AnimationDrawable
+    private var animationDrawable: AnimationDrawable? = null
     private var target: LatLng? = null
     private var type: Int = 1
     private var longitude: Double = CurrApplication.APP_LATLNG.longitude
@@ -53,9 +51,6 @@ class MyNearByActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         withTitle(resources.getString(R.string.mynearby_title))
         setBaseContentLayout(R.layout.activity_mynearby)
-        myLocationView = layoutInflater.inflate(R.layout.mapview_mylocation2, LinearLayout(this), false)
-        val ivDiffuse = myLocationView.findViewById<ImageView>(R.id.ivDiffuse)
-        animationDrawable = ivDiffuse.drawable as AnimationDrawable
         setDistance()
         mapView.onCreate(savedInstanceState)
         initMapView()
@@ -163,13 +158,13 @@ class MyNearByActivity : BaseActivity() {
 
     //启动帧动画
     private fun startAnim() {
-        animationDrawable.start()
+        animationDrawable?.start()
     }
 
     //选择当前动画的第一帧，然后停止
     private fun stopAnim() {
-        animationDrawable.selectDrawable(0) //选择当前动画的第一帧，然后停止
-        animationDrawable.stop()
+        animationDrawable?.selectDrawable(0) //选择当前动画的第一帧，然后停止
+        animationDrawable?.stop()
     }
 
     override fun afterLocation(location: AMapLocation) {
@@ -177,6 +172,9 @@ class MyNearByActivity : BaseActivity() {
         this.longitude = location.longitude
         this.latitude = location.latitude
         this.target = LatLng(location.latitude, location.longitude)
+        val myLocationView = layoutInflater.inflate(R.layout.mapview_mylocation2, LinearLayout(this), false)
+        val ivDiffuse = myLocationView.findViewById<ImageView>(R.id.ivDiffuse)
+        animationDrawable = ivDiffuse.drawable as AnimationDrawable
         aMap.addMarker(createOptions(LatLng(location.latitude, location.longitude), location.city, location.address, BitmapDescriptorFactory.fromView(myLocationView)))
         if (type == 4) aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), aMap.cameraPosition.zoom, 0f, 0f)))
         getCheckMapData()
@@ -327,7 +325,7 @@ class MyNearByActivity : BaseActivity() {
         scenicMarkers.addAll(markers)
     }
 
-    private fun createOptions(latLng: LatLng, title: String?, snippet: String?, bitmap: BitmapDescriptor): MarkerOptions {
+    private fun createOptions(latLng: LatLng, title: String?, snippet: String?, bitmap: BitmapDescriptor?): MarkerOptions? {
         return MarkerOptions().anchor(0.5f, 1f)
                 .position(latLng)
                 .title(title)

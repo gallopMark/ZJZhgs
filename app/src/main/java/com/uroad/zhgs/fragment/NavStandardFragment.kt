@@ -17,6 +17,7 @@ import com.amap.api.maps.model.*
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.LoginActivity
 import com.uroad.zhgs.activity.AMapNaviSearchActivity
+import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
@@ -536,8 +537,9 @@ class NavStandardFragment : BaseFragment() {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
                 val dialog = SnapShotDialog(context, mdl)
                 dialog.setOnItemClickListener(object : SnapShotDialog.OnItemClickListener {
-                    override fun onItemClick(position: Int, photos: ArrayList<String>) {
-                        showBigPic(position, photos)
+                    override fun onItemClick(dataMDL: SnapShotMDL) {
+                        getRoadVideo(dataMDL.resid, dataMDL.shortname)
+//                        showBigPic(position, photos)
                     }
                 })
                 dialog.show()
@@ -662,6 +664,36 @@ class NavStandardFragment : BaseFragment() {
                     }
                     showShortToast("订阅成功")
                 } else showShortToast(GsonUtils.getMsg(data))
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
+    }
+
+    /*获取快拍请求流地址*/
+    private fun getRoadVideo(resId: String?, shortName: String?) {
+        doRequest(WebApiService.ROAD_VIDEO, WebApiService.roadVideoParams(resId), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
+                    mdl?.rtmpIp?.let {
+                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                            putBoolean("isLive", true)
+                            putString("url", it)
+                            putString("title", shortName)
+                        })
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {

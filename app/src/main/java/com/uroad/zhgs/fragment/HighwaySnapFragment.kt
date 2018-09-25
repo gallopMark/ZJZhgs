@@ -1,12 +1,15 @@
 package com.uroad.zhgs.fragment
 
+import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
 import android.view.View
 import com.uroad.library.utils.DisplayUtils
+import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.adapteRv.CCTVDataAdapter
 import com.uroad.zhgs.common.BasePageRefreshRvFragment
-import com.uroad.zhgs.model.CCTVMDL
+import com.uroad.zhgs.model.RtmpMDL
+import com.uroad.zhgs.model.SnapShotMDL
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -20,7 +23,7 @@ import com.uroad.zhgs.widget.GridSpacingItemDecoration
 class HighwaySnapFragment : BasePageRefreshRvFragment() {
 
     private var roadoldid: String = ""
-    private val mDatas = ArrayList<CCTVMDL>()
+    private val mDatas = ArrayList<SnapShotMDL>()
     private lateinit var adapter: CCTVDataAdapter
     private var isFirstLoad = true
     override fun initViewData(view: View) {
@@ -33,9 +36,40 @@ class HighwaySnapFragment : BasePageRefreshRvFragment() {
         adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
             override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
                 if (position in 0 until mDatas.size) {
-                    val photos = ArrayList<String>().apply { for (item in mDatas) if (!TextUtils.isEmpty(item.getLastPicUrl())) add(item.getLastPicUrl()) }
-                    showBigPic(position, photos)
+//                    val photos = ArrayList<String>().apply { for (item in mDatas) if (!TextUtils.isEmpty(item.getLastPicUrl())) add(item.getLastPicUrl()) }
+//                    showBigPic(position, photos)
+                    getRoadVideo(mDatas[position].resid, mDatas[position].shortname)
                 }
+            }
+        })
+    }
+
+    /*获取快拍请求流地址*/
+    private fun getRoadVideo(resId: String?, shortName: String?) {
+        doRequest(WebApiService.ROAD_VIDEO, WebApiService.roadVideoParams(resId), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
+                    mdl?.rtmpIp?.let {
+                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                            putBoolean("isLive", true)
+                            putString("url", it)
+                            putString("title", shortName)
+                        })
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
             }
         })
     }
@@ -51,7 +85,7 @@ class HighwaySnapFragment : BasePageRefreshRvFragment() {
                 finishLoad()
                 setPageEndLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    val mdls = GsonUtils.fromDataToList(data, CCTVMDL::class.java)
+                    val mdls = GsonUtils.fromDataToList(data, SnapShotMDL::class.java)
                     updateData(mdls)
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
@@ -68,7 +102,7 @@ class HighwaySnapFragment : BasePageRefreshRvFragment() {
         })
     }
 
-    private fun updateData(mdls: MutableList<CCTVMDL>) {
+    private fun updateData(mdls: MutableList<SnapShotMDL>) {
         mDatas.clear()
         mDatas.addAll(mdls)
         adapter.notifyDataSetChanged()

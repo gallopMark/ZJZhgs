@@ -42,8 +42,8 @@
         android:id="@+id/tvRequestAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_5"
         android:layout_marginBottom="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_5"
         android:textColor="@color/appTextColor"
         android:textSize="@dimen/font_14" />
 
@@ -78,7 +78,8 @@
                 android:paddingRight="@dimen/margin_20"
                 android:paddingTop="@dimen/margin_5"
                 android:text="@string/rescue_record_evaluate"
-                android:textColor="@color/appTextColor" />
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
 
             <TextView
                 android:id="@+id/tvInvoice"
@@ -92,7 +93,8 @@
                 android:paddingRight="@dimen/margin_10"
                 android:paddingTop="@dimen/margin_5"
                 android:text="@string/rescue_record_invoice"
-                android:textColor="@color/appTextColor" />
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
 
             <TextView
                 android:id="@+id/tvPay"
@@ -106,7 +108,8 @@
                 android:paddingRight="@dimen/margin_15"
                 android:paddingTop="@dimen/margin_5"
                 android:text="@string/rescue_record_pay"
-                android:textColor="@color/appTextColor" />
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
 
             <TextView
                 android:id="@+id/tvMoney"

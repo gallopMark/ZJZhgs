@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -93,21 +94,23 @@ class HighWayHotlineActivity : BaseActivity() {
     }
 
     private fun reset() {
+        val ts14 = resources.getDimension(R.dimen.font_14)
         vTab1.visibility = View.INVISIBLE
         vTab2.visibility = View.INVISIBLE
-        rbTab1.textSize = 14f
-        rbTab2.textSize = 14f
+        rbTab1.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        rbTab2.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
     }
 
     private fun setVisable(tab: Int) {
+        val ts16 = resources.getDimension(R.dimen.font_16)
         when (tab) {
             0 -> {
                 vTab1.visibility = View.VISIBLE
-                rbTab1.textSize = 16f
+                rbTab1.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
             }
             1 -> {
                 vTab2.visibility = View.VISIBLE
-                rbTab2.textSize = 16f
+                rbTab2.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.uroad.zhgs.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.net.http.SslError
 import android.os.Build
@@ -16,6 +15,7 @@ import com.uroad.rxhttp.RxHttpManager
 import com.uroad.rxhttp.download.DownloadListener
 import com.uroad.zhgs.activity.LoginActivity
 import com.uroad.zhgs.R
+import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.CCTVDetailRvDialog
@@ -93,10 +93,10 @@ class DiagramFragment : BaseFragment() {
     }
 
     inner class JavascriptInterface {
-        @android.webkit.JavascriptInterface
-        fun refreshpage() {  // 2．页面刷新
-
-        }
+//        @android.webkit.JavascriptInterface
+//        fun refreshpage() {  // 2．页面刷新
+//
+//        }
 
         @android.webkit.JavascriptInterface
         fun uroadplus_showPOI(poitype: String, poiid: String) {
@@ -203,11 +203,42 @@ class DiagramFragment : BaseFragment() {
         }
         val dialog = CCTVDetailRvDialog(context, mdLs)
         dialog.setOnPhotoClickListener(object : CCTVDetailRvDialog.OnPhotoClickListener {
-            override fun onPhotoClick(position: Int, photos: ArrayList<String>) {
-                showBigPic(position, photos)
+            override fun onPhotoClick(position: Int, mdl: SnapShotMDL) {
+//                showBigPic(position, photos)
+                getRoadVideo(mdl.resid, mdl.shortname)
             }
         })
         dialog.show()
+    }
+
+    /*获取快拍请求流地址*/
+    private fun getRoadVideo(resId: String?, shortName: String?) {
+        doRequest(WebApiService.ROAD_VIDEO, WebApiService.roadVideoParams(resId), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
+                    mdl?.rtmpIp?.let {
+                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                            putBoolean("isLive", true)
+                            putString("url", it)
+                            putString("title", shortName)
+                        })
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
     }
 
     private inner class MWebViewClient : WebViewClient() {

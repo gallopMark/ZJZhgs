@@ -3,6 +3,7 @@ package com.uroad.zhgs.adapteRv
 import android.app.Activity
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.util.TypedValue
 import android.widget.RelativeLayout
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
@@ -20,15 +21,17 @@ class NewsTabAdapter(context: Activity, mDatas: MutableList<NewsTabMDL.Type>)
     private val colorSelected = ContextCompat.getColor(context, R.color.appTextColor)
     private var selectPos = 0
     private var onSelectedListener: OnSelectedListener? = null
+    private val ts14 = context.resources.getDimension(R.dimen.font_14)
+    private val ts16 = context.resources.getDimension(R.dimen.font_16)
 
     override fun onBindHoder(holder: RecyclerHolder, t: NewsTabMDL.Type, position: Int) {
         holder.itemView.layoutParams = RelativeLayout.LayoutParams(width, RelativeLayout.LayoutParams.WRAP_CONTENT)
         if (selectPos == position) {
-            holder.setTextSize(R.id.tvTabName, 16f)
+            holder.setTextSize(R.id.tvTabName, TypedValue.COMPLEX_UNIT_PX, ts16)
             holder.setTextColor(R.id.tvTabName, colorSelected)
             holder.setVisibility(R.id.vUnderLine, true)
         } else {
-            holder.setTextSize(R.id.tvTabName, 14f)
+            holder.setTextSize(R.id.tvTabName, TypedValue.COMPLEX_UNIT_PX, ts14)
             holder.setTextColor(R.id.tvTabName, colorDefault)
             holder.setVisibility(R.id.vUnderLine, false)
         }

@@ -31,14 +31,13 @@ import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.widget.RelativeLayout
+import android.util.TypedValue
 import com.uroad.zhgs.activity.*
 import com.uroad.zhgs.adapteRv.NewsAdapter
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.rxbus.MessageEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import com.uroad.library.rxbus.RxBus
-import com.uroad.library.utils.DisplayUtils
 import com.uroad.library.utils.VersionUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.dialog.BindCarDialog
@@ -170,31 +169,33 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     }
 
     private fun initTab() {
-        tvNearByToll.textSize = 14f
+        val ts12 = context.resources.getDimension(R.dimen.font_12)
+        val ts14 = context.resources.getDimension(R.dimen.font_14)
+        tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
         tvNearByToll.isSelected = true
         val listener = View.OnClickListener { v ->
-            tvNearByToll.textSize = 12f
+            tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
             tvNearByToll.isSelected = false
-            tvNearByService.textSize = 12f
+            tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
             tvNearByService.isSelected = false
-            tvNearByScenic.textSize = 12f
+            tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
             tvNearByScenic.isSelected = false
             flToll.visibility = View.GONE
             flService.visibility = View.GONE
             flScenic.visibility = View.GONE
             when (v.id) {
                 R.id.tvNearByToll -> {
-                    tvNearByToll.textSize = 14f
+                    tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
                     tvNearByToll.isSelected = true
                     flToll.visibility = View.VISIBLE
                 }
                 R.id.tvNearByService -> {
-                    tvNearByService.textSize = 14f
+                    tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
                     tvNearByService.isSelected = true
                     flService.visibility = View.VISIBLE
                 }
                 R.id.tvNearByScenic -> {
-                    tvNearByScenic.textSize = 14f
+                    tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
                     tvNearByScenic.isSelected = true
                     flScenic.visibility = View.VISIBLE
                 }

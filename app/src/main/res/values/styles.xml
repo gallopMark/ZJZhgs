@@ -35,6 +35,7 @@
         <item name="titleTextAppearance">@style/ToolbarTitleTextStyle</item>
         <item name="homeAsUpIndicator">@mipmap/ic_back</item>
         <item name="navigationIcon">@mipmap/ic_back</item>
+        <item name="android:minHeight">@dimen/toolbar_height</item>
         <!--<item name="android:minHeight">?attr/actionBarSize</item>-->
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/toolbar_height</item>
@@ -154,6 +155,7 @@
         <item name="android:background">@color/transparent</item>
         <item name="titleTextAppearance">@style/ToolbarTitleTextStyle</item>
         <item name="homeAsUpIndicator">@mipmap/ic_back</item>
+        <item name="android:minHeight">@dimen/toolbar_height</item>
         <!--<item name="android:minHeight">?attr/actionBarSize</item>-->
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/toolbar_height</item>
@@ -164,6 +166,7 @@
         <item name="titleTextAppearance">@style/ToolbarSmallTitle</item>
         <item name="homeAsUpIndicator">@mipmap/ic_back</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">@dimen/toolbar_height</item>
         <item name="android:layout_height">@dimen/toolbar_height</item>
     </style>
 
@@ -179,5 +182,5 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
-    <style name="TranslucentTheme" parent="AppTheme"/>
+    <style name="TranslucentTheme" parent="AppTheme" />
 </resources>
