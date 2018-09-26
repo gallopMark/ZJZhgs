@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
-import com.amap.api.col.sln3.it
 import com.uroad.library.utils.NetworkUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseFragment
@@ -40,10 +39,6 @@ class ShoppingFragment : BaseFragment() {
                 webView.goBack()
                 if (!webView.canGoBack()) {
                     ivBack.visibility = View.GONE
-                } else {
-                    if (webView.url != null && webView.url == ApiService.SHOPPING_URL) {
-                        ivBack.visibility = View.GONE
-                    }
                 }
             } else {
                 ivBack.visibility = View.GONE
@@ -80,21 +75,17 @@ class ShoppingFragment : BaseFragment() {
             }
             return@OnKeyListener false
         })
-        webView.webChromeClient = BaseWebChromeClient()
-        webView.webViewClient = BaseWebViewClient()
+        webView.webViewClient = MWebViewClient()
+        webView.webChromeClient = MWebChromeClient()
     }
 
-    open inner class BaseWebViewClient : WebViewClient() {
+    inner class MWebViewClient : WebViewClient() {
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.loadUrl(request?.url.toString())
             } else {
                 view.loadUrl(request?.toString())
-            }
-            view.url?.let {
-                if (it == ApiService.SHOPPING_URL) ivBack.visibility = View.GONE
-                else ivBack.visibility = View.VISIBLE
             }
             return true
         }
@@ -109,7 +100,7 @@ class ShoppingFragment : BaseFragment() {
 
     }
 
-    open inner class BaseWebChromeClient : WebChromeClient() {
+    inner class MWebChromeClient : WebChromeClient() {
         override fun onProgressChanged(view: WebView?, newProgress: Int) {
             super.onProgressChanged(view, newProgress)
             if (newProgress == 100) {
@@ -117,6 +108,11 @@ class ShoppingFragment : BaseFragment() {
             } else {
                 if (progressBar.visibility != View.VISIBLE) progressBar.visibility = View.VISIBLE
                 progressBar.progress = newProgress
+            }
+            if (webView.canGoBack()) {
+                ivBack.visibility = View.VISIBLE
+            } else {
+                ivBack.visibility = View.GONE
             }
         }
 
