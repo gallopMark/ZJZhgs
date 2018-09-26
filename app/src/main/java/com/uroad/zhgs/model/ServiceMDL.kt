@@ -7,26 +7,30 @@ import java.io.Serializable
 /**
  *Created by MFB on 2018/8/21.
  * 服务区
-"picurl	图标
-poiid	站点ID
-latitude	纬度
-longitude	经度
-shortname	高速名称
-name	站点名
-detailurl	详情链接
-distance	距离	KM
-hasfood	是否有餐饮	0 否 ； 1 是
-hasroom	是否有住宿	0 否 ； 1 是
-hastoilet	是否有厕所	0 否 ； 1 是
-hasshop	是否有商店	0 否 ； 1 是
-haspark	是否有停车	0 否 ； 1 是
-hasoil	是否有油站	0 否 ； 1 是
-hasrepair	是否有维修	0 否 ； 1 是
-oil1	汽油92价格	对。空或者 0 就是没了
-oil2	汽油95价格	空或者 0 就是没了
-oil3	汽油98价格	空或者 0 就是没了
-oil4	柴油0价格	空或者 0 就是没了
-parkstatus	停车场状态	1-充足，2-紧张
+"parkstatusname": "充足",
+"picurl": "http:\/\/zhgs.u-road.com\/ZJAppApi\/newcode\/g60.png",
+"poiid": "331002",
+"longitude": "120.221020",
+"latitude": "30.283927",
+"shortname": "G60沪昆高速(沪杭)",
+"name": "长安服务区",
+"distance": "2.51",
+"detailurl": "http:\/\/zhgs.u-road.com\/ZJAppView\/serviceDetail.html?dataid=331002",
+"hasfood": "1",
+"hasroom": "0",
+"hastoilet": "1",
+"hasspecialty": "1",
+"hasshop": "1",
+"haspark": "1",
+"hasoil": "1",
+"hasrepair": "1",
+"oil1": "5.6",
+"oil2": "5.6",
+"oil3": "5.6",
+"oil4": "5.6",
+"parkstatus": "1",
+"oil_arr": ["汽油92#", "汽油95#", "汽油98#", "柴油0#"],
+"service_arr": ["加油站", "停车场", "餐饮", "卫生间", "商店", "维修店", "特产"]
  */
 class ServiceMDL : MutilItem, Serializable {
     override fun getItemType(): Int = 8
@@ -98,5 +102,16 @@ class ServiceMDL : MutilItem, Serializable {
         if (hasshop == 1) list.add(context.getString(R.string.service_area_shop))
         if (hasspecialty == 1) list.add(context.getString(R.string.service_area_specialty))
         return list
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            !is ServiceMDL -> false
+            else -> this === other || detailurl == other.detailurl
+        }
+    }
+
+    override fun hashCode(): Int {
+        return 31 + (detailurl?.hashCode() ?: 0)
     }
 }

@@ -25,8 +25,7 @@ class NearByServiceAdapter(private val context: Activity, mDatas: MutableList<Se
             params.leftMargin = 0
         }
         holder.itemView.layoutParams = params
-        val ivPic = holder.obtainView<ImageView>(R.id.ivPic)
-        ImageLoaderV4.getInstance().displayImage(context, t.picurl, ivPic, ContextCompat.getColor(context, R.color.transparent))
+        holder.displayImage(R.id.ivPic, t.picurl,R.color.color_f7)
         holder.setText(R.id.tvName, t.name)
         holder.setText(R.id.tvDistance, "${t.distance}km")
     }

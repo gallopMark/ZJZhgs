@@ -43,6 +43,9 @@ class MyNearByActivity : BaseActivity() {
     private val nameList = ArrayList<String>()
     private var visit: String = "15"
     private var isShow = false
+    private var tollGateMDL: TollGateMDL? = null
+    private var serviceMDL: ServiceMDL? = null
+    private var scenicMDL: ScenicMDL? = null
     private val tollMarkers = ArrayList<Marker>()
     private val serviceMarkers = ArrayList<Marker>()
     private val scenicMarkers = ArrayList<Marker>()
@@ -51,10 +54,10 @@ class MyNearByActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         withTitle(resources.getString(R.string.mynearby_title))
         setBaseContentLayout(R.layout.activity_mynearby)
+        intent.extras?.let { type = it.getInt("type", 1) }
         setDistance()
         mapView.onCreate(savedInstanceState)
         initMapView()
-        intent.extras?.let { type = it.getInt("type", 1) }
         setCheck()
         applyLocationPermission(true)
     }
@@ -72,33 +75,38 @@ class MyNearByActivity : BaseActivity() {
 
     private fun dealWithFromHome() {
         val mdl = intent.extras?.getSerializable("mdl")
-        when (mdl) {
-            is TollGateMDL -> {
-                val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()),
-                        MapDataType.TOLL_GATE.name, MapDataType.TOLL_GATE.name,
-                        BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_toll_icon))
-                val marker = aMap.addMarker(option).apply { `object` = mdl }
-                tollMarkers.add(marker)
-                aMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(mdl.latitude(), mdl.longitude()), aMap.cameraPosition.zoom, 0f, 0f)))
-                enlargeMarkerIcon(marker)
-            }
-            is ServiceMDL -> {
-                val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()),
-                        MapDataType.SERVICE_AREA.name, MapDataType.SERVICE_AREA.name,
-                        BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_service_icon))
-                val marker = aMap.addMarker(option).apply { `object` = mdl }
-                serviceMarkers.add(marker)
-                aMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(mdl.latitude(), mdl.longitude()), aMap.cameraPosition.zoom, 0f, 0f)))
-                enlargeMarkerIcon(marker)
-            }
-            is ScenicMDL -> {
-                val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()),
-                        MapDataType.SCENIC.name, MapDataType.SCENIC.name,
-                        BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_secnic_icon))
-                val marker = aMap.addMarker(option).apply { `object` = mdl }
-                scenicMarkers.add(marker)
-                aMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(mdl.latitude(), mdl.longitude()), aMap.cameraPosition.zoom, 0f, 0f)))
-                enlargeMarkerIcon(marker)
+        mdl?.let {
+            when (it) {
+                is TollGateMDL -> {
+                    tollGateMDL = it
+                    val option = createOptions(LatLng(it.latitude(), it.longitude()),
+                            MapDataType.TOLL_GATE.name, MapDataType.TOLL_GATE.name,
+                            BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_toll_icon))
+                    val marker = aMap.addMarker(option).apply { `object` = mdl }
+                    tollMarkers.add(marker)
+                    aMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.latitude(), it.longitude()), aMap.cameraPosition.zoom, 0f, 0f)))
+                    enlargeMarkerIcon(marker)
+                }
+                is ServiceMDL -> {
+                    serviceMDL = it
+                    val option = createOptions(LatLng(it.latitude(), it.longitude()),
+                            MapDataType.SERVICE_AREA.name, MapDataType.SERVICE_AREA.name,
+                            BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_service_icon))
+                    val marker = aMap.addMarker(option).apply { `object` = mdl }
+                    serviceMarkers.add(marker)
+                    aMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.latitude(), it.longitude()), aMap.cameraPosition.zoom, 0f, 0f)))
+                    enlargeMarkerIcon(marker)
+                }
+                is ScenicMDL -> {
+                    scenicMDL = it
+                    val option = createOptions(LatLng(it.latitude(), it.longitude()),
+                            MapDataType.SCENIC.name, MapDataType.SCENIC.name,
+                            BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_secnic_icon))
+                    val marker = aMap.addMarker(option).apply { `object` = mdl }
+                    scenicMarkers.add(marker)
+                    aMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.latitude(), it.longitude()), aMap.cameraPosition.zoom, 0f, 0f)))
+                    enlargeMarkerIcon(marker)
+                }
             }
         }
     }
@@ -287,11 +295,18 @@ class MyNearByActivity : BaseActivity() {
         for (marker in tollMarkers) marker.remove()
         for (marker in serviceMarkers) marker.remove()
         for (marker in scenicMarkers) marker.remove()
+        tollGateMDL = null
+        serviceMDL = null
+        scenicMDL = null
     }
 
     //收费站类型数据
     private fun updateToll(list: MutableList<TollGateMDL>) {
         val markers = ArrayList<Marker>()
+        val mdl = tollGateMDL
+        if (mdl != null && list.contains(mdl)) {
+            list.remove(mdl)
+        }
         for (item in list) {
             val option = createOptions(LatLng(item.latitude(), item.longitude()),
                     MapDataType.TOLL_GATE.name, MapDataType.TOLL_GATE.name,
@@ -304,6 +319,10 @@ class MyNearByActivity : BaseActivity() {
     //服务区类型数据
     private fun updateService(list: MutableList<ServiceMDL>) {
         val markers = ArrayList<Marker>()
+        val mdl = serviceMDL
+        if (mdl != null && list.contains(mdl)) {
+            list.remove(mdl)
+        }
         for (item in list) {
             val option = createOptions(LatLng(item.latitude(), item.longitude()),
                     MapDataType.SERVICE_AREA.name, MapDataType.SERVICE_AREA.name,
@@ -316,6 +335,10 @@ class MyNearByActivity : BaseActivity() {
     //景点类型数据
     private fun updateScenic(list: MutableList<ScenicMDL>) {
         val markers = ArrayList<Marker>()
+        val mdl = scenicMDL
+        if (mdl != null && list.contains(mdl)) {
+            list.remove(mdl)
+        }
         for (item in list) {
             val option = createOptions(LatLng(item.latitude(), item.longitude()),
                     MapDataType.SCENIC.name, MapDataType.SCENIC.name,

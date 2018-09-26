@@ -9,6 +9,7 @@ import com.uroad.ijkplayer.ZPlayer
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CurrApplication
 import kotlinx.android.synthetic.main.activity_videoplay.*
 import java.lang.ref.WeakReference
 
@@ -45,6 +46,7 @@ class VideoPlayerActivity : BaseActivity() {
             isLive = it.getBoolean("isLive", false)
             url = it.getString("url")
             title = it.getString("title", "")
+            CurrApplication.rtmpIp = url
         }
         handler = MHandler(this)
         val videoHeight = DisplayUtils.getWindowHeight(this) / 2

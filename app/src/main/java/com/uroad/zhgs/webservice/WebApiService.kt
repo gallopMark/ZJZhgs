@@ -498,6 +498,10 @@ class WebApiService {
 
         //resid	视频的resid
         fun roadVideoParams(resid: String?) = getBaseParams().apply { put("resid", resid) }
+
+        const val CLOSE_VIDEO = "closeVideo"
+
+        fun closeVideoParams(rtmpIp: String?) = getBaseParams().apply { put("rtmpIp", rtmpIp) }
     }
 
 }

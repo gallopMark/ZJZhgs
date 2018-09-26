@@ -34,7 +34,7 @@ class TollGateMDL : MutilItem, Serializable {
     var detailurl: String? = null
 
     var markerIcon: Int = R.mipmap.ic_marker_toll_icon
-    var markerBigIco: Int =  R.mipmap.ic_marker_toll_big_icon
+    var markerBigIco: Int = R.mipmap.ic_marker_toll_big_icon
 
     fun latitude(): Double {
         latitude?.let { return it }
@@ -44,5 +44,16 @@ class TollGateMDL : MutilItem, Serializable {
     fun longitude(): Double {
         longitude?.let { return it }
         return 0.0
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            !is TollGateMDL -> false
+            else -> this === other || detailurl == other.detailurl
+        }
+    }
+
+    override fun hashCode(): Int {
+        return 31 + (detailurl?.hashCode() ?: 0)
     }
 }

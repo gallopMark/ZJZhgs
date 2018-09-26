@@ -25,7 +25,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
@@ -421,9 +420,7 @@ public class ZPlayer extends RelativeLayout {
         }
         int width = activity.getResources().getDisplayMetrics().widthPixels;
         int height = activity.getResources().getDisplayMetrics().heightPixels;
-
         screenWidthPixels = width > height ? width : height;
-
         $ = new Query();
         contentView = View.inflate(context, R.layout.view_super_player, this);
         videoView = contentView.findViewById(R.id.video_view);
