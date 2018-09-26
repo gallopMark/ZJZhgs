@@ -102,7 +102,7 @@ class EventDetailPageDialog(private val context: Activity,
             tvEndTimeTips.text = if (data.eventtype == MapDataType.CONSTRUCTION.code)
                 context.resources.getString(R.string.usersubscribe_planEndTime)
             else context.resources.getString(R.string.usersubscribe_endTime)
-            tvEndTime.text = data.getRealoverTime()
+            tvEndTime.text = data.getPlanOverTime()
             if (TextUtils.isEmpty(data.getUpdateTime())) {
                 tvUpdateTime.text = "--"
             } else {

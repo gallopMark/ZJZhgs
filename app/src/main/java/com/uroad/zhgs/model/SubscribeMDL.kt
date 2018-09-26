@@ -152,6 +152,12 @@ eventtype	事件类型
         return parseDate(realovertime)
     }
 
+    fun getPlanOverTime(): String {
+        if (TextUtils.isEmpty(parseDate(planovertime)))
+            return "--"
+        return parseDate(planovertime)
+    }
+
     fun getAcceptTime(): String {
         if (TextUtils.isEmpty(parseDate(accepttime)))
             return "--"

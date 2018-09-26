@@ -29,7 +29,7 @@ class HighwayEventListAdapter(private val context: Context, mDatas: MutableList<
         } else {
             holder.setText(R.id.tvEndTimeTips, context.getString(R.string.usersubscribe_endTime))
         }
-        holder.setText(R.id.tvEndTime, t.getRealoverTime())
+        holder.setText(R.id.tvEndTime, t.getPlanOverTime())
         if (TextUtils.isEmpty(t.getUpdateTime())) {
             holder.setText(R.id.tvUpdateTime, "--")
         } else {

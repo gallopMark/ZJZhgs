@@ -90,8 +90,8 @@
 
         <ImageView
             android:id="@+id/ivNav"
-            android:layout_width="@dimen/margin_30"
-            android:layout_height="@dimen/margin_30"
+            android:layout_width="@dimen/margin_25"
+            android:layout_height="@dimen/margin_25"
             android:layout_gravity="center"
             android:src="@mipmap/ic_navigation_icon" />
     </LinearLayout>

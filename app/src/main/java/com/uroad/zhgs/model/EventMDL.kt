@@ -93,6 +93,12 @@ class EventMDL : MutilItem, Serializable {
         return parseDate(realovertime)
     }
 
+    fun getPlanOverTime(): String {
+        if (TextUtils.isEmpty(parseDate(planovertime)))
+            return "--"
+        return parseDate(planovertime)
+    }
+
     private fun parseDate(timeStr: String?): String {
         if (TextUtils.isEmpty(timeStr)) return ""
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())

@@ -84,7 +84,7 @@ class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<Sub
         } else {
             holder.setText(R.id.tvEndTimeTips, context.resources.getString(R.string.usersubscribe_endTime))
         }
-        holder.setText(R.id.tvEndTime, t.getRealoverTime())
+        holder.setText(R.id.tvEndTime, t.getPlanOverTime())
     }
 
     /*拥堵类型*/

@@ -60,10 +60,12 @@ class EventDetailDialog(private val context: Activity, private val dataMDL: Even
             } else {
                 tvOccTime.text = dataMDL.getOccTime()
             }
-            tvEndTimeTips.text = if (dataMDL.eventtype == MapDataType.CONSTRUCTION.code)
-                context.resources.getString(R.string.usersubscribe_planEndTime)
-            else context.resources.getString(R.string.usersubscribe_endTime)
-            tvEndTime.text = dataMDL.getRealoverTime()
+            if (dataMDL.eventtype == MapDataType.CONSTRUCTION.code) {
+                tvEndTimeTips.text = context.resources.getString(R.string.usersubscribe_planEndTime)
+            } else {
+                tvEndTimeTips.text = context.resources.getString(R.string.usersubscribe_endTime)
+            }
+            tvEndTime.text = dataMDL.getPlanOverTime()
             if (TextUtils.isEmpty(dataMDL.getUpdateTime())) {
                 tvUpdateTime.text = "--"
             } else {

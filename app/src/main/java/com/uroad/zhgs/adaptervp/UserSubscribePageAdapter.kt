@@ -119,7 +119,7 @@ class UserSubscribePageAdapter(private val context: Context,
         } else {
             tvEndTimeTips.text = context.resources.getString(R.string.usersubscribe_endTime)
         }
-        tvEndTime.text = item.getRealoverTime()
+        tvEndTime.text = item.getPlanOverTime()
     }
 
     /*拥堵类型*/
