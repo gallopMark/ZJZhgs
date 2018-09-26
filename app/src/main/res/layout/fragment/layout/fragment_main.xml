@@ -352,85 +352,8 @@
                         android:id="@+id/flNearby"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone">
+                        android:visibility="gone" />
 
-                        <FrameLayout
-                            android:id="@+id/flToll"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/rvToll"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:overScrollMode="never" />
-
-                            <TextView
-                                android:id="@+id/tvEmptyToll"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:drawableLeft="@mipmap/ic_nodata"
-                                android:drawablePadding="@dimen/margin_20"
-                                android:gravity="center"
-                                android:text="@string/home_nearby_empty"
-                                android:textColor="@color/appTextColor"
-                                android:textSize="@dimen/font_16"
-                                android:visibility="gone" />
-                        </FrameLayout>
-
-                        <FrameLayout
-                            android:id="@+id/flService"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone">
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/rvService"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:overScrollMode="never" />
-
-                            <TextView
-                                android:id="@+id/tvEmptyService"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:drawableLeft="@mipmap/ic_nodata"
-                                android:drawablePadding="@dimen/margin_20"
-                                android:gravity="center"
-                                android:text="@string/home_nearby_empty"
-                                android:textColor="@color/appTextColor"
-                                android:textSize="@dimen/font_16"
-                                android:visibility="gone" />
-                        </FrameLayout>
-
-                        <FrameLayout
-                            android:id="@+id/flScenic"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone">
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/rvScenic"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:overScrollMode="never" />
-
-                            <TextView
-                                android:id="@+id/tvEmptyScenic"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:drawableLeft="@mipmap/ic_nodata"
-                                android:drawablePadding="@dimen/margin_20"
-                                android:gravity="center"
-                                android:text="@string/home_nearby_empty"
-                                android:textColor="@color/appTextColor"
-                                android:textSize="@dimen/font_16"
-                                android:visibility="gone" />
-                        </FrameLayout>
-                    </FrameLayout>
                 </LinearLayout>
 
                 <View

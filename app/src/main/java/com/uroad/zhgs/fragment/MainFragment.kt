@@ -3,7 +3,6 @@ package com.uroad.zhgs.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.amap.api.location.AMapLocation
@@ -13,16 +12,11 @@ import com.amap.api.services.weather.WeatherSearch
 import com.amap.api.services.weather.WeatherSearchQuery
 import com.amap.api.services.weather.LocalWeatherForecastResult
 import com.amap.api.services.weather.LocalWeatherLiveResult
-import com.uroad.zhgs.adapteRv.NearByScenicAdapter
-import com.uroad.zhgs.adapteRv.NearByServiceAdapter
-import com.uroad.zhgs.adapteRv.NearByTollAdapter
 import com.uroad.zhgs.adaptervp.UserSubscribePageAdapter
-import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
-import java.lang.ref.WeakReference
 import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableString
@@ -40,6 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import com.uroad.library.rxbus.RxBus
 import com.uroad.library.utils.VersionUtils
 import com.uroad.zhgs.R
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.BindCarDialog
 import com.uroad.zhgs.dialog.VersionDialog
 import com.uroad.zhgs.enumeration.Carcategory
@@ -57,15 +52,6 @@ import io.reactivex.disposables.Disposable
 class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeatherSearchListener {
     private var isOpenLocation = false   //是否已经打开定位
     private var weatherSearch: WeatherSearch? = null    //高德api天气搜索
-    private var latitude = 0.0
-    private var longitude = 0.0
-    private lateinit var handler: MHandler
-    private val tollList = ArrayList<TollGateMDL>()   //附近加油站数据集合
-    private lateinit var tollAdapter: NearByTollAdapter     //附近加油站适配器
-    private val serviceList = ArrayList<ServiceMDL>()   //附近服务区数据集合
-    private lateinit var serviceAdapter: NearByServiceAdapter      //附近服务区适配器
-    private val scenicList = ArrayList<ScenicMDL>()     //附近景点数据集合
-    private lateinit var scenicAdapter: NearByScenicAdapter //附近景点适配器
     private val newsList = ArrayList<NewsMDL>()     //推荐资讯数据集合
     private lateinit var newsAdapter: NewsAdapter   //资讯列表适配器
     private val subscribeMDLs = ArrayList<SubscribeMDL>()   //我的订阅数据集（已登录状态）
@@ -74,16 +60,15 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private var isDestroyView = false
     private var serviceIntent: Intent? = null
     private var onMenuClickListener: OnMenuClickListener? = null
+    private var longitude = CurrApplication.APP_LATLNG.longitude
+    private var latitude = CurrApplication.APP_LATLNG.latitude
+    private var tollFragment: NearByTollCFragment? = null
+    private var serviceFragment: NearByServiceCFragment? = null
+    private var scenicFragment: NearByScenicCFragment? = null
+    private val handler = Handler()
 
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
-        const val CODE_VERSION = 0x0000
-        const val CODE_SUBSCRIBE = 0x0001
-        const val CODE_TOLL = 0x0002
-        const val CODE_SERVICE = 0x0003
-        const val CODE_SCENIC = 0x0004
-        const val CODE_NEWS = 0x0005
-        const val CODE_WEATHER = 0x0006
         const val DELAY_MILLIS = 3000L
     }
 
@@ -99,7 +84,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         initRv()
         /*未申请位置权限，则申请*/
         if (!hasLocationPermissions()) applyLocationPermissions()
-        handler = MHandler(this)
         //注册rxBus 接收订阅取消的消息，将我的订阅列表中的相关信息移除
         disposable = RxBus.getDefault().toObservable(MessageEvent::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -180,24 +164,21 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             tvNearByService.isSelected = false
             tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
             tvNearByScenic.isSelected = false
-            flToll.visibility = View.GONE
-            flService.visibility = View.GONE
-            flScenic.visibility = View.GONE
             when (v.id) {
                 R.id.tvNearByToll -> {
                     tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
                     tvNearByToll.isSelected = true
-                    flToll.visibility = View.VISIBLE
+                    setTab(1)
                 }
                 R.id.tvNearByService -> {
                     tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
                     tvNearByService.isSelected = true
-                    flService.visibility = View.VISIBLE
+                    setTab(2)
                 }
                 R.id.tvNearByScenic -> {
                     tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
                     tvNearByScenic.isSelected = true
-                    flScenic.visibility = View.VISIBLE
+                    setTab(3)
                 }
             }
         }
@@ -208,50 +189,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     }
 
     private fun initRv() {
-        rvToll.isNestedScrollingEnabled = false
-        rvService.isNestedScrollingEnabled = false
-        rvScenic.isNestedScrollingEnabled = false
         rvInfo.isNestedScrollingEnabled = false
-        rvToll.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
-        rvService.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
-        rvScenic.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
         rvInfo.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.VERTICAL }
-        tollAdapter = NearByTollAdapter(context, tollList)
-        rvToll.adapter = tollAdapter
-        serviceAdapter = NearByServiceAdapter(context, serviceList)
-        rvService.adapter = serviceAdapter
-        scenicAdapter = NearByScenicAdapter(context, scenicList)
-        rvScenic.adapter = scenicAdapter
-        tollAdapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until tollList.size) {
-                    openActivity(MyNearByActivity::class.java, Bundle().apply {
-                        putInt("type", 1)
-                        putSerializable("mdl", tollList[position])
-                    })
-                }
-            }
-        })
-        serviceAdapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until serviceList.size) {
-                    openActivity(MyNearByActivity::class.java, Bundle().apply {
-                        putInt("type", 2)
-                        putSerializable("mdl", serviceList[position])
-                    })
-                }
-            }
-        })
-        scenicAdapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until scenicList.size) {
-                    openActivity(MyNearByActivity::class.java, Bundle().apply {
-                        putInt("type", 3)
-                        putSerializable("mdl", scenicList[position])
-                    })
-                }
-            }
-        })
         newsAdapter = NewsAdapter(context, newsList)
         rvInfo.adapter = newsAdapter
         newsAdapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
@@ -384,12 +323,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     val mdl = GsonUtils.fromDataBean(data, VersionMDL::class.java)
                     mdl?.let { versionTips(it) }
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_VERSION, DELAY_MILLIS)
+                    handler.postDelayed({ getVersionByType() }, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_VERSION, DELAY_MILLIS)
+                handler.postDelayed({ getVersionByType() }, DELAY_MILLIS)
             }
         })
     }
@@ -426,13 +365,13 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     val mdLs = GsonUtils.fromDataToList(data, SubscribeMDL::class.java)
                     updateSubscribe(mdLs)
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_SUBSCRIBE, DELAY_MILLIS)
+                    handler.postDelayed({ getSubscribe() }, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
                 //加载失败，延迟三秒重新加载
-                handler.sendEmptyMessageDelayed(CODE_SUBSCRIBE, DELAY_MILLIS)
+                handler.postDelayed({ getSubscribe() }, DELAY_MILLIS)
             }
         })
     }
@@ -457,12 +396,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                     val mdLs = GsonUtils.fromDataToList(data, NewsMDL::class.java)
                     updateNews(mdLs)
                 } else {
-                    handler.sendEmptyMessageDelayed(CODE_NEWS, DELAY_MILLIS)
+                    handler.postDelayed({ getNewsList() }, DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_NEWS, DELAY_MILLIS)
+                handler.postDelayed({ getNewsList() }, DELAY_MILLIS)
             }
         })
     }
@@ -483,10 +422,56 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             query = mQuery
             searchWeatherAsyn() //异步搜索
         }
-        val latitude = location.latitude
-        val longitude = location.longitude
-        getNearbyData(latitude, longitude)
+        longitude = location.longitude
+        latitude = location.latitude
+        flNearby.visibility = View.VISIBLE
+        setTab(1)
         closeLocation()  //定位成功，关闭定位；用户下拉刷新再次打开
+    }
+
+    /*我的附近tab 1->附近收费站 2->附近服务区 3->附近景点*/
+    private fun setTab(tab: Int) {
+        val transaction = childFragmentManager.beginTransaction()
+        tollFragment?.let { transaction.hide(it) }
+        serviceFragment?.let { transaction.hide(it) }
+        scenicFragment?.let { transaction.hide(it) }
+        val bundle = Bundle().apply {
+            putDouble("longitude", longitude)
+            putDouble("latitude", latitude)
+        }
+        when (tab) {
+            1 -> {
+                if (tollFragment == null) {
+                    tollFragment = NearByTollCFragment().apply {
+                        arguments = bundle
+                        transaction.add(R.id.flNearby, this)
+                    }
+                } else {
+                    tollFragment?.let { transaction.show(it) }
+                }
+            }
+            2 -> {
+                if (serviceFragment == null) {
+                    serviceFragment = NearByServiceCFragment().apply {
+                        arguments = bundle
+                        transaction.add(R.id.flNearby, this)
+                    }
+                } else {
+                    serviceFragment?.let { transaction.show(it) }
+                }
+            }
+            3 -> {
+                if (scenicFragment == null) {
+                    scenicFragment = NearByScenicCFragment().apply {
+                        arguments = bundle
+                        transaction.add(R.id.flNearby, this)
+                    }
+                } else {
+                    scenicFragment?.let { transaction.show(it) }
+                }
+            }
+        }
+        transaction.commit()
     }
 
     override fun locationFailure() {
@@ -538,7 +523,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             tv_temperature.text = temperature
             tv_city.text = result.city
         } else {
-            handler.sendEmptyMessageDelayed(CODE_WEATHER, DELAY_MILLIS)
+            handler.postDelayed({ weatherSearch?.searchWeatherAsyn() }, DELAY_MILLIS)
         }
     }
 
@@ -546,140 +531,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
 
     }
 
-    //根据当前经纬度获取附近信息
-    private fun getNearbyData(latitude: Double, longitude: Double) {
-        this.latitude = latitude
-        this.longitude = longitude
-        /*测试经纬度*/
-//        val latitude = CurrApplication.APP_LATLNG.latitude
-//        val longitude = CurrApplication.APP_LATLNG.longitude
-        getNearByToll(latitude, longitude)
-        getNearByService(latitude, longitude)
-        getNearByScenic(latitude, longitude)
-    }
-
-    /*获取附近加油站信息*/
-    private fun getNearByToll(latitude: Double, longitude: Double) {
-        doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.TOLL_GATE.code,
-                longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
-            override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) {
-                    val list = GsonUtils.fromDataToList(data, TollGateMDL::class.java)
-                    tollList.addAll(list)
-                    updateToll(list)
-                } else {
-                    handler.sendEmptyMessageDelayed(CODE_TOLL, DELAY_MILLIS)
-                }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_TOLL, DELAY_MILLIS)
-            }
-        })
-    }
-
-    /*获取附近服务区信息*/
-    private fun getNearByService(latitude: Double, longitude: Double) {
-        doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.SERVICE_AREA.code,
-                longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
-            override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) {
-                    val list = GsonUtils.fromDataToList(data, ServiceMDL::class.java)
-                    updateService(list)
-                } else {
-                    handler.sendEmptyMessageDelayed(CODE_SERVICE, DELAY_MILLIS)
-                }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_SERVICE, DELAY_MILLIS)
-            }
-        })
-    }
-
-    /*获取附近景点信息*/
-    private fun getNearByScenic(latitude: Double, longitude: Double) {
-        doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.SCENIC.code,
-                longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
-            override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) {
-                    val list = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
-                    updateScenic(list)
-                } else {
-                    handler.sendEmptyMessageDelayed(CODE_SCENIC, DELAY_MILLIS)
-                }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.sendEmptyMessageDelayed(CODE_SCENIC, DELAY_MILLIS)
-            }
-        })
-    }
-
-    //更新附近加油站ui
-    private fun updateToll(list: MutableList<TollGateMDL>) {
-        tollList.clear()
-        tollList.addAll(list)
-        tollAdapter.notifyDataSetChanged()
-        if (tollList.size > 0) {
-            rvToll.visibility = View.VISIBLE
-            tvEmptyToll.visibility = View.GONE
-        } else {
-            rvToll.visibility = View.GONE
-            tvEmptyToll.visibility = View.VISIBLE
-        }
-    }
-
-    //更新附近服务区ui
-    private fun updateService(list: MutableList<ServiceMDL>) {
-        serviceList.clear()
-        serviceList.addAll(list)
-        serviceAdapter.notifyDataSetChanged()
-        if (serviceList.size > 0) {
-            rvService.visibility = View.VISIBLE
-            tvEmptyService.visibility = View.GONE
-        } else {
-            rvService.visibility = View.GONE
-            tvEmptyService.visibility = View.VISIBLE
-        }
-    }
-
-    //更新附近景点ui
-    private fun updateScenic(list: MutableList<ScenicMDL>) {
-        scenicList.clear()
-        scenicList.addAll(list)
-        scenicAdapter.notifyDataSetChanged()
-        if (scenicList.size > 0) {
-            rvService.visibility = View.VISIBLE
-            tvEmptyScenic.visibility = View.GONE
-        } else {
-            rvService.visibility = View.GONE
-            tvEmptyScenic.visibility = View.VISIBLE
-        }
-    }
-
-    private class MHandler(fragment: MainFragment) : Handler() {
-        private val weakReference: WeakReference<MainFragment> = WeakReference(fragment)
-        override fun handleMessage(msg: Message) {
-            val fragment = weakReference.get() ?: return
-            when (msg.what) {
-                CODE_VERSION -> fragment.getVersionByType()
-                CODE_SUBSCRIBE -> fragment.getSubscribe()
-                CODE_TOLL -> fragment.getNearByToll(fragment.latitude, fragment.longitude)
-                CODE_SERVICE -> fragment.getNearByService(fragment.latitude, fragment.longitude)
-                CODE_SCENIC -> fragment.getNearByScenic(fragment.latitude, fragment.longitude)
-                CODE_NEWS -> fragment.getNewsList()
-                CODE_WEATHER -> fragment.weatherSearch?.searchWeatherAsyn()
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         if (hasLocationPermissions() && !isOpenLocation) {
             openLocation()
-            flNearby.visibility = View.VISIBLE
-            tvLocationFailure.visibility = View.GONE
         }
         if (!isLogin() && flSubscribe.visibility != View.GONE) {  //退出登录
             flSubscribe.visibility = View.GONE

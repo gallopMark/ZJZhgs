@@ -303,11 +303,9 @@ class MyNearByActivity : BaseActivity() {
     //收费站类型数据
     private fun updateToll(list: MutableList<TollGateMDL>) {
         val markers = ArrayList<Marker>()
-        val mdl = tollGateMDL
-        if (mdl != null && list.contains(mdl)) {
-            list.remove(mdl)
-        }
+        val detailUrl = tollGateMDL?.detailurl
         for (item in list) {
+            if(item.detailurl == detailUrl) continue
             val option = createOptions(LatLng(item.latitude(), item.longitude()),
                     MapDataType.TOLL_GATE.name, MapDataType.TOLL_GATE.name,
                     BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_toll_icon))
@@ -319,11 +317,9 @@ class MyNearByActivity : BaseActivity() {
     //服务区类型数据
     private fun updateService(list: MutableList<ServiceMDL>) {
         val markers = ArrayList<Marker>()
-        val mdl = serviceMDL
-        if (mdl != null && list.contains(mdl)) {
-            list.remove(mdl)
-        }
+        val detailUrl = serviceMDL?.detailurl
         for (item in list) {
+            if(item.detailurl == detailUrl) continue
             val option = createOptions(LatLng(item.latitude(), item.longitude()),
                     MapDataType.SERVICE_AREA.name, MapDataType.SERVICE_AREA.name,
                     BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_service_icon))
@@ -335,11 +331,9 @@ class MyNearByActivity : BaseActivity() {
     //景点类型数据
     private fun updateScenic(list: MutableList<ScenicMDL>) {
         val markers = ArrayList<Marker>()
-        val mdl = scenicMDL
-        if (mdl != null && list.contains(mdl)) {
-            list.remove(mdl)
-        }
+        val detailUrl = scenicMDL?.detailurl
         for (item in list) {
+            if(item.detailurl == detailUrl) continue
             val option = createOptions(LatLng(item.latitude(), item.longitude()),
                     MapDataType.SCENIC.name, MapDataType.SCENIC.name,
                     BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_secnic_icon))
