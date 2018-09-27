@@ -112,13 +112,14 @@ class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<Sub
         }
         var jamSpeed = ""
         t.jamspeed?.let { jamSpeed += it }
+        val ts18 = context.resources.getDimensionPixelOffset(R.dimen.font_18)
         jamSpeed += "km/h"
-        holder.setText(R.id.tvJamSpeed, SpannableString(jamSpeed).apply { setSpan(AbsoluteSizeSpan(18, true), 0, jamSpeed.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) })
+        holder.setText(R.id.tvJamSpeed, SpannableString(jamSpeed).apply { setSpan(AbsoluteSizeSpan(ts18, false), 0, jamSpeed.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) })
         var distance = ""
         t.jamdist?.let { distance += it }
         distance += "km"
-        holder.setText(R.id.tvDistance, SpannableString(distance).apply { setSpan(AbsoluteSizeSpan(18, true), 0, distance.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) })
-        holder.setText(R.id.tvDuration, t.getLongTime())
+        holder.setText(R.id.tvDistance, SpannableString(distance).apply { setSpan(AbsoluteSizeSpan(ts18, false), 0, distance.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) })
+        holder.setText(R.id.tvDuration, t.getLongTime(ts18, false))
     }
 
     /*救援进展类型*/

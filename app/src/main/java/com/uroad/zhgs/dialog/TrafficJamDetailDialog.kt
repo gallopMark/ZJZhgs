@@ -70,12 +70,13 @@ class TrafficJamDetailDialog(private val context: Activity, private val dataMDL:
             var jamSpeed = ""
             dataMDL.jamspeed?.let { jamSpeed += it }
             jamSpeed += "km/h"
-            tvJamSpeed.text = SpannableString(jamSpeed).apply { setSpan(AbsoluteSizeSpan(18, true), 0, jamSpeed.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+            val ts18 = context.resources.getDimensionPixelOffset(R.dimen.font_18)
+            tvJamSpeed.text = SpannableString(jamSpeed).apply { setSpan(AbsoluteSizeSpan(ts18, false), 0, jamSpeed.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
             var distance = ""
             dataMDL.jamdist?.let { distance += it }
             distance += "km"
-            tvDistance.text = SpannableString(distance).apply { setSpan(AbsoluteSizeSpan(18, true), 0, distance.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
-            tvDuration.text = dataMDL.getLongTime()
+            tvDistance.text = SpannableString(distance).apply { setSpan(AbsoluteSizeSpan(ts18, false), 0, distance.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+            tvDuration.text = dataMDL.getLongTime(ts18, false)
             if (dataMDL.subscribestatus == 1) {
                 tvSubscribe.text = context.resources.getString(R.string.usersubscribe_hasSubscribe)
                 tvSubscribe.isEnabled = false

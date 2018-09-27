@@ -77,7 +77,8 @@ class RescuePayActivity : BaseActivity() {
         tvRescueAddress.text = rescueAddres
         var money = "¥"
         payMDL.paymoney?.let { money += it }
-        tvMoney.text = SpannableString(money).apply { setSpan(AbsoluteSizeSpan(25, true), 1, money.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE) }
+        val ts25 = resources.getDimensionPixelOffset(R.dimen.font_25)
+        tvMoney.text = SpannableString(money).apply { setSpan(AbsoluteSizeSpan(ts25, false), 1, money.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE) }
         payMDL.paymoneydetail?.let {
             llDetail.visibility = View.VISIBLE
             tvDetailContent.text = it

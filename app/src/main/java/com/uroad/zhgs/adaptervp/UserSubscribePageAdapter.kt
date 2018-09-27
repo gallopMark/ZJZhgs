@@ -148,12 +148,13 @@ class UserSubscribePageAdapter(private val context: Context,
         var jamSpeed = ""
         item.jamspeed?.let { jamSpeed += it }
         jamSpeed += "km/h"
-        tvJamSpeed.text = SpannableString(jamSpeed).apply { setSpan(AbsoluteSizeSpan(18, true), 0, jamSpeed.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+        val ts18 = context.resources.getDimensionPixelOffset(R.dimen.font_18)
+        tvJamSpeed.text = SpannableString(jamSpeed).apply { setSpan(AbsoluteSizeSpan(ts18, false), 0, jamSpeed.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
         var distance = ""
         item.jamdist?.let { distance += it }
         distance += "km"
-        tvDistance.text = SpannableString(distance).apply { setSpan(AbsoluteSizeSpan(18, true), 0, distance.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
-        tvDuration.text = item.getLongTime()
+        tvDistance.text = SpannableString(distance).apply { setSpan(AbsoluteSizeSpan(ts18, false), 0, distance.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+        tvDuration.text = item.getLongTime(ts18, false)
     }
 
     /*救援进展类型*/
@@ -172,7 +173,7 @@ class UserSubscribePageAdapter(private val context: Context,
         else item.content
         tvAcceptTime.typeface = typeface
         tvStartTime.typeface = typeface
-        tvArriveTime.typeface = typeface.also {  }
+        tvArriveTime.typeface = typeface.also { }
         tvAcceptTime.text = item.getAcceptTime()
         tvStartTime.text = item.getStartTime()
         tvArriveTime.text = item.getArriveTime()

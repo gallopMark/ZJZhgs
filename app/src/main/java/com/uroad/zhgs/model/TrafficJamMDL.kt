@@ -74,28 +74,28 @@ class TrafficJamMDL : MutilItem, Serializable {
         return parseDate(pubtime)
     }
 
-    fun getLongTime(): SpannableString {
+    fun getLongTime(size: Int, dip: Boolean): SpannableString {
         longtime?.let {
             try {
                 val min = it.toInt()
                 if (min < 60) {
                     val source = "${min}min"
-                    return SpannableString(source).apply { setSpan(AbsoluteSizeSpan(18, true), 0, source.indexOf("m"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+                    return SpannableString(source).apply { setSpan(AbsoluteSizeSpan(size, dip), 0, source.indexOf("m"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
                 } else if (min > 60 && min < 60 * 24) {
                     val hour = min / 60
                     val minute = min % 60
                     val source = "${hour}h${minute}min"
                     return SpannableString(source).apply {
-                        setSpan(AbsoluteSizeSpan(18, true), 0, source.indexOf("h"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                        setSpan(AbsoluteSizeSpan(18, true), source.indexOf("h") + 1, source.indexOf("m"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        setSpan(AbsoluteSizeSpan(size, dip), 0, source.indexOf("h"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        setSpan(AbsoluteSizeSpan(size, dip), source.indexOf("h") + 1, source.indexOf("m"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 } else {
                     val day = min / 60 / 24
                     val hour = min % (60 / 24)
                     val source = "${day}d${hour}h"
                     return SpannableString(source).apply {
-                        setSpan(AbsoluteSizeSpan(18, true), 0, source.indexOf("d"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                        setSpan(AbsoluteSizeSpan(18, true), source.indexOf("d") + 1, source.indexOf("h"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        setSpan(AbsoluteSizeSpan(size, dip), 0, source.indexOf("d"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        setSpan(AbsoluteSizeSpan(size, dip), source.indexOf("d") + 1, source.indexOf("h"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
             } catch (e: Exception) {
