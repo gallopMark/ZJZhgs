@@ -18,7 +18,7 @@ import com.uroad.zhgs.helper.AppLocalHelper
  * @describe 第一次进入路况导航显示
  */
 class NewFunctionDialog(private val context: Activity)
-    : Dialog(context) {
+    : Dialog(context, R.style.translucentDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,6 @@ class NewFunctionDialog(private val context: Activity)
             window.setContentView(contentView)
             val btIKnow = contentView.findViewById<Button>(R.id.btIKnow)
             btIKnow.setOnClickListener { dismiss() }
-            window.setBackgroundDrawableResource(R.drawable.bg_corners_5dp)
             window.setLayout((DisplayUtils.getWindowWidth(context) * 0.75).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
             window.setGravity(Gravity.CENTER)
         }

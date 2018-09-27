@@ -21,7 +21,7 @@ import com.uroad.zhgs.model.VersionMDL
  * @describe 版本更新对话框
  */
 class VersionDialog(private val context: Activity, private val mdl: VersionMDL)
-    : Dialog(context) {
+    : Dialog(context, R.style.translucentDialog) {
 
     private var onConfirmClickListener: OnConfirmClickListener? = null
 
@@ -57,7 +57,6 @@ class VersionDialog(private val context: Activity, private val mdl: VersionMDL)
             }
             btCancel.setOnClickListener { dismiss() }
             btConfirm.setOnClickListener { onConfirmClickListener?.onConfirm(mdl, this@VersionDialog) }
-            window.setBackgroundDrawableResource(R.drawable.bg_corners_5dp)
             window.setLayout((DisplayUtils.getWindowWidth(context) * 0.75).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
             window.setGravity(Gravity.CENTER)
         }
