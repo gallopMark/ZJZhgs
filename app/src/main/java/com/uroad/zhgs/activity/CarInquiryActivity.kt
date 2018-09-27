@@ -2,6 +2,7 @@ package com.uroad.zhgs.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.uroad.library.utils.BitmapUtils
@@ -9,11 +10,8 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.dialog.WheelViewDialog
-import com.uroad.zhgs.enumeration.Carcategory
+import com.uroad.zhgs.fragment.MainFragment
 import com.uroad.zhgs.model.CarMDL
-import com.uroad.zhgs.utils.GsonUtils
-import com.uroad.zhgs.webservice.HttpRequestCallback
-import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_carinquiry.*
 
 /**
@@ -52,26 +50,9 @@ class CarInquiryActivity : BaseActivity() {
     }
 
     override fun initData() {
-        doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), Carcategory.COACH.code), object : HttpRequestCallback<String>() {
-            override fun onPreExecute() {
-                showLoading()
-            }
-
-            override fun onSuccess(data: String?) {
-                endLoading()
-                if (GsonUtils.isResultOk(data)) {
-                    val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
-                    updateData(mdLs)
-                } else {
-                    showShortToast(GsonUtils.getMsg(data))
-                }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                endLoading()
-                onHttpError(e)
-            }
-        })
+        val mdLs = ArrayList<CarMDL>()
+        MainFragment.cars?.let { mdLs.addAll(it) }
+        updateData(mdLs)
     }
 
     private fun updateData(mdLs: MutableList<CarMDL>) {
@@ -81,11 +62,13 @@ class CarInquiryActivity : BaseActivity() {
                 index = i
                 hasDefault = true
                 tvSelectCar.text = mdLs[i].carno
+                post()
                 break
             }
         }
         if (!hasDefault && mdLs.size > 0) {  //如果没有默认车辆 则显示第一辆车
             tvSelectCar.text = mdLs[0].carno
+            post()
         }
         if (mdLs.size > 1) {
             tvSelectCar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_arrow_down_default, 0)
@@ -104,9 +87,19 @@ class CarInquiryActivity : BaseActivity() {
                                 dialog.dismiss()
                                 index = position
                                 tvSelectCar.text = text
+                                post()
                             }
                         }).show()
             }
         }
+    }
+
+    private fun post() {
+        ivContent.visibility = View.INVISIBLE
+        cpView.visibility = View.VISIBLE
+        cpView.postDelayed({
+            cpView.visibility = View.GONE
+            ivContent.visibility = View.VISIBLE
+        }, 2000)
     }
 }

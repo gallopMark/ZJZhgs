@@ -1,6 +1,5 @@
 package com.uroad.zhgs.webservice
 
-import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.uroad.zhgs.utils.AndroidBase64Utils
@@ -19,7 +18,8 @@ interface ApiService {
     companion object {
         var isDebug = false
         // http://zhgs.u-road.com/ZJAppApi/index.php/api/
-        const val BASE_URL = "http://zhgs.u-road.com/ZJAppApi/index.php/api/"
+        // http://zjzhgs.u-road.com:11001     zhgs.u-road.com
+        const val BASE_URL = "http://zjzhgs.u-road.com:11001/ZJAppApi/index.php/api/"
         const val Base_DEBUG_URL = "http://10.126.241.9/ZJAppApi/index.php/api/"
         const val SHOPPING_URL = "https://h5.youzan.com/wscshop/feature/FzaSlSjOX1"
         const val MQTT_SERVICEURL = "tcp://47.96.92.29:9000"

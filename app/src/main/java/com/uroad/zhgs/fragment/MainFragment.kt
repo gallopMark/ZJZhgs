@@ -70,6 +70,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
         const val DELAY_MILLIS = 3000L
+        var cars: MutableList<CarMDL>? = null
     }
 
     override fun setBaseLayoutResID(): Int = R.layout.fragment_main
@@ -288,6 +289,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
                     if (mdLs.size > 0) {
+                        cars?.clear()
+                        cars = ArrayList<CarMDL>().apply { addAll(mdLs) }
                         openActivity(CarInquiryActivity::class.java)
                     } else {
                         BindCarDialog(context).setOnConfirmClickListener(object : BindCarDialog.OnConfirmClickListener {
@@ -545,6 +548,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
 
     override fun onDestroyView() {
         isDestroyView = true
+        cars?.let {
+            it.clear()
+            cars = null
+        }
         disposable?.dispose()
         handler.removeCallbacksAndMessages(null)
         serviceIntent?.let { context.stopService(it) }
