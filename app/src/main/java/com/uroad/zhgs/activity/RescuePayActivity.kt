@@ -139,6 +139,7 @@ class RescuePayActivity : BaseActivity() {
                         val results = result.split(";")
                         if (results.isNotEmpty() && results[0].contains("9000")) {
                             openActivity(RescuePaySuccessActivity::class.java, Bundle().apply { putString("rescueid", rescueid) })
+                            setResult(RESULT_OK)
                             finish()
                         } else if (results.isNotEmpty() && results[0].contains("6001")) {
                             showShortToast("支付已取消")

@@ -34,6 +34,7 @@ class NearByServiceCFragment : BaseFragment() {
     private var latitude = CurrApplication.APP_LATLNG.latitude
     private val mDatas = ArrayList<ServiceMDL>()
     private lateinit var adapter: NearByServiceAdapter
+
     override fun setBaseLayoutResID(): Int = R.layout.fragment_nearby_child
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         arguments?.let {
@@ -67,7 +68,7 @@ class NearByServiceCFragment : BaseFragment() {
                 onSuccess()
                 if (GsonUtils.isResultOk(data)) {
                     val list = GsonUtils.fromDataToList(data, ServiceMDL::class.java)
-                    updateToll(list)
+                    update(list)
                 } else {
                     onError()
                 }
@@ -126,7 +127,7 @@ class NearByServiceCFragment : BaseFragment() {
         tvError.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun updateToll(list: MutableList<ServiceMDL>) {
+    private fun update(list: MutableList<ServiceMDL>) {
         mDatas.clear()
         if (list.size > 0) {
             mDatas.addAll(list)
@@ -137,5 +138,23 @@ class NearByServiceCFragment : BaseFragment() {
             recyclerView.visibility = View.GONE
             tvEmpty.visibility = View.VISIBLE
         }
+    }
+
+    fun onLocationUpdate(longitude: Double, latitude: Double) {
+        this.longitude = longitude
+        this.latitude = latitude
+        doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.SERVICE_AREA.code,
+                longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                onSuccess()
+                if (GsonUtils.isResultOk(data)) {
+                    val list = GsonUtils.fromDataToList(data, ServiceMDL::class.java)
+                    update(list)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+            }
+        })
     }
 }

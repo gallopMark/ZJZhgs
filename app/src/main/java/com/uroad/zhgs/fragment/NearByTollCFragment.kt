@@ -138,4 +138,23 @@ class NearByTollCFragment : BaseFragment() {
             tvEmpty.visibility = View.VISIBLE
         }
     }
+
+    fun onLocationUpdate(longitude: Double, latitude: Double) {
+        this.longitude = longitude
+        this.latitude = latitude
+        doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.TOLL_GATE.code,
+                longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
+
+            override fun onSuccess(data: String?) {
+                onSuccess()
+                if (GsonUtils.isResultOk(data)) {
+                    val list = GsonUtils.fromDataToList(data, TollGateMDL::class.java)
+                    update(list)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+            }
+        })
+    }
 }

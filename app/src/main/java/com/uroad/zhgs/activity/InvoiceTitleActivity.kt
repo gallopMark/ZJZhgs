@@ -183,6 +183,7 @@ class InvoiceTitleActivity : BaseActivity() {
             })
         }
         typeList.addAll(mdLs)
+        isCompany = true
         typeList[0].dictcode?.let { fpType = it }
         typeAdapter.notifyDataSetChanged()
         typeList[0].sontype?.let { sonList ->
@@ -317,6 +318,7 @@ class InvoiceTitleActivity : BaseActivity() {
                 endLoading()
                 if (GsonUtils.isResultOk(data)) {
                     showShortToast("提交成功")
+                    setResult(RESULT_OK)
                     Handler().postDelayed({ if (!isFinishing) finish() }, 1500)
                 } else {
                     showShortToast(GsonUtils.getMsg(data))

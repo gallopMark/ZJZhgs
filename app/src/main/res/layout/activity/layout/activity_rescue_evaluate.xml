@@ -59,8 +59,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/margin_10"
                 android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_10"
                 android:text="@string/rescue_evaluate_service_tips"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/font_14" />
@@ -70,8 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:starDistance="@dimen/margin_12"
                 app:isIntMark="true"
+                app:starDistance="@dimen/margin_12"
                 app:starEmpty="@mipmap/ic_star_default"
                 app:starFill="@mipmap/ic_star_selected"
                 app:starSize="@dimen/margin_45" />
@@ -85,21 +85,30 @@
                 android:textColor="@color/appTextColor"
                 android:textSize="@dimen/font_14" />
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_20"
+                android:overScrollMode="never" />
+
             <LinearLayout
                 android:id="@+id/llEvaluate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_20"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/etContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_50"
-                android:layout_marginRight="@dimen/margin_50"
                 android:layout_marginTop="@dimen/margin_15"
+                android:layout_marginRight="@dimen/margin_50"
                 android:background="@color/transparent"
                 android:hint="@string/rescue_evaluate_hint"
                 android:maxLines="2"

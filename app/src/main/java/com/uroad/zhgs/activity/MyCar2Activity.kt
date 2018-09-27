@@ -105,24 +105,26 @@ class MyCar2Activity : BaseRefreshRvActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
-            requestAdd ->{
-                if(resultCode == RESULT_OK){
+        when (requestCode) {
+            requestAdd -> {
+                if (resultCode == RESULT_OK) {
                     cLoadView.setState(CurrencyLoadView.STATE_GONE)
                     refreshLayout.visibility = View.VISIBLE
                     pullToRefresh()
                 }
             }
-            requestEdit ->{
-                val type = data?.getStringExtra("type")
-                if (type == "alert") {
-                    cLoadView.setState(CurrencyLoadView.STATE_GONE)
-                    refreshLayout.visibility = View.VISIBLE
-                    pullToRefresh()
-                } else {
-                    mDatas.removeAt(clickIndex)
-                    adapter.notifyDataSetChanged()
-                    if (mDatas.size == 0) onPageNoData()
+            requestEdit -> {
+                if (resultCode == RESULT_OK) {
+                    val type = data?.getStringExtra("type")
+                    if (type == "alert") {
+                        cLoadView.setState(CurrencyLoadView.STATE_GONE)
+                        refreshLayout.visibility = View.VISIBLE
+                        pullToRefresh()
+                    } else {
+                        mDatas.removeAt(clickIndex)
+                        adapter.notifyDataSetChanged()
+                        if (mDatas.size == 0) onPageNoData()
+                    }
                 }
             }
         }

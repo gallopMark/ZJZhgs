@@ -50,7 +50,7 @@ import io.reactivex.disposables.Disposable
  * 18802076493 a123456
  */
 class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeatherSearchListener {
-    private var isOpenLocation = false   //是否已经打开定位
+    private var isLocationSuccess = false  //是否已经点位成功
     private var weatherSearch: WeatherSearch? = null    //高德api天气搜索
     private val newsList = ArrayList<NewsMDL>()     //推荐资讯数据集合
     private lateinit var newsAdapter: NewsAdapter   //资讯列表适配器
@@ -66,13 +66,16 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private var serviceFragment: NearByServiceCFragment? = null
     private var scenicFragment: NearByScenicCFragment? = null
     private val handler = Handler()
+    private var currentTab = 1
 
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
         const val DELAY_MILLIS = 3000L
+        const val UPDATE_TIME = 5 * 60 * 1000L  //我的附近，定时5分钟刷新一次
         var cars: MutableList<CarMDL>? = null
     }
 
+    private val nearByRun = Runnable { openLocation() }
     override fun setBaseLayoutResID(): Int = R.layout.fragment_main
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
@@ -313,9 +316,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     }
 
     override fun initData() {
-//        getSubscribe()
         getVersionByType()
-        getNewsList()
     }
 
     /*获取app版本号*/
@@ -417,7 +418,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     }
 
     override fun afterLocation(location: AMapLocation) {
-        isOpenLocation = true
+        isLocationSuccess = true
         val city = location.city
         val mQuery = WeatherSearchQuery(city, WeatherSearchQuery.WEATHER_TYPE_LIVE)
         weatherSearch = WeatherSearch(context).apply {
@@ -427,13 +428,18 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         }
         longitude = location.longitude
         latitude = location.latitude
+        tvLocationFailure.visibility = View.GONE
         flNearby.visibility = View.VISIBLE
-        setTab(1)
+        locationUpdate(longitude, latitude)
+        setTab(currentTab)
+        handler.postDelayed(nearByRun, UPDATE_TIME)
         closeLocation()  //定位成功，关闭定位；用户下拉刷新再次打开
     }
 
+
     /*我的附近tab 1->附近收费站 2->附近服务区 3->附近景点*/
     private fun setTab(tab: Int) {
+        currentTab = tab
         val transaction = childFragmentManager.beginTransaction()
         tollFragment?.let { transaction.hide(it) }
         serviceFragment?.let { transaction.hide(it) }
@@ -477,8 +483,16 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         transaction.commit()
     }
 
+    private fun locationUpdate(longitude: Double, latitude: Double) {
+        tollFragment?.let { if (it.isAdded) it.onLocationUpdate(longitude, latitude) }
+        serviceFragment?.let { if (it.isAdded) it.onLocationUpdate(longitude, latitude) }
+        scenicFragment?.let { if (it.isAdded) it.onLocationUpdate(longitude, latitude) }
+    }
+
     override fun locationFailure() {
-        onLocationFailure()
+        //如果第一次定位成功，再次定位时失败了，则不显示定位定位失败页，避免我的附近数据无法查阅
+        if (!isLocationSuccess) onLocationFailure()
+        else handler.postDelayed({ nearByRun }, DELAY_MILLIS)
     }
 
     private fun onLocationFailure() {
@@ -536,14 +550,21 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
 
     override fun onResume() {
         super.onResume()
-        if (hasLocationPermissions() && !isOpenLocation) {
-            openLocation()
-        }
-        if (!isLogin() && flSubscribe.visibility != View.GONE) {  //退出登录
+        if (hasLocationPermissions() && !isLocationSuccess) openLocation()
+        if (!isLogin()) { //退出登录
             flSubscribe.visibility = View.GONE
+            subscribeMDLs.clear()
+            subscribeAdapter.notifyDataSetChanged()
+        } else { //返回到首页刷新我的订阅
+            getSubscribe()
+            bannerView.startAutoScroll()
         }
-        getSubscribe()
-        bannerView.startAutoScroll()
+        getNewsList()  //返回到首页刷新资讯
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (isLogin()) bannerView.stopAutoScroll()
     }
 
     override fun onDestroyView() {

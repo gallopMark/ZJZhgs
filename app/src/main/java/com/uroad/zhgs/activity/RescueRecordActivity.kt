@@ -1,5 +1,7 @@
 package com.uroad.zhgs.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -24,6 +26,9 @@ class RescueRecordActivity : BaseRefreshRvActivity() {
     private val mDatas = ArrayList<RescueItemMDL>()
     private lateinit var adapter: RescueRecordAdapter
     private var isFirstInitData = true
+    private val requestEvaluate = 0x0001
+    private val requestInvoice = 0x0002
+    private val requestPay = 0x0003
 
     override fun initViewData() {
         withTitle(resources.getString(R.string.rescue_record_title))
@@ -50,13 +55,13 @@ class RescueRecordActivity : BaseRefreshRvActivity() {
                 if (position in 0 until mDatas.size) {
                     when (view.id) {
                         R.id.tvEvaluate -> {
-                            openActivity(RescueEvaluateActivity::class.java, Bundle().apply { putString("rescueid", mDatas[position].rescueid) })
+                            openActivityForResult(RescueEvaluateActivity::class.java, Bundle().apply { putString("rescueid", mDatas[position].rescueid) }, requestEvaluate)
                         }
                         R.id.tvInvoice -> {
-                            openActivity(InvoiceTitleActivity::class.java, Bundle().apply { putString("rescueid", mDatas[position].rescueid) })
+                            openActivityForResult(InvoiceTitleActivity::class.java, Bundle().apply { putString("rescueid", mDatas[position].rescueid) }, requestInvoice)
                         }
                         R.id.tvPay -> {
-                            openActivity(RescuePayActivity::class.java, Bundle().apply { putString("rescueid", mDatas[position].rescueid) })
+                            openActivityForResult(RescuePayActivity::class.java, Bundle().apply { putString("rescueid", mDatas[position].rescueid) }, requestPay)
                         }
                     }
                 }
@@ -107,5 +112,26 @@ class RescueRecordActivity : BaseRefreshRvActivity() {
 
     override fun onReload(view: View) {
         initData()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            requestEvaluate -> {
+                if (resultCode == RESULT_OK) {
+                    initData()
+                }
+            }
+            requestInvoice -> {
+                if (resultCode == RESULT_OK) {
+                    initData()
+                }
+            }
+            requestPay -> {
+                if (resultCode == RESULT_OK) {
+                    initData()
+                }
+            }
+        }
     }
 }
