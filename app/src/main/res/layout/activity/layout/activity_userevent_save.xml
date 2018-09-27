@@ -6,23 +6,38 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/customToolbar"
-        style="@style/SmallTitleToolbar"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp"
-        android:background="@color/colorUserEvent"
-        app:contentInsetStartWithNavigation="0dp"
-        app:navigationIcon="@mipmap/ic_back_white"
-        app:titleMarginStart="@dimen/minus_6"
-        app:titleTextColor="@color/colorTransparent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/colorUserEvent">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@mipmap/ic_back_white" />
+
+        <TextView
+            android:id="@+id/tvSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tvTitle"
+            android:layout_toRightOf="@+id/ivBack"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_14" />
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/ToolbarTitleTextView"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_18" />
-    </android.support.v7.widget.Toolbar>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorTransparent"
+            android:textSize="@dimen/app_title_textsize" />
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
@@ -51,8 +66,8 @@
                     android:id="@+id/llYD"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/margin_45"
-                    android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="@drawable/bg_report_button_selector"
                     android:gravity="center">
 
@@ -71,9 +86,9 @@
                     android:id="@+id/llZC"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/margin_45"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:layout_weight="1"
-                    android:layout_gravity="center"
                     android:background="@drawable/bg_report_button_selector"
                     android:gravity="center">
 
@@ -92,9 +107,9 @@
                     android:id="@+id/llSG"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/margin_45"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:layout_weight="1"
-                    android:layout_gravity="center"
                     android:background="@drawable/bg_report_button_selector"
                     android:gravity="center">
 
@@ -120,8 +135,8 @@
                     android:id="@+id/llJS"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/margin_45"
-                    android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:background="@drawable/bg_report_button_selector"
                     android:gravity="center">
 
@@ -140,9 +155,9 @@
                     android:id="@+id/llYS"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/margin_45"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:layout_weight="1"
-                    android:layout_gravity="center"
                     android:background="@drawable/bg_report_button_selector"
                     android:gravity="center">
 
@@ -161,9 +176,9 @@
                     android:id="@+id/llGZ"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/margin_45"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:layout_weight="1"
-                    android:layout_gravity="center"
                     android:background="@drawable/bg_report_button_selector"
                     android:gravity="center">
 
@@ -192,13 +207,13 @@
                 android:layout_marginTop="@dimen/margin_12"
                 android:background="@color/transparent"
                 android:gravity="top"
-                android:paddingLeft="@dimen/margin_10"
-                android:paddingRight="@dimen/margin_10"
                 android:hint="@string/userEvent_remark_hint"
                 android:lineSpacingExtra="@dimen/margin_4"
-                android:textColor="@color/appTextColor"
                 android:maxLines="4"
                 android:minLines="4"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_10"
+                android:textColor="@color/appTextColor"
                 android:textColorHint="@color/darkgrey"
                 android:textSize="@dimen/font_16" />
 
@@ -252,12 +267,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/white"
                 android:layout_marginBottom="@dimen/margin_20"
-                android:textSize="@dimen/font_16"
                 android:layout_marginTop="@dimen/margin_40"
                 android:background="@mipmap/ic_button_corner_bg"
-                android:text="@string/submit" />
+                android:text="@string/submit"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_16" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

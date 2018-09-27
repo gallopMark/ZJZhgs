@@ -20,7 +20,7 @@ import com.uroad.zhgs.R
  * 描述:统一风格的dialog
  * 作者:马飞奔 Administrator
  */
-class MaterialDialog(mContext: Context) : AlertDialog(mContext, R.style.baseCustomDialog_margin30) {
+class MaterialDialog(mContext: Context) : AlertDialog(mContext, R.style.materialDialog) {
     private val view: View = LayoutInflater.from(mContext).inflate(R.layout.dialog_material, LinearLayout(mContext), false)
     private val tvTips: TextView // 提示框标题
     private val tvMessage: TextView // 提示内容
@@ -34,8 +34,6 @@ class MaterialDialog(mContext: Context) : AlertDialog(mContext, R.style.baseCust
         btMakeSure = view.findViewById(R.id.bt_makesure)
         tvDivider = view.findViewById(R.id.tvDivider)
         btCancel = view.findViewById(R.id.bt_cancel)
-        val maxHeight = (ScreenUtils.getScreenHeight(mContext) * 0.6).toInt()
-        tvMessage.maxHeight = maxHeight
         tvMessage.movementMethod = ScrollingMovementMethod.getInstance()
     }
 

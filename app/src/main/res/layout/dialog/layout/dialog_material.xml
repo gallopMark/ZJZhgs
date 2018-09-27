@@ -29,6 +29,7 @@
         android:layout_marginTop="@dimen/margin_16"
         android:gravity="center"
         android:lineSpacingExtra="@dimen/margin_2"
+        android:maxHeight="@dimen/margin_200"
         android:overScrollMode="never"
         android:paddingLeft="@dimen/margin_20"
         android:paddingRight="@dimen/margin_20"
@@ -81,10 +82,10 @@
             android:paddingBottom="@dimen/margin_8"
             android:paddingLeft="@dimen/margin_12"
             android:paddingRight="@dimen/margin_12"
-            android:visibility="gone"
             android:paddingTop="@dimen/margin_8"
             android:text="@string/dialog_button_confirm"
             android:textColor="@color/colorAccent"
-            android:textSize="@dimen/font_16" />
+            android:textSize="@dimen/font_16"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

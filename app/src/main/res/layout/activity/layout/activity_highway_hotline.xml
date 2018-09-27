@@ -100,8 +100,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.7"
-            android:gravity="right"
-            android:visibility="invisible">
+            android:gravity="right">
 
             <ImageView
                 android:id="@+id/ivSearch"

@@ -42,9 +42,9 @@ class UserEventListActivity : BaseActivity() {
             isMy = it.getBoolean("isMy", false)
         }
         if (isMy) type = WebApiService.REPORT_TYPE_MY
-        customToolbar.title = resources.getString(R.string.userEvent_title)
+        tvSubTitle.text = resources.getString(R.string.userEvent_title)
         tvTitle.text = resources.getString(R.string.userEvent_burst)
-        customToolbar.setNavigationOnClickListener { onBackPressed() }
+        ivBack.setOnClickListener { onBackPressed() }
         recyclerView.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.VERTICAL }
         adapter = UserEventAdapter(this, mDatas)
         recyclerView.adapter = adapter

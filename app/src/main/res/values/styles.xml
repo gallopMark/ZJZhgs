@@ -116,6 +116,14 @@
         <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
 
+    <style name="materialDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:layout_margin">@dimen/margin_30</item>
+    </style>
+
     <style name="translucentDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowNoTitle">true</item>

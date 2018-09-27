@@ -45,6 +45,7 @@
     <dimen name="margin_95">95dp</dimen>
     <dimen name="margin_100">100dp</dimen>
     <dimen name="margin_130">130dp</dimen>
+    <dimen name="margin_200">200dp</dimen>
     <dimen name="margin_280">280dp</dimen>
     <dimen name="minus_1">-1dp</dimen>
     <dimen name="minus_2">-2dp</dimen>

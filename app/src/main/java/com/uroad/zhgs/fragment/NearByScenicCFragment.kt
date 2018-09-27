@@ -1,9 +1,16 @@
 package com.uroad.zhgs.fragment
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.view.View
+import com.uroad.library.utils.NetworkUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.MyNearByActivity
 import com.uroad.zhgs.adapteRv.NearByScenicAdapter
@@ -27,7 +34,6 @@ class NearByScenicCFragment : BaseFragment() {
     private var latitude = CurrApplication.APP_LATLNG.latitude
     private val mDatas = ArrayList<ScenicMDL>()
     private lateinit var adapter: NearByScenicAdapter
-    private val handler = Handler()
     override fun setBaseLayoutResID(): Int = R.layout.fragment_nearby_child
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         arguments?.let {
@@ -54,27 +60,73 @@ class NearByScenicCFragment : BaseFragment() {
         doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.SCENIC.code,
                 longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
-                llLoading.visibility = View.VISIBLE
+                onBefore()
             }
 
             override fun onSuccess(data: String?) {
-                llLoading.visibility = View.GONE
+                onSuccess()
                 if (GsonUtils.isResultOk(data)) {
                     val list = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
-                    updateToll(list)
+                    update(list)
                 } else {
-                    handler.postDelayed({ initData() }, 3000)
+                    onError()
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                llLoading.visibility = View.GONE
-                handler.postDelayed({ initData() }, 3000)
+                onError()
             }
         })
     }
 
-    private fun updateToll(list: MutableList<ScenicMDL>) {
+    private fun onBefore() {
+        loading.visibility = View.VISIBLE
+        tvError.visibility = View.GONE
+        tvEmpty.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun onSuccess() {
+        loading.visibility = View.GONE
+        tvError.visibility = View.GONE
+        tvEmpty.visibility = View.GONE
+    }
+
+    private fun onError() {
+        loading.visibility = View.GONE
+        tvError.visibility = View.VISIBLE
+        tvEmpty.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+        val text: String
+        val drawable: Drawable?
+        if (!NetworkUtils.isConnected(context)) {
+            text = context.getString(R.string.nonetwork) + "请点击重试"
+            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_nonetwork)
+        } else {
+            text = context.getString(R.string.connect_error) + "请点击重试"
+            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_connect_error)
+        }
+        val start = text.indexOf("请")
+        val end = text.length
+        val clickSpan = object : ClickableSpan() {
+            override fun onClick(p0: View?) {
+                initData()
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.isUnderlineText = false
+            }
+        }
+        val ss = SpannableString(text).apply {
+            setSpan(clickSpan, start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorAccent)), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        tvError.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        tvError.text = ss
+        tvError.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun update(list: MutableList<ScenicMDL>) {
         mDatas.clear()
         if (list.size > 0) {
             mDatas.addAll(list)
@@ -85,10 +137,5 @@ class NearByScenicCFragment : BaseFragment() {
             recyclerView.visibility = View.GONE
             tvEmpty.visibility = View.VISIBLE
         }
-    }
-
-    override fun onDestroyView() {
-        handler.removeCallbacksAndMessages(null)
-        super.onDestroyView()
     }
 }

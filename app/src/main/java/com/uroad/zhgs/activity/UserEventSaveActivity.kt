@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
@@ -25,12 +24,10 @@ import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.GridSpacingItemDecoration
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_userevent_save.*
-import top.zibin.luban.Luban
 import java.io.File
 
 /**
@@ -88,10 +85,10 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_userevent_save)
-        customToolbar.title = resources.getString(R.string.userEvent_title)
-        initTitleView()
+        tvSubTitle.text = resources.getString(R.string.userEvent_title)
         tvTitle.text = resources.getString(R.string.userEvent_burst)
-        customToolbar.setNavigationOnClickListener { onBackPressed() }
+        tvSubTitle.setOnClickListener { onBackPressed() }
+        ivBack.setOnClickListener { onBackPressed() }
         llYD.isSelected = true
         initRv()
         applyLocationPermission(true)
@@ -103,19 +100,6 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
             }
         }
         btSubmit.setOnClickListener { commit() }
-    }
-
-    /**
-     * 获取TitleTextView 通过反射获取toolbar titleView
-     */
-    private fun initTitleView() {
-        try {
-            val field = Toolbar::class.java.getDeclaredField("mTitleTextView").apply { isAccessible = true }
-            val titleView = field.get(customToolbar) as View
-            titleView.setOnClickListener { onBackPressed() }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     private fun initRv() {

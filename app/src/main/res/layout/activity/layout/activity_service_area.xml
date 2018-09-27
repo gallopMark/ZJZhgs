@@ -39,7 +39,8 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingLeft="@dimen/margin_10"
-                android:paddingRight="@dimen/margin_10" />
+                android:paddingRight="@dimen/margin_10"
+                android:textSize="@dimen/font_16" />
         </LinearLayout>
     </FrameLayout>
 
