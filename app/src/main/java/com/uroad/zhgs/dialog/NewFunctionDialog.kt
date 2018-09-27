@@ -5,9 +5,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
+import com.uroad.library.utils.BitmapUtils
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.helper.AppLocalHelper
@@ -31,9 +32,13 @@ class NewFunctionDialog(private val context: Activity)
         window?.let { window ->
             val contentView = LayoutInflater.from(context).inflate(R.layout.dialog_newfunctions, LinearLayout(context), false)
             window.setContentView(contentView)
+            val ivPic = contentView.findViewById<ImageView>(R.id.ivPic)
             val btIKnow = contentView.findViewById<Button>(R.id.btIKnow)
             btIKnow.setOnClickListener { dismiss() }
-            window.setLayout((DisplayUtils.getWindowWidth(context) * 0.75).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
+            val width = (DisplayUtils.getWindowWidth(context) * 0.75).toInt()
+            val height = (DisplayUtils.getWindowHeight(context) * 0.75).toInt()
+            ivPic.setImageBitmap(BitmapUtils.decodeSampledBitmapFromResource(context.resources, R.mipmap.ic_new_functions_bg, width, height))
+            window.setLayout(width, height)
             window.setGravity(Gravity.CENTER)
         }
     }
