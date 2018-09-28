@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:srlDrawableArrowSize="@dimen/margin_30"
-    app:srlDrawableProgressSize="@dimen/margin_30"
-    app:srlTextSizeTime="@dimen/font_16"
-    app:srlTextSizeTitle="@dimen/font_18" />
+    app:srlDrawableArrowSize="@dimen/margin_24"
+    app:srlDrawableProgressSize="@dimen/margin_24"
+    app:srlAccentColor="@color/blow_gray"
+    app:srlTextSizeTime="@dimen/font_14"
+    app:srlTextSizeTitle="@dimen/font_16" />

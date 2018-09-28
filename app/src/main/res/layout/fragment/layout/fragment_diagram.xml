@@ -8,12 +8,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center" />
-
-    <ImageView
-        android:id="@+id/ivLoading"
-        android:layout_width="@dimen/margin_45"
-        android:layout_height="@dimen/margin_45"
-        android:layout_gravity="center"
-        android:src="@drawable/anim_loading"
-        android:visibility="gone" />
 </FrameLayout>

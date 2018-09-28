@@ -1,11 +1,11 @@
 package com.uroad.zhgs.fragment
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.AnimationDrawable
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
@@ -53,10 +53,8 @@ class DiagramFragment : BaseFragment() {
     }
 
     override fun setBaseLayoutResID(): Int = R.layout.fragment_diagram
-    private lateinit var animationDrawable: AnimationDrawable
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
-        animationDrawable = ivLoading.drawable as AnimationDrawable
         initSettings()
         initWebView()
     }
@@ -70,6 +68,11 @@ class DiagramFragment : BaseFragment() {
         webView.settings.loadsImagesAutomatically = true
         webView.settings.databaseEnabled = true
         webView.settings.setGeolocationEnabled(true)// 启用地理定位
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        } else {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
@@ -93,7 +96,7 @@ class DiagramFragment : BaseFragment() {
     }
 
     inner class JavascriptInterface {
-//        @android.webkit.JavascriptInterface
+        //        @android.webkit.JavascriptInterface
 //        fun refreshpage() {  // 2．页面刷新
 //
 //        }
@@ -242,7 +245,6 @@ class DiagramFragment : BaseFragment() {
     }
 
     private inner class MWebViewClient : WebViewClient() {
-
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 webView.loadUrl(request?.url.toString())
@@ -259,18 +261,10 @@ class DiagramFragment : BaseFragment() {
         override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
             handler.proceed()
         }
+
     }
 
     inner class MWebChromeClient : WebChromeClient() {
-        override fun onProgressChanged(view: WebView?, newProgress: Int) {
-            if (newProgress >= 90) {
-                ivLoading.visibility = View.GONE
-                animationDrawable.stop()
-            } else {
-                ivLoading.visibility = View.VISIBLE
-                animationDrawable.start()
-            }
-        }
 
         override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
             callback?.invoke(origin, true, false)
