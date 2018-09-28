@@ -122,6 +122,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     private boolean enableSurfaceView = true;
     private boolean enableTextureView = false;
     private boolean enableNoView = false;
+    private boolean isLive = false;
 
     public void setUsingAndroidPlayer(boolean usingAndroidPlayer) {
         this.usingAndroidPlayer = usingAndroidPlayer;
@@ -153,6 +154,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     public void setEnableNoView(boolean enableNoView) {
         this.enableNoView = enableNoView;
+    }
+
+    public void setLive(boolean live) {
+        isLive = live;
     }
 
     public IjkVideoView(Context context) {
@@ -349,6 +354,16 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 10000000);
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 1);
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
+                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024 * 16);
+                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 50000);
+                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 0);
+                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_frame", 0);
+                    if (isLive) {
+                        // Param for living
+                        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 10000);
+                        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
+                        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+                    }
                 }
                 mMediaPlayer = ijkMediaPlayer;
             }

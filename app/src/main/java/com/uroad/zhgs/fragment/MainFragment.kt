@@ -480,7 +480,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                 }
             }
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     private fun locationUpdate(longitude: Double, latitude: Double) {

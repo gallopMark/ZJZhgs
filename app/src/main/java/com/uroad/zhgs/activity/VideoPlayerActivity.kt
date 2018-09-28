@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.view.View
 import android.widget.FrameLayout
 import com.uroad.ijkplayer.ZPlayer
 import com.uroad.library.utils.DisplayUtils
@@ -49,10 +50,16 @@ class VideoPlayerActivity : BaseActivity() {
             CurrApplication.rtmpIp = url
         }
         handler = MHandler(this)
-        cpv.postDelayed(run, 5000)
+        initZPlayer()
+//        cpv.postDelayed(run, 5000)
+//        cpv.post(run)
     }
 
-    private val run = Runnable { initZPlayer() }
+//    private val run = Runnable {
+//        cpv.visibility = View.GONE
+//        zPlayer.visibility = View.VISIBLE
+//        initZPlayer()
+//    }
 
     private fun initZPlayer() {
         val videoHeight = DisplayUtils.getWindowHeight(this) / 2
@@ -77,7 +84,6 @@ class VideoPlayerActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        cpv.removeCallbacks(run)
         handler.removeCallbacksAndMessages(null)
         zPlayer.onDestroy()
         super.onDestroy()

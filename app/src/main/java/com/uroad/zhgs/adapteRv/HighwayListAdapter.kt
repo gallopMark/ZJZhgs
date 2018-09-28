@@ -121,9 +121,9 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
                 }
             }
             val paint = Paint().apply { textSize = context.resources.getDimension(R.dimen.font_12) }
-            val w = (DisplayUtils.getWindowWidth(context) - dp5 * 2) - paint.measureText(content) - dp5 * count
-            if (w > 0) width = (w / (mDatas.size - count)).toInt()
-            else width = DisplayUtils.dip2px(context, 2f)
+            val w = (DisplayUtils.getWindowWidth(context) - dp5 * 2) - paint.measureText(content) - dp5 * (count - 1)
+            width = if (w > 0) (w / (mDatas.size - count)).toInt()
+            else DisplayUtils.dip2px(context, 2f)
         }
 
         override fun bindView(viewType: Int): Int {
@@ -189,6 +189,6 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
     }
 
     interface OnItemClickCallBack {
-        fun callback(position:Int)
+        fun callback(position: Int)
     }
 }

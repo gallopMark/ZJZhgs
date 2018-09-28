@@ -1379,6 +1379,7 @@ public class ZPlayer extends RelativeLayout {
      */
     public ZPlayer setLive(boolean isLive) {
         this.isLive = isLive;
+        videoView.setLive(isLive);
         return this;
     }
 
