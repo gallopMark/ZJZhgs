@@ -1,6 +1,5 @@
 package com.uroad.zhgs.webservice
 
-import com.amap.api.col.sln3.tr
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.uroad.zhgs.utils.AndroidBase64Utils
@@ -17,7 +16,7 @@ import retrofit2.http.*
  */
 interface ApiService {
     companion object {
-        var isDebug = true
+        var isDebug = false
         // http://zhgs.u-road.com/ZJAppApi/index.php/api/
         // http://zjzhgs.u-road.com:11001     zhgs.u-road.com
         const val BASE_URL = "http://zjzhgs.u-road.com:11001/ZJAppApi/index.php/api/"

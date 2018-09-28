@@ -263,7 +263,7 @@ class DiagramFragment : BaseFragment() {
 
     inner class MWebChromeClient : WebChromeClient() {
         override fun onProgressChanged(view: WebView?, newProgress: Int) {
-            if (newProgress >= 96) {
+            if (newProgress >= 90) {
                 ivLoading.visibility = View.GONE
                 animationDrawable.stop()
             } else {

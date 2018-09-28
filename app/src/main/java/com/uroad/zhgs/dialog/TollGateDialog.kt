@@ -36,12 +36,20 @@ class TollGateDialog(private val context: Activity, private val dataMDL: TollGat
             val ivClose = contentView.findViewById<ImageView>(R.id.ivClose)
             val ivIcon = contentView.findViewById<ImageView>(R.id.ivIcon)
             val tvName = contentView.findViewById<TextView>(R.id.tvName)
+            val tvStatus = contentView.findViewById<TextView>(R.id.tvStatus)
             val tvDistance = contentView.findViewById<TextView>(R.id.tvDistance)
             val tvAddress = contentView.findViewById<TextView>(R.id.tvAddress)
             val llDetail = contentView.findViewById<LinearLayout>(R.id.llDetail)
             val llNavigation = contentView.findViewById<LinearLayout>(R.id.llNavigation)
             ivClose.setOnClickListener { dismiss() }
             ivIcon.setImageResource(R.mipmap.ic_menu_jtss_toll_p)
+            if (dataMDL.poistatus == 1) {
+                tvStatus.text = "正常"
+                tvStatus.setBackgroundResource(R.drawable.bg_status_normal_corners)
+            } else {
+                tvStatus.text = "关闭"
+                tvStatus.setBackgroundResource(R.drawable.bg_status_close_corners)
+            }
             tvName.text = dataMDL.name
             var distance = ""
             dataMDL.distance?.let { distance += it }

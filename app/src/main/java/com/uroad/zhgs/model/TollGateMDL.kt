@@ -15,7 +15,7 @@ import java.io.Serializable
 "distance": "0.84",
 "upstatus": "2",
 "downstatus": "2",
-"poistatus": "1",
+"poistatus": "1", 	0 关闭 ； 1 开启
 "detailurl": "http:\/\/zhgs.u-road.com\/ZJAppView\/stationDetail.html?dataid=1027"
  */
 class TollGateMDL : MutilItem, Serializable {
