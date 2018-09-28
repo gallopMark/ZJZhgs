@@ -8,7 +8,7 @@ android {
         applicationId "com.uroad.zhgs"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
+        versionCode 20180927
         versionName "2.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

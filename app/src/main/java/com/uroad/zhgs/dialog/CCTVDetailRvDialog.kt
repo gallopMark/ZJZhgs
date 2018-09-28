@@ -61,7 +61,7 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
         override fun onBindHoder(holder: RecyclerHolder, t: SnapShotMDL, position: Int) {
             holder.setVisibility(R.id.ivClose, false)
             holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_jtss_spot_p)
-            holder.setText(R.id.tvEventName, "监控")
+            holder.setText(R.id.tvEventName, context.resources.getString(R.string.monitor_video))
             holder.setText(R.id.tvTitle, t.shortname)
             val recyclerView = holder.obtainView<RecyclerView>(R.id.recyclerView)
             recyclerView.isNestedScrollingEnabled = false

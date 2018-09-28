@@ -87,7 +87,7 @@
                 android:layout_marginTop="@dimen/margin_10"
                 android:gravity="center"
                 android:text="@string/nonetwork"
-                android:textColor="@color/white"
+                android:textColor="@color/blow_gray"
                 android:textSize="@dimen/font_16" />
 
             <TextView
@@ -114,7 +114,7 @@
             android:drawableTop="@mipmap/ic_nodata"
             android:gravity="center"
             android:text="@string/page_nodata"
-            android:textColor="@color/white"
+            android:textColor="@color/blow_gray"
             android:textSize="@dimen/font_16"
             android:visibility="gone" />
     </FrameLayout>

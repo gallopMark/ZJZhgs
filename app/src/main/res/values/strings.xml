@@ -42,6 +42,7 @@
     <string name="version_update_notification_content">安装包：%1$s\u3000已下载：%2$s</string>
     <string name="version_update_error">下载地址错误！</string>
     <string name="version_update_explain">更新说明</string>
+    <string name="monitor_video">监控视频</string>
 
     <string name="new_functions">新功能</string>
     <string name="new_functions_msg">•全新版本升级\n•新增高速救援服务，一键救援提交，救援进展实时查询\n•高速导航功能升级，简图/地图模式随心切换。\n•其他功能优化</string>
@@ -65,7 +66,7 @@
     <string name="home_nearby_scenic">景点</string>
     <string name="home_nearby_more">更多</string>
     <string name="home_nearby_empty">暂无附近数据</string>
-    <string name="home_recommend_info">推荐资讯</string>
+    <string name="home_recommend_info">最新资讯</string>
     <string name="home_recommend_more">更多</string>
     <string name="home_location_failure_tips">定位失败，立即重试</string>
     <!--首页 end-->
@@ -337,7 +338,7 @@
     <string name="highwayList_nearby">附近高速</string>
     <string name="highwayList_all">全部高速</string>
     <string name="highwayPreview_tab1">高速快览</string>
-    <string name="highwayPreview_tab2">监控快拍</string>
+    <string name="highwayPreview_tab2">@string/monitor_video</string>
     <string name="highwayPreview_tab3">高速事件</string>
     <string name="highwayPreview_change">换向</string>
     <!--高速列表 end-->

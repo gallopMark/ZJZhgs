@@ -1,12 +1,12 @@
 package com.uroad.zhgs.adapteRv
 
 import android.app.Activity
-import android.app.PendingIntent.getActivity
 import android.content.Context
+import android.graphics.Paint
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Display
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
@@ -17,6 +17,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.HighwayMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
+import com.uroad.zhgs.rv.BaseRecyclerAdapter
 
 /**
  *Created by MFB on 2018/8/16.
@@ -24,11 +25,17 @@ import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
  */
 class HighwayListAdapter(private val context: Activity, mDatas: MutableList<HighwayMDL>)
     : BaseArrayRecyclerAdapter<HighwayMDL>(context, mDatas) {
+    private var onItemClickCallBack: OnItemClickCallBack? = null
+    fun setOnItemClickCallBack(onItemClickCallBack: OnItemClickCallBack) {
+        this.onItemClickCallBack = onItemClickCallBack
+    }
+
     override fun bindView(viewType: Int): Int {
         return R.layout.item_highway_list
     }
 
     override fun onBindHoder(holder: RecyclerHolder, t: HighwayMDL, position: Int) {
+        val pos = position
         val ivIcon = holder.obtainView<ImageView>(R.id.ivIcon)
         ImageLoaderV4.getInstance().displayImage(context, t.picurl, ivIcon, ContextCompat.getColor(context, R.color.white))
         holder.setText(R.id.tvShortname, t.shortname)
@@ -38,24 +45,48 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
         rvEvent.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
         if (t.getEventList().size > 0) {
             rvEvent.visibility = View.VISIBLE
-            rvEvent.adapter = EventNumAdapter(context, t.getEventList())
         } else {
             rvEvent.visibility = View.GONE
+        }
+        rvEvent.adapter = EventNumAdapter(context, t.getEventList()).apply {
+            setOnItemClickListener(object : OnItemClickListener {
+                override fun onItemClick(adapter: BaseRecyclerAdapter, holder: RecyclerHolder, view: View, position: Int) {
+                    onItemClickCallBack?.callback(pos)
+                }
+            })
         }
         val rvSite = holder.obtainView<RecyclerView>(R.id.rvSite)
         rvSite.isNestedScrollingEnabled = false
         rvSite.layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
             override fun canScrollHorizontally(): Boolean = false
         }
-        rvSite.adapter = SiteAdapter(context, t.getRoadUp())
+        rvSite.adapter = SiteAdapter(context, t.getRoadUp()).apply {
+            setOnItemClickListener(object : OnItemClickListener {
+                override fun onItemClick(adapter: BaseRecyclerAdapter, holder: RecyclerHolder, view: View, position: Int) {
+                    onItemClickCallBack?.callback(pos)
+                }
+            })
+        }
         val rvUp = holder.obtainView<RecyclerView>(R.id.rvUp)
         rvUp.isNestedScrollingEnabled = false
         rvUp.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
-        rvUp.adapter = SiteAdapter.ColorAdapter(context, t.getRoadUp())
+        rvUp.adapter = SiteAdapter.ColorAdapter(context, t.getRoadUp()).apply {
+            setOnItemClickListener(object : OnItemClickListener {
+                override fun onItemClick(adapter: BaseRecyclerAdapter, holder: RecyclerHolder, view: View, position: Int) {
+                    onItemClickCallBack?.callback(pos)
+                }
+            })
+        }
         val rvDown = holder.obtainView<RecyclerView>(R.id.rvDown)
         rvDown.isNestedScrollingEnabled = false
         rvDown.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
-        rvDown.adapter = SiteAdapter.ColorAdapter(context, t.getRoadDown())
+        rvDown.adapter = SiteAdapter.ColorAdapter(context, t.getRoadDown()).apply {
+            setOnItemClickListener(object : OnItemClickListener {
+                override fun onItemClick(adapter: BaseRecyclerAdapter, holder: RecyclerHolder, view: View, position: Int) {
+                    onItemClickCallBack?.callback(pos)
+                }
+            })
+        }
         holder.bindChildClick(R.id.flViewDetail)
     }
 
@@ -74,14 +105,25 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
     class SiteAdapter(context: Activity, mDatas: MutableList<HighwayMDL.State>)
         : BaseArrayRecyclerAdapter<HighwayMDL.State>(context, mDatas) {
         var width: Int
-        val dp5 = DisplayUtils.dip2px(context, 5f)
+        private val dp5 = DisplayUtils.dip2px(context, 5f)
+        private var lastName = ""
 
         init {
-            var count = 0   //第一个默认显示
+            var count = 0
+            var content = ""
             for (item in mDatas) {
-                if (item.isshow == 1) count++
+                if (item.isshow == 1) {
+                    count++
+                    item.name?.let {
+                        content += it
+                        lastName = it
+                    }
+                }
             }
-            width = DisplayUtils.getWindowWidth(context) / (mDatas.size + count) / 2
+            val paint = Paint().apply { textSize = context.resources.getDimension(R.dimen.font_12) }
+            val w = (DisplayUtils.getWindowWidth(context) - dp5 * 2) - paint.measureText(content) - dp5 * count
+            if (w > 0) width = (w / (mDatas.size - count)).toInt()
+            else width = DisplayUtils.dip2px(context, 2f)
         }
 
         override fun bindView(viewType: Int): Int {
@@ -93,10 +135,10 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
             val tvText = holder.obtainView<TextView>(R.id.tvText)
             val params0 = ivIcon.layoutParams as LinearLayout.LayoutParams
             holder.setLayoutParams(R.id.ivIcon, params0)
-            if (position == itemCount - 1) {
-                params0.gravity = Gravity.END
-            } else {
-                params0.gravity = Gravity.START
+            when (position) {
+                0 -> params0.gravity = Gravity.START
+                itemCount - 1 -> params0.gravity = Gravity.END
+                else -> params0.gravity = Gravity.CENTER
             }
             ivIcon.layoutParams = params0
             if (t.isHinge()) {
@@ -105,16 +147,28 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
                 ivIcon.setImageResource(R.mipmap.ic_highway_site)
             }
             val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            if (t.isshow == 1) {
-                tvText.text = t.name
-                ivIcon.visibility = View.VISIBLE
-                params.rightMargin = dp5
+            if (TextUtils.equals(t.name, lastName)) {
+                if (t.isshow == 1) {
+                    tvText.text = t.name
+                    ivIcon.visibility = View.VISIBLE
+                } else {
+                    tvText.text = ""
+                    ivIcon.visibility = View.INVISIBLE
+                }
                 params.width = LinearLayout.LayoutParams.WRAP_CONTENT
-            } else {
-                tvText.text = ""
-                ivIcon.visibility = View.INVISIBLE
-                params.width = width
                 params.rightMargin = 0
+            } else {
+                if (t.isshow == 1) {
+                    tvText.text = t.name
+                    ivIcon.visibility = View.VISIBLE
+                    params.rightMargin = dp5
+                    params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+                } else {
+                    tvText.text = ""
+                    ivIcon.visibility = View.INVISIBLE
+                    params.width = width
+                    params.rightMargin = 0
+                }
             }
             holder.itemView.layoutParams = params
         }
@@ -132,5 +186,9 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
                 holder.setBackgroundColor(R.id.vColor, t.getColor(context))
             }
         }
+    }
+
+    interface OnItemClickCallBack {
+        fun callback(position:Int)
     }
 }

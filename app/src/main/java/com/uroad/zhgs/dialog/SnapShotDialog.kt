@@ -49,7 +49,7 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
             val recyclerView = contentView.findViewById<RecyclerView>(R.id.recyclerView)
             ivClose.setOnClickListener { dismiss() }
             ivIcon.setImageResource(R.mipmap.ic_menu_jtss_spot_p)
-            tvEventName.text = "监控"
+            tvEventName.text = context.resources.getString(R.string.monitor_video)
             tvTitle.text = dataMDL.shortname
             if (dataMDL.getPicUrls().size > 0) {
                 tvEmpty.visibility = View.GONE

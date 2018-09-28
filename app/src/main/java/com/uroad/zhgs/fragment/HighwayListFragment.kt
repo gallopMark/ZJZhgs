@@ -32,18 +32,19 @@ class HighwayListFragment : BasePageRefreshRvFragment() {
             latitude = it.getDouble("latitude")
         }
         recyclerView.isNestedScrollingEnabled = false
-        adapter = HighwayListAdapter(context, mDatas)
+        adapter = HighwayListAdapter(context, mDatas).apply {
+            setOnItemClickCallBack(object : HighwayListAdapter.OnItemClickCallBack {
+                override fun callback(position: Int) {
+                    openPreViewActivity(position)
+                }
+            })
+            setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
+                override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                    openPreViewActivity(position)
+                }
+            })
+        }
         recyclerView.adapter = adapter
-        adapter.setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
-            override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                openPreViewActivity(position)
-            }
-        })
-        adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                openPreViewActivity(position)
-            }
-        })
     }
 
     private fun openPreViewActivity(position: Int) {

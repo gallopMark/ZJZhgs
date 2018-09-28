@@ -577,7 +577,7 @@ public class ZPlayer extends RelativeLayout {
             handler.removeMessages(MESSAGE_SHOW_PROGRESS);
             hideAll();
             if (isLive) {
-                showStatus(activity.getResources().getString(R.string.IjkPlayer_small_problem), "重试");
+                showStatus(activity.getResources().getString(R.string.IjkPlayer_small_problem_alive), "重试");
                 if (defaultRetryTime > 0) {
                     handler.sendEmptyMessageDelayed(MESSAGE_RESTART_PLAY, defaultRetryTime);
                 }

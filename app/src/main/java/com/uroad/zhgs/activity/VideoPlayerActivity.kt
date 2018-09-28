@@ -18,6 +18,7 @@ class VideoPlayerActivity : BaseActivity() {
     /*rtmp://live.hkstv.hk.lxdns.com/live/hks 测试链接*/
     private var isLive = false
     private var url: String? = null
+    private var title: String? = null
     private var times = 10
 
     companion object {
@@ -41,7 +42,6 @@ class VideoPlayerActivity : BaseActivity() {
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_videoplay)
-        var title = ""
         intent.extras?.let {
             isLive = it.getBoolean("isLive", false)
             url = it.getString("url")
@@ -49,6 +49,12 @@ class VideoPlayerActivity : BaseActivity() {
             CurrApplication.rtmpIp = url
         }
         handler = MHandler(this)
+        cpv.postDelayed(run, 5000)
+    }
+
+    private val run = Runnable { initZPlayer() }
+
+    private fun initZPlayer() {
         val videoHeight = DisplayUtils.getWindowHeight(this) / 2
         zPlayer.layoutParams = (zPlayer.layoutParams as FrameLayout.LayoutParams).apply { height = videoHeight }
         zPlayer.setLive(isLive)
@@ -71,6 +77,7 @@ class VideoPlayerActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        cpv.removeCallbacks(run)
         handler.removeCallbacksAndMessages(null)
         zPlayer.onDestroy()
         super.onDestroy()
