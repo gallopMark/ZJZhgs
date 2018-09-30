@@ -1,6 +1,5 @@
 package com.uroad.zhgs.activity
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -10,16 +9,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.imageloader_v4.listener.IImageLoaderListener
-import com.uroad.library.utils.BitmapUtils
 import com.uroad.library.utils.DisplayUtils
-import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adaptervp.SplashGuideAdapter
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.WelComeMDL
 import com.uroad.zhgs.utils.GsonUtils
-import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -57,12 +53,12 @@ class SplashActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_splash)
         val isFirstInstall = AppLocalHelper.isFirstInstall(this)
+        handler = MHandler(this)
         if (isFirstInstall) {  //如果是第一次安装，展示引导页
             onGuide()
         } else {
             onAdvert()
         }
-        handler = MHandler(this)
     }
 
     //展示引导页
@@ -91,7 +87,7 @@ class SplashActivity : BaseActivity() {
                 else ivGoTo.visibility = View.INVISIBLE
                 for (i in 0 until indicators.size) {
                     //选中的页面改变小圆点为选中状态，反之为未选中
-                    if(position == i) indicators[i].setImageResource(R.mipmap.ic_indicator_selected)
+                    if (position == i) indicators[i].setImageResource(R.mipmap.ic_indicator_selected)
                     else indicators[i].setImageResource(R.mipmap.ic_indicator_default)
                 }
             }
@@ -109,13 +105,9 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun getWelComeJpg() {
-        doRequest(RxHttpManager.getSInstance()
-                .baseUrl(ApiService.BASE_URL)
-                .connectTimeout(5 * 1000)
-                .readTimeout(5 * 1000)
-                .createSApi(ApiService::class.java)
-                .doPost(ApiService.createRequestBody(HashMap(), WebApiService.WELCOME_JPG)), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.WELCOME_JPG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
+                handler.removeCallbacks(runMain)  //请求成功，移除跳转首页
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, WelComeMDL::class.java)
                     if (mdl == null) handler.postDelayed({ if (!isGoMain) openMain() }, 1000)
@@ -126,15 +118,21 @@ class SplashActivity : BaseActivity() {
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ if (!isGoMain) openMain() }, 1000)
+                handler.removeCallbacks(runMain)
+                handler.post { if (!isGoMain) openMain() }
             }
         })
+        /*5秒钟请求无响应直接跳转首页*/
+        handler.postDelayed(runMain, 5000)
     }
+
+    private val runMain = Runnable { if (!isGoMain) openMain() }
 
     private fun updateData(comeMDL: WelComeMDL) {
         comeMDL.adtime?.let { delayMillis = it }
         ImageLoaderV4.getInstance().displayImage(this, comeMDL.jpgurl, ivPic, object : IImageLoaderListener {
             override fun onLoadingFailed(url: String?, target: ImageView?, exception: Exception?) {
+                handler.post { if (!isGoMain) openMain() }
             }
 
             override fun onLoadingComplete(url: String?, target: ImageView?) {

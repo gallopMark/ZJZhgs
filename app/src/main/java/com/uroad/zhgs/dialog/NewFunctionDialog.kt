@@ -38,10 +38,10 @@ class NewFunctionDialog(private val context: Activity)
             window.setContentView(contentView)
             val ivPic = contentView.findViewById<ImageView>(R.id.ivPic)
             val btIKnow = contentView.findViewById<Button>(R.id.btIKnow)
+            ivPic.setImageResource(R.mipmap.ic_new_functions_bg)
             btIKnow.setOnClickListener { dismiss() }
             val width = (DisplayUtils.getWindowWidth(context) * 0.75).toInt()
             val height = (DisplayUtils.getWindowHeight(context) * 0.75).toInt()
-            ivPic.setImageBitmap(BitmapUtils.decodeSampledBitmapFromResource(context.resources, R.mipmap.ic_new_functions_bg, width, height))
             window.setLayout(width, height)
             window.setGravity(Gravity.CENTER)
         }

@@ -62,9 +62,9 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private var onMenuClickListener: OnMenuClickListener? = null
     private var longitude = CurrApplication.APP_LATLNG.longitude
     private var latitude = CurrApplication.APP_LATLNG.latitude
-    private var tollFragment: NearByTollCFragment? = null
-    private var serviceFragment: NearByServiceCFragment? = null
-    private var scenicFragment: NearByScenicCFragment? = null
+    private lateinit var tollFragment: NearByTollCFragment
+    private lateinit var serviceFragment: NearByServiceCFragment
+    private lateinit var scenicFragment: NearByScenicCFragment
     private val handler = Handler()
     private var currentTab = 1
 
@@ -161,6 +161,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         val ts14 = context.resources.getDimension(R.dimen.font_14)
         tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
         tvNearByToll.isSelected = true
+        initFragments()
+        setTab(1)
         val listener = View.OnClickListener { v ->
             tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
             tvNearByToll.isSelected = false
@@ -190,6 +192,17 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         tvNearByService.setOnClickListener(listener)
         tvNearByScenic.setOnClickListener(listener)
         tvNearByMore.setOnClickListener { openActivity(MyNearByActivity::class.java, Bundle().apply { putInt("type", 4) }) }
+    }
+
+    private fun initFragments() {
+        tollFragment = NearByTollCFragment()
+        serviceFragment = NearByServiceCFragment()
+        scenicFragment = NearByScenicCFragment()
+        val transaction = childFragmentManager.beginTransaction()
+        transaction.add(R.id.flNearby, tollFragment)
+        transaction.add(R.id.flNearby, serviceFragment)
+        transaction.add(R.id.flNearby, scenicFragment)
+        transaction.commit()
     }
 
     private fun initRv() {
@@ -431,7 +444,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         tvLocationFailure.visibility = View.GONE
         flNearby.visibility = View.VISIBLE
         locationUpdate(longitude, latitude)
-        setTab(currentTab)
         handler.postDelayed(nearByRun, UPDATE_TIME)
         closeLocation()  //定位成功，关闭定位；用户下拉刷新再次打开
     }
@@ -441,52 +453,21 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private fun setTab(tab: Int) {
         currentTab = tab
         val transaction = childFragmentManager.beginTransaction()
-        tollFragment?.let { transaction.hide(it) }
-        serviceFragment?.let { transaction.hide(it) }
-        scenicFragment?.let { transaction.hide(it) }
-        val bundle = Bundle().apply {
-            putDouble("longitude", longitude)
-            putDouble("latitude", latitude)
-        }
+        transaction.hide(tollFragment)
+        transaction.hide(serviceFragment)
+        transaction.hide(scenicFragment)
         when (tab) {
-            1 -> {
-                if (tollFragment == null) {
-                    tollFragment = NearByTollCFragment().apply {
-                        arguments = bundle
-                        transaction.add(R.id.flNearby, this)
-                    }
-                } else {
-                    tollFragment?.let { transaction.show(it) }
-                }
-            }
-            2 -> {
-                if (serviceFragment == null) {
-                    serviceFragment = NearByServiceCFragment().apply {
-                        arguments = bundle
-                        transaction.add(R.id.flNearby, this)
-                    }
-                } else {
-                    serviceFragment?.let { transaction.show(it) }
-                }
-            }
-            3 -> {
-                if (scenicFragment == null) {
-                    scenicFragment = NearByScenicCFragment().apply {
-                        arguments = bundle
-                        transaction.add(R.id.flNearby, this)
-                    }
-                } else {
-                    scenicFragment?.let { transaction.show(it) }
-                }
-            }
+            1 -> transaction.show(tollFragment)
+            2 -> transaction.show(serviceFragment)
+            3 -> transaction.show(scenicFragment)
         }
-        transaction.commitAllowingStateLoss()
+        transaction.commit()
     }
 
     private fun locationUpdate(longitude: Double, latitude: Double) {
-        tollFragment?.let { if (it.isAdded) it.onLocationUpdate(longitude, latitude) }
-        serviceFragment?.let { if (it.isAdded) it.onLocationUpdate(longitude, latitude) }
-        scenicFragment?.let { if (it.isAdded) it.onLocationUpdate(longitude, latitude) }
+        if (tollFragment.isAdded) tollFragment.onLocationUpdate(longitude, latitude)
+        if (serviceFragment.isAdded) serviceFragment.onLocationUpdate(longitude, latitude)
+        if (scenicFragment.isAdded) scenicFragment.onLocationUpdate(longitude, latitude)
     }
 
     override fun locationFailure() {

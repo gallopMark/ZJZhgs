@@ -34,6 +34,7 @@ class NearByScenicCFragment : BaseFragment() {
     private var latitude = CurrApplication.APP_LATLNG.latitude
     private val mDatas = ArrayList<ScenicMDL>()
     private lateinit var adapter: NearByScenicAdapter
+    private var isFirstLoad = true
     override fun setBaseLayoutResID(): Int = R.layout.fragment_nearby_child
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         arguments?.let {
@@ -56,11 +57,17 @@ class NearByScenicCFragment : BaseFragment() {
         recyclerView.adapter = adapter
     }
 
-    override fun initData() {
+    fun onLocationUpdate(longitude: Double, latitude: Double) {
+        this.longitude = longitude
+        this.latitude = latitude
+        loadData()
+    }
+
+    private fun loadData() {
         doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.SCENIC.code,
                 longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
-                onBefore()
+                if (isFirstLoad) onBefore()
             }
 
             override fun onSuccess(data: String?) {
@@ -69,12 +76,12 @@ class NearByScenicCFragment : BaseFragment() {
                     val list = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
                     update(list)
                 } else {
-                    onError()
+                    if (isFirstLoad) onError()
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                onError()
+                if (isFirstLoad) onError()
             }
         })
     }
@@ -110,7 +117,7 @@ class NearByScenicCFragment : BaseFragment() {
         val end = text.length
         val clickSpan = object : ClickableSpan() {
             override fun onClick(p0: View?) {
-                initData()
+                loadData()
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -127,6 +134,7 @@ class NearByScenicCFragment : BaseFragment() {
     }
 
     private fun update(list: MutableList<ScenicMDL>) {
+        isFirstLoad = false
         mDatas.clear()
         if (list.size > 0) {
             mDatas.addAll(list)
@@ -137,23 +145,5 @@ class NearByScenicCFragment : BaseFragment() {
             recyclerView.visibility = View.GONE
             tvEmpty.visibility = View.VISIBLE
         }
-    }
-
-    fun onLocationUpdate(longitude: Double, latitude: Double) {
-        this.longitude = longitude
-        this.latitude = latitude
-        doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(MapDataType.SCENIC.code,
-                longitude, latitude, "", "home"), object : HttpRequestCallback<String>() {
-            override fun onSuccess(data: String?) {
-                onSuccess()
-                if (GsonUtils.isResultOk(data)) {
-                    val list = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
-                    update(list)
-                }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-            }
-        })
     }
 }
