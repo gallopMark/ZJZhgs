@@ -23,8 +23,8 @@ class EventDetailPageDialog(private val context: Activity,
                             private val mDatas: MutableList<EventMDL>)
     : Dialog(context, R.style.translucentDialog) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         initView()
     }
 

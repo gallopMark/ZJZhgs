@@ -30,7 +30,6 @@ import java.lang.ref.WeakReference
  *Created by MFB on 2018/8/9.
  */
 class SplashActivity : BaseActivity() {
-    private var bitmap: Bitmap? = null
     private var delayMillis: Int = 3
     private val updateCode = 0x0001
     private lateinit var handler: MHandler
@@ -104,10 +103,7 @@ class SplashActivity : BaseActivity() {
     //不是第一次安装，则加载广告页
     private fun onAdvert() {
         flAdvert.visibility = View.VISIBLE
-        bitmap = BitmapUtils.decodeSampledBitmapFromResource(resources,
-                R.mipmap.ic_splash_bg, DisplayUtils.getWindowWidth(this),
-                DisplayUtils.getWindowHeight(this))
-        ivPic.setImageBitmap(bitmap)
+        ivPic.setImageResource(R.mipmap.ic_splash_bg)
         tvJump.setOnClickListener { openMain() }
         getWelComeJpg()
     }
@@ -154,7 +150,6 @@ class SplashActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        bitmap?.recycle()
         handler.removeCallbacksAndMessages(null)
         super.onDestroy()
     }

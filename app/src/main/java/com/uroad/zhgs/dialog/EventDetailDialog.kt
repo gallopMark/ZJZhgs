@@ -27,8 +27,8 @@ class EventDetailDialog(private val context: Activity, private val dataMDL: Even
         this.onSubscribeListener = onSubscribeListener
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         initView()
     }
 

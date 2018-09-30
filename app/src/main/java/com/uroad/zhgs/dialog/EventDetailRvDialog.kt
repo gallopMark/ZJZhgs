@@ -31,8 +31,8 @@ class EventDetailRvDialog(private val context: Activity,
         this.onSubscribeListener = onSubscribeListener
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         initView()
     }
 

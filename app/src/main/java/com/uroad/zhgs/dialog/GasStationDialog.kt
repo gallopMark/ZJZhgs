@@ -25,8 +25,8 @@ class GasStationDialog(private val context: Activity, private val dataMDL: GasSt
         this.onNavigationListener = onNavigationListener
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         initView()
     }
 

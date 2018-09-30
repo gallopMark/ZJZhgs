@@ -24,8 +24,8 @@ class TollGateDialog(private val context: Activity, private val dataMDL: TollGat
         this.onButtonClickListener = onButtonClickListener
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         initView()
     }
 

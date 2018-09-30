@@ -32,8 +32,8 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
         this.onPhotoClickListener = onPhotoClickListener
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         initView()
     }
 

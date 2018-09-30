@@ -46,8 +46,8 @@ class WheelViewDialog(private val context: Activity)
         return this
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         data?.let { initView(it) }
     }
 

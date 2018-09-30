@@ -45,8 +45,8 @@ class EditDialog(private val context: Activity) : AlertDialog(context, R.style.s
         return this
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun show() {
+        super.show()
         initView()
     }
 

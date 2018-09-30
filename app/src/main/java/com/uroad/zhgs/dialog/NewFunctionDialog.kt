@@ -25,6 +25,10 @@ class NewFunctionDialog(private val context: Activity)
         super.onCreate(savedInstanceState)
         setCanceledOnTouchOutside(false)
         setOnDismissListener { AppLocalHelper.saveNav(context, false) }
+    }
+
+    override fun show() {
+        super.show()
         initView()
     }
 

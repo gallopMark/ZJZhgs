@@ -27,6 +27,10 @@ class BindCarDialog(private val context: Activity) : Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCanceledOnTouchOutside(false)
+    }
+
+    override fun show() {
+        super.show()
         initView()
     }
 

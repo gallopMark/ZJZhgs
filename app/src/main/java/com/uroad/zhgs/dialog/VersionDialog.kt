@@ -33,6 +33,10 @@ class VersionDialog(private val context: Activity, private val mdl: VersionMDL)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCanceledOnTouchOutside(false)
+    }
+
+    override fun show() {
+        super.show()
         initView()
     }
 
