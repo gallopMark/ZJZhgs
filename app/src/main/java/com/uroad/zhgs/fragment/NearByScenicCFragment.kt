@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.RelativeLayout
 import com.uroad.library.utils.NetworkUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.MyNearByActivity
@@ -37,10 +38,7 @@ class NearByScenicCFragment : BaseFragment() {
     private var isFirstLoad = true
     override fun setBaseLayoutResID(): Int = R.layout.fragment_nearby_child
     override fun setUp(view: View, savedInstanceState: Bundle?) {
-        arguments?.let {
-            longitude = it.getDouble("longitude", longitude)
-            latitude = it.getDouble("latitude", latitude)
-        }
+        flBaseContent.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
         recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
         adapter = NearByScenicAdapter(context, mDatas).apply {
             setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {

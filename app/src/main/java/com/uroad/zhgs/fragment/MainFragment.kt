@@ -86,6 +86,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         }
         initTab()
         initRv()
+        initRefresh()
         /*未申请位置权限，则申请*/
         if (!hasLocationPermissions()) applyLocationPermissions()
         //注册rxBus 接收订阅取消的消息，将我的订阅列表中的相关信息移除
@@ -246,6 +247,16 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
                 bannerView.startAutoScroll()
             }
         })
+    }
+
+    /*下拉刷新 重新打开定位，刷新我的附近，我的订阅，最新资讯*/
+    private fun initRefresh() {
+        refreshLayout.isEnableLoadMore = false
+        refreshLayout.setOnRefreshListener {
+            if (hasLocationPermissions()) openLocation()
+            getSubscribe()
+            getNewsList()
+        }
     }
 
     override fun onPause() {
@@ -409,6 +420,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     private fun getNewsList() {
         doRequest(WebApiService.HOME_NEWS, HashMap(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
+                refreshLayout.finishRefresh()
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, NewsMDL::class.java)
                     updateNews(mdLs)
@@ -418,6 +430,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
+                refreshLayout.finishRefresh()
                 handler.postDelayed({ getNewsList() }, DELAY_MILLIS)
             }
         })
@@ -444,6 +457,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         tvLocationFailure.visibility = View.GONE
         flNearby.visibility = View.VISIBLE
         locationUpdate(longitude, latitude)
+        handler.removeCallbacks(nearByRun)
         handler.postDelayed(nearByRun, UPDATE_TIME)
         closeLocation()  //定位成功，关闭定位；用户下拉刷新再次打开
     }
