@@ -47,7 +47,7 @@ import com.uroad.zhgs.activity.WebViewActivity
 import com.uroad.zhgs.dialog.LoadingDialog
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.utils.AndroidBase64Utils
-import com.uroad.zhgs.utils.StatuBarUtils
+import com.uroad.zhgs.utils.StatusBarUtils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.upload.RequestBodyWrapper
 import com.uroad.zhgs.webservice.upload.UploadFileCallback
@@ -104,8 +104,8 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //            window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 //        }
-        StatuBarUtils.statusBarMIUILightMode(window, true)
-        StatuBarUtils.statusBarFlymeLightMode(window, true)
+        StatusBarUtils.statusBarMIUILightMode(window, true)
+        StatusBarUtils.statusBarFlymeLightMode(window, true)
     }
 
     /**

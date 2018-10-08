@@ -7,7 +7,7 @@ import android.view.WindowManager
 /**
  *Created by MFB on 2018/8/10.
  */
-class StatuBarUtils {
+class StatusBarUtils {
     companion object {
 
         @SuppressLint("PrivateApi")
