@@ -52,9 +52,9 @@ class RouteNaviActivity : BaseActivity(), AMapNaviListener, AMapNaviViewListener
     }
 
     //算路终点坐标
-    private var mEndLatlng = NaviLatLng(22.652, 113.966)
+    private var mEndLatlng: NaviLatLng? = NaviLatLng(22.652, 113.966)
     //算路起点坐标
-    private var mStartLatlng = NaviLatLng(22.540332, 113.939961)
+    private var mStartLatlng: NaviLatLng? = NaviLatLng(22.540332, 113.939961)
     //存储算路起点的列表
     private val sList = ArrayList<NaviLatLng>()
     //存储算路终点的列表
@@ -78,8 +78,8 @@ class RouteNaviActivity : BaseActivity(), AMapNaviListener, AMapNaviViewListener
         mAMapNavi.setUseInnerVoice(true)
         mAMapNavi.setEmulatorNaviSpeed(60)
         selectRouteId?.let { mAMapNavi.selectRouteId(it) }
-        sList.add(mStartLatlng)
-        eList.add(mEndLatlng)
+        mStartLatlng?.let {  sList.add(it) }
+        mEndLatlng?.let { eList.add(it) }
     }
 
     override fun onNaviInfoUpdate(p0: NaviInfo?) {

@@ -278,10 +278,11 @@ class RescueRequestActivity : BaseActivity() {
                     }
                 }).withItemNum(5).withListener(object : WheelViewDialog.OnItemSelectListener {
                     override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
-                        etMyCarNum.setText(text)
-                        etMyCarNum.setSelection(etMyCarNum.text.length)
-                        if (position in 0 until mdLs.size)
+                        if (position in 0 until mdLs.size) {
                             mdLs[position].carid?.let { usercarid = it }
+                            etMyCarNum.setText(text)
+                            etMyCarNum.setSelection(etMyCarNum.text.length)
+                        }
                         dialog.dismiss()
                     }
                 }).show()
@@ -421,7 +422,7 @@ class RescueRequestActivity : BaseActivity() {
                                 val picItem = item as PicMDL
                                 RxHttpManager.createApi(ApiService::class.java)
                                         .uploadFile(createMultipart(File(picItem.path), "file"))
-                                        .subscribe { body ->
+                                        .subscribe({ body ->
                                             val json = body?.string()
                                             if (GsonUtils.isResultOk(json)) {
                                                 val imageMDL = GsonUtils.fromDataBean(json, UploadMDL::class.java)
@@ -429,7 +430,7 @@ class RescueRequestActivity : BaseActivity() {
                                                     imageUrlSB.append("$it,")
                                                 }
                                             }
-                                        }
+                                        }, {})
                             }
                         }
                     }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

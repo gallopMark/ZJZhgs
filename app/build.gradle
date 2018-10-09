@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+// 添加插件
+//apply plugin: 'com.mob.sdk'
+//
+//// 在MobSDK的扩展中注册MobIM的相关信息
+//MobSDK {
+//    appKey "2821815e92c1a"
+//    appSecret "741416a700fd713e242d1aae85712fed"
+//    MobIM {}
+//}
 
 android {
     compileSdkVersion 28

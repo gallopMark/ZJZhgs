@@ -150,7 +150,7 @@ class FeedbackActivity : BaseActivity() {
                                     val picItem = item as PicMDL
                                     RxHttpManager.createApi(ApiService::class.java)
                                             .uploadFile(createMultipart(File(picItem.path), "file"))
-                                            .subscribe { body ->
+                                            .subscribe({ body ->
                                                 val json = body?.string()
                                                 if (GsonUtils.isResultOk(json)) {
                                                     val imageMDL = GsonUtils.fromDataBean(json, UploadMDL::class.java)
@@ -158,7 +158,7 @@ class FeedbackActivity : BaseActivity() {
                                                         sb.append("$it,")
                                                     }
                                                 }
-                                            }
+                                            }, {})
                                 }
                             }
                             sb

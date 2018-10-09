@@ -85,9 +85,11 @@ class CarInquiryActivity : BaseActivity() {
                         .withListener(object : WheelViewDialog.OnItemSelectListener {
                             override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
                                 dialog.dismiss()
-                                index = position
-                                tvSelectCar.text = text
-                                post()
+                                if (position in 0 until data.size) {
+                                    index = position
+                                    tvSelectCar.text = text
+                                    post()
+                                }
                             }
                         }).show()
             }

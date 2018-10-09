@@ -256,7 +256,7 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
                                 val picItem = item as PicMDL
                                 RxHttpManager.createApi(ApiService::class.java)
                                         .uploadFile(createMultipart(File(picItem.path), "file"))
-                                        .subscribe { body ->
+                                        .subscribe({ body ->
                                             val json = body?.string()
                                             if (GsonUtils.isResultOk(json)) {
                                                 val imageMDL = GsonUtils.fromDataBean(json, UploadMDL::class.java)
@@ -264,7 +264,7 @@ class UserEventSaveActivity : BaseActivity(), View.OnClickListener {
                                                     sb.append("$it,")
                                                 }
                                             }
-                                        }
+                                        }, {})
                             }
                         }
                         sb
