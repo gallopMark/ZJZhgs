@@ -14,10 +14,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -58,6 +55,7 @@ import java.net.URLConnection
 abstract class BaseFragment : Fragment(), AMapLocationListener {
     lateinit var context: Activity
     private var rootView: View? = null
+    open lateinit var baseParent: RelativeLayout
     lateinit var flBaseTop: FrameLayout
     lateinit var flBaseContent: FrameLayout
     lateinit var flBaseLoad: FrameLayout
@@ -82,6 +80,7 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_base, container, false).apply {
+                baseParent = findViewById(R.id.baseParent)
                 flBaseTop = findViewById(R.id.flBaseTop)
                 flBaseContent = findViewById(R.id.flBaseContent)
                 flBaseLoad = findViewById(R.id.flBaseLoad)
@@ -379,10 +378,10 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         })
     }
 
-    fun showDialog(title: String?, message: String,
-                   textCancel: String, textConfirm: String,
-                   cancelListener: MaterialDialog.ButtonClickListener?,
-                   confirmListener: MaterialDialog.ButtonClickListener?) {
+    open fun showDialog(title: String?, message: String,
+                        textCancel: String, textConfirm: String,
+                        cancelListener: MaterialDialog.ButtonClickListener?,
+                        confirmListener: MaterialDialog.ButtonClickListener?) {
         val dialog = MaterialDialog(context)
         dialog.setTitle(title)
         dialog.setMessage(message)

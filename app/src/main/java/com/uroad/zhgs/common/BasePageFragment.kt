@@ -10,10 +10,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.amap.api.maps.model.Poi
 import com.amap.api.navi.AmapNaviPage
 import com.amap.api.navi.AmapNaviParams
@@ -51,6 +48,7 @@ import java.net.URLConnection
 abstract class BasePageFragment : Fragment() {
     lateinit var context: Activity
     private var rootView: View? = null
+    open lateinit var baseParent: RelativeLayout
     open lateinit var flBaseTop: FrameLayout
     open lateinit var flBaseContent: FrameLayout
     open lateinit var flBaseBottom: FrameLayout
@@ -98,6 +96,7 @@ abstract class BasePageFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = rootView ?: inflater.inflate(R.layout.fragment_base, container, false).apply {
+            baseParent = findViewById(R.id.baseParent)
             flBaseTop = findViewById(R.id.flBaseTop)
             flBaseContent = findViewById(R.id.flBaseContent)
             flBaseLoad = findViewById(R.id.flBaseLoad)
@@ -419,7 +418,7 @@ abstract class BasePageFragment : Fragment() {
 
     fun showShortToast(text: CharSequence?) {
         if (TextUtils.isEmpty(text)) return
-        val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, null)
+        val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, LinearLayout(context), false)
         val textView = v.findViewById<TextView>(R.id.tv_text)
         textView.text = text
         if (mShortToast == null) {
@@ -435,7 +434,7 @@ abstract class BasePageFragment : Fragment() {
 
     fun showLongToast(text: CharSequence?) {
         if (TextUtils.isEmpty(text)) return
-        val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, null)
+        val v = LayoutInflater.from(context).inflate(R.layout.layout_base_toast, LinearLayout(context), false)
         val textView = v.findViewById<TextView>(R.id.tv_text)
         textView.text = text
         if (mLongToast == null) {
