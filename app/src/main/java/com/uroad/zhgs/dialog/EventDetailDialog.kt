@@ -2,7 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -19,12 +19,15 @@ import com.uroad.zhgs.utils.TypefaceUtils
 /**
  *Created by MFB on 2018/8/15.
  */
-class EventDetailDialog(private val context: Activity, private val dataMDL: EventMDL) : Dialog(context, R.style.transparentDialog) {
+class EventDetailDialog(private val context: Activity, private var dataMDL: EventMDL) : Dialog(context, R.style.transparentDialog) {
 
-    private var onSubscribeListener: OnSubscribeListener? = null
+    private var onViewClickListener: OnViewClickListener? = null
+    private var tvUseful: TextView? = null
+    private var tvUseless: TextView? = null
+    private var tvSubscribe: TextView? = null
 
-    fun setOnSubscribeListener(onSubscribeListener: OnSubscribeListener) {
-        this.onSubscribeListener = onSubscribeListener
+    fun setOnViewClickListener(onViewClickListener: OnViewClickListener) {
+        this.onViewClickListener = onViewClickListener
     }
 
     override fun show() {
@@ -45,7 +48,9 @@ class EventDetailDialog(private val context: Activity, private val dataMDL: Even
             val tvEndTime = contentView.findViewById<TextView>(R.id.tvEndTime)
             val tvEndTimeTips = contentView.findViewById<TextView>(R.id.tvEndTimeTips)
             val tvUpdateTime = contentView.findViewById<TextView>(R.id.tvUpdateTime)
-            val tvSubscribe = contentView.findViewById<TextView>(R.id.tvSubscribe)
+            tvUseful = contentView.findViewById(R.id.tvUseful)
+            tvUseless = contentView.findViewById(R.id.tvUseless)
+            tvSubscribe = contentView.findViewById(R.id.tvSubscribe)
             ivClose.setOnClickListener { dismiss() }
             ivIcon.setImageResource(dataMDL.getIcon())
             tvEventName.text = dataMDL.eventtypename
@@ -71,21 +76,48 @@ class EventDetailDialog(private val context: Activity, private val dataMDL: Even
             } else {
                 tvUpdateTime.text = dataMDL.getUpdateTime()
             }
-            if (dataMDL.subscribestatus == 1) {
-                tvSubscribe.text = context.resources.getString(R.string.usersubscribe_hasSubscribe)
-                tvSubscribe.isEnabled = false
-            } else {
-                tvSubscribe.text = context.resources.getString(R.string.usersubscribe_subscribe)
-                tvSubscribe.isEnabled = true
-                tvSubscribe.setOnClickListener { onSubscribeListener?.onSubscribe(dataMDL) }
-            }
+            updateMDL(dataMDL)
+            updateSubscribe(dataMDL)
             window.setLayout(DisplayUtils.getWindowWidth(context), WindowManager.LayoutParams.WRAP_CONTENT)
             window.setWindowAnimations(R.style.dialog_anim)
             window.setGravity(Gravity.BOTTOM)
         }
     }
 
-    interface OnSubscribeListener {
-        fun onSubscribe(dataMDL: EventMDL)
+    fun updateMDL(mdl: EventMDL) {
+        dataMDL = mdl
+        if (mdl.isuseful == 1) {
+            tvUseful?.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useful_pressed), null, null, null)
+        } else {
+            tvUseful?.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useful_default), null, null, null)
+        }
+        if (mdl.isuseful == 2) {
+            tvUseless?.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useless_pressed), null, null, null)
+        } else {
+            tvUseless?.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useless_default), null, null, null)
+        }
+        if (mdl.isuseful == 1 || mdl.isuseful == 2) {
+            tvUseful?.isEnabled = false
+            tvUseless?.isEnabled = false
+        } else {
+            tvUseful?.setOnClickListener { onViewClickListener?.onViewClick(mdl, 1) }
+            tvUseless?.setOnClickListener { onViewClickListener?.onViewClick(mdl, 2) }
+        }
+    }
+
+    fun updateSubscribe(mdl: EventMDL) {
+        dataMDL = mdl
+        if (mdl.subscribestatus == 1) {
+            tvSubscribe?.text = context.resources.getString(R.string.usersubscribe_hasSubscribe)
+            tvSubscribe?.isEnabled = false
+        } else {
+            tvSubscribe?.text = context.resources.getString(R.string.usersubscribe_subscribe)
+            tvSubscribe?.isEnabled = true
+            tvSubscribe?.setOnClickListener { onViewClickListener?.onViewClick(dataMDL, 3) }
+        }
+    }
+
+    interface OnViewClickListener {
+        fun onViewClick(dataMDL: EventMDL, type: Int)
     }
 }

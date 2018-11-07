@@ -1,7 +1,6 @@
 package com.uroad.rxhttp.upload;
 
 
-import com.google.gson.JsonObject;
 import com.uroad.rxhttp.exception.ApiException;
 import com.uroad.rxhttp.interceptor.Transformer;
 
@@ -13,11 +12,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -69,7 +66,7 @@ public class UploadRetrofit {
     public static Disposable uploadFile(String url, File file, String fileKey, HashMap<String, String> params, final UploadListener listener) {
         RequestBody requestBody = RequestBody.create(MediaType.parse(guessMimeType(file.getName())), file);
         RequestBodyWrapper wrapper = new RequestBodyWrapper(requestBody, listener);
-        if (fileKey == null) fileKey = "filename";
+        if (fileKey == null) fileKey = "file";
         MultipartBody.Part part = MultipartBody.Part.createFormData(fileKey, file.getName(), wrapper);
         if (params == null) params = new HashMap<>();
         return doOnSubscribe(UploadRetrofit.get()
@@ -81,7 +78,7 @@ public class UploadRetrofit {
     public static Disposable uploadFileWithRaw(String url, File file, String fileKey, HashMap<String, Object> params, final UploadListener listener) {
         RequestBody requestBody = RequestBody.create(MediaType.parse(guessMimeType(file.getName())), file);
         RequestBodyWrapper wrapper = new RequestBodyWrapper(requestBody, listener);
-        if (fileKey == null) fileKey = "filename";
+        if (fileKey == null) fileKey = "file";
         MultipartBody.Part part = MultipartBody.Part.createFormData(fileKey, file.getName(), wrapper);
         if (params == null) params = new HashMap<>();
         return doOnSubscribe(UploadRetrofit.get()
@@ -132,7 +129,7 @@ public class UploadRetrofit {
             RequestBody requestBody = RequestBody.create(MediaType.parse(guessMimeType(file.getName())), file);
             MultiRequestBodyWrapper wrapper = new MultiRequestBodyWrapper(file, requestBody, listener);
             //后台接收图片流的参数名
-            if (fileKey == null) fileKey = "filename";
+            if (fileKey == null) fileKey = "file";
             builder.addFormDataPart(fileKey, file.getName(), wrapper);
         }
         List<MultipartBody.Part> parts = builder.build().parts();

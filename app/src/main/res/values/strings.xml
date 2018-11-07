@@ -7,7 +7,9 @@
     <!--bugly appId-->
     <string name="bugly_appid">02386c6b12</string>
 
+    <string name="goBack">返回</string>
     <string name="action_settings">设置</string>
+    <string name="action_share">分享</string>
     <string name="dialog_default_title">温馨提示</string>
     <string name="dialog_button_cancel">取消</string>
     <string name="dialog_button_confirm">确定</string>
@@ -78,8 +80,12 @@
     <string name="mine_my_burst">我的报料</string>
     <string name="mine_my_subscribe">我的订阅</string>
     <string name="mine_rescue_record">救援记录</string>
+    <string name="mine_my_notice">我的关注</string>
     <string name="mine_message_center">消息中心</string>
     <string name="mine_my_car">我的车辆</string>
+    <string name="mine_my_passRecord">通行记录</string>
+    <string name="mine_my_tracks">我的足迹</string>
+    <string name="mine_my_code">我的邀请码</string>
     <string name="mine_share_app">分享APP</string>
     <string name="mine_settings">设置</string>
     <!--我的 end-->
@@ -254,6 +260,7 @@
     <string name="register_password_hint">请输入密码</string>
     <string name="register_passwrod2_hint">请再次输入密码</string>
     <string name="register_verificationCode_hint">请输入验证码</string>
+    <string name="register_QRCode_hint">请输入邀请码（选填）</string>
     <string name="register_getverificationCode">获取验证码</string>
     <string name="register_password_error">密码前后不一致，请重新输入</string>
     <string name="register_button_text">注册</string>
@@ -281,11 +288,7 @@
     <string name="service_area_empty_oilInfo">暂无油品信息</string>
     <string name="service_area_parkInfo">停车位信息：</string>
     <!--服务区 end-->
-    <!--资讯 start-->
-    <string name="news_title">资讯</string>
     <string name="news_detail_title">资讯详情</string>
-    <string name="news_viewcounnt">浏览数：</string>
-    <!--资讯 end-->
     <!--用户报料 start-->
     <string name="userEvent_title">车友互动</string>
     <string name="userEvent_burst">我要报料</string>
@@ -369,11 +372,13 @@
     <!--个人信息 end-->
     <!--设置 start-->
     <string name="settings_title">设置</string>
+    <string name="settings_follow">允许被关注</string>
+    <string name="settings_follow_tips">开启后，可被其他用户设为关注好友</string>
     <string name="settings_change_password">修改密码</string>
     <string name="settings_feedback">意见反馈</string>
     <string name="settings_clear_cache">清除缓存</string>
     <string name="settings_aboutus">关于我们</string>
-    <string name="settings_logout">登出</string>
+    <string name="settings_logout">退出登录</string>
     <!--设置 end-->
     <string name="changepassword_title">修改密码</string>
     <string name="changepassword_oldPW">旧密码\u3000</string>
@@ -485,5 +490,59 @@
 
     <string name="carInquiry_your">您的车辆</string>
 
+    <string name="riders_interaction">车友互动</string>
+    <string name="riders_myNotice">我的关注</string>
+    <string name="riders_organize">车友组队</string>
+    <string name="riders_alive">高速直播</string>
+    <string name="your_invitation_code">您的邀请码</string>
+    <string name="copy">复制</string>
+    <string name="myCode_bottom_tips">扫描二维码下载APP，并输入上方邀请\n码进行注册，即为邀请成功</string>
+    <string name="userful">有用</string>
+    <string name="useless">没用</string>
+    <string name="create_motorcade">创建车队，我要当队长</string>
+    <string name="create_motorcade_english">Create Team</string>
+    <string name="create_riders_team">创建车队</string>
+    <string name="modify_riders_team">修改车队</string>
+    <string name="create_riders_confirm">确认</string>
+    <string name="create_riders_content_hint">请输入车队名称</string>
+    <string name="create_riders_destination">目的地</string>
+    <string name="create_riders_destination_hint">请输入目的地</string>
+    <string name="riders_destination_edit">修改</string>
+    <string name="input_password_enter_team">输入口令，加入队伍</string>
+    <string name="input_password_hint">请输入口令</string>
+    <string name="team_agreement">组队协议</string>
+    <string name="dialog_riders_agreement_title">浙江智慧高速\n车友组队出行服务协议</string>
+    <string name="disagree">不同意</string>
+    <string name="agree">同意</string>
+    <string name="navigation">导航</string>
+    <string name="riders_settings">车队设置</string>
+    <string name="riders_inToken">加入口令</string>
+    <string name="riders_members">群成员</string>
+    <string name="riders_quit">退出车队</string>
+    <string name="riders_quit_msg">您确定退出车队吗？</string>
+    <string name="riders_dissolution">解散车队</string>
+    <string name="riders_dissolution_msg">您确定解散车队吗？</string>
+    <string name="riders_dissolution_tips">车队已被解散</string>
+    <string name="riders_inviting_title">邀请加入</string>
+    <string name="riders_member_selected">选择队友</string>
+    <string name="riders_search_hint">搜索好友</string>
+    <string name="riders_last_team">上次组队好友</string>
+    <string name="riders_in_team">组队中</string>
+    <string name="riders_empty_list">前往车友互动页面关注好友，\n即可邀请好友加入车队哦~</string>
+    <string name="riders_inviting_unSelected">请先选择好友</string>
+    <string name="inviting_with_token">口令邀请</string>
+    <string name="inviting_with_friends">好友邀请</string>
+    <string name="follow">关注</string>
+    <string name="follow_already">已关注</string>
+    <string name="wechat">微信</string>
+    <string name="qq">QQ</string>
+    <string name="wechat_friends">朋友圈</string>
+    <string name="Rerecord">重录</string>
+    <string name="dialog_riders_multiInviting_title">若您选择加入队伍，则默认您已同意《智慧高速车友组队出行服务协议》。</string>
+    <string name="thatsOk">不用了</string>
+    <string name="join">加入</string>
+    <string name="customer_service">小智问问</string>
+    <string name="pass_record_small_tips">查询结果仅供参考，实际通行费用请以实际支付为准</string>
+    <string name="pass_money">通行费</string>
 </resources>
 

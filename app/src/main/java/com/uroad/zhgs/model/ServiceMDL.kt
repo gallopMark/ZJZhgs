@@ -1,7 +1,9 @@
 package com.uroad.zhgs.model
 
 import android.content.Context
+import com.amap.api.maps.model.LatLng
 import com.uroad.zhgs.R
+import com.uroad.zhgs.cluster.ClusterItem
 import java.io.Serializable
 
 /**
@@ -32,7 +34,7 @@ import java.io.Serializable
 "oil_arr": ["汽油92#", "汽油95#", "汽油98#", "柴油0#"],
 "service_arr": ["加油站", "停车场", "餐饮", "卫生间", "商店", "维修店", "特产"]
  */
-class ServiceMDL : MutilItem, Serializable {
+class ServiceMDL : MutilItem, ClusterItem, Serializable {
     override fun getItemType(): Int = 8
     var poiid: String? = null
     var picurl: String? = null
@@ -114,4 +116,8 @@ class ServiceMDL : MutilItem, Serializable {
     override fun hashCode(): Int {
         return 31 + (detailurl?.hashCode() ?: 0)
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+    override fun getMarkerSmallIcon(): Int = markerIcon
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }

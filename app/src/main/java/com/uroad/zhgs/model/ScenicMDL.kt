@@ -1,6 +1,8 @@
 package com.uroad.zhgs.model
 
+import com.amap.api.maps.model.LatLng
 import com.uroad.zhgs.R
+import com.uroad.zhgs.cluster.ClusterItem
 import java.io.Serializable
 
 /**
@@ -15,7 +17,7 @@ import java.io.Serializable
 "distance": "4.88",
 "detailurl": "http:\/\/zhgs.u-road.com\/ZJAppView\/touristDetail.html?dataid=235"
  */
-class ScenicMDL : MutilItem, Serializable {
+class ScenicMDL : ClusterItem, MutilItem, Serializable {
     override fun getItemType(): Int = 7
     var name: String? = null
     var longitude: Double? = 0.0
@@ -49,4 +51,8 @@ class ScenicMDL : MutilItem, Serializable {
     override fun hashCode(): Int {
         return 31 + (detailurl?.hashCode() ?: 0)
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+    override fun getMarkerSmallIcon(): Int = markerIcon
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }

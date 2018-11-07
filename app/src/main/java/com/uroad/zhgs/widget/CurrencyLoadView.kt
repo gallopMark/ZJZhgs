@@ -1,6 +1,7 @@
 package com.uroad.zhgs.widget
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -9,18 +10,16 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.uroad.library.utils.ScreenUtils
 import com.uroad.zhgs.R
 
 class CurrencyLoadView : FrameLayout {
+    private val mContext: Context
     private lateinit var loadingView: View
     private lateinit var errorView: View
     private lateinit var emptyView: View
     private lateinit var mLoadingTv: TextView
-    private lateinit var ivPic: ImageView
-    private lateinit var tvErrorTips: TextView
+    private lateinit var mErrorTv: TextView
     private lateinit var tvReload: TextView
-    private lateinit var mEmptyIv: ImageView
     private lateinit var mEmptyTv: TextView
     private var onRetryListener: OnRetryListener? = null
 
@@ -34,15 +33,17 @@ class CurrencyLoadView : FrameLayout {
     }
 
     constructor(context: Context) : super(context) {
+        mContext = context
         init(context)
     }
 
-
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        mContext = context
         init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        mContext = context
         init(context)
     }
 
@@ -61,39 +62,35 @@ class CurrencyLoadView : FrameLayout {
 
     private fun findViews() {
         mLoadingTv = findViewById(R.id.mLoadingTv)
-        ivPic = findViewById(R.id.ivPic)
-        tvErrorTips = findViewById(R.id.tvErrorTips)
+        mErrorTv = findViewById(R.id.mErrorTv)
         tvReload = findViewById(R.id.tvReload)
-        mEmptyIv = findViewById(R.id.mEmptyIv)
         mEmptyTv = findViewById(R.id.mEmptyTv)
-        val imageSize = ScreenUtils.getScreenWidth(context) / 3
-        val picParams = LinearLayout.LayoutParams(imageSize, imageSize)
-        ivPic.layoutParams = picParams
-        mEmptyIv.layoutParams = picParams
         tvReload.setOnClickListener {
             setState(STATE_IDEA)
             onRetryListener?.onRetry(this@CurrencyLoadView)
         }
     }
 
-    fun setLoadingText(text: CharSequence) {
+    fun setLoadingText(text: CharSequence?) {
         mLoadingTv.text = text
     }
 
     fun setEmptyIco(resId: Int) {
-        mEmptyIv.setImageResource(resId)
+        val drawableTop = ContextCompat.getDrawable(mContext, resId)
+        mEmptyTv.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
     }
 
-    fun setEmptyText(text: CharSequence) {
+    fun setEmptyText(text: CharSequence?) {
         mEmptyTv.text = text
     }
 
-    fun setErrorText(text: CharSequence) {
-        tvErrorTips.text = text
+    fun setErrorText(text: CharSequence?) {
+        mErrorTv.text = text
     }
 
     fun setErrorIcon(resId: Int) {
-        ivPic.setImageResource(resId)
+        val drawableTop = ContextCompat.getDrawable(mContext, resId)
+        mErrorTv.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
     }
 
     fun setState(state: Int) {

@@ -16,8 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/margin_30"
             android:layout_marginTop="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/margin_30"
             android:src="@mipmap/ic_login_logo" />
 
         <EditText
@@ -30,10 +30,10 @@
             android:hint="@string/login_phone_hint"
             android:inputType="phone"
             android:maxLines="1"
-            android:paddingBottom="@dimen/margin_15"
             android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
             android:paddingTop="@dimen/margin_15"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_15"
             android:textSize="@dimen/font_14" />
 
         <View
@@ -51,10 +51,10 @@
             android:hint="@string/register_password_hint"
             android:inputType="textPassword"
             android:maxLines="1"
-            android:paddingBottom="@dimen/margin_15"
             android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
             android:paddingTop="@dimen/margin_15"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_15"
             android:textSize="@dimen/font_14" />
 
         <View
@@ -72,10 +72,10 @@
             android:hint="@string/register_passwrod2_hint"
             android:inputType="textPassword"
             android:maxLines="1"
-            android:paddingBottom="@dimen/margin_15"
             android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
             android:paddingTop="@dimen/margin_15"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_15"
             android:textSize="@dimen/font_14" />
 
         <View
@@ -100,10 +100,10 @@
                 android:hint="@string/login_verificationCode_hint"
                 android:inputType="number"
                 android:maxLines="1"
-                android:paddingBottom="@dimen/margin_15"
                 android:paddingLeft="@dimen/margin_10"
-                android:paddingRight="@dimen/margin_10"
                 android:paddingTop="@dimen/margin_15"
+                android:paddingRight="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_15"
                 android:textSize="@dimen/font_14" />
 
             <TextView
@@ -112,10 +112,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_corners_30dp"
                 android:gravity="center"
-                android:paddingBottom="@dimen/margin_5"
                 android:paddingLeft="@dimen/margin_10"
-                android:paddingRight="@dimen/margin_10"
                 android:paddingTop="@dimen/margin_5"
+                android:paddingRight="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_5"
                 android:text="@string/login_getverificationCode"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/font_14" />
@@ -126,15 +126,36 @@
             android:layout_height="@dimen/margin_1"
             android:background="@color/lightgrey" />
 
+        <EditText
+            android:id="@+id/etQRCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:drawableLeft="@mipmap/ic_drawable_qrcode"
+            android:drawablePadding="@dimen/margin_10"
+            android:hint="@string/register_QRCode_hint"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingTop="@dimen/margin_15"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_15"
+            android:textSize="@dimen/font_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_1"
+            android:background="@color/lightgrey" />
+
         <CheckBox
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@null"
             android:layout_marginTop="@dimen/margin_10"
-            android:drawablePadding="@dimen/margin_5"
+            android:button="@null"
             android:checked="true"
             android:drawableLeft="@drawable/bg_circle_checkbox_selector"
+            android:drawablePadding="@dimen/margin_5"
             android:text="@string/register_bottom_tips"
             android:textColor="@color/grey"
             android:textSize="@dimen/font_14" />
@@ -157,7 +178,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_15"
             android:text="@string/register_bottom_text"
-            android:textSize="@dimen/font_14"
-            android:textColor="@color/grey" />
+            android:textColor="@color/grey"
+            android:textSize="@dimen/font_14" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

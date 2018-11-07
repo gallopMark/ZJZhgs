@@ -1,6 +1,8 @@
 package com.uroad.zhgs.model
 
+import com.amap.api.maps.model.LatLng
 import com.uroad.zhgs.R
+import com.uroad.zhgs.cluster.ClusterItem
 import java.io.Serializable
 
 /**
@@ -18,7 +20,7 @@ import java.io.Serializable
 "poistatus": "1", 	0 关闭 ； 1 开启
 "detailurl": "http:\/\/zhgs.u-road.com\/ZJAppView\/stationDetail.html?dataid=1027"
  */
-class TollGateMDL : MutilItem, Serializable {
+class TollGateMDL : MutilItem, ClusterItem, Serializable {
     override fun getItemType(): Int = 9
 
     var picurl: String? = null
@@ -56,4 +58,8 @@ class TollGateMDL : MutilItem, Serializable {
     override fun hashCode(): Int {
         return 31 + (detailurl?.hashCode() ?: 0)
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+    override fun getMarkerSmallIcon(): Int = markerIcon
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }

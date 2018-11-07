@@ -156,7 +156,8 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
 
     //执行注册请求
     private fun doRegister(phone: String, password: String, code: String) {
-        doRequest(WebApiService.USER_REGISTER, WebApiService.userRegisterParams(phone, password, code), object : HttpRequestCallback<String>() {
+        val qrCode = etQRCode.text.toString().trim()
+        doRequest(WebApiService.USER_REGISTER, WebApiService.userRegisterParams(phone, password, code, qrCode), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading("正在注册…")
             }

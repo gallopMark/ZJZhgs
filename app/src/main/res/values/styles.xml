@@ -153,10 +153,53 @@
         <item name="android:windowExitAnimation">@anim/operate_out</item>
     </style>
 
-    <style name="UserEventTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme2" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorUserEvent</item>
         <item name="colorPrimaryDark">@color/colorUserEvent</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--window color-->
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="AppToolBarStyle2" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/colorUserEvent</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleTextStyle</item>
+        <item name="navigationIcon">@mipmap/ic_back_white</item>
+        <item name="android:minHeight">@dimen/toolbar_height</item>
+        <item name="title">""</item>
+        <!--<item name="android:minHeight">?attr/actionBarSize</item>-->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="actionMenuTextColor">@color/appTextColor</item>
+        <item name="popupTheme">@style/OverflowMenuStyle</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+        <item name="android:actionMenuTextAppearance">@style/ToolbarMenuTextStyle</item>
+    </style>
+
+    <style name="ToolbarTitleTextView2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginLeft">@dimen/margin_8</item>
+        <item name="android:layout_marginRight">@dimen/margin_8</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/app_title_textsize</item>
+    </style>
+
+    <style name="ToolbarOptionsView2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingLeft">@dimen/margin_16</item>
+        <item name="android:paddingRight">@dimen/margin_16</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/font_14</item>
     </style>
 
     <style name="UserEventToolbar" parent="Widget.AppCompat.Toolbar">
@@ -191,4 +234,18 @@
     </style>
 
     <style name="TranslucentTheme" parent="AppTheme" />
+
+    <style name="Divider_f7_1dp">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/margin_1</item>
+        <item name="android:background">@color/color_f7</item>
+    </style>
+
+    <style name="Divider_f7_1dp_margin12">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/margin_1</item>
+        <item name="android:background">@color/color_f7</item>
+        <item name="android:layout_marginLeft">@dimen/margin_12</item>
+        <item name="android:layout_marginRight">@dimen/margin_12</item>
+    </style>
 </resources>

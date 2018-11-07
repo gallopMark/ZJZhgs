@@ -7,8 +7,9 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.AbsoluteSizeSpan
+import com.amap.api.maps.model.LatLng
 import com.uroad.zhgs.R
-import com.uroad.zhgs.utils.TimeUtil
+import com.uroad.zhgs.cluster.ClusterItem
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,7 +36,7 @@ import java.util.*
 "latitude": "30.320795",
 "longitude": "120.546791"
  */
-class TrafficJamMDL : MutilItem, Serializable {
+class TrafficJamMDL : MutilItem, ClusterItem, Serializable {
     override fun getItemType(): Int = 2
 
     var subscribestatus: Int? = 0
@@ -56,9 +57,10 @@ class TrafficJamMDL : MutilItem, Serializable {
     var content: String? = null
     var updatetime: String? = null
     var eventstatus: String? = null
+    var isuseful: Int? = 0
 
-    var markerIcon: Int = 0
-    var markerBigIco: Int = 0
+    var markerIcon: Int = R.mipmap.ic_marker_yd_icon
+    var markerBigIco: Int = R.mipmap.ic_marker_yd_big_icon
 
     fun latitude(): Double {
         latitude?.let { return it }
@@ -141,4 +143,8 @@ class TrafficJamMDL : MutilItem, Serializable {
             ""
         }
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+    override fun getMarkerSmallIcon(): Int = markerIcon
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }

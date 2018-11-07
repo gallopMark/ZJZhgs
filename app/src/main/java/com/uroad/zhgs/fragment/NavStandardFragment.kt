@@ -1,9 +1,9 @@
 package com.uroad.zhgs.fragment
 
+import android.app.Dialog
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.support.v4.util.ArrayMap
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -12,12 +12,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.AMap
+import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
+import com.amap.api.maps.model.animation.AlphaAnimation
+import com.amap.api.maps.model.animation.Animation
+import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.LoginActivity
 import com.uroad.zhgs.activity.AMapNaviSearchActivity
 import com.uroad.zhgs.activity.VideoPlayerActivity
+import com.uroad.zhgs.cluster.Cluster
+import com.uroad.zhgs.cluster.ClusterItem
+import com.uroad.zhgs.cluster.CustomClusterItem
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
@@ -26,6 +33,7 @@ import com.uroad.zhgs.model.*
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
+import com.uroad.zhgs.widget.CustomView
 import kotlinx.android.synthetic.main.fragment_nav_standard.*
 
 /**
@@ -41,9 +49,12 @@ class NavStandardFragment : BaseFragment() {
     private lateinit var myLocationView: View
     private lateinit var animationDrawable: AnimationDrawable
     private var targetLatLng: LatLng? = null
-    private var oldMarker: Marker? = null
-    private val markerMap = ArrayMap<String, ArrayList<Marker>>()
     private val map = ArrayMap<Int, Boolean>()
+    private var mClusterSize: Int = 0
+    private var mClusterDistance: Double = 0.0
+    private val clusterMap = ArrayMap<String, ArrayList<CustomClusterItem>>()
+    private val mAddMarkers = ArrayList<Marker>()
+    private val weatherMarkers = ArrayList<Marker>()
 
     override fun setBaseLayoutResID(): Int {
         return R.layout.fragment_nav_standard
@@ -71,13 +82,49 @@ class NavStandardFragment : BaseFragment() {
 
     private fun initMapView() {
         aMap = mapView.map.apply { moveCamera(CameraUpdateFactory.newLatLngZoom(CurrApplication.APP_LATLNG, this.cameraPosition.zoom)) }
+        mClusterSize = DisplayUtils.dip2px(context, 50f)
+        mClusterDistance = (aMap.scalePerPixel * mClusterSize).toDouble()
+        aMap.setOnCameraChangeListener(object : AMap.OnCameraChangeListener {
+            override fun onCameraChange(position: CameraPosition) {
+
+            }
+
+            override fun onCameraChangeFinish(position: CameraPosition) {
+                mClusterDistance = (aMap.scalePerPixel * mClusterSize).toDouble()
+                onReCluster()
+            }
+        })
         aMap.setOnMarkerClickListener { marker ->
-            if (marker.`object` is WeatherMDL) return@setOnMarkerClickListener true
-            oldMarker?.let { restoreMarker(it) }
-            enlargeMarkerIcon(marker)
-            return@setOnMarkerClickListener true
+            if (marker.`object` is Cluster) {
+                val cluster = marker.`object` as Cluster
+                if (cluster.getClusterItems().size >= 2) {
+                    enlargeMap()
+                } else {
+                    cluster.getObject()?.let {
+                        enlargeMarkerIcon(cluster, marker)
+                    }
+                }
+                return@setOnMarkerClickListener true
+            } else {
+                return@setOnMarkerClickListener true
+            }
         }
         dealWithFromHome()
+    }
+
+    /*地图移动时重新绘制点聚合，或者移除某一功能时*/
+    private fun onReCluster() {
+        val removeMarkers = ArrayList(mAddMarkers)
+        val alphaAnimation = AlphaAnimation(1f, 0f)
+        val myAnimationListener = MyAnimationListener(removeMarkers)
+        for (marker in removeMarkers) {
+            marker.setAnimation(alphaAnimation)
+            marker.setAnimationListener(myAnimationListener)
+            marker.startAnimation()
+        }
+        for ((k, _) in clusterMap) {
+            calculateClusters(k)
+        }
     }
 
     //如果用户从首页我的订阅点击进来 则显示该事件详情
@@ -85,29 +132,60 @@ class NavStandardFragment : BaseFragment() {
         val mdl = arguments?.getSerializable("mdl")
         mdl?.let { mdL ->
             if (mdL is TrafficJamMDL) {
-                val markers = ArrayList<Marker>()
-                val options = createOptions(LatLng(mdL.latitude(), mdL.longitude())
-                        , MapDataType.TRAFFIC_JAM.name, MapDataType.TRAFFIC_JAM.name,
-                        BitmapDescriptorFactory.fromResource(mdL.markerIcon))
+                val jamMDL = mdl as TrafficJamMDL
+                val options = MarkerOptions().anchor(0.5f, 0.5f)
+                        .icon(getSmallIcon(jamMDL.markerIcon))
+                        .position(jamMDL.getPosition())
+                        .anchor(0.5f, 1f)
+                        .visible(true)
+                        .infoWindowEnable(false)
+                        .draggable(false)
                 val marker = aMap.addMarker(options)
-                markers.add(marker.apply { `object` = mdL })
-                markerMap[MapDataType.TRAFFIC_JAM.name] = markers
-                aMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(mdL.latitude(), mdL.longitude())))
-                enlargeMarkerIcon(marker)
-            } else if (mdL is EventMDL) {
-                val title: String = when (mdL.getSubType()) {
-                    SubscribeMDL.SubType.Control.code -> MapDataType.CONTROL.name
-                    SubscribeMDL.SubType.Emergencies.code -> MapDataType.CONSTRUCTION.name
-                    else -> MapDataType.CONSTRUCTION.name
+                val cluster = Cluster(jamMDL.getPosition()).apply {
+                    setIcon(jamMDL.markerIcon)
+                    setBigIcon(jamMDL.markerBigIco)
+                    setObject(jamMDL)
                 }
-                val markers = ArrayList<Marker>()
-                val options = createOptions(LatLng(mdL.latitude(), mdL.longitude()), title, title,
-                        BitmapDescriptorFactory.fromResource(mdL.markerIcon))
-                val marker = aMap.addMarker(options)
-                markers.add(marker.apply { `object` = mdL })
-                markerMap[title] = markers
+                marker.`object` = cluster
+//                clusterMap[MapDataType.TRAFFIC_JAM.code] = ArrayList<CustomClusterItem>().apply { add(CustomClusterItem(jamMDL.getPosition(), jamMDL.markerIcon, jamMDL.markerBigIco, jamMDL)) }
                 aMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(mdL.latitude(), mdL.longitude())))
-                enlargeMarkerIcon(marker)
+                enlargeMarkerIcon(cluster, marker)
+            } else if (mdL is EventMDL) {
+                val eventMDL = mdl as EventMDL
+                val markerIcon: Int
+                val markerBigIcon: Int
+                when (mdL.getSubType()) {
+                    SubscribeMDL.SubType.Control.code -> {
+                        markerIcon = R.mipmap.ic_marker_gz_icon
+                        markerBigIcon = R.mipmap.ic_marker_gz_big_icon
+                    }
+                    SubscribeMDL.SubType.Emergencies.code -> {
+                        markerIcon = R.mipmap.ic_marker_sg_icon
+                        markerBigIcon = R.mipmap.ic_marker_sg_big_icon
+                    }
+                    else -> {
+                        markerIcon = R.mipmap.ic_marker_shig_icon
+                        markerBigIcon = R.mipmap.ic_marker_shig_big_icon
+                    }
+                }
+                eventMDL.markerIcon = markerIcon
+                eventMDL.markerBigIco = markerBigIcon
+                val options = MarkerOptions().anchor(0.5f, 0.5f)
+                        .icon(getSmallIcon(eventMDL.markerIcon))
+                        .position(eventMDL.getPosition())
+                        .anchor(0.5f, 1f)
+                        .visible(true)
+                        .infoWindowEnable(false)
+                        .draggable(false)
+                val marker = aMap.addMarker(options)
+                val cluster = Cluster(eventMDL.getPosition()).apply {
+                    setIcon(eventMDL.markerIcon)
+                    setBigIcon(eventMDL.markerBigIco)
+                    setObject(eventMDL)
+                }
+                marker.`object` = cluster
+                aMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(mdL.latitude(), mdL.longitude())))
+                enlargeMarkerIcon(cluster, marker)
             }
         }
     }
@@ -174,77 +252,90 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.ACCIDENT.code)
                 } else {
-                    clearMarkers(MapDataType.ACCIDENT.name, markerMap[MapDataType.ACCIDENT.name])
+                    clusterMap.remove(MapDataType.ACCIDENT.code)
+                    onReCluster()
                 }
             }
             2 -> {  //点击管制菜单
                 if (isChecked) {
                     getMapDataByType(MapDataType.CONTROL.code)
                 } else {
-                    clearMarkers(MapDataType.CONTROL.name, markerMap[MapDataType.CONTROL.name])
+                    clusterMap.remove(MapDataType.CONTROL.code)
+                    onReCluster()
                 }
             }
             3 -> {  //点击施工菜单
                 if (isChecked) {
                     getMapDataByType(MapDataType.CONSTRUCTION.code)
                 } else {
-                    clearMarkers(MapDataType.CONSTRUCTION.name, markerMap[MapDataType.CONSTRUCTION.name])
+                    clusterMap.remove(MapDataType.CONSTRUCTION.code)
+                    onReCluster()
                 }
             }
             4 -> {  //点击拥堵菜单
                 if (isChecked) {
                     getMapDataByType(MapDataType.TRAFFIC_JAM.code)
                 } else {
-                    clearMarkers(MapDataType.TRAFFIC_JAM.name, markerMap[MapDataType.TRAFFIC_JAM.name])
+                    clusterMap.remove(MapDataType.TRAFFIC_JAM.code)
+                    onReCluster()
                 }
             }
             5 -> {    //点击监控菜单
                 if (isChecked) {
                     getMapDataByType(MapDataType.SNAPSHOT.code)
                 } else {
-                    clearMarkers(MapDataType.SNAPSHOT.name, markerMap[MapDataType.SNAPSHOT.name])
+                    clusterMap.remove(MapDataType.SNAPSHOT.code)
+                    onReCluster()
                 }
             }
             6 -> {      //点击天气菜单
                 if (isChecked) {
                     getMapDataByType(MapDataType.WEATHER.code)
                 } else {
-                    clearMarkers(MapDataType.WEATHER.name, markerMap[MapDataType.WEATHER.name])
+                    for (marker in weatherMarkers) {
+                        marker.remove() //移除当前Marker
+                        marker.destroy()
+                    }
                 }
             }
             7 -> {   //点击维修店
                 if (isChecked) {
                     getMapDataByType(MapDataType.REPAIR_SHOP.code)
                 } else {
-                    clearMarkers(MapDataType.REPAIR_SHOP.name, markerMap[MapDataType.REPAIR_SHOP.name])
+                    clusterMap.remove(MapDataType.REPAIR_SHOP.code)
+                    onReCluster()
                 }
             }
             8 -> {  //加油站
                 if (isChecked) {
                     getMapDataByType(MapDataType.GAS_STATION.code)
                 } else {
-                    clearMarkers(MapDataType.GAS_STATION.name, markerMap[MapDataType.GAS_STATION.name])
+                    clusterMap.remove(MapDataType.GAS_STATION.code)
+                    onReCluster()
                 }
             }
             9 -> {  //景点
                 if (isChecked) {
                     getMapDataByType(MapDataType.SCENIC.code)
                 } else {
-                    clearMarkers(MapDataType.SCENIC.name, markerMap[MapDataType.SCENIC.name])
+                    clusterMap.remove(MapDataType.SCENIC.code)
+                    onReCluster()
                 }
             }
             10 -> {  //服务区
                 if (isChecked) {
                     getMapDataByType(MapDataType.SERVICE_AREA.code)
                 } else {
-                    clearMarkers(MapDataType.SERVICE_AREA.name, markerMap[MapDataType.SERVICE_AREA.name])
+                    clusterMap.remove(MapDataType.SERVICE_AREA.code)
+                    onReCluster()
                 }
             }
             11 -> { //收费站
                 if (isChecked) {
                     getMapDataByType(MapDataType.TOLL_GATE.code)
                 } else {
-                    clearMarkers(MapDataType.TOLL_GATE.name, markerMap[MapDataType.TOLL_GATE.name])
+                    clusterMap.remove(MapDataType.TOLL_GATE.code)
+                    onReCluster()
                 }
             }
         }
@@ -280,178 +371,259 @@ class NavStandardFragment : BaseFragment() {
     private fun updateData(type: String, data: String?) {
         if (type == MapDataType.ACCIDENT.code || type == MapDataType.CONTROL.code
                 || type == MapDataType.CONSTRUCTION.code) {   //事件类型
-            val dataMDLs = GsonUtils.fromDataToList(data, EventMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 1)
+            onEventData(type, data)
         } else if (type == MapDataType.TRAFFIC_JAM.code) {  //拥堵类型
-            val dataMDLs = GsonUtils.fromDataToList(data, TrafficJamMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 2)
+            onTrafficJamData(type, data)
         } else if (type == MapDataType.SNAPSHOT.code) { //快拍类型
-            val dataMDLs = GsonUtils.fromDataToList(data, SnapShotMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 3)
+            onSnapShotData(type, data)
         } else if (type == MapDataType.WEATHER.code) {  //天气类型
             val dataMDLs = GsonUtils.fromDataToList(data, WeatherMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 4)
+            insertPoint(ArrayList<MutilItem>().apply { addAll(dataMDLs) })
         } else if (type == MapDataType.REPAIR_SHOP.code) {  //维修店类型
-            val dataMDLs = GsonUtils.fromDataToList(data, RepairShopMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 5)
+            onRepairShopData(type, data)
         } else if (type == MapDataType.GAS_STATION.code) {  //加油站类型
-            val dataMDLs = GsonUtils.fromDataToList(data, GasStationMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 6)
+            onGasStationData(type, data)
         } else if (type == MapDataType.SCENIC.code) {  //景点类型
-            val dataMDLs = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 7)
+            onScenicData(type, data)
         } else if (type == MapDataType.SERVICE_AREA.code) {  //服务区类型
-            val dataMDLs = GsonUtils.fromDataToList(data, ServiceMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 8)
+            onServiceData(type, data)
         } else if (type == MapDataType.TOLL_GATE.code) { //收费站类型
-            val dataMDLs = GsonUtils.fromDataToList(data, TollGateMDL::class.java)
-            insertPoint(type, ArrayList<MutilItem>().apply { addAll(dataMDLs) }, 9)
+            onTollGateData(type, data)
         }
     }
 
-    private fun insertPoint(type: String, data: MutableList<MutilItem>, dataType: Int) {
-        var markerIcon = 0
-        var markerBigIco = 0
-        val title: String
+    //事件类型数据处理
+    private fun onEventData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, EventMDL::class.java)
+        val markerIcon: Int
+        val markerBigIco: Int
         when (type) {
             MapDataType.ACCIDENT.code -> {
                 markerIcon = R.mipmap.ic_marker_sg_icon
                 markerBigIco = R.mipmap.ic_marker_sg_big_icon
-                title = MapDataType.ACCIDENT.name
             }
             MapDataType.CONTROL.code -> {
                 markerIcon = R.mipmap.ic_marker_gz_icon
                 markerBigIco = R.mipmap.ic_marker_gz_big_icon
-                title = MapDataType.CONTROL.name
+            }
+            else -> {
+                markerIcon = R.mipmap.ic_marker_shig_icon
+                markerBigIco = R.mipmap.ic_marker_shig_big_icon
+            }
+        }
+        for (item in dataMDLs) {
+            item.markerIcon = markerIcon
+            item.markerBigIco = markerBigIco
+        }
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    /*拥堵类型数据处理*/
+    private fun onTrafficJamData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, TrafficJamMDL::class.java)
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    /*监控快拍数据处理*/
+    private fun onSnapShotData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, SnapShotMDL::class.java)
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    /*附近维修店数据类型处理*/
+    private fun onRepairShopData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, RepairShopMDL::class.java)
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    /*附近加油站数据类型处理*/
+    private fun onGasStationData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, GasStationMDL::class.java)
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    /*附近景点类型数据处理*/
+    private fun onScenicData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    /*附近服务区类型数据处理*/
+    private fun onServiceData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, ServiceMDL::class.java)
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    /*附近收费站类型数据处理*/
+    private fun onTollGateData(type: String, data: String?) {
+        val dataMDLs = GsonUtils.fromDataToList(data, TollGateMDL::class.java)
+        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+    }
+
+    //进行点聚合
+    private fun cluster(type: String, data: MutableList<ClusterItem>) {
+        val items = ArrayList<CustomClusterItem>()
+        val markerIcon: Int
+        val markerBigIco: Int
+        when (type) {
+            MapDataType.ACCIDENT.code -> {
+                markerIcon = R.mipmap.ic_marker_sg_icon
+                markerBigIco = R.mipmap.ic_marker_sg_big_icon
+            }
+            MapDataType.CONTROL.code -> {
+                markerIcon = R.mipmap.ic_marker_gz_icon
+                markerBigIco = R.mipmap.ic_marker_gz_big_icon
             }
             MapDataType.CONSTRUCTION.code -> {
                 markerIcon = R.mipmap.ic_marker_shig_icon
                 markerBigIco = R.mipmap.ic_marker_shig_big_icon
-                title = MapDataType.CONSTRUCTION.name
             }
             MapDataType.TRAFFIC_JAM.code -> {
                 markerIcon = R.mipmap.ic_marker_yd_icon
                 markerBigIco = R.mipmap.ic_marker_yd_big_icon
-                title = MapDataType.TRAFFIC_JAM.name
-            }
-            MapDataType.WEATHER.code -> {
-                title = MapDataType.WEATHER.name
             }
             MapDataType.SNAPSHOT.code -> {
-                title = MapDataType.SNAPSHOT.name
                 markerIcon = R.mipmap.ic_marker_snap_icon
                 markerBigIco = R.mipmap.ic_marker_snap_big_icon
             }
             MapDataType.REPAIR_SHOP.code -> {
-                title = MapDataType.REPAIR_SHOP.name
                 markerIcon = R.mipmap.ic_marker_repair_icon
                 markerBigIco = R.mipmap.ic_marker_repair_big_icon
             }
             MapDataType.GAS_STATION.code -> {
-                title = MapDataType.GAS_STATION.name
                 markerIcon = R.mipmap.ic_marker_gas_icon
                 markerBigIco = R.mipmap.ic_marker_gas_big_icon
             }
             MapDataType.SCENIC.code -> {
-                title = MapDataType.SCENIC.name
                 markerIcon = R.mipmap.ic_marker_secnic_icon
                 markerBigIco = R.mipmap.ic_marker_secnic_big_icon
             }
             MapDataType.SERVICE_AREA.code -> {
-                title = MapDataType.SERVICE_AREA.name
                 markerIcon = R.mipmap.ic_marker_service_icon
                 markerBigIco = R.mipmap.ic_marker_service_big_icon
             }
             else -> {
-                title = MapDataType.TOLL_GATE.name
                 markerIcon = R.mipmap.ic_marker_toll_icon
                 markerBigIco = R.mipmap.ic_marker_toll_big_icon
             }
         }
-        //  markerMap[title]?.let { clearMarkers(title, it) }
-        val markers = ArrayList<Marker>()
-        when (dataType) {
-            1 -> {
-                for (item in data) {  //事件类型（事故、施工、管制）
-                    val mdl = item as EventMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
+        for (item in data) {
+            items.add(CustomClusterItem(item.getPosition(), markerIcon, markerBigIco, item))
+        }
+        clusterMap[type] = items
+        calculateClusters(type)
+    }
+
+    private fun calculateClusters(type: String) {
+        val mClusters = ArrayList<Cluster>()
+        val visibleBounds = aMap.projection.visibleRegion.latLngBounds
+        clusterMap[type]?.let {
+            for (clusterItem in it) {
+                val latLng = clusterItem.getPosition()
+                if (visibleBounds.contains(latLng)) {
+                    var cluster = getCluster(latLng, mClusters)
+                    if (cluster != null) {
+                        cluster.setIcon(clusterItem.getMarkerSmallIcon())
+                        cluster.setBigIcon(clusterItem.getMarkerBigIcon())
+                        cluster.setObject(clusterItem.getObject())
+                        cluster.addClusterItem(clusterItem)
+                    } else {
+                        cluster = Cluster(latLng).apply {
+                            setIcon(clusterItem.getMarkerSmallIcon())
+                            setBigIcon(clusterItem.getMarkerBigIcon())
+                            setObject(clusterItem.getObject())
+                        }
+                        mClusters.add(cluster)
+                        cluster.addClusterItem(clusterItem)
+                    }
                 }
             }
-            2 -> {
-                for (item in data) {  //拥堵类型
-                    val mdl = item as TrafficJamMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
-            }
-            3 -> {
-                for (item in data) {   //快拍类型
-                    val mdl = item as SnapShotMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
-            }
-            4 -> {
-                for (item in data) {   //天气类型
-                    val mdl = item as WeatherMDL
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, mdl.city, BitmapDescriptorFactory.fromView(getWeatherView(mdl)))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
-            }
-            5 -> {   //维修店类型
-                for (item in data) {
-                    val mdl = item as RepairShopMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
-            }
-            6 -> { // 加油站类型
-                for (item in data) {
-                    val mdl = item as GasStationMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
-            }
-            7 -> { //景点类型
-                for (item in data) {
-                    val mdl = item as ScenicMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
-            }
-            8 -> { //服务区类型
-                for (item in data) {
-                    val mdl = item as ServiceMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
-            }
-            9 -> { //收费站类型
-                for (item in data) {
-                    val mdl = item as TollGateMDL
-                    mdl.markerIcon = markerIcon
-                    mdl.markerBigIco = markerBigIco
-                    val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), title, title, BitmapDescriptorFactory.fromResource(markerIcon))
-                    markers.add(aMap.addMarker(option).apply { `object` = mdl })
-                }
+            addClusterToMap(mClusters)
+        }
+    }
+
+    /**
+     * 根据一个点获取是否可以依附的聚合点，没有则返回null
+     */
+    private fun getCluster(latLng: LatLng, clusters: MutableList<Cluster>): Cluster? {
+        for (cluster in clusters) {
+            val clusterCenterPoint = cluster.getCenterLatLng()
+            val distance = AMapUtils.calculateLineDistance(latLng, clusterCenterPoint).toDouble()
+            if (distance < mClusterDistance && aMap.cameraPosition.zoom < 19) {
+                return cluster
             }
         }
-        markerMap[title] = markers
+        return null
+    }
+
+    /**
+     * 将聚合元素添加至地图上
+     */
+    private fun addClusterToMap(clusters: List<Cluster>) {
+        for (cluster in clusters) {
+            addSingleClusterToMap(cluster)
+        }
+    }
+
+    /**
+     * marker渐变动画，动画结束后将Marker删除
+     */
+    inner class MyAnimationListener(private val mRemoveMarkers: MutableList<Marker>) : Animation.AnimationListener {
+
+        override fun onAnimationStart() {
+        }
+
+        override fun onAnimationEnd() {
+            for (marker in mRemoveMarkers) {
+                marker.remove()
+            }
+            mRemoveMarkers.clear()
+        }
+    }
+
+    /**
+     * 将单个聚合元素添加至地图显示
+     */
+    private fun addSingleClusterToMap(cluster: Cluster) {
+        val latLng = cluster.getCenterLatLng()
+        val markerOptions = MarkerOptions()
+        markerOptions.anchor(0.5f, 0.5f)
+                .icon(getBitmapDes(cluster, cluster.getClusterCount()))
+                .position(latLng)
+                .visible(true)
+                .infoWindowEnable(false)
+                .draggable(false)
+        val marker = aMap.addMarker(markerOptions)
+        marker.setObject(cluster)
+        marker.startAnimation()
+        cluster.setMarker(marker)
+        mAddMarkers.add(marker)
+    }
+
+    private fun getBitmapDes(cluster: Cluster, size: Int): BitmapDescriptor {
+        val view = LayoutInflater.from(context).inflate(R.layout.mapview_cluster, LinearLayout(context), false)
+        val ivIcon = view.findViewById<ImageView>(R.id.ivIcon)
+        val cvParent = view.findViewById<CustomView>(R.id.cvParent)
+        val tvCount = view.findViewById<TextView>(R.id.tvCount)
+        ivIcon.setImageResource(cluster.getIcon())
+        if (size > 1) {
+            tvCount.text = size.toString()
+            cvParent.visibility = View.VISIBLE
+        } else {
+            cvParent.visibility = View.GONE
+        }
+        return BitmapDescriptorFactory.fromView(view)
+    }
+
+    private fun insertPoint(data: MutableList<MutilItem>) {
+        val markers = ArrayList<Marker>()
+        for (item in data) {   //天气类型
+            val mdl = item as WeatherMDL
+            val option = createOptions(LatLng(mdl.latitude(), mdl.longitude()), MapDataType.WEATHER.name, mdl.city, BitmapDescriptorFactory.fromView(getWeatherView(mdl)))
+            markers.add(aMap.addMarker(option).apply { `object` = mdl })
+        }
+        weatherMarkers.clear()
+        weatherMarkers.addAll(markers)
     }
 
     private fun createOptions(latLng: LatLng, title: String?, snippet: String?, bitmap: BitmapDescriptor): MarkerOptions {
@@ -476,78 +648,71 @@ class NavStandardFragment : BaseFragment() {
         return view
     }
 
-    //删除指定Marker
-    private fun clearMarkers(id: String, markers: ArrayList<Marker>?) {
-        markers?.let {
-            for (marker in it) {
-                if (TextUtils.equals(marker.title, id)) {
-                    marker.remove() //移除当前Marker
-                }
-            }
-        }
-    }
-
-    //还原上次点击的marker
-    private fun restoreMarker(marker: Marker) {
-        when {
-            marker.`object` is EventMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as EventMDL).markerIcon))
-            marker.`object` is TrafficJamMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as TrafficJamMDL).markerIcon))
-            marker.`object` is SnapShotMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as SnapShotMDL).markerIcon))
-            marker.`object` is RepairShopMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as RepairShopMDL).markerIcon))
-            marker.`object` is GasStationMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as GasStationMDL).markerIcon))
-            marker.`object` is ScenicMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as ScenicMDL).markerIcon))
-            marker.`object` is ServiceMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as ServiceMDL).markerIcon))
-            marker.`object` is TollGateMDL -> marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as TollGateMDL).markerIcon))
-        }
-    }
-
-    //marker点击放大图标
-    private fun enlargeMarkerIcon(marker: Marker) {
-        when {
-            marker.`object` is EventMDL -> {
-                val mdl = marker.`object` as EventMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+    /*marker点击放大 查看详情*/
+    private fun enlargeMarkerIcon(cluster: Cluster, marker: Marker) {
+        when (cluster.getObject()) {
+            is EventMDL -> {  //事件类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as EventMDL
                 val dialog = EventDetailDialog(context, mdl)
-                dialog.setOnSubscribeListener(object : EventDetailDialog.OnSubscribeListener {
-                    override fun onSubscribe(dataMDL: EventMDL) {
+                dialog.setOnViewClickListener(object : EventDetailDialog.OnViewClickListener {
+                    override fun onViewClick(dataMDL: EventMDL, type: Int) {
                         if (!isLogin()) openActivity(LoginActivity::class.java)
-                        else dataMDL.eventid?.let { saveSubscribe(dataMDL.getSubType(), it, marker, dataMDL) }
-                        dialog.dismiss()
+                        else {
+                            when (type) {
+                                1 -> {  //点击了“有用”
+                                    saveIsUseful(cluster, mdl, 1, dialog)
+                                }
+                                2 -> {  //点击了“没用”
+                                    saveIsUseful(cluster, mdl, 2, dialog)
+                                }
+                                else -> dataMDL.eventid?.let { saveSubscribe(cluster, dataMDL, dialog) }
+                            }
+                        }
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
-            marker.`object` is TrafficJamMDL -> {
-                val mdl = marker.`object` as TrafficJamMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+            is TrafficJamMDL -> {  //拥堵类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as TrafficJamMDL
                 val dialog = TrafficJamDetailDialog(context, mdl)
-                dialog.setOnSubscribeListener(object : TrafficJamDetailDialog.OnSubscribeListener {
-                    override fun onSubscribe(dataMDL: TrafficJamMDL) {
+                dialog.setOnViewClickListener(object : TrafficJamDetailDialog.OnViewClickListener {
+                    override fun onViewClick(dataMDL: TrafficJamMDL, type: Int) {
                         if (!isLogin()) openActivity(LoginActivity::class.java)
-                        else dataMDL.eventid?.let { saveSubscribe(dataMDL.getSubType(), it, marker, dataMDL) }
-                        dialog.dismiss()
+                        else {
+                            when (type) {
+                                1 -> {  //点击了“有用”
+                                    saveIsUseful(cluster, dataMDL, 1, dialog)
+                                }
+                                2 -> {  //点击了“没用”
+                                    saveIsUseful(cluster, dataMDL, 2, dialog)
+                                }
+                                else -> dataMDL.eventid?.let { saveSubscribe(cluster, dataMDL, dialog) }
+                            }
+                            dialog.dismiss()
+                        }
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
-            marker.`object` is SnapShotMDL -> {
-                val mdl = marker.`object` as SnapShotMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+            is SnapShotMDL -> {  //快拍类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as SnapShotMDL
                 val dialog = SnapShotDialog(context, mdl)
                 dialog.setOnItemClickListener(object : SnapShotDialog.OnItemClickListener {
                     override fun onItemClick(dataMDL: SnapShotMDL) {
                         getRoadVideo(dataMDL.resid, dataMDL.shortname)
-//                        showBigPic(position, photos)
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
-            marker.`object` is RepairShopMDL -> {
-                val mdl = marker.`object` as RepairShopMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+            is RepairShopMDL -> { //维修店类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as RepairShopMDL
                 val dialog = RepairShopDialog(context, mdl)
                 dialog.setOnButtonClickListener(object : RepairShopDialog.OnButtonClickListener {
                     override fun onNavigation(dataMDL: RepairShopMDL) {
@@ -559,11 +724,11 @@ class NavStandardFragment : BaseFragment() {
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
-            marker.`object` is GasStationMDL -> {
-                val mdl = marker.`object` as GasStationMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+            is GasStationMDL -> { //加油站类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as GasStationMDL
                 val dialog = GasStationDialog(context, mdl)
                 targetLatLng?.let { mdl.setDistance(it.longitude, it.latitude, mdl.longitude(), mdl.latitude()) }
                 dialog.setOnNavigationListener(object : GasStationDialog.OnNavigationListener {
@@ -576,11 +741,11 @@ class NavStandardFragment : BaseFragment() {
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
-            marker.`object` is ScenicMDL -> {
-                val mdl = marker.`object` as ScenicMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+            is ScenicMDL -> {  //景点类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as ScenicMDL
                 val dialog = ScenicDialog(context, mdl)
                 dialog.setOnButtonClickListener(object : ScenicDialog.OnButtonClickListener {
                     override fun onDetail(dataMDL: ScenicMDL) {
@@ -597,11 +762,11 @@ class NavStandardFragment : BaseFragment() {
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
-            marker.`object` is ServiceMDL -> {
-                val mdl = marker.`object` as ServiceMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+            is ServiceMDL -> { //服务区类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as ServiceMDL
                 val dialog = ServiceAreaDialog(context, mdl)
                 dialog.setOnButtonClickListener(object : ServiceAreaDialog.OnButtonClickListener {
                     override fun onDetail(dataMDL: ServiceMDL) {
@@ -618,11 +783,11 @@ class NavStandardFragment : BaseFragment() {
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
-            marker.`object` is TollGateMDL -> {
-                val mdl = marker.`object` as TollGateMDL
-                marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
+            is TollGateMDL -> {  //收费站类型
+                marker.setIcon(getBigIcon(cluster.getBigIcon()))
+                val mdl = cluster.getObject() as TollGateMDL
                 val dialog = TollGateDialog(context, mdl)
                 dialog.setOnButtonClickListener(object : TollGateDialog.OnButtonClickListener {
                     override fun onDetail(dataMDL: TollGateMDL) {
@@ -639,14 +804,79 @@ class NavStandardFragment : BaseFragment() {
                     }
                 })
                 dialog.show()
-                dialog.setOnDismissListener { restoreMarker(marker) }
+                dialog.setOnDismissListener { marker.setIcon(getSmallIcon(cluster.getIcon())) }
             }
         }
-        oldMarker = marker
     }
 
-    private fun saveSubscribe(subtype: String, dataid: String, marker: Marker, dataMDL: MutilItem) {
-        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), subtype, dataid), object : HttpRequestCallback<String>() {
+    /*marker大图标*/
+    private fun getBigIcon(bigIcon: Int): BitmapDescriptor {
+        val view = LayoutInflater.from(context).inflate(R.layout.mapview_cluster, LinearLayout(context), false)
+        val ivIcon = view.findViewById<ImageView>(R.id.ivIcon)
+        view.findViewById<CustomView>(R.id.cvParent).visibility = View.GONE
+        ivIcon.setImageResource(bigIcon)
+        return BitmapDescriptorFactory.fromView(view)
+    }
+
+    /*marker小图标*/
+    private fun getSmallIcon(smallIcon: Int): BitmapDescriptor {
+        val view = LayoutInflater.from(context).inflate(R.layout.mapview_cluster, LinearLayout(context), false)
+        val ivIcon = view.findViewById<ImageView>(R.id.ivIcon)
+        view.findViewById<CustomView>(R.id.cvParent).visibility = View.GONE
+        ivIcon.setImageResource(smallIcon)
+        return BitmapDescriptorFactory.fromView(view)
+    }
+
+    //是否有用
+    private fun saveIsUseful(cluster: Cluster, dataMDL: MutilItem, type: Int, dialog: Dialog) {
+        val eventId = if (dataMDL is EventMDL) {
+            dataMDL.eventid
+        } else {
+            (dataMDL as TrafficJamMDL).eventid
+        }
+        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(eventId, getUserId(), type), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    if (dataMDL is EventMDL) {
+                        dataMDL.isuseful = type
+                        cluster.setObject(dataMDL)
+                        (dialog as EventDetailDialog).updateMDL(dataMDL)
+                    } else {
+                        val mdl = dataMDL as TrafficJamMDL
+                        mdl.isuseful = type
+                        cluster.setObject(mdl)
+                        (dialog as TrafficJamDetailDialog).updateMDL(dataMDL)
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
+    }
+
+    /*保存订阅 事件类型或拥堵类型才可以订阅*/
+    private fun saveSubscribe(cluster: Cluster, dataMDL: MutilItem, dialog: Dialog) {
+        val subtype: String?
+        val dataId: String?
+        if (dataMDL is EventMDL) {
+            subtype = dataMDL.subtype
+            dataId = dataMDL.eventid
+        } else {
+            val mdl = dataMDL as TrafficJamMDL
+            subtype = mdl.subtype
+            dataId = mdl.eventid
+        }
+        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), subtype, dataId), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading("保存订阅…")
             }
@@ -656,11 +886,13 @@ class NavStandardFragment : BaseFragment() {
                 if (GsonUtils.isResultOk(data)) {
                     if (dataMDL is EventMDL) {
                         dataMDL.subscribestatus = 1
-                        marker.`object` = dataMDL
+                        cluster.setObject(dataMDL)
+                        (dialog as EventDetailDialog).updateSubscribe(dataMDL)
                     } else {
                         val mdl = dataMDL as TrafficJamMDL
                         mdl.subscribestatus = 1
-                        marker.`object` = mdl
+                        cluster.setObject(mdl)
+                        (dialog as TrafficJamDetailDialog).updateSubscribe(mdl)
                     }
                     showShortToast("订阅成功")
                 } else showShortToast(GsonUtils.getMsg(data))
@@ -717,5 +949,4 @@ class NavStandardFragment : BaseFragment() {
         mapView.onDestroy()
         super.onDestroyView()
     }
-
 }

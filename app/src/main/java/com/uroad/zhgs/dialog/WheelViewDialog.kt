@@ -2,7 +2,6 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -23,8 +22,6 @@ class WheelViewDialog(private val context: Activity)
     private var data: ArrayList<String>? = null
     private var itemNumber: Int = 7
     private var defaultIndex: Int = -1
-    private var selectIndex: Int = -1
-    private var text: String = ""
 
     fun withData(data: ArrayList<String>): WheelViewDialog {
         this.data = data
@@ -61,26 +58,15 @@ class WheelViewDialog(private val context: Activity)
             wheelView.itemNumber = itemNumber
             wheelView.setData(data)
             if (defaultIndex in 0 until data.size) wheelView.setDefault(defaultIndex)
-            wheelView.setOnSelectListener(object : WheelView.OnSelectListener {
-                override fun selecting(id: Int, text: String) {
-
-                }
-
-                override fun endSelect(id: Int, text: String) {
-                    setSelect(id, text)
-                }
-            })
-            tvConfirm.setOnClickListener { onItemSelectListener?.onItemSelect(selectIndex, text, this@WheelViewDialog) }
+            tvConfirm.setOnClickListener {
+                val selected = wheelView.selected
+                if (selected in 0 until data.size) onItemSelectListener?.onItemSelect(selected, data[selected], this@WheelViewDialog)
+            }
             window.setContentView(contentView)
             window.setLayout(DisplayUtils.getWindowWidth(context), WindowManager.LayoutParams.WRAP_CONTENT)
             window.setWindowAnimations(R.style.dialog_anim)
             window.setGravity(Gravity.BOTTOM)
         }
-    }
-
-    fun setSelect(position: Int, text: String) {
-        selectIndex = position
-        this.text = text
     }
 
     interface OnItemSelectListener {

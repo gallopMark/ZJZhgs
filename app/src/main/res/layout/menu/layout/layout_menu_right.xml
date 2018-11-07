@@ -273,8 +273,7 @@
                     android:padding="@dimen/margin_5"
                     android:text="@string/roadNavigation_menu_pile"
                     android:textColor="@color/cb_color_selector"
-                    android:textSize="@dimen/font_16"
-                    android:visibility="gone" />
+                    android:textSize="@dimen/font_16" />
 
                 <CheckBox
                     android:id="@+id/cbTrafficToll"

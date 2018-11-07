@@ -22,6 +22,7 @@ import com.uroad.zhgs.dialog.CCTVDetailRvDialog
 import com.uroad.zhgs.dialog.EventDetailRvDialog
 import com.uroad.zhgs.enumeration.DiagramEventType
 import com.uroad.zhgs.model.*
+import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.utils.DiagramUtils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -281,13 +282,14 @@ class DiagramFragment : BaseFragment() {
         if (DiagramUtils.diagramExists()) {
             loadUrl()
         } else {
-            doRequest(WebApiService.DIAGRAM, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+            doRequest(WebApiService.APP_CONFIG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
                 override fun onSuccess(data: String?) {
-                    if (GsonUtils.isResultOk(data)) {
-                        val mdl = GsonUtils.fromDataBean(data, DiagramMDL::class.java)
-                        mdl?.let { updateData(mdl) }
-                    } else {
-                        showShortToast(GsonUtils.getMsg(data))
+                    val mdLs = GsonUtils.fromDataToList(data, AppConfigMDL::class.java)
+                    for (item in mdLs) {
+                        if (TextUtils.equals(item.confid, AppConfigMDL.Type.DIAGRAM_VER.CODE)) {
+                            updateData(item)
+                            break
+                        }
                     }
                 }
 
@@ -298,9 +300,9 @@ class DiagramFragment : BaseFragment() {
         }
     }
 
-    private fun updateData(mdl: DiagramMDL) {
+    private fun updateData(mdl: AppConfigMDL) {
         val verLocal = DiagramUtils.getVersionLocal(context)
-        if (VersionUtils.isNeedUpdate(mdl.ver, verLocal)) {  //判断服务器版本是否大于本地保存的版本号
+        if (VersionUtils.isNeedUpdate(mdl.conf_ver, verLocal)) {  //判断服务器版本是否大于本地保存的版本号
             DiagramUtils.deleteAllFile()   //先删除文件夹下所有文件
             doDownload(mdl.url)
         } else {
@@ -310,7 +312,7 @@ class DiagramFragment : BaseFragment() {
                 doDownload(mdl.url)
             }
         }
-        DiagramUtils.saveVersionSer(context, mdl.ver)  //保存服务器版本号到本地
+        DiagramUtils.saveVersionSer(context, mdl.conf_ver)  //保存服务器版本号到本地
     }
 
     //下载简图

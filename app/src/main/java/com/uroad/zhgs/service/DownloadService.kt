@@ -161,6 +161,7 @@ class DownloadService : Service() {
             val errorText = "下载失败，请点击重试！"
             mBuilder?.setContentText(errorText)
             notifyId()
+            if(isForce) execute()
         }
     }
 

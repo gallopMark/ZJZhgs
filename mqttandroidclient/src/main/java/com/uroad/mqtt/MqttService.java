@@ -1,29 +1,23 @@
 package com.uroad.mqtt;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
  * Created by MFB on 2018/9/5.
  */
 public class MqttService {
-    private final String TAG = MqttService.class.getSimpleName();
     private MqttAndroidClient client;
     private MqttConnectOptions conOpt;
     private Context context;
-    private boolean isDebug;
     private String serverUrl;
     private String userName;
     private String passWord;
@@ -32,7 +26,7 @@ public class MqttService {
     private int timeOut;
     private int keepAliveInterval;
     private boolean cleanSession;
-    private boolean autoReconnect;
+    private boolean autoReconnect = true;
     private IMqttCallBack starMQTTCallBack;
 
     /**
@@ -40,7 +34,6 @@ public class MqttService {
      */
     private MqttService(Builder builder) {
         this.context = builder.context;
-        this.isDebug = builder.isDebug;
         this.serverUrl = builder.serverUrl;
         this.userName = builder.userName;
         this.passWord = builder.passWord;
@@ -62,7 +55,6 @@ public class MqttService {
         private String userName = "admin";
         private String passWord = "password";
         private String clientId;
-        private boolean isDebug = false;
         private int timeOut = 10;
         private int keepAliveInterval = 20;
         private boolean cleanSession = false;
@@ -70,11 +62,6 @@ public class MqttService {
 
         public Builder(Context context) {
             this.context = context;
-        }
-
-        public Builder isDebug(boolean isDebug) {
-            this.isDebug = isDebug;
-            return this;
         }
 
         public Builder serverUrl(String serverUrl) {
@@ -151,6 +138,7 @@ public class MqttService {
         // 密码
         conOpt.setPassword(passWord.toCharArray());
         conOpt.setAutomaticReconnect(autoReconnect); //自动重连
+        conOpt.setMaxInflight(10); //允许同时发送几条消息（未收到broker确认信息）
     }
 
     /**
@@ -178,6 +166,17 @@ public class MqttService {
         }
     }
 
+
+    public void subscribe(String topics, int qos) {
+        if (!isConnected()) return;
+        try {
+            // 订阅topic话题
+            client.subscribe(topics, qos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 订阅主题
      *
@@ -185,20 +184,147 @@ public class MqttService {
      * @param qos    策略
      */
     public void subscribe(String[] topics, int[] qos) {
+        if (!isConnected()) return;
         try {
             // 订阅topic话题
             client.subscribe(topics, qos);
         } catch (Exception e) {
-            if (isDebug) e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
-    public void subscribe(String topics, int qos) {
+    public void subscribe(String topicFilter, int qos, Object userContext, IMqttActionListener callback) {
+        if (!isConnected()) return;
         try {
             // 订阅topic话题
-            client.subscribe(new String[]{topics}, new int[]{qos});
+            client.subscribe(topicFilter, qos, userContext, callback);
         } catch (Exception e) {
-            if (isDebug) e.printStackTrace();
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribe(String[] topicFilters, int[] qos, Object userContext, IMqttActionListener callback) {
+        if (!isConnected()) return;
+        try {
+            // 订阅topic话题
+            client.subscribe(topicFilters, qos, userContext, callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribe(String topicFilter, int qos, Object userContext, IMqttActionListener callback, IMqttMessageListener messageListener) {
+        if (!isConnected()) return;
+        try {
+            // 订阅topic话题
+            client.subscribe(topicFilter, qos, userContext, callback, messageListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribe(String topicFilter, int qos, IMqttMessageListener messageListener) {
+        if (!isConnected()) return;
+        try {
+            // 订阅topic话题
+            client.subscribe(topicFilter, qos, messageListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribe(String[] topicFilters, int[] qos, IMqttMessageListener[] messageListeners) {
+        if (!isConnected()) return;
+        try {
+            // 订阅topic话题
+            client.subscribe(topicFilters, qos, messageListeners);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribe(String[] topicFilters, int[] qos, Object userContext, IMqttActionListener callback, IMqttMessageListener[] messageListeners) {
+        if (!isConnected()) return;
+        try {
+            // 订阅topic话题
+            client.subscribe(topicFilters, qos, userContext, callback, messageListeners);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void publish(String topic, byte[] payload, int qos,
+                        boolean retained) {
+        if (!isConnected()) return;
+        try {
+            client.publish(topic, payload, qos, retained);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void publish(String topic, MqttMessage message) {
+        if (!isConnected()) return;
+        try {
+            client.publish(topic, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void publish(String topic, byte[] payload, int qos,
+                        boolean retained, Object userContext, IMqttActionListener callback) {
+        if (!isConnected()) return;
+        try {
+            client.publish(topic, payload, qos, retained, userContext, callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void publish(String topic, MqttMessage message,
+                        Object userContext, IMqttActionListener callback) {
+        if (!isConnected()) return;
+        try {
+            client.publish(topic, message, userContext, callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unsubscribe(String topicFilter) {
+        if (!isConnected()) return;
+        try {
+            client.unsubscribe(topicFilter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unsubscribe(String[] topic) {
+        if (!isConnected()) return;
+        try {
+            client.unsubscribe(topic);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unsubscribe(String topicFilter, Object userContext, IMqttActionListener callback) {
+        if (!isConnected()) return;
+        try {
+            client.unsubscribe(topicFilter, userContext, callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unsubscribe(String[] topicFilters, Object userContext, IMqttActionListener callback) {
+        if (!isConnected()) return;
+        try {
+            client.unsubscribe(topicFilters, userContext, callback);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -206,10 +332,13 @@ public class MqttService {
      * 断开连接
      */
     public void disconnect() {
+        if (client == null) return;
         try {
+            client.unregisterResources();
+            client.close();
             client.disconnect();
         } catch (Exception e) {
-            if (isDebug) Log.e(TAG, e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -217,10 +346,11 @@ public class MqttService {
      * 判断连接是否断开
      */
     public boolean isConnected() {
+        if (client == null) return false;
         try {
             return client.isConnected();
         } catch (Exception e) {
-            if (isDebug) Log.e(TAG, e.toString());
+            e.printStackTrace();
         }
         return false;
     }
@@ -232,7 +362,6 @@ public class MqttService {
 
         @Override
         public void onSuccess(IMqttToken arg0) {
-            if (isDebug) Log.i(TAG, "mqtt connect success ");
             if (starMQTTCallBack != null) {
                 starMQTTCallBack.connectSuccess(arg0);
             }
@@ -240,7 +369,6 @@ public class MqttService {
 
         @Override
         public void onFailure(IMqttToken arg0, Throwable arg1) {
-            if (isDebug) Log.i(TAG, "mqtt connect failed ");
             if (starMQTTCallBack != null) {
                 starMQTTCallBack.connectFailed(arg0, arg1);
             }
@@ -253,9 +381,6 @@ public class MqttService {
         @Override
         public void messageArrived(String topic, MqttMessage message) {
             String msgContent = new String(message.getPayload());
-            String detailLog = topic + ";qos:" + message.getQos() + ";retained:" + message.isRetained();
-            if (isDebug) Log.i(TAG, "messageArrived:" + msgContent);
-            if (isDebug) Log.i(TAG, detailLog);
             if (starMQTTCallBack != null) {
                 starMQTTCallBack.messageArrived(topic, msgContent, message.getQos());
             }
@@ -266,7 +391,6 @@ public class MqttService {
             if (starMQTTCallBack != null) {
                 starMQTTCallBack.deliveryComplete(arg0);
             }
-            if (isDebug) Log.i(TAG, "deliveryComplete");
         }
 
         @Override
@@ -274,7 +398,6 @@ public class MqttService {
             if (starMQTTCallBack != null) {
                 starMQTTCallBack.connectionLost(arg0);
             }
-            if (isDebug) Log.i(TAG, "connectionLost");
             // 失去连接，重连
         }
     };

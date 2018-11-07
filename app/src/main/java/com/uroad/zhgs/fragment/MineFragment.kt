@@ -50,6 +50,9 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         tvRescueRecord.setOnClickListener(this)
         rlMessage.setOnClickListener(this)
         tvMyCar.setOnClickListener(this)
+        tvPassRecord.setOnClickListener(this)
+        tvMyTracks.setOnClickListener(this)
+        tvMyCode.setOnClickListener(this)
         tvSettings.setOnClickListener { openActivity(SettingsActivity::class.java) }
     }
 
@@ -59,11 +62,14 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             return
         }
         when (v.id) {
-            R.id.tvMyBurst -> openActivity(UserEventListActivity::class.java, Bundle().apply { putBoolean("isMy", true) })  //我的报料
+            R.id.tvMyBurst -> openActivity(MyRidersReportActivity::class.java)  //我的报料
             R.id.tvMySubscribe -> openActivity(UserSubscribeActivity::class.java)  //我的订阅
             R.id.tvRescueRecord -> openActivity(RescueRecordActivity::class.java)  //救援记录
             R.id.rlMessage -> openActivity(UserMsgActivity::class.java) //消息中心
             R.id.tvMyCar -> openActivity(MyCar2Activity::class.java) //我的车辆
+            R.id.tvPassRecord -> openActivity(MyPassRecordActivity::class.java) //通行记录
+            R.id.tvMyTracks -> openActivity(MyTracksActivity::class.java) //我的足迹
+            R.id.tvMyCode -> openActivity(MyInvitationCodeActivity::class.java) //我的邀请码
         }
     }
 

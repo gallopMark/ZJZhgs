@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ridersReportVoice">ridersReportVoice.json</string>
+    <string name="ridersSpeak">riders_speak.json</string>
+    <string name="ridersRecord">riders_record.json</string>
+</resources>

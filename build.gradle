@@ -2,6 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.2.71'
+    ext.androidXVersion = '1.0.0'
     repositories {
         google()
         jcenter()
@@ -11,7 +12,7 @@ buildscript {
 //        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // 注册MobSDK
 //        classpath 'com.mob.sdk:MobSDK:+'

@@ -2,6 +2,7 @@ package com.uroad.zhgs.activity
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.UserMsgAdapter
@@ -74,4 +75,7 @@ class UserMsgActivity : BaseRefreshRvActivity() {
         else index += 1
     }
 
+    override fun onReload(view: View) {
+        pullToRefresh()
+    }
 }

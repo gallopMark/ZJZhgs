@@ -36,4 +36,10 @@
             <enum name="circle" value="1" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="CustomShapeTextView">
+        <attr name="paintNormalColor" format="reference|color" />
+        <attr name="paintSelectColor" format="reference|color" />
+        <attr name="isFillColor" format="boolean" />
+    </declare-styleable>
 </resources>

@@ -1,6 +1,7 @@
 package com.uroad.zhgs.activity
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -9,6 +10,10 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.dialog.MaterialDialog
+import com.uroad.zhgs.service.MyTracksService
+import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.webservice.HttpRequestCallback
+import com.uroad.zhgs.webservice.WebApiService
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -23,11 +28,7 @@ class SettingsActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_settings)
         withTitle(resources.getString(R.string.settings_title))
-        if (UserPreferenceHelper.isLogin(this)) {
-            btLogout.visibility = View.VISIBLE
-        } else {
-            btLogout.visibility = View.GONE
-        }
+        init()
         setCache()
         llClearCache.setOnClickListener {
             showDialog("清除缓存", "清除缓存会导致下载的内容删除，确定清除吗?",
@@ -41,6 +42,27 @@ class SettingsActivity : BaseActivity() {
                     clearCache()
                 }
             })
+        }
+    }
+
+    private fun setCache() {
+        tvCacheSize.text = DataCleanManager.getTotalCacheSize(this)
+    }
+
+    private fun init() {
+        if (!isLogin()) {
+            llTopSettings.visibility = View.GONE
+            llChangePW.visibility = View.GONE
+            btLogout.visibility = View.GONE
+        } else {
+            llTopSettings.visibility = View.VISIBLE
+            llChangePW.visibility = View.VISIBLE
+            btLogout.visibility = View.VISIBLE
+        }
+        checkBox.isChecked = UserPreferenceHelper.isFollow(this)
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            val isFollow = if (isChecked) 1 else 0
+            userSetUp(isFollow)
         }
     }
 
@@ -60,10 +82,6 @@ class SettingsActivity : BaseActivity() {
                     it.request(1)
                     showLoading("正在清除…")
                 }))
-    }
-
-    private fun setCache() {
-        tvCacheSize.text = DataCleanManager.getTotalCacheSize(this)
     }
 
     override fun setListener() {
@@ -92,10 +110,31 @@ class SettingsActivity : BaseActivity() {
                 override fun onClick(v: View, dialog: AlertDialog) {
                     dialog.dismiss()
                     UserPreferenceHelper.clear(this@SettingsActivity)
-                    showShortToast("您已登出")
+                    showShortToast("您已退出登录")
+                    /*退出登录，则停止记录足迹的服务*/
+                    stopService(Intent(this@SettingsActivity, MyTracksService::class.java))
                     finish()
                 }
             })
         }
+    }
+
+    private fun userSetUp(isFollow: Int) {
+        doRequest(WebApiService.USER_SETUP, WebApiService.userSetupParams(getUserId(), isFollow), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    showShortToast("设置成功")
+                    UserPreferenceHelper.saveFollow(this@SettingsActivity, checkBox.isChecked)
+                } else {
+                    checkBox.isChecked = !checkBox.isChecked
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                checkBox.isChecked = !checkBox.isChecked
+                onHttpError(e)
+            }
+        })
     }
 }

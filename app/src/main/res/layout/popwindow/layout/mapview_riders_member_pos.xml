@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llWindow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/ic_riders_member_window"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_4"
+        android:paddingRight="@dimen/margin_4">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="@dimen/margin_4"
+            android:paddingRight="@dimen/margin_4"
+            android:paddingBottom="@dimen/margin_5"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_12" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/ivPosArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivIcon"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/minus_5"
+            android:src="@mipmap/ic_riders_member_pos" />
+
+        <FrameLayout
+            android:id="@+id/flIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/ic_riders_member_iconbg" />
+
+        <com.uroad.library.widget.CircleImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/flIcon"
+            android:layout_alignTop="@+id/flIcon"
+            android:layout_alignRight="@+id/flIcon"
+            android:layout_alignBottom="@+id/flIcon"
+            android:layout_marginLeft="@dimen/margin_2"
+            android:layout_marginRight="@dimen/margin_2"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:contentDescription="@string/riders_members"
+            android:scaleType="centerCrop" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ivIcon"
+            android:layout_alignTop="@+id/ivIcon"
+            android:layout_alignRight="@+id/ivIcon"
+            android:layout_alignBottom="@+id/ivIcon"
+            android:visibility="gone"
+            app:lottie_fileName="@string/ridersSpeak"
+            app:lottie_imageAssetsFolder="images"
+            app:lottie_loop="true" />
+    </RelativeLayout>
+
+</LinearLayout>

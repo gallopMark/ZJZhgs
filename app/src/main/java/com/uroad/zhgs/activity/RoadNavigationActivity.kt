@@ -115,6 +115,7 @@ class RoadNavigationActivity : BaseActivity() {
         cbEventSG2.isChecked = true
         cbEventGZ2.isChecked = true
         cbEventShiG2.isChecked = false
+        cbTrafficPile.isChecked = false
         cbTrafficToll.isChecked = true
         cbTrafficService.isChecked = true
         cbTrafficSpot.isChecked = true
@@ -266,7 +267,7 @@ class RoadNavigationActivity : BaseActivity() {
         flBottom.setOnClickListener {
             if (!isLogin()) openActivity(LoginActivity::class.java)
             else {
-                openActivity(UserEventListActivity::class.java, Bundle().apply { putBoolean("anim", true) })
+                openActivity(RidersInteractionActivity::class.java, Bundle().apply { putBoolean("anim", true) })
                 overridePendingTransition(R.anim.slide_bottom_in, 0)
             }
         }

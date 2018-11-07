@@ -278,11 +278,9 @@ class RescueRequestActivity : BaseActivity() {
                     }
                 }).withItemNum(5).withListener(object : WheelViewDialog.OnItemSelectListener {
                     override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
-                        if (position in 0 until mdLs.size) {
-                            mdLs[position].carid?.let { usercarid = it }
-                            etMyCarNum.setText(text)
-                            etMyCarNum.setSelection(etMyCarNum.text.length)
-                        }
+                        mdLs[position].carid?.let { usercarid = it }
+                        etMyCarNum.setText(text)
+                        etMyCarNum.setSelection(etMyCarNum.text.length)
                         dialog.dismiss()
                     }
                 }).show()

@@ -1,6 +1,9 @@
 package com.uroad.zhgs.model
 
 import android.text.TextUtils
+import com.amap.api.maps.model.LatLng
+import com.uroad.zhgs.R
+import com.uroad.zhgs.cluster.ClusterItem
 
 /**
  *Created by MFB on 2018/8/22.
@@ -13,7 +16,7 @@ import android.text.TextUtils
 "resname": "K135+701杭向",
 "resid": "95053ba453154f29befb27551bff438c"
  */
-class SnapShotMDL : MutilItem {
+class SnapShotMDL : MutilItem, ClusterItem {
     override fun getItemType(): Int = 3
     var cctvids: String? = null
     var roadoldid: String? = null
@@ -24,8 +27,8 @@ class SnapShotMDL : MutilItem {
     var resname: String? = null
     var resid: String? = null
 
-    var markerIcon: Int = 0
-    var markerBigIco: Int = 0
+    var markerIcon: Int = R.mipmap.ic_marker_snap_icon
+    var markerBigIco: Int = R.mipmap.ic_marker_snap_big_icon
 
     fun latitude(): Double {
         latitude?.let { return it }
@@ -58,4 +61,9 @@ class SnapShotMDL : MutilItem {
         }
         return ""
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+    override fun getMarkerSmallIcon(): Int = markerIcon
+
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }

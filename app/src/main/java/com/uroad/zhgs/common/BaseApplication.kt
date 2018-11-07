@@ -14,7 +14,6 @@ import com.uroad.zhgs.utils.AndroidBase64Utils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import io.reactivex.Observable
-import java.io.File
 
 /**
  * @author MFB
@@ -26,41 +25,6 @@ abstract class BaseApplication : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         MultiDex.install(base)
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        initBugly()
-        initHttpService()
-        //    initXunFei()
-        initCompressorPath()
-        initDiagramPath()
-    }
-
-    /*配置接口地址*/
-    private fun initHttpService() {
-        val baseUrl = if (ApiService.isDebug) ApiService.Base_DEBUG_URL else ApiService.BASE_URL
-        RxHttpManager.get().config().setBaseUrl(baseUrl)
-    }
-
-    /*初始化讯飞语音*/
-    private fun initXunFei() {
-        //SpeechUtility.createUtility(this, "${SpeechConstant.APPID}=${resources.getString(R.string.msc_appId)}")
-    }
-
-    private fun initCompressorPath() {
-        CurrApplication.COMPRESSOR_PATH = "${cacheDir.absolutePath}${File.separator}compressor"
-        File(CurrApplication.COMPRESSOR_PATH).apply { if (!exists()) this.mkdirs() }
-    }
-
-    //简图路径
-    private fun initDiagramPath() {
-        CurrApplication.DIAGRAM_PATH = "${filesDir.absolutePath}${File.separator}diagram"
-    }
-
-    /*初始化tencent bugly*/
-    private fun initBugly() {
-        CrashReport.initCrashReport(this, resources.getString(R.string.bugly_appid), false)
     }
 
     //网络请求

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_corners_white_10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivTopPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_riders_dialog_inviting_bg_" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivTopPic"
+            android:layout_alignLeft="@+id/ivTopPic"
+            android:layout_alignRight="@+id/ivTopPic"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_10">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:lineSpacingExtra="@dimen/margin_4"
+                android:text="@string/dialog_riders_multiInviting_title"
+                android:textSize="@dimen/font_14" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:overScrollMode="never" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvClose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_f2"
+        android:gravity="center"
+        android:padding="@dimen/margin_10"
+        android:text="@string/thatsOk"
+        android:textColor="@color/gary"
+        android:textSize="@dimen/font_14" />
+</LinearLayout>

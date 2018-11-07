@@ -12,11 +12,14 @@ import com.uroad.rxhttp.RxHttpManager
 import com.uroad.rxhttp.RxHttpManager.addDisposable
 import com.uroad.rxhttp.download.DownloadListener
 import com.uroad.zhgs.activity.VideoPlayerActivity
-import com.uroad.zhgs.model.DiagramMDL
+import com.uroad.zhgs.model.sys.AppConfigMDL
+import com.uroad.zhgs.utils.AssetsUtils
 import com.uroad.zhgs.utils.DiagramUtils
 import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
+import java.io.File
 
 /**
  *Created by MFB on 2018/7/26.
@@ -27,37 +30,106 @@ class CurrApplication : BaseApplication() {
         val APP_LATLNG = LatLng(30.3, 120.2)   //杭州经纬度
         lateinit var DIAGRAM_PATH: String
         lateinit var COMPRESSOR_PATH: String
+        lateinit var MAP_STYLE_PATH: String //自定义地图存放的路径
+        lateinit var RECORDER_PATH: String //录音文件存放的目录
+        lateinit var VIDEO_PATH: String //视频录制存放的目录
+        const val DELAY_MILLIS = 3000L
         var rtmpIp: String? = null
+        var VOICE_MAX_SEC = 20  //语音最大录制时长
+        var VIDEO_MAX_SEC = 20  //视频最大录制时长
+        var WISDOM_URL: String? = null  //小智问问url
+        var ALIVE_URL: String? = null   //直播url
+        var BREAK_RULES_URL: String? = null //违章查询url
     }
 
     private val handler = Handler()
     override fun onCreate() {
         super.onCreate()
-        downloadDragram()
+        initBugly()
+        initHttpService()
+        initFilePath()
+        downloadDiagram()
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
     }
 
+    /*配置接口地址*/
+    private fun initHttpService() {
+        val baseUrl = if (ApiService.isDebug) ApiService.Base_DEBUG_URL else ApiService.BASE_URL
+        RxHttpManager.get().config().setBaseUrl(baseUrl)
+    }
+
+    /*初始化讯飞语音*/
+    private fun initXunFei() {
+        //SpeechUtility.createUtility(this, "${SpeechConstant.APPID}=${resources.getString(R.string.msc_appId)}")
+    }
+
+    /*初始化tencent bugly*/
+    private fun initBugly() {
+//        CrashReport.initCrashReport(this, resources.getString(R.string.bugly_appid), false)
+    }
+
+    private fun initFilePath() {
+        initCompressorPath()
+        initDiagramPath()
+        initMapStylePath()
+        initRecorderPath()
+        initVideoPath()
+    }
+
+    private fun initCompressorPath() {
+        COMPRESSOR_PATH = "${cacheDir.absolutePath}${File.separator}compressor"
+        File(COMPRESSOR_PATH).apply { if (!exists()) this.mkdirs() }
+    }
+
+    //简图路径
+    private fun initDiagramPath() {
+        DIAGRAM_PATH = "${filesDir.absolutePath}${File.separator}diagram"
+    }
+
+    private fun initMapStylePath() {
+        val path = "${filesDir.absolutePath}${File.separator}/mapStyle"
+        val file = File(path).apply { if (!exists()) this.mkdirs() }
+        val fileAssetPath = "mapStyle.data"
+        MAP_STYLE_PATH = AssetsUtils.assets2SD(this, fileAssetPath, "$path${File.separator}$fileAssetPath")
+    }
+
+    /*录音文件存放的目录*/
+    private fun initRecorderPath() {
+        RECORDER_PATH = "${filesDir.absolutePath}${File.separator}/recorder"
+        File(RECORDER_PATH).apply { if (!exists()) this.mkdirs() }
+    }
+
+    private fun initVideoPath() {
+        VIDEO_PATH = "${filesDir.absolutePath}${File.separator}/video"
+        File(RECORDER_PATH).apply { if (!exists()) this.mkdirs() }
+    }
+
     /*下载简图*/
-    private fun downloadDragram() {
-        doRequest(WebApiService.DIAGRAM, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+    private fun downloadDiagram() {
+        doRequest(WebApiService.APP_CONFIG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) {
-                    val mdl = GsonUtils.fromDataBean(data, DiagramMDL::class.java)
-                    mdl?.let { updateData(mdl) }
+                val mdLs = GsonUtils.fromDataToList(data, AppConfigMDL::class.java)
+                if (mdLs.size == 0) {
+                    handler.postDelayed({ downloadDiagram() }, 3000)
                 } else {
-                    handler.postDelayed({ downloadDragram() }, 3000)
+                    for (item in mdLs) {
+                        if (TextUtils.equals(item.confid, AppConfigMDL.Type.DIAGRAM_VER.CODE)) {
+                            updateData(item)
+                            break
+                        }
+                    }
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ downloadDragram() }, 3000)
+                handler.postDelayed({ downloadDiagram() }, 3000)
             }
         })
     }
 
-    private fun updateData(mdl: DiagramMDL) {
+    private fun updateData(mdl: AppConfigMDL) {
         val verLocal = DiagramUtils.getVersionLocal(this)
-        if (VersionUtils.isNeedUpdate(mdl.ver, verLocal)) {  //判断服务器版本是否大于本地保存的版本号
+        if (VersionUtils.isNeedUpdate(mdl.conf_ver, verLocal)) {  //判断服务器版本是否大于本地保存的版本号
             DiagramUtils.deleteAllFile()   //先删除文件夹下所有文件
             doDownload(mdl.url)
         } else {
@@ -65,7 +137,7 @@ class CurrApplication : BaseApplication() {
                 doDownload(mdl.url)
             }
         }
-        DiagramUtils.saveVersionSer(this, mdl.ver)  //保存服务器版本号到本地
+        DiagramUtils.saveVersionSer(this, mdl.conf_ver)  //保存服务器版本号到本地
     }
 
     //下载简图

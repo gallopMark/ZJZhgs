@@ -1,5 +1,9 @@
 package com.uroad.zhgs.model
 
+import com.amap.api.maps.model.LatLng
+import com.uroad.zhgs.R
+import com.uroad.zhgs.cluster.ClusterItem
+
 /**
  *Created by MFB on 2018/8/23.
  * 汽修店返回参数说明
@@ -11,8 +15,9 @@ package com.uroad.zhgs.model
 "distance": "4.80",
 "detailurl": "http:\/\/zhgs.u-road.com\/ZJAppView\/repairDetail.html?dataid=16"
  */
-class RepairShopMDL : MutilItem {
+class RepairShopMDL : ClusterItem, MutilItem {
     override fun getItemType(): Int = 5
+
     var repairid: String? = null
     var name: String? = null
     var address: String? = null
@@ -21,8 +26,8 @@ class RepairShopMDL : MutilItem {
     var distance: String? = null
     var detailurl: String? = null
 
-    var markerIcon: Int = 0
-    var markerBigIco: Int = 0
+    var markerIcon: Int = R.mipmap.ic_marker_repair_icon
+    var markerBigIco: Int = R.mipmap.ic_marker_repair_big_icon
 
     fun latitude(): Double {
         latitude?.let { return it }
@@ -33,4 +38,8 @@ class RepairShopMDL : MutilItem {
         longitude?.let { return it }
         return 0.0
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+    override fun getMarkerSmallIcon(): Int = markerIcon
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }

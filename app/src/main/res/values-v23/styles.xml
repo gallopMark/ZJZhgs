@@ -13,4 +13,13 @@
         <item name="searchViewStyle">@style/SearchViewStyle</item>
         <!-- <item name="android:windowAnimationStyle">@style/ActivityAnimationStyle</item>-->
     </style>
+
+    <style name="AppTheme2">
+        <item name="colorPrimary">@color/colorUserEvent</item>
+        <item name="colorPrimaryDark">@color/colorUserEvent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--window color-->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>

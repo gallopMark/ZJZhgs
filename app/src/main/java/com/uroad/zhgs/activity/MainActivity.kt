@@ -1,14 +1,27 @@
 package com.uroad.zhgs.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.app.FragmentTransaction
+import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
+import com.uroad.library.utils.VersionUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.fragment.MainFragment
 import com.uroad.zhgs.fragment.MineFragment
 import com.uroad.zhgs.fragment.ShoppingFragment
+import com.uroad.zhgs.helper.AppLocalHelper
+import com.uroad.zhgs.model.sys.AppConfigMDL
+import com.uroad.zhgs.model.sys.SysConfigMDL
+import com.uroad.zhgs.service.MyTracksService
+import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.webservice.HttpRequestCallback
+import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_main.*
 
 //app首页
@@ -16,10 +29,14 @@ class MainActivity : BaseActivity() {
     private var mainFragment: MainFragment? = null
     private var shoppingFragment: ShoppingFragment? = null
     private var mineFragment: MineFragment? = null
+    private lateinit var handler: Handler
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_main)
         initTab()
         setCurrentTab(1)
+        /*已经登录才启动记录足迹的服务*/
+        if (isLogin()) startService(Intent(this, MyTracksService::class.java))
+        handler = Handler(Looper.getMainLooper())
     }
 
     private fun setCurrentTab(tab: Int) {
@@ -79,6 +96,97 @@ class MainActivity : BaseActivity() {
         radioGroup.check(R.id.rbHome)
     }
 
+    override fun initData() {
+        initAppConfig()
+        getAppConfig()
+    }
+
+    /*获取本地配置数据*/
+    private fun initAppConfig() {
+        CurrApplication.VOICE_MAX_SEC = AppLocalHelper.getVoiceMax(this)
+        CurrApplication.VIDEO_MAX_SEC = AppLocalHelper.getVideoMax(this)
+        CurrApplication.WISDOM_URL = AppLocalHelper.getWisdomUrl(this)
+        CurrApplication.ALIVE_URL = AppLocalHelper.getAliveUrl(this)
+        CurrApplication.BREAK_RULES_URL = AppLocalHelper.getBreakRulesUrl(this)
+    }
+
+    //APP配置版本
+    private fun getAppConfig() {
+        doRequest(WebApiService.APP_CONFIG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, AppConfigMDL::class.java)
+                    for (item in mdLs) {
+                        if (TextUtils.equals(item.confid, AppConfigMDL.Type.SYSTEM_VER.CODE)) {
+                            checkAppVer(item)
+                            break
+                        }
+                    }
+                } else {
+                    handler.postDelayed({ getAppConfig() }, CurrApplication.DELAY_MILLIS)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ getAppConfig() }, CurrApplication.DELAY_MILLIS)
+            }
+        })
+    }
+
+    private fun checkAppVer(configMDL: AppConfigMDL) {
+        val currVer = AppLocalHelper.getSysVer(this)
+        if (VersionUtils.isNeedUpdate(configMDL.conf_ver, currVer)) {
+            getSysConfig(configMDL)
+        }
+    }
+
+    private fun getSysConfig(configMDL: AppConfigMDL) {
+        doRequest(WebApiService.SYS_CONFIG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, SysConfigMDL::class.java)
+                    AppLocalHelper.saveSysVer(this@MainActivity, configMDL.conf_ver)
+                    configure(mdLs)
+                } else {
+                    handler.postDelayed({ getAppConfig() }, 3000)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ getAppConfig() }, 3000)
+            }
+        })
+    }
+
+    /*配置数据*/
+    private fun configure(mdLs: MutableList<SysConfigMDL>) {
+        for (item in mdLs) {
+            val sysCode = item.syscode?.toLowerCase()
+            when {
+                TextUtils.equals(sysCode, SysConfigMDL.VOICE_MAX_SEC) -> {
+                    CurrApplication.VOICE_MAX_SEC = item.getVoiceValue(item.sysvalue)
+                    AppLocalHelper.saveVoiceMax(this, CurrApplication.VOICE_MAX_SEC)
+                }
+                TextUtils.equals(sysCode, SysConfigMDL.VIDEO_MAX_SEC) -> {
+                    CurrApplication.VIDEO_MAX_SEC = item.getVideoValue(item.sysvalue)
+                    AppLocalHelper.saveVideoMax(this, CurrApplication.VIDEO_MAX_SEC)
+                }
+                TextUtils.equals(sysCode, SysConfigMDL.WISDOM_URL) -> {
+                    CurrApplication.WISDOM_URL = item.sysvalue
+                    AppLocalHelper.saveWisdomUrl(this, item.sysvalue)
+                }
+                TextUtils.equals(sysCode, SysConfigMDL.ALINE_URL) -> {
+                    CurrApplication.ALIVE_URL = item.sysvalue
+                    AppLocalHelper.saveAliveUrl(this, item.sysvalue)
+                }
+                TextUtils.equals(sysCode, SysConfigMDL.BREAK_RULES_URL) -> {
+                    CurrApplication.BREAK_RULES_URL = item.sysvalue
+                    AppLocalHelper.saveBreakRulesUrl(this, item.sysvalue)
+                }
+            }
+        }
+    }
+
     //记录用户首次点击返回键的时间
     private var firstTime: Long = 0
 
@@ -94,5 +202,10 @@ class MainActivity : BaseActivity() {
             }
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
+        super.onDestroy()
     }
 }

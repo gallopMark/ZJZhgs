@@ -1,8 +1,13 @@
 package com.uroad.zhgs.fragment
 
+import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.amap.api.location.AMapLocation
@@ -17,7 +22,6 @@ import com.uroad.zhgs.model.*
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
-import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextPaint
@@ -33,14 +37,20 @@ import com.uroad.zhgs.rxbus.MessageEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import com.uroad.library.rxbus.RxBus
 import com.uroad.library.utils.VersionUtils
+import com.uroad.mqtt.IMqttCallBack
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.CurrApplication
-import com.uroad.zhgs.dialog.BindCarDialog
-import com.uroad.zhgs.dialog.VersionDialog
-import com.uroad.zhgs.enumeration.Carcategory
+import com.uroad.zhgs.dialog.*
+import com.uroad.zhgs.model.mqtt.AddTeamMDL
+import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.service.DownloadService
 import com.uroad.zhgs.utils.PackageInfoUtils
+import com.uroad.zhgs.webservice.ApiService
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.layout_fragment_main.*
+import kotlinx.android.synthetic.main.layout_riders_message.*
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.IMqttToken
 
 
 /**
@@ -87,6 +97,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         initTab()
         initRv()
         initRefresh()
+        initMenu()
         /*未申请位置权限，则申请*/
         if (!hasLocationPermissions()) applyLocationPermissions()
         //注册rxBus 接收订阅取消的消息，将我的订阅列表中的相关信息移除
@@ -259,113 +270,61 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        bannerView.stopAutoScroll()
+    /*菜单列表*/
+    private fun initMenu() {
+        childFragmentManager.beginTransaction().replace(R.id.flMenu, MainMenuFragment().apply {
+            setOnShopClickListener(object : MainMenuFragment.OnShopClickListener {
+                override fun onShopClick() {
+                    onMenuClickListener?.onMenuClick()
+                }
+            })
+        }).commit()
     }
 
     override fun setListener() {
-        tvLJLF.setOnClickListener(this)
-        tvService.setOnClickListener(this)
-        tvGSRX.setOnClickListener(this)
-        tvZXSC.setOnClickListener(this)
-        tvShare.setOnClickListener(this)
-        tvWFCX.setOnClickListener(this)
-        tvGSZX.setOnClickListener(this)
-        tvCXCX.setOnClickListener(this)
         tvInfoMore.setOnClickListener(this)
+        ivCustomerService.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.tvLJLF -> openActivity(RoadTollActivity::class.java)  //路径路费
-            R.id.tvService -> openActivity(ServiceAreaActivity::class.java) //服务区
-            R.id.tvGSRX -> openActivity(HighWayHotlineActivity::class.java) //高速热线
-            R.id.tvCXCX -> { //诚信查询
-                if (!isLogin()) openActivity(LoginActivity::class.java)
-                else getMyCar()
-//                openActivity(OnlineShoppingActivity::class.java)
-            }
-            R.id.tvShare -> { //车友报料
-                if (!isLogin()) openActivity(LoginActivity::class.java)
-                else openActivity(UserEventListActivity::class.java)
-            }
-            R.id.tvWFCX -> {  //违法查询
-                openActivity(BreakRulesActivity::class.java)
-            }
-            R.id.tvGSZX -> { //高速资讯
-                openActivity(NewsMainActivity::class.java)
-            }
-            R.id.tvZXSC -> {  //在线商城
-                onMenuClickListener?.onMenuClick()
-//                openActivity(MoreActivity::class.java)
-            }
             R.id.tvInfoMore -> openActivity(NewsMainActivity::class.java) //更多资讯
+            R.id.ivCustomerService -> CurrApplication.WISDOM_URL?.let { openWebActivity(it, context.getString(R.string.customer_service)) } //小智问问
         }
     }
 
-    /*获取用户车辆（仅客车）*/
-    private fun getMyCar() {
-        doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), Carcategory.COACH.code), object : HttpRequestCallback<String>() {
-            override fun onPreExecute() {
-                showLoading()
-            }
+    override fun initData() {
+        checkAndUpdate()
+    }
 
+    /*检测更新*/
+    private fun checkAndUpdate() {
+        doRequest(WebApiService.APP_CONFIG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
-                endLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
-                    if (mdLs.size > 0) {
-                        cars?.clear()
-                        cars = ArrayList<CarMDL>().apply { addAll(mdLs) }
-                        openActivity(CarInquiryActivity::class.java)
-                    } else {
-                        BindCarDialog(context).setOnConfirmClickListener(object : BindCarDialog.OnConfirmClickListener {
-                            override fun onConfirm(dialog: BindCarDialog) {
-                                dialog.dismiss()
-                                openActivity(BindCarActivity::class.java)
-                            }
-                        }).show()
+                    val mdLs = GsonUtils.fromDataToList(data, AppConfigMDL::class.java)
+                    for (item in mdLs) {
+                        if (TextUtils.equals(item.confid, AppConfigMDL.Type.ANDROID_VER.CODE)) {
+                            versionTips(item)
+                            break
+                        }
                     }
                 } else {
-                    showShortToast(GsonUtils.getMsg(data))
+                    handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                endLoading()
-                onHttpError(e)
-            }
-        })
-    }
-
-    override fun initData() {
-        getVersionByType()
-    }
-
-    /*获取app版本号*/
-    private fun getVersionByType() {
-        doRequest(WebApiService.APP_VERSION, WebApiService.appVersionParams(PackageInfoUtils.getVersionName(context)), object : HttpRequestCallback<String>() {
-            override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) {
-                    val mdl = GsonUtils.fromDataBean(data, VersionMDL::class.java)
-                    mdl?.let { versionTips(it) }
-                } else {
-                    handler.postDelayed({ getVersionByType() }, DELAY_MILLIS)
-                }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ getVersionByType() }, DELAY_MILLIS)
+                handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
             }
         })
     }
 
     /*版本检测是否更新*/
-    private fun versionTips(mdl: VersionMDL) {
+    private fun versionTips(mdl: AppConfigMDL) {
         if (VersionUtils.isNeedUpdate(mdl.conf_ver, PackageInfoUtils.getVersionName(context))) {
             VersionDialog(context, mdl).setOnConfirmClickListener(object : VersionDialog.OnConfirmClickListener {
-                override fun onConfirm(mdl: VersionMDL, dialog: VersionDialog) {
+                override fun onConfirm(mdl: AppConfigMDL, dialog: VersionDialog) {
                     dialog.dismiss()
                     if (TextUtils.isEmpty(mdl.url)) showShortToast(context.getString(R.string.version_update_error))
                     else {
@@ -552,14 +511,232 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             subscribeAdapter.notifyDataSetChanged()
         } else { //返回到首页刷新我的订阅
             getSubscribe()
-            bannerView.startAutoScroll()
         }
         getNewsList()  //返回到首页刷新资讯
+        checkCarTeamSituation()
+        clipboard()
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (isLogin()) bannerView.stopAutoScroll()
+    /*检查是否有车队或者邀请*/
+    private fun checkCarTeamSituation() {
+        if (!isLogin()) return
+        doRequest(WebApiService.CHECK_RIDERS, WebApiService.checkRidersParams(getUserId()), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                llRidersWindow.visibility = View.GONE
+            }
+
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, RidersMsgMDL::class.java)
+                    mdl?.let { updateCarTeam(it) }
+                } else {
+                    handler.postDelayed({ checkCarTeamSituation() }, DELAY_MILLIS)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ checkCarTeamSituation() }, DELAY_MILLIS)
+            }
+        })
+    }
+
+    private fun updateCarTeam(mdl: RidersMsgMDL) {
+        when (mdl.type) {  //1 已加入车队；2 收到邀请
+            1 -> mdl.content?.let {
+                if (it.size > 0) {
+                    val content = it[0]
+                    llRidersWindow.visibility = View.VISIBLE
+                    tvMsgCount.visibility = View.GONE
+                    tvDestination.visibility = View.VISIBLE
+                    tvDestination.text = content.toplace
+                    llRidersWindow.setOnClickListener { _ -> openActivity(RidersDetailActivity::class.java, Bundle().apply { putString("teamId", content.teamid) }) }
+                }
+            }
+            2 -> mdl.content?.let {
+                if (it.size > 0) {
+                    llRidersWindow.visibility = View.VISIBLE
+                    tvMsgCount.visibility = View.VISIBLE
+                    tvMsgCount.text = it.size.toString()
+                    tvDestination.visibility = View.VISIBLE
+                    tvDestination.text = "你被邀请加入车队"
+                    llRidersWindow.setOnClickListener { _ ->
+                        if (it.size == 1) {
+                            RidersInTokenDialog(context).withData(it[0]).setOnViewClickListener(object : RidersInTokenDialog.OnViewClickListener {
+                                override fun onViewClick(type: Int, dialog: RidersInTokenDialog) {
+                                    when (type) {
+                                        1 -> openActivity(RidersAgreementActivity::class.java)
+                                        2 -> {
+                                            refuseInvitation()
+                                            dialog.dismiss()
+                                        }
+                                        3 -> {
+                                            joinCarTeam(it[0].teamid)
+                                            dialog.dismiss()
+                                        }
+                                    }
+                                }
+                            }).show()
+                        } else {
+                            RidersMultiInvitDialog(context, it).onViewClickListener(object : RidersMultiInvitDialog.OnViewClickListener {
+                                override fun onViewClick(type: Int, dialog: RidersMultiInvitDialog) {
+                                    when (type) {
+                                        1 -> {   //点击了组队协议
+                                            openActivity(RidersAgreementActivity::class.java)
+                                        }
+                                        2 -> {  //点击不用了（即拒绝邀请）
+                                            llRidersWindow.visibility = View.GONE
+                                            refuseInvitation()
+                                            dialog.dismiss()
+                                        }
+                                    }
+                                }
+
+                                override fun onItemSelected(content: RidersMsgMDL.Content, dialog: RidersMultiInvitDialog) {
+                                    onJoinConfirm(content, dialog)
+                                }
+                            }).show()
+                        }
+                    }
+                }
+            }
+            else -> {
+                llRidersWindow.visibility = View.GONE
+            }
+        }
+    }
+
+    /*拒绝邀请*/
+    private fun refuseInvitation() {
+        doRequest(WebApiService.REFUSE_INVITE, WebApiService.refuseInviteParams(getUserId()), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (!GsonUtils.isResultOk(data)) handler.postDelayed({ refuseInvitation() }, DELAY_MILLIS)
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ refuseInvitation() }, DELAY_MILLIS)
+            }
+        })
+    }
+
+    private fun onJoinConfirm(content: RidersMsgMDL.Content, invitDialog: RidersMultiInvitDialog) {
+        val dialog = MaterialDialog(context)
+        dialog.setTitle(context.resources.getString(R.string.dialog_default_title))
+        val message = if (!TextUtils.isEmpty(content.username)) {
+            "确定加入${content.username}的组队吗？"
+        } else {
+            "确定加入此车队吗？"
+        }
+        dialog.setMessage(message)
+        dialog.setNegativeButton(context.resources.getString(R.string.dialog_button_cancel), object : MaterialDialog.ButtonClickListener {
+            override fun onClick(v: View, dialog: AlertDialog) {
+                dialog.dismiss()
+            }
+        })
+        dialog.setPositiveButton(context.resources.getString(R.string.dialog_button_confirm), object : MaterialDialog.ButtonClickListener {
+            override fun onClick(v: View, dialog: AlertDialog) {
+                joinCarTeam(content.teamid)
+                invitDialog.dismiss()
+                dialog.dismiss()
+            }
+        })
+        dialog.show()
+    }
+
+    /*加入车队*/
+    private fun joinCarTeam(teamId: String?) {
+        val mqttService = ApiService.buildMQTTService(context)
+        mqttService.connect(object : IMqttCallBack {
+            override fun messageArrived(topic: String?, message: String?, qos: Int) {
+            }
+
+            override fun connectionLost(throwable: Throwable?) {
+            }
+
+            override fun deliveryComplete(deliveryToken: IMqttDeliveryToken?) {
+                openActivity(RidersDetailActivity::class.java, Bundle().apply { putString("teamId", teamId) })
+                mqttService.disconnect()
+            }
+
+            override fun connectSuccess(token: IMqttToken?) {
+                val mdl = AddTeamMDL().apply {
+                    this.userid = getUserId()
+                    this.username = getUserName()
+                    this.usericon = getIconFile()
+                    this.teamid = teamId
+                    this.longitude = this@MainFragment.longitude
+                    this.latitude = this@MainFragment.latitude
+                }
+                mqttService.publish("${ApiService.TOPIC_ADD_TEAM}$teamId", mdl.obtainMessage())
+            }
+
+            override fun connectFailed(token: IMqttToken?, throwable: Throwable?) {
+            }
+        })
+    }
+
+    /*获取系统粘贴板内容，判断是否存在车队口令*/
+    private fun clipboard() {
+        if (!isLogin()) return
+        val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val data = cm.primaryClip
+        if (data != null && data.itemCount > 0) {
+            val item = data.getItemAt(0)
+            val content = item.text.toString()
+            if (!TextUtils.isEmpty(content)
+                    && content.contains("智慧高速车友组队")
+                    && content.contains("¢")) {
+                //从口令中截取口令
+                val start = content.indexOf("¢") + 1
+                val end = content.lastIndexOf("¢")
+                val inToken = content.substring(start, end)
+                getCarTeamData(inToken)
+                cm.primaryClip = ClipData.newPlainText(null, "")
+            }
+        }
+    }
+
+    private fun getCarTeamData(inToken: String?) {
+        doRequest(WebApiService.CAR_TEAM_DETAIL, WebApiService.getCarTeamDataParams2(inToken), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, RidersDetailMDL::class.java)
+                    mdl?.teammember?.let { members ->
+                        var isMySelf = false
+                        for (member in members) {
+                            if (TextUtils.equals(member.userid, getUserId())) {
+                                isMySelf = true
+                                break
+                            }
+                        }
+                        if (!isMySelf) {
+                            mdl.team_data?.let {
+                                RidersInTokenDialog(context).withData(it).setOnViewClickListener(object : RidersInTokenDialog.OnViewClickListener {
+                                    override fun onViewClick(type: Int, dialog: RidersInTokenDialog) {
+                                        when (type) {
+                                            1 -> openActivity(RidersAgreementActivity::class.java)
+                                            2 -> {
+                                                refuseInvitation()
+                                                dialog.dismiss()
+                                            }
+                                            3 -> {
+                                                joinCarTeam(mdl.team_data?.teamid)
+                                                dialog.dismiss()
+                                            }
+                                        }
+                                    }
+                                }).show()
+                            }
+                        }
+                    }
+                } else {
+                    handler.postDelayed({ getCarTeamData(inToken) }, DELAY_MILLIS)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ getCarTeamData(inToken) }, DELAY_MILLIS)
+            }
+        })
     }
 
     override fun onDestroyView() {

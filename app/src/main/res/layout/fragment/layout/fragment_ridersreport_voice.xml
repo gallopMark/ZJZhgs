@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_12"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_12"
+        android:paddingRight="@dimen/margin_12">
+
+        <LinearLayout
+            android:id="@+id/llYD"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/margin_45"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/bg_report_button_selector"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/bg_report_icon_yd_selector"
+                android:drawablePadding="@dimen/margin_16"
+                android:gravity="center"
+                android:text="@string/userEvent_yongdu"
+                android:textColor="@color/button_report_color_selector"
+                android:textSize="@dimen/font_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llZC"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/margin_45"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_weight="1"
+            android:background="@drawable/bg_report_button_selector"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/bg_report_icon_zc_selector"
+                android:drawablePadding="@dimen/margin_16"
+                android:gravity="center"
+                android:text="@string/userEvent_shigu"
+                android:textColor="@color/button_report_color_selector"
+                android:textSize="@dimen/font_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSG"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/margin_45"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_weight="1"
+            android:background="@drawable/bg_report_button_selector"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/bg_report_icon_sg_selector"
+                android:drawablePadding="@dimen/margin_16"
+                android:gravity="center"
+                android:text="@string/userEvent_shigong"
+                android:textColor="@color/button_report_color_selector"
+                android:textSize="@dimen/font_16" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_12"
+        android:paddingRight="@dimen/margin_12">
+
+        <LinearLayout
+            android:id="@+id/llJS"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/margin_45"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/bg_report_button_selector"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/bg_report_icon_js_selector"
+                android:drawablePadding="@dimen/margin_16"
+                android:gravity="center"
+                android:text="@string/userEvent_jishui"
+                android:textColor="@color/button_report_color_selector"
+                android:textSize="@dimen/font_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llYS"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/margin_45"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_weight="1"
+            android:background="@drawable/bg_report_button_selector"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/bg_report_icon_ys_selector"
+                android:drawablePadding="@dimen/margin_16"
+                android:gravity="center"
+                android:text="@string/userEvent_yisa"
+                android:textColor="@color/button_report_color_selector"
+                android:textSize="@dimen/font_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llGZ"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/margin_45"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_weight="1"
+            android:background="@drawable/bg_report_button_selector"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/bg_report_icon_gz_selector"
+                android:drawablePadding="@dimen/margin_16"
+                android:gravity="center"
+                android:text="@string/userEvent_guanzhi"
+                android:textColor="@color/button_report_color_selector"
+                android:textSize="@dimen/font_16" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_1"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginTop="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:background="@color/color_f7" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_12"
+        android:paddingRight="@dimen/margin_12">
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableLeft="@mipmap/ic_location_blue_big"
+            android:drawablePadding="@dimen/margin_5"
+            android:padding="@dimen/margin_12"
+            android:textColor="@color/appTextColor"
+            android:textSize="@dimen/font_16" />
+
+        <ImageView
+            android:id="@+id/ivPos"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10"
+            android:src="@mipmap/ic_report_pos" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_1"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:background="@color/color_f7" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_30"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvRecordTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/appTextColor"
+            android:textSize="@dimen/font_18" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_5">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivVoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/anim_voice" />
+
+                <com.uroad.zhgs.recorder.AudioButton
+                    android:id="@+id/audioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/ivVoice"
+                    android:layout_alignTop="@+id/ivVoice"
+                    android:layout_alignRight="@+id/ivVoice"
+                    android:layout_alignBottom="@+id/ivVoice"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/margin_60"
+                    android:background="@color/transparent" />
+
+                <ImageView
+                    android:id="@+id/ivPlayVoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/ic_riders_voice_play"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvRecordTips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:textColor="@color/blow_gray"
+                android:textSize="@dimen/font_12" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/tvReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_theme_corners_default"
+            android:gravity="center"
+            android:text="@string/Rerecord"
+            android:textColor="@color/color_riders_text"
+            android:textSize="@dimen/font_16" />
+
+        <TextView
+            android:id="@+id/tvSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:background="@mipmap/ic_theme_corners_sold"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_16" />
+    </LinearLayout>
+</LinearLayout>

@@ -11,6 +11,7 @@ class UserPreferenceHelper {
     companion object {
         private const val PREFS_USER = "Prefs_user"
         const val USER_ID = "userid"
+        const val PUSH_ID = "pushid"
         const val REAL_NAME = "realname"
         const val CARD_NO = "cardno"
         const val PHONE = "phone"
@@ -20,7 +21,9 @@ class UserPreferenceHelper {
         const val ICON_FILE = "iconfile"
         const val SEX = "sex"
         const val LOGIN_STAYUS = "login_status"
-        const val RESCUE_NOTICE = "rescue_notice"
+        const val REQUEST_CODE = "requestcode"
+        const val ISFOLLOW = "isfollow"
+        const val QRCODE = "QRCode"
 
         private fun from(context: Context): SharedPreferences {
             return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
@@ -29,6 +32,7 @@ class UserPreferenceHelper {
         fun save(context: Context, userMDL: UserMDL) {
             from(context).edit().apply {
                 putString(USER_ID, userMDL.userid)
+                putString(PUSH_ID, userMDL.pushid)
                 putString(REAL_NAME, userMDL.name)
                 putString(CARD_NO, userMDL.cardno)
                 putString(PHONE, userMDL.phone)
@@ -37,6 +41,9 @@ class UserPreferenceHelper {
                 putInt(STATUS, userMDL.status)
                 putString(ICON_FILE, userMDL.iconfile)
                 putInt(SEX, userMDL.sex)
+                putString(QRCODE, userMDL.QRCode)
+                putString(REQUEST_CODE, userMDL.requestcode)
+                putBoolean(ISFOLLOW, userMDL.isFollow())
                 putBoolean(LOGIN_STAYUS, userMDL.isLogin)
             }.apply()
         }
@@ -109,14 +116,14 @@ class UserPreferenceHelper {
             return from(context).getBoolean(LOGIN_STAYUS, false)
         }
 
-        fun saveRescueNotice(context: Context, isRescueNotice: Boolean) {
-            from(context).edit().putBoolean(RESCUE_NOTICE, isRescueNotice).apply()
-        }
+        fun saveQRCode(context: Context, qrCode: String) = from(context).edit().putString(QRCODE, qrCode).apply()
+        fun getQRCode(context: Context): String = from(context).getString(QRCODE, "")
 
-        fun isRescueNotice(context: Context): Boolean {
-            return from(context).getBoolean(RESCUE_NOTICE, false)
-        }
+        fun saveRequestCode(context: Context, requestCode: String?) = from(context).edit().putString(REQUEST_CODE, requestCode).apply()
+        fun getRequestCode(context: Context): String = from(context).getString(REQUEST_CODE, "")
 
+        fun saveFollow(context: Context, isFollow: Boolean) = from(context).edit().putBoolean(ISFOLLOW, isFollow).apply()
+        fun isFollow(context: Context): Boolean = from(context).getBoolean(ISFOLLOW, true)
         fun clear(context: Context) {
             from(context).edit().clear().apply()
         }

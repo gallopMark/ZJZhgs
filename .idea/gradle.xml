@@ -11,9 +11,12 @@
             <option value="$PROJECT_DIR$/AMapLib" />
             <option value="$PROJECT_DIR$/HttpLib" />
             <option value="$PROJECT_DIR$/Imageloader" />
+            <option value="$PROJECT_DIR$/PageRecyclerview" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/cameraLibrary" />
             <option value="$PROJECT_DIR$/ijkplayer" />
             <option value="$PROJECT_DIR$/mqttandroidclient" />
+            <option value="$PROJECT_DIR$/sharelib" />
             <option value="$PROJECT_DIR$/uroadlib" />
           </set>
         </option>

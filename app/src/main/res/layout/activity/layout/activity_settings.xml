@@ -11,35 +11,92 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvChangePW"
+        <LinearLayout
+            android:id="@+id/llTopSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@mipmap/ic_arrow_right_grey"
-            android:paddingBottom="@dimen/margin_14"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
             android:paddingTop="@dimen/margin_14"
-            android:text="@string/settings_change_password"
-            android:textSize="@dimen/font_16" />
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_14">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_follow"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_follow_tips"
+                    android:textColor="@color/gary"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@drawable/bg_switch_button_selector"
+                android:checked="true" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_1"
             android:layout_marginLeft="@dimen/margin_10"
             android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
             android:background="@color/color_f7" />
+
+        <LinearLayout
+            android:id="@+id/llChangePW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvChangePW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@mipmap/ic_arrow_right_grey"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingTop="@dimen/margin_14"
+                android:paddingRight="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_14"
+                android:text="@string/settings_change_password"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:background="@color/color_f7" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvFeedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableRight="@mipmap/ic_arrow_right_grey"
-            android:paddingBottom="@dimen/margin_14"
             android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
             android:paddingTop="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_14"
             android:text="@string/settings_feedback"
+            android:textColor="@color/appTextColor"
             android:textSize="@dimen/font_16" />
 
         <View
@@ -61,10 +118,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="@dimen/margin_14"
                 android:paddingTop="@dimen/margin_14"
-                android:textSize="@dimen/font_16"
-                android:text="@string/settings_clear_cache" />
+                android:paddingBottom="@dimen/margin_14"
+                android:text="@string/settings_clear_cache"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
 
             <TextView
                 android:id="@+id/tvCacheSize"
@@ -95,11 +153,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableRight="@mipmap/ic_arrow_right_grey"
-            android:paddingBottom="@dimen/margin_14"
             android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
             android:paddingTop="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_14"
             android:text="@string/settings_aboutus"
+            android:textColor="@color/appTextColor"
             android:textSize="@dimen/font_16" />
 
         <Button

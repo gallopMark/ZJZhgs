@@ -21,5 +21,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':uroadlib')
     /*ijkplayer视频播放器 支持rmtp,http,https*/
-    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
 }

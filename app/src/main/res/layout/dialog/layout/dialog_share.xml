@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_20"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvWeChatMsg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_wechat_icon"
+            android:drawablePadding="@dimen/margin_5"
+            android:gravity="center"
+            android:text="@string/wechat"
+            android:textSize="@dimen/font_16" />
+
+        <TextView
+            android:id="@+id/tvWeChatFriends"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_wechat_friends_icon"
+            android:drawablePadding="@dimen/margin_5"
+            android:gravity="center"
+            android:text="@string/wechat_friends"
+            android:textSize="@dimen/font_16" />
+
+        <TextView
+            android:id="@+id/tvQQ"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_qq_icon"
+            android:drawablePadding="@dimen/margin_5"
+            android:gravity="center"
+            android:text="@string/qq"
+            android:textSize="@dimen/font_16" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_20"
+        android:padding="@dimen/margin_10"
+        android:text="@string/cancel"
+        android:textColor="@color/white" />
+</LinearLayout>

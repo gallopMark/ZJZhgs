@@ -34,6 +34,26 @@ class TimeUtil {
                 (diff / minute).toString() + "分钟前"
             } else "刚刚"
         }
-    }
 
+        //毫秒转秒
+        fun milliSecond2Second(time: Long): String {
+            //毫秒转秒
+            var sec = time.toInt() / 1000
+            val min = sec / 60    //分钟
+            sec %= 60        //秒
+            return if (min < 10) {    //分钟补0
+                if (sec < 10) {    //秒补0
+                    "0$min:0$sec"
+                } else {
+                    "0$min:$sec"
+                }
+            } else {
+                if (sec < 10) {    //秒补0
+                    min.toString() + ":0" + sec
+                } else {
+                    min.toString() + ":" + sec
+                }
+            }
+        }
+    }
 }

@@ -116,8 +116,20 @@ class WebApiService {
         //1.15 保存报料信息
         const val SAVE_USER_EVENT = "saveUserEvent"
 
+        /**
+         * userid	用户ID	否
+        remark	爆料内容	否
+        roadoldid	路段ID	否
+        eventtype	爆料类型	否	1015001 拥堵，1015002 事故，1015003 施工，1015004 遗洒，1015005 积水，1015006 管制
+        longitude	经度	否
+        latitude	纬度	否
+        img_urls	图片、视频、语音的URL	是	多张 逗号分隔
+        category	报料类型	否	1-图片，2-视频，3-语音
+        remark1	备注	是	视频的时候保留第一帧图片，语音的时候保留时间，图片传空字符串
+         */
         fun saveUserEventParams(userid: String?, remark: String?, roadoldid: String?,
-                                eventtype: String?, longitude: Double, latitude: Double, img_urls: String?)
+                                eventtype: String?, longitude: Double, latitude: Double,
+                                img_urls: String?, category: Int, remark1: String?)
                 : HashMap<String, String?> = getBaseParams().apply {
             put("userid", userid)
             put("remark", remark)
@@ -126,6 +138,8 @@ class WebApiService {
             put("longitude", longitude.toString())
             put("latitude", latitude.toString())
             put("img_urls", img_urls)
+            put("category", category.toString())
+            put("remark1", remark1)
         }
 
         // 1.16 点赞
@@ -157,12 +171,12 @@ class WebApiService {
 
         //1.18 用户报料-列表
         const val USER_EVELT_LIST = "getUserEventList"
-        const val REPORT_TYPE_MY = "my"
+
         /**
          * userid	用户ID
         index	当前页		1 开始
         size	每页显示的数量
-        type	类型		默认全部；传 my 获取我的报料
+        type	类型		默认全部；传 my 获取我的报料 ;传 myfollow 获取我的关注
          */
         fun userEventListParams(userid: String?, type: String?, index: Int, size: Int) = getBaseParams().apply {
             put("userid", userid)
@@ -186,10 +200,11 @@ class WebApiService {
         //1.20 注册
         const val USER_REGISTER = "userRegister"
 
-        fun userRegisterParams(phone: String?, password: String?, code: String?) = getBaseParams().apply {
+        fun userRegisterParams(phone: String?, password: String?, code: String?, regrequestcode: String?) = getBaseParams().apply {
             put("phone", phone)
             put("password", password)
             put("code", code)
+            put("regrequestcode", regrequestcode)
         }
 
         //1.21 登录
@@ -207,11 +222,13 @@ class WebApiService {
          * phone	手机号	否
         type	登录方式	否	1 密码 ； 2 验证码
         password	密码&验证码	否	密码登录就传md5后的内容；验证码登录就直接传验证码
+
          */
         fun userLoginParams(phone: String?, type: String?, password: String?) = getBaseParams().apply {
             put("phone", phone)
             put("type", type)
             put("password", password)
+            put("lastmobilever",2.toString())
         }
 
         //1.22 新闻列表
@@ -405,6 +422,21 @@ class WebApiService {
         //1.46 保存订阅
         const val SAVE_SUBSCRIBE = "saveSubscribe"
 
+        //是否有用
+        const val SAVE_IS_USEFUL = "isUseful"
+
+        /**
+         * 参数项	名称	是否可为空	备注
+        eventid	事件ID	否
+        userid	用户ID	否
+        isuseful	是否有用	否	1-有用，2-无用，3-两者都没选择
+         */
+        fun isUsefulParams(eventid: String?, userid: String, isuseful: Int) = getBaseParams().apply {
+            put("eventid", eventid)
+            put("userid", userid)
+            put("isuseful", isuseful.toString())
+        }
+
         /**
          * subtype	订阅类型
          * 1170001 突发事件 ： 1170002 计划施工 ； 1170003 管制事件 ； 1170004 拥堵
@@ -502,6 +534,167 @@ class WebApiService {
         const val CLOSE_VIDEO = "closeVideo"
 
         fun closeVideoParams(rtmpIp: String?) = getBaseParams().apply { put("rtmpIp", rtmpIp) }
+
+
+        /******************************第二期开发***************************************/
+        /*车队接口*/
+        //1、是否有车队或者邀请
+        const val CHECK_RIDERS = "checkCarTeamSituation"
+
+        fun checkRidersParams(userid: String) = getBaseParams().apply { put("userid", userid) }
+        //2、创建&修改车队
+        const val CREATE_CAR_TEAM = "creatCarTeam"
+
+        /**
+         * teamid	车队ID	是	新增不用传
+        toplace	目的地	否
+        teamname	车队名	否
+        longitude	目的地的经度	否
+        latitude	目的地的维度	否
+        teamleader	创建人ID	否
+        user_longitude	用户的经度	否
+        user_latitude	用户的维度	否
+         */
+        fun createCarTeamParams(teamid: String?, toplace: String?, teamname: String?,
+                                longitude: Double, latitude: Double, teamleader: String?) = getBaseParams().apply {
+            put("teamid", teamid)
+            put("toplace", toplace)
+            put("teamname", teamname)
+            put("longitude", longitude.toString())
+            put("latitude", latitude.toString())
+            put("teamleader", teamleader)
+        }
+
+        //3、加入车队
+        const val JOIN_CAR_TEAM = "joinCarTeam"
+
+        /**
+         * 参数项	名称	是否可为空	备注
+        intoken	进入口令	否
+        userid	请求加入的用户ID	否
+        longitude	用户的经度	否
+        latitude	用户的维度	否
+         */
+        fun joinCarTeamParams(intoken: String?, userid: String?, longitude: Double, latitude: Double) = getBaseParams().apply {
+            put("intoken", intoken)
+            put("userid", userid)
+            put("longitude", longitude.toString())
+            put("latitude", latitude.toString())
+        }
+
+        //4、车队详情
+        const val CAR_TEAM_DETAIL = "getCarTeamData"
+
+        fun getCarTeamDataParams(teamid: String?) = getBaseParams().apply { put("teamid", teamid) }
+        fun getCarTeamDataParams2(intoken: String?) = getBaseParams().apply { put("intoken", intoken) }
+        //5、车队列表
+        const val CAR_TEAM_LIST = "inviteList"
+
+        fun carTeamListParams(userid: String?, keyword: String?) = getBaseParams().apply {
+            put("userid", userid)
+            put("keyword", keyword)
+        }
+        //6、用户关注
+
+        const val UPDATE_FOLLOW_STATUS = "updateFollowStatus"
+        fun updateFollowParams(userid: String?, followuserid: String?, status: Int) = getBaseParams().apply {
+            put("userid", userid)
+            put("followuserid", followuserid)
+            put("status", status.toString())
+        }
+
+        //8、解散车队
+        const val DISSOLUTION_RIDERS = "dissolutionCarTeam"
+
+        fun dissolutionCarTeamParams(teamid: String?) = getBaseParams().apply { put("teamid", teamid) }
+
+        //9、拒绝邀请
+        const val REFUSE_INVITE = "refuseInvitation"
+
+        fun refuseInviteParams(userid: String) = getBaseParams().apply { put("userid", userid) }
+
+        //10、邀请用户
+        const val INVITE_RIDERS = "inviteUser"
+
+        /**
+         * teamid	车队ID	否
+        rquserid	被邀请用户ID	否	多个逗号分隔
+        userid	用户ID	否
+         */
+        fun inviteRidersParams(teamid: String?, rquserid: String?, userid: String?) = getBaseParams().apply {
+            put("teamid", teamid)
+            put("rquserid", rquserid)
+            put("userid", userid)
+        }
+
+        /*足迹接口*/
+        //1、保存足迹
+        const val SAVE_TRACKS = "saveMyFootprint"
+
+        /**
+         * userid	用户ID	否
+        province	省份	否
+        city	城市	否
+        district	城区	否
+        street	街道	否
+        citycode	城市编号	否
+        adcode	区域编号	否
+        address	地址	否
+         */
+        fun saveTracksParams(userid: String?, province: String?, city: String?
+                             , district: String?, street: String?, citycode: String?
+                             , adcode: String?, address: String?) = getBaseParams().apply {
+            put("userid", userid)
+            put("province", province)
+            put("city", city)
+            put("district", district)
+            put("street", street)
+            put("citycode", citycode)
+            put("adcode", adcode)
+            put("address", address)
+        }
+
+        //2.我的足迹
+        const val MY_FOOTPRINT = "getMyFootprint"
+
+        fun getMyFootprintParams(userid: String?) = getBaseParams().apply { put("userid", userid) }
+
+        //用户设置
+        const val USER_SETUP = "userSetUp"
+
+        //isfollow	是否能被关注	否	0 关闭 ； 1 开启
+        fun userSetupParams(userid: String?, isfollow: Int) = getBaseParams().apply {
+            put("userid", userid)
+            put("isfollow", isfollow.toString())
+        }
+
+        //获取我的邀请码
+        const val MY_REQUEST_CODE = "getRequestCode"
+
+        fun getMyCodeParams(userid: String?) = getBaseParams().apply { put("userid", userid) }
+
+        //基础数据
+        const val SYS_CONFIG = "getSysConfig"
+
+        //APP配置版本
+        const val APP_CONFIG = "getAppConfig"
+
+        //获取菜单
+        const val MAIN_MENU = "getMainMenu"
+
+        //通行记录
+        const val PASS_RECORD = "getCurrentRecordData"
+
+        fun passRecordParams(carno: String?, startdate: String?, type: String?) = getBaseParams().apply {
+            put("carno", carno)
+            put("startdate", startdate)
+            put("type", type)
+        }
+
+        /*分享接口*/
+        const val SHARE_LIST = "getShareList"
+
+        fun shareListParams(userid: String?) = getBaseParams().apply { put("userid", userid) }
     }
 
 }

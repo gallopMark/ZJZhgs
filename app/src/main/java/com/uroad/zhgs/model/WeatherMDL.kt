@@ -1,6 +1,7 @@
 package com.uroad.zhgs.model
 
 import android.text.TextUtils
+import com.amap.api.maps.model.LatLng
 import com.uroad.zhgs.R
 
 

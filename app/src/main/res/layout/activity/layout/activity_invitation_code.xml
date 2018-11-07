@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/ic_mycode_bg"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/customToolbar"
+        style="@style/AppToolBarStyle2"
+        android:background="@color/transparent"
+        app:title="">
+
+        <TextView
+            style="@style/ToolbarTitleTextView2"
+            android:text="@string/mine_my_code" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_20">
+
+        <ImageView
+            android:id="@+id/ivPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_mycode_vector" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ivPic"
+            android:layout_marginLeft="@dimen/margin_25"
+            android:layout_marginTop="@dimen/minus_50"
+            android:layout_marginRight="@dimen/margin_25"
+            android:layout_marginBottom="@dimen/margin_25"
+            android:background="@drawable/bg_corners_white_10dp"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:text="@string/your_invitation_code"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:id="@+id/tvQRCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:textColor="@color/color_mycode"
+                    android:textSize="@dimen/font_20" />
+
+                <TextView
+                    android:id="@+id/tvCopy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_4"
+                    android:background="@mipmap/ic_button_copy"
+                    android:gravity="center"
+                    android:text="@string/copy"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_14" />
+
+                <View
+                    style="@style/Divider_f7_1dp"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_10" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:src="@mipmap/ic_mycode_text" />
+
+                <ImageView
+                    android:id="@+id/ivQRCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_10" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_30"
+                    android:gravity="center"
+                    android:text="@string/myCode_bottom_tips"
+                    android:textColor="@color/gary"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
+</LinearLayout>

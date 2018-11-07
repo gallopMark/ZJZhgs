@@ -46,16 +46,23 @@ import com.uroad.zhgs.activity.ShowImageActivity
 import com.uroad.zhgs.activity.WebViewActivity
 import com.uroad.zhgs.dialog.LoadingDialog
 import com.uroad.zhgs.helper.UserPreferenceHelper
+import com.uroad.zhgs.model.UploadMDL
 import com.uroad.zhgs.utils.AndroidBase64Utils
+import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.utils.MimeTypeTool
 import com.uroad.zhgs.utils.StatusBarUtils
 import com.uroad.zhgs.webservice.ApiService
+import com.uroad.zhgs.webservice.upload.FileUploadObserver
 import com.uroad.zhgs.webservice.upload.RequestBodyWrapper
 import com.uroad.zhgs.webservice.upload.UploadFileCallback
 import com.uroad.zhgs.widget.CurrencyLoadView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.lang.StringBuilder
 import java.net.URLConnection
 
 
@@ -259,12 +266,7 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
 
     //文件上传
     open fun doUpload(file: File, fileKey: String?, params: Map<String, String>?, callback: UploadFileCallback?) {
-        val fileNameMap = URLConnection.getFileNameMap()
-        var contentTypeFor: String? = fileNameMap.getContentTypeFor(file.name)
-        if (contentTypeFor == null) {
-            contentTypeFor = "application/octet-stream"
-        }
-        val requestBody = RequestBody.create(MediaType.parse(contentTypeFor), file)
+        val requestBody = RequestBody.create(MediaType.parse(contentTypeFor(file)), file)
         val wrapper = RequestBodyWrapper(requestBody, callback)
         var key = fileKey
         if (key == null) key = "file"
@@ -290,17 +292,41 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         addDisposable(disposable)
     }
 
+    open fun uploadFiles(files: MutableList<File>, callback: UploadFileCallback?) {
+        addDisposable(Observable.fromArray(files).map { fileList ->
+            val sb = StringBuilder()
+            for (file in fileList) {
+                val part = createMultipart(file, "file")
+                RxHttpManager.createApi(ApiService::class.java).uploadFile(part)
+                        .subscribe({ body ->
+                            val json = body?.string()
+                            if (GsonUtils.isResultOk(json)) {
+                                val imageMDL = GsonUtils.fromDataBean(json, UploadMDL::class.java)
+                                imageMDL?.imgurl?.file?.let { sb.append("$it,") }
+                            }
+                        }, {})
+            }
+            sb
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ sb ->
+                    callback?.onSuccess(sb.toString())
+                }, {
+                    callback?.onFailure(it)
+                }, {
+                    callback?.onComplete()
+                }, {
+                    callback?.onStart(it)
+                }))
+    }
+
+    private fun contentTypeFor(file: File): String = MimeTypeTool.getMimeType(file)
+
     open fun createMultipart(file: File, fileKey: String?): MultipartBody.Part {
         return createMultipart(file, fileKey, null)
     }
 
     open fun createMultipart(file: File, fileKey: String?, params: Map<String, String>?): MultipartBody.Part {
-        val fileNameMap = URLConnection.getFileNameMap()
-        var contentTypeFor: String? = fileNameMap.getContentTypeFor(file.name)
-        if (contentTypeFor == null) {
-            contentTypeFor = "application/octet-stream"
-        }
-        val requestBody = RequestBody.create(MediaType.parse(contentTypeFor), file)
+        val requestBody = RequestBody.create(MediaType.parse(contentTypeFor(file)), file)
         var key = fileKey
         if (key == null) key = "file"
         return MultipartBody.Part.createFormData(key, file.name, requestBody)
@@ -381,7 +407,10 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         flBaseLoad.visibility = View.GONE
     }
 
-    open fun onReload(view: View) {}
+    open fun onReload(view: View) {
+        initData()
+    }
+
     // 封装跳转
     fun openActivity(c: Class<*>) {
         openActivity(c, null)
@@ -743,6 +772,9 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         return UserPreferenceHelper.isLogin(this)
     }
 
+    fun getRequestCode() = UserPreferenceHelper.getRequestCode(this)
+
+    fun getQRCode() = UserPreferenceHelper.getQRCode(this)
     //启动导航页面
     fun openNaviPage(start: Poi?, end: Poi) {
         AmapNaviPage.getInstance().showRouteActivity(this, AmapNaviParams(start, null, end, AmapNaviType.DRIVER), null)

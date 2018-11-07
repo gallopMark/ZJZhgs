@@ -13,14 +13,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
-import com.uroad.zhgs.model.VersionMDL
+import com.uroad.zhgs.model.sys.AppConfigMDL
 
 /**
  * @author MFB
  * @create 2018/9/21
  * @describe 版本更新对话框
  */
-class VersionDialog(private val context: Activity, private val mdl: VersionMDL)
+class VersionDialog(private val context: Activity, private val mdl: AppConfigMDL)
     : Dialog(context, R.style.translucentDialog) {
 
     private var onConfirmClickListener: OnConfirmClickListener? = null
@@ -47,10 +47,10 @@ class VersionDialog(private val context: Activity, private val mdl: VersionMDL)
             val tvContent = contentView.findViewById<TextView>(R.id.tvContent)
             val btCancel = contentView.findViewById<Button>(R.id.btCancel)
             val btConfirm = contentView.findViewById<Button>(R.id.btConfirm)
-            if (TextUtils.isEmpty(mdl.content)) {
+            if (TextUtils.isEmpty(mdl.title)) {
                 tvContent.text = context.getString(R.string.version_update_defContent)
             } else {
-                tvContent.text = mdl.content
+                tvContent.text = mdl.title
             }
             if (mdl.isforce == 1) {  //强制更新   隐藏取消 按钮
                 btCancel.visibility = View.GONE
@@ -67,6 +67,6 @@ class VersionDialog(private val context: Activity, private val mdl: VersionMDL)
     }
 
     interface OnConfirmClickListener {
-        fun onConfirm(mdl: VersionMDL, dialog: VersionDialog)
+        fun onConfirm(mdl: AppConfigMDL, dialog: VersionDialog)
     }
 }

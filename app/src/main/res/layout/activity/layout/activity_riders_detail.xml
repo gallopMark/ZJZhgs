@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.uroad.zhgs.widget.MyMapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#b3ffffff"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_5"
+            android:paddingBottom="@dimen/margin_5">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_riders_destination"
+                    android:textColor="@color/gary"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:id="@+id/tvDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_2"
+                    android:background="@color/transparent"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_20"
+                android:drawableTop="@mipmap/ic_riders_edit"
+                android:drawablePadding="@dimen/margin_3"
+                android:gravity="center"
+                android:padding="@dimen/margin_5"
+                android:text="@string/modify"
+                android:textSize="@dimen/font_12" />
+
+            <TextView
+                android:id="@+id/tvNavigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_10"
+                android:drawableTop="@mipmap/ic_navigation_icon2"
+                android:drawablePadding="@dimen/margin_3"
+                android:gravity="center"
+                android:padding="@dimen/margin_5"
+                android:text="@string/navigation"
+                android:textSize="@dimen/font_12" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivInvitation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/ivLocation"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:src="@mipmap/ic_riders_invitation" />
+
+        <ImageView
+            android:id="@+id/ivLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/flVoice"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:src="@mipmap/ic_riders_location" />
+
+        <FrameLayout
+            android:id="@+id/flVoice"
+            android:layout_width="@dimen/margin_130"
+            android:layout_height="@dimen/margin_130"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/ivVoice"
+                android:layout_width="@dimen/margin_70"
+                android:layout_height="@dimen/margin_70"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_voice_button" />
+
+            <com.uroad.zhgs.recorder.TouchAudioButton
+                android:id="@+id/audioButton"
+                android:layout_width="@dimen/margin_70"
+                android:layout_height="@dimen/margin_70"
+                android:layout_gravity="center"
+                android:background="@color/transparent" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:lottie_fileName="@string/ridersRecord"
+                app:lottie_imageAssetsFolder="images"
+                app:lottie_scale="0.8" />
+        </FrameLayout>
+    </RelativeLayout>
+</FrameLayout>

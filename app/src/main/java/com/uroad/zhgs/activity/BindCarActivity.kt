@@ -190,11 +190,9 @@ class BindCarActivity : BaseActivity() {
                     .default(3)
                     .withListener(object : WheelViewDialog.OnItemSelectListener {
                         override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
-                            if (position in 0 until data.size) {
-                                numType = data[position]
-                                tvNumType.text = numType
-                                dialog.dismiss()
-                            }
+                            numType = data[position]
+                            tvNumType.text = numType
+                            dialog.dismiss()
                         }
                     }).show()
         }

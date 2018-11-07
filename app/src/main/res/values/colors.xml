@@ -42,4 +42,13 @@
     <color name="service_area_bg">#dbf8fc</color>
     <color name="service_area_text">#1dd1e7</color>
     <color name="car_select_bgColor">#eaf6ff</color>
+    <color name="color_mycode">#ff4d62</color>
+    <color name="color_myTrack_text">#c7c9cb</color>
+    <color name="color_riders_text">#5f8ebe</color>
+    <color name="white_translucency">#80ffffff</color>
+    <color name="color_edf2f7">#edf2f7</color>
+    <color name="white_trans10">#1affffff</color>
+    <color name="white_trans30">#4dffffff</color>
+    <color name="white_trans70">#b3ffffff</color>
+    <color name="riders_inTeam">#ffad0e</color>
 </resources>

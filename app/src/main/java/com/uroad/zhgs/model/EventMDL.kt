@@ -1,7 +1,9 @@
 package com.uroad.zhgs.model
 
 import android.text.TextUtils
+import com.amap.api.maps.model.LatLng
 import com.uroad.zhgs.R
+import com.uroad.zhgs.cluster.ClusterItem
 import com.uroad.zhgs.enumeration.MapDataType
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -30,7 +32,7 @@ statusname	状态
 statuscolor	状态颜色
 updatetime	更新时间	单位 min
  */
-class EventMDL : MutilItem, Serializable {
+class EventMDL : ClusterItem, MutilItem, Serializable {
     override fun getItemType(): Int = 1
     var subscribestatus: Int? = 0
     var latitude: Double? = 0.0
@@ -48,6 +50,7 @@ class EventMDL : MutilItem, Serializable {
     var statusname: String? = null
     var statuscolor: String? = null
     var updatetime: String? = null
+    var isuseful:Int?=0
 
     var markerIcon: Int = 0
     var markerBigIco: Int = 0
@@ -122,4 +125,9 @@ class EventMDL : MutilItem, Serializable {
     fun getUpdateTime(): String {
         return parseDate(updatetime)
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+
+    override fun getMarkerSmallIcon(): Int = markerIcon
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }

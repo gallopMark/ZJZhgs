@@ -25,10 +25,16 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -114,7 +120,6 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity android:name=".activity.NewsMainActivity" />
-        <activity android:name=".activity.NewsDetailActivity" />
 
         <activity
             android:name=".activity.RoadNavigationActivity"
@@ -130,12 +135,9 @@
             android:name=".activity.HighwaySearchActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.HighwayPreViewActivity" />
+
         <activity
-            android:name=".activity.UserEventListActivity"
-            android:theme="@style/UserEventTheme" />
-        <activity
-            android:name=".activity.UserEventSaveActivity"
-            android:theme="@style/UserEventTheme"
+            android:name=".activity.RidersReportActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activity.ShowImageActivity" />
         <activity android:name=".activity.RoadTollActivity" />
@@ -159,7 +161,37 @@
             android:screenOrientation="sensor" />
         <activity android:name=".activity.CarInquiryActivity" />
 
+        <activity
+            android:name=".activity.RidersInteractionActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.MyRidersReportActivity" />
+        <activity android:name=".activity.MyTracksActivity" /> <!--我的足迹页面-->
+        <activity android:name=".activity.MyInvitationCodeActivity" /> <!--我的邀请码页面-->
+        <activity
+            android:name=".activity.RidersEditActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustPan" /> <!--创建车队页面-->
+        <activity
+            android:name=".activity.RidersDetailActivity"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".activity.RidersSettingsActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.RidersInvitingActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".activity.RidersAgreementActivity" />
+        <activity android:name=".activity.MyPassRecordActivity" />
+
+        <activity android:name=".activity.CameraActivity" />
+        <activity android:name=".activity.VideoActivity" />
+        <!--保存足迹服务-->
+        <service android:name=".service.MyTracksService" />
+        <!--版本更新下载服务-->
         <service android:name=".service.DownloadService" />
+
         <!--photopicker-->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -174,6 +206,30 @@
         <activity android:name=".photopicker.ui.ImageGridActivity" />
         <activity android:name=".photopicker.ui.ImagePreViewActivity" />
         <activity android:name=".photopicker.ui.ImageCropActivity" />
+
+        <!--微信分享-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--QQ分享-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/QQ_APP_ID_STR" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait" />
         <!--高德地图-->
         <service android:name="com.amap.api.location.APSService" />
         <activity

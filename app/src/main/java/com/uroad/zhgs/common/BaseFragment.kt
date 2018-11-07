@@ -10,11 +10,14 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.MimeTypeFilter
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.*
+import com.amap.api.col.sln3.it
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -36,22 +39,30 @@ import com.uroad.zhgs.activity.WebViewActivity
 import com.uroad.zhgs.dialog.LoadingDialog
 import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.helper.UserPreferenceHelper
+import com.uroad.zhgs.model.UploadMDL
 import com.uroad.zhgs.utils.AndroidBase64Utils
+import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.utils.MimeTypeTool
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
+import com.uroad.zhgs.webservice.upload.FileUploadObserver
 import com.uroad.zhgs.webservice.upload.RequestBodyWrapper
 import com.uroad.zhgs.webservice.upload.UploadFileCallback
 import com.uroad.zhgs.widget.CurrencyLoadView
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.lang.StringBuilder
 import java.net.URLConnection
 
+@Suppress("UNCHECKED_CAST")
 abstract class BaseFragment : Fragment(), AMapLocationListener {
     lateinit var context: Activity
     private var rootView: View? = null
@@ -186,7 +197,6 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         addDisposable(disposable)
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun <T> onHttpSuccess(json: String, callBack: HttpRequestCallback<T>?) {
         callBack?.let {
             val result = AndroidBase64Utils.decodeToString(json)
@@ -215,7 +225,7 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
     }
 
     //文件上传
-    open fun doUpload(file: File, fileKey: String?, callback: UploadFileCallback?) {
+    open fun doUpload(file: File?, fileKey: String?, callback: UploadFileCallback?) {
         doUpload(file, fileKey, null, callback)
     }
 
@@ -229,13 +239,12 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
     }
 
     //文件上传
-    open fun doUpload(file: File, fileKey: String?, params: Map<String, String>?, callback: UploadFileCallback?) {
-        val fileNameMap = URLConnection.getFileNameMap()
-        var contentTypeFor: String? = fileNameMap.getContentTypeFor(file.name)
-        if (contentTypeFor == null) {
-            contentTypeFor = "application/octet-stream"
+    open fun doUpload(file: File?, fileKey: String?, params: Map<String, String>?, callback: UploadFileCallback?) {
+        if (file == null || !file.exists()) {
+            showShortToast("上传的文件不存在")
+            return
         }
-        val requestBody = RequestBody.create(MediaType.parse(contentTypeFor), file)
+        val requestBody = RequestBody.create(MediaType.parse(contentTypeFor(file)), file)
         val wrapper = RequestBodyWrapper(requestBody, callback)
         var key = fileKey
         if (key == null) key = "file"
@@ -260,6 +269,36 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
                 })
         addDisposable(disposable)
     }
+
+    open fun uploadFiles(files: MutableList<File>, callback: UploadFileCallback?) {
+        addDisposable(Observable.fromCallable {
+            val sb = StringBuilder()
+            for (i in 0 until files.size) {
+                val part = createMultipart(files[i], "file")
+                RxHttpManager.createApi(ApiService::class.java).uploadFile(part)
+                        .subscribe({ body ->
+                            val json = body?.string()
+                            if (GsonUtils.isResultOk(json)) {
+                                val imageMDL = GsonUtils.fromDataBean(json, UploadMDL::class.java)
+                                imageMDL?.imgurl?.file?.let { sb.append("$it,") }
+                            }
+                        }, {})
+            }
+            sb
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ sb ->
+                    sb.deleteCharAt(sb.lastIndexOf(","))
+                    callback?.onSuccess(sb.toString())
+                }, {
+                    callback?.onFailure(it)
+                }, {
+                    callback?.onComplete()
+                }, {
+                    callback?.onStart(it)
+                }))
+    }
+
+    private fun contentTypeFor(file: File): String = MimeTypeTool.getMimeType(file)
 
     open fun createMultipart(file: File, fileKey: String?): MultipartBody.Part {
         return createMultipart(file, fileKey, null)
@@ -489,6 +528,35 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         this.permissionCallback = permissionCallback
         requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION), CODE_PERMISSION)
+    }
+
+    fun applyLocationPermission(finishAfterDenied: Boolean) {
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+                var isOpen = false
+                val dialog = MaterialDialog(context)
+                dialog.setTitle(getString(R.string.dialog_default_title))
+                dialog.setMessage(getString(R.string.dismiss_location_message))
+                dialog.setNegativeButton(getString(R.string.dialog_button_cancel), object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        dialog.dismiss()
+                    }
+                })
+                dialog.setPositiveButton(getString(R.string.reopen), object : MaterialDialog.ButtonClickListener {
+                    override fun onClick(v: View, dialog: AlertDialog) {
+                        isOpen = true
+                        dialog.dismiss()
+                        applyLocationPermission(finishAfterDenied)
+                    }
+                })
+                dialog.show()
+                dialog.setOnDismissListener { if (!isOpen && finishAfterDenied) context.finish() }
+            }
+        })
     }
 
     open fun openLocation() {

@@ -24,7 +24,7 @@ class NewsMainActivity : BaseActivity() {
     private val mDatas = ArrayList<NewsTabMDL.Type>()
 
     override fun setUp(savedInstanceState: Bundle?) {
-        withTitle(resources.getString(R.string.news_title))
+        withTitle(resources.getString(R.string.home_menu_gszx))
         setBaseContentLayout(R.layout.activity_news_main)
         rvTab.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.HORIZONTAL }
     }

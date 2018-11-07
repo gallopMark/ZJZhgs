@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.os.*
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.PopupWindowCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -358,13 +359,7 @@ class AMapNaviSearchActivity : BaseActivity() {
             isFocusable = false
             setBackgroundDrawable(ColorDrawable())
             isOutsideTouchable = true
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                // 获取控件的位置，安卓系统>7.0
-                val location = IntArray(2)
-                llTop.getLocationOnScreen(location)
-                showAtLocation(llTop, Gravity.NO_GRAVITY, 0, location[1] + llTop.height)
-            } else
-                showAsDropDown(llTop)
+            PopupWindowCompat.showAsDropDown(this, llTop, 0, 0, Gravity.NO_GRAVITY)
         }
         val adapter = PoiItemAdapter(this, items)
         recyclerView.adapter = adapter

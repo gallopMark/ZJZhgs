@@ -1,6 +1,7 @@
 package com.uroad.zhgs.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -13,6 +14,7 @@ import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.enumeration.VerificationCode
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.model.UserMDL
+import com.uroad.zhgs.service.MyTracksService
 import com.uroad.zhgs.utils.CheckUtils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.InputMethodUtils
@@ -191,6 +193,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private fun handleLoginResult(mdl: UserMDL) {
         mdl.isLogin = true
         UserPreferenceHelper.save(this, mdl)
+        /*登录成功，开启记录足迹的后台服务*/
+        startService(Intent(this, MyTracksService::class.java))
         if (firstLogin) {   //如果是首次登录（从未登录过，从启动页进来）
             openActivity(MainActivity::class.java)
             finish()

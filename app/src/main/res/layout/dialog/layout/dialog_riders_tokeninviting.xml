@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_corners_white_10dp">
+
+        <ImageView
+            android:id="@+id/ivTopPic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_riders_dialog_inviting_bg_" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivTopPic"
+            android:layout_alignLeft="@+id/ivTopPic"
+            android:layout_alignRight="@+id/ivTopPic"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_15">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:maxHeight="@dimen/margin_100"
+                android:text="#智慧高速车友组队口令#长安复制这条信息后，打开智慧高速即可加入队伍，或在车友组队功能中，输入组队口令：6930亦可加入车队"
+                android:textColor="@color/gary"
+                android:textSize="@dimen/font_14" />
+
+            <TextView
+                android:id="@+id/tvShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_20"
+                android:textSize="@dimen/font_13" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_15"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvShareToWeChat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@mipmap/ic_shareto_wechat"
+                    android:drawablePadding="@dimen/margin_4"
+                    android:gravity="center"
+                    android:text="@string/wechat"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:id="@+id/tvShareToQQ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_20"
+                    android:drawableTop="@mipmap/ic_shareto_qq"
+                    android:drawablePadding="@dimen/margin_4"
+                    android:gravity="center"
+                    android:text="@string/qq"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlContent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_20"
+        android:src="@mipmap/ic_close_white" />
+</RelativeLayout>

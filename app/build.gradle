@@ -17,7 +17,7 @@ android {
         applicationId "com.uroad.zhgs"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 20180930
+        versionCode 20181101
         versionName "2.0.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -37,6 +37,7 @@ android {
                     'src/main/res/layout/dialog',
                     'src/main/res/layout/photopicker',
                     'src/main/res/layout/base',
+                    'src/main/res/layout/include',
                     'src/main/res/layout',
                     'src/main/res'
             ]
@@ -62,6 +63,9 @@ dependencies {
     implementation project(':Imageloader')
     implementation project(':mqttandroidclient')
     implementation project(':ijkplayer')
+    implementation project(':cameraLibrary')
+    implementation project(':sharelib')
+    implementation project(':PageRecyclerview')
     implementation 'top.zibin:Luban:1.1.8'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
     //没有使用特殊Header，可以不加这行
@@ -69,6 +73,7 @@ dependencies {
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.0.9'
     implementation 'com.github.chrisbanes:PhotoView:2.1.4'
     implementation 'com.pl:wheelview:0.7.2'
+    implementation 'com.airbnb.android:lottie:2.0.0'
     /*文件下载器*/
     implementation 'com.liulishuo.filedownloader:library:1.7.5'
     implementation files('libs/alipaySdk-20180601.jar')

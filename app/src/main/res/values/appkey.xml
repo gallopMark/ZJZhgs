@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--QQ开发平台  安卓  APP ID  1102506892  APP KEY  catZZLV7dVASDNcF
+              iOS    APP ID1107151075  APP KEY  3PrDr5o1d4ciIKrJ
+微信开发平台    AppID  wx8ce19d7ff29fbbd1  AppSecret:   32015278d073cf4037939469450b45c2-->
+    <string name="QQ_APP_ID">1102506892</string>
+    <string name="QQ_APP_ID_STR">tencent1102506892</string>
+    <string name="QQ_APP_KEY">catZZLV7dVASDNcF</string>
+    <string name="WECHAT_APP_ID">wx8ce19d7ff29fbbd1</string>
+    <string name="WECHAT_APP_SECRET">32015278d073cf4037939469450b45c2</string>
+
+    <string name="errCode_success">分享成功</string>
+    <string name="errCode_cancel">分享取消</string>
+    <string name="errCode_deny">分享被拒绝</string>
+    <string name="errCode_unknown">发送返回</string>
+    <!--
+    APP ID ：934487c34aa3e
+SECRET KEY： 8f0af6f873e1b2faf17d5704e3548076
+ACCESS ID： 2100315776
+ACCESS KEY ：A27LF82F8VSW
+    -->
+    <string name="PIGEON_APP_ID">934487c34aa3e</string>
+    <string name="PIGEON_SECRET_KEY">8f0af6f873e1b2faf17d5704e3548076</string>
+    <string name="PIGEON_ACCESS_ID">2100315776</string>
+    <string name="PIGEON_ACCESS_KEY">A27LF82F8VSW</string>
+</resources>

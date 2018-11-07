@@ -1,11 +1,10 @@
 package com.uroad.zhgs.model
 
-import com.amap.api.col.sln3.km
-import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.model.LatLng
+import com.uroad.zhgs.R
+import com.uroad.zhgs.cluster.ClusterItem
 import java.math.BigDecimal
-import java.text.DecimalFormat
 
 
 /**
@@ -16,7 +15,7 @@ import java.text.DecimalFormat
 "name": "东恒石油钱江路加油站",
 "address": "钱江路1751号"
  */
-class GasStationMDL : MutilItem {
+class GasStationMDL : ClusterItem, MutilItem {
     override fun getItemType(): Int = 6
     var longitude: Double? = 0.0
     var latitude: Double? = 0.0
@@ -24,8 +23,8 @@ class GasStationMDL : MutilItem {
     var address: String? = null
     var realDistance: Float = 0f
 
-    var markerIcon: Int = 0
-    var markerBigIco: Int = 0
+    var markerIcon: Int = R.mipmap.ic_marker_gas_icon
+    var markerBigIco: Int = R.mipmap.ic_marker_gas_big_icon
 
     fun latitude(): Double {
         latitude?.let { return it }
@@ -48,4 +47,9 @@ class GasStationMDL : MutilItem {
     private fun rad(d: Double): Double {
         return d * Math.PI / 180.0
     }
+
+    override fun getPosition(): LatLng = LatLng(latitude(), longitude())
+    override fun getMarkerSmallIcon(): Int = markerIcon
+
+    override fun getMarkerBigIcon(): Int = markerBigIco
 }
