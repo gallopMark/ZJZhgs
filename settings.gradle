@@ -1,1 +1,1 @@
-include ':app',':HttpLib', ':uroadlib', ':Imageloader', ':AMapLib', ':mqttandroidclient', ':ijkplayer', ':cameraLibrary', ':sharelib', ':PageRecyclerview'
+include ':app',':HttpLib', ':uroadlib', ':Imageloader', ':AMapLib', ':mqttandroidclient', ':ijkplayer', ':cameraLibrary', ':sharelib'

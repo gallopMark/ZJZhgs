@@ -8,6 +8,7 @@ import android.os.Message
 import android.support.v4.content.ContextCompat
 import android.text.*
 import android.view.View
+import com.tencent.android.tpush.XGPushManager
 import com.uroad.library.utils.SecurityUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
@@ -193,6 +194,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private fun handleLoginResult(mdl: UserMDL) {
         mdl.isLogin = true
         UserPreferenceHelper.save(this, mdl)
+        if (!TextUtils.isEmpty(mdl.pushid)) {
+            XGPushManager.bindAccount(this, mdl.pushid)
+        }
         /*登录成功，开启记录足迹的后台服务*/
         startService(Intent(this, MyTracksService::class.java))
         if (firstLogin) {   //如果是首次登录（从未登录过，从启动页进来）

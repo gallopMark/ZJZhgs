@@ -19,11 +19,12 @@ import retrofit2.http.*
  */
 interface ApiService {
     companion object {
-        var isDebug = false
+        var isDebug = true
         // http://zhgs.u-road.com/ZJAppApi/index.php/api/
+        //http://10.126.241.9
         // http://zjzhgs.u-road.com:11001  zhgs.u-road.com  http://zjgd.u-road.com/ZJAppApi/index.php/api
-        const val BASE_URL = "http://zhgs.u-road.com/ZJAppApi/index.php/api/"
-        const val Base_DEBUG_URL = "http://10.126.241.9/ZJAppApi/index.php/api/"
+        const val BASE_URL = "http://10.126.241.9/ZJAppApi/index.php/api/"
+        const val BASE_DEBUG_URL = "http://zhgs.u-road.com/ZJAppApi/index.php/api/"
         const val SHOPPING_URL = "https://h5.youzan.com/wscshop/feature/FzaSlSjOX1"
         const val MQTT_SERVICEURL = "tcp://47.96.92.29:9000"
         const val MQTT_USER = "zhejiang"

@@ -167,7 +167,7 @@ class MyPassRecordActivity : BaseActivity() {
         popupWindow.isFocusable = true
         popupWindow.setBackgroundDrawable(ColorDrawable())
         popupWindow.isOutsideTouchable = true
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             val location = IntArray(2)
             baseLine.getLocationInWindow(location)
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) { // 7.1 版本处理
@@ -175,9 +175,8 @@ class MyPassRecordActivity : BaseActivity() {
                 popupWindow.height = screenHeight - location[1] - baseLine.height
             }
             popupWindow.showAtLocation(baseLine, Gravity.NO_GRAVITY, location[0], location[1] + baseLine.height)
-        } else {
+        } else
             PopupWindowCompat.showAsDropDown(popupWindow, baseLine, 0, 0, Gravity.NO_GRAVITY)
-        }
     }
 
     //获取通行记录

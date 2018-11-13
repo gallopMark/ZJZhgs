@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import com.tencent.android.tpush.XGPushManager
 import com.uroad.library.utils.DataCleanManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
@@ -109,6 +110,7 @@ class SettingsActivity : BaseActivity() {
             }, object : MaterialDialog.ButtonClickListener {
                 override fun onClick(v: View, dialog: AlertDialog) {
                     dialog.dismiss()
+                    delAccount()
                     UserPreferenceHelper.clear(this@SettingsActivity)
                     showShortToast("您已退出登录")
                     /*退出登录，则停止记录足迹的服务*/
@@ -117,6 +119,12 @@ class SettingsActivity : BaseActivity() {
                 }
             })
         }
+    }
+
+    /*解绑指定账号*/
+    private fun delAccount() {
+        XGPushManager.delAccount(this, UserPreferenceHelper.getPushID(this))
+        XGPushManager.unregisterPush(this)
     }
 
     private fun userSetUp(isFollow: Int) {

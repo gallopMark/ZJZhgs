@@ -30,10 +30,10 @@ class NewsMDL {
 
     fun getTime(): String {
         if (TextUtils.isEmpty(intime)) return ""
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         try {
+            val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val time = format.parse(intime).time
-            return TimeUtil.converTime(time)
+            return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(time)
         } catch (e: Exception) {
             return ""
         }

@@ -297,8 +297,8 @@
                                 android:paddingLeft="@dimen/margin_10"
                                 android:paddingRight="@dimen/margin_10"
                                 android:text="@string/home_recommend_more"
-                                android:textColor="@color/tv_tab_textcolor_selector"
-                                android:textSize="@dimen/font_12" />
+                                android:textColor="@color/appTextColor"
+                                android:textSize="@dimen/font_14" />
                         </LinearLayout>
 
                         <android.support.v7.widget.RecyclerView

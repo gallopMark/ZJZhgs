@@ -17,6 +17,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import com.amap.api.col.sln3.it
 import com.amap.api.col.sln3.pw
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
@@ -28,6 +29,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.mqtt.IMqttCallBack
 import com.uroad.mqtt.MqttService
 import com.uroad.zhgs.R
+import com.uroad.zhgs.R.id.mapView
 import com.uroad.zhgs.adapteRv.AMapPoiAdapter
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.common.ThemeStyleActivity
@@ -214,7 +216,7 @@ class RidersEditActivity : ThemeStyleActivity() {
             isFocusable = false
             setBackgroundDrawable(ColorDrawable())
             isOutsideTouchable = true
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 val location = IntArray(2)
                 llTop.getLocationInWindow(location)
                 if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) { // 7.1 版本处理
@@ -222,9 +224,8 @@ class RidersEditActivity : ThemeStyleActivity() {
                     height = screenHeight - location[1] - llTop.height
                 }
                 showAtLocation(llTop, Gravity.NO_GRAVITY, location[0], location[1] + llTop.height)
-            } else {
+            } else
                 PopupWindowCompat.showAsDropDown(this, llTop, 0, 0, Gravity.NO_GRAVITY)
-            }
         }
     }
 

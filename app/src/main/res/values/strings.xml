@@ -404,6 +404,7 @@
     <string name="bindcar_top_tips">请根据实际情况填写信息，否则可能导致违章或方案绕行</string>
     <string name="bindcar_carNum">车牌号码</string>
     <string name="bindcar_carNum_hint">请输入车牌号码</string>
+    <string name="bindcar_carNum_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="bindcar_car_category">车辆类别</string>
     <string name="bindcar_car_type">车辆类型</string>
     <string name="bindcar_car_ton">吨</string>

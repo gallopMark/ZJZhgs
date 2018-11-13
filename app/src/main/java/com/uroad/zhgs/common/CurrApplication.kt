@@ -6,12 +6,17 @@ import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import com.amap.api.maps.model.LatLng
+import com.tencent.android.tpush.XGPushManager
+import com.tencent.bugly.crashreport.CrashReport
+import com.umeng.commonsdk.UMConfigure
 import com.uroad.library.utils.VersionUtils
 import com.uroad.library.utils.ZipUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.rxhttp.RxHttpManager.addDisposable
 import com.uroad.rxhttp.download.DownloadListener
+import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoPlayerActivity
+import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.utils.AssetsUtils
 import com.uroad.zhgs.utils.DiagramUtils
@@ -45,27 +50,45 @@ class CurrApplication : BaseApplication() {
     private val handler = Handler()
     override fun onCreate() {
         super.onCreate()
-        initBugly()
         initHttpService()
         initFilePath()
         downloadDiagram()
+        initXG()
+        initUM()
+        initBugly()
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
     }
 
     /*配置接口地址*/
     private fun initHttpService() {
-        val baseUrl = if (ApiService.isDebug) ApiService.Base_DEBUG_URL else ApiService.BASE_URL
+        val baseUrl = if (ApiService.isDebug) ApiService.BASE_DEBUG_URL else ApiService.BASE_URL
         RxHttpManager.get().config().setBaseUrl(baseUrl)
     }
 
     /*初始化讯飞语音*/
-    private fun initXunFei() {
-        //SpeechUtility.createUtility(this, "${SpeechConstant.APPID}=${resources.getString(R.string.msc_appId)}")
-    }
+//    private fun initXunFei() {
+//        //SpeechUtility.createUtility(this, "${SpeechConstant.APPID}=${resources.getString(R.string.msc_appId)}")
+//    }
 
     /*初始化tencent bugly*/
     private fun initBugly() {
-//        CrashReport.initCrashReport(this, resources.getString(R.string.bugly_appid), false)
+        if (ApiService.isDebug) return
+        CrashReport.initCrashReport(this, resources.getString(R.string.bugly_appid), false)
+    }
+
+    /*注册信鸽推送*/
+    private fun initXG() {
+        val pushID = UserPreferenceHelper.getPushID(this)
+        if (!TextUtils.isEmpty(pushID)) {
+            XGPushManager.bindAccount(this, pushID)
+        } else {
+            XGPushManager.registerPush(this)
+        }
+    }
+
+    /*友盟统计初始化*/
+    private fun initUM() {
+        UMConfigure.init(this, getString(R.string.UMENG_APP_ID), "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "")
     }
 
     private fun initFilePath() {
@@ -88,7 +111,7 @@ class CurrApplication : BaseApplication() {
 
     private fun initMapStylePath() {
         val path = "${filesDir.absolutePath}${File.separator}/mapStyle"
-        val file = File(path).apply { if (!exists()) this.mkdirs() }
+        File(path).apply { if (!exists()) this.mkdirs() }
         val fileAssetPath = "mapStyle.data"
         MAP_STYLE_PATH = AssetsUtils.assets2SD(this, fileAssetPath, "$path${File.separator}$fileAssetPath")
     }
@@ -184,11 +207,10 @@ class CurrApplication : BaseApplication() {
     private fun closeVideo(rtmpIp: String) {
         doRequest(WebApiService.CLOSE_VIDEO, WebApiService.closeVideoParams(rtmpIp), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) Log.e("closeVideo", "视频流关闭成功")
+                if (!GsonUtils.isResultOk(data)) handler.postDelayed({ closeVideo(rtmpIp) }, 3000)
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                Log.e("closeVideo", "视频流关闭失败")
                 handler.postDelayed({ closeVideo(rtmpIp) }, 3000)
             }
         })

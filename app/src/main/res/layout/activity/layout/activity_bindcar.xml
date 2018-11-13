@@ -53,8 +53,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_10"
-                    android:drawablePadding="@dimen/margin_5"
                     android:drawableRight="@mipmap/ic_small_arrow_down"
+                    android:drawablePadding="@dimen/margin_5"
                     android:padding="@dimen/margin_10"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/font_14" />
@@ -64,6 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
+                    android:digits="@string/bindcar_carNum_digits"
                     android:hint="@string/bindcar_carNum_hint"
                     android:padding="@dimen/margin_14"
                     android:textSize="@dimen/font_14" />
@@ -430,8 +431,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginRight="@dimen/margin_10"
             android:text="@string/bindcar_bottom_tips"
             android:textColor="@color/colorOrange"
             android:textSize="@dimen/font_12" />
@@ -441,8 +442,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/margin_30"
             android:layout_marginTop="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/margin_30"
             android:background="@mipmap/ic_button_corner_bg"
             android:text="@string/submit"
             android:textColor="@color/white"

@@ -19,12 +19,14 @@ import com.uroad.zhgs.widget.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.activity_bindcar.*
 import android.widget.*
 import android.os.Handler
+import android.text.method.ReplacementTransformationMethod
 import com.uroad.zhgs.R
 import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.dialog.WheelViewDialog
 import com.uroad.zhgs.enumeration.Carcategory
 import com.uroad.zhgs.model.CarDetailMDL
 import com.uroad.zhgs.utils.CheckUtils
+import com.uroad.zhgs.utils.InputMethodUtils
 
 
 /**
@@ -175,6 +177,7 @@ class BindCarActivity : BaseActivity() {
             llContent.visibility = View.GONE
         }
         initNumTv()
+        initEtNum()
         initRv()
         checkbox.setOnCheckedChangeListener { _, isChecked -> isdefault = if (isChecked) 1 else 0 }
         btSubmit.setOnClickListener { onSubmit() }
@@ -195,6 +198,19 @@ class BindCarActivity : BaseActivity() {
                             dialog.dismiss()
                         }
                     }).show()
+        }
+    }
+
+    /*要将输入的小写字母自动转化为大写字母并显示在EditText上,比较简便的方法是设置EditText的setTransformationMethod*/
+    private fun initEtNum() {
+        etCarNum.transformationMethod = object : ReplacementTransformationMethod() {
+            override fun getOriginal(): CharArray {
+                return charArrayOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
+            }
+
+            override fun getReplacement(): CharArray {
+                return charArrayOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
+            }
         }
     }
 
@@ -524,5 +540,10 @@ class BindCarActivity : BaseActivity() {
                 onHttpError(e)
             }
         })
+    }
+
+    override fun finish() {
+        InputMethodUtils.hideSoftInput(this)
+        super.finish()
     }
 }

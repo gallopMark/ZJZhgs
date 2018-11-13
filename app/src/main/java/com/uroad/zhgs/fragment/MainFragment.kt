@@ -173,6 +173,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
         val ts14 = context.resources.getDimension(R.dimen.font_14)
         tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
         tvNearByToll.isSelected = true
+        tvNearByMore.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        tvNearByMore.isSelected = true
         initFragments()
         setTab(1)
         val listener = View.OnClickListener { v ->

@@ -220,7 +220,7 @@ class MyInvitationCodeActivity : ThemeStyleActivity() {
 
     /*分享到QQ*/
     private fun shareToQQ(mdl: ShareMDL) {
-        mTencent = Tencent.createInstance(getString(R.string.QQ_APP_ID), applicationContext)
+        mTencent = Tencent.createInstance(getString(R.string.QQ_APP_ID), this)
         val bundle = Bundle()
         bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT)
         bundle.putString(QQShare.SHARE_TO_QQ_TITLE, mdl.title)

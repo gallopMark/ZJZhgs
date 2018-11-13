@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="@dimen/margin_50"
-    android:paddingRight="@dimen/margin_50"
-    android:paddingTop="@dimen/margin_30">
+    android:paddingTop="@dimen/margin_30"
+    android:paddingRight="@dimen/margin_50">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -21,28 +21,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/margin_15"
         android:layout_marginTop="@dimen/margin_15"
+        android:layout_marginBottom="@dimen/margin_15"
         android:lineSpacingExtra="@dimen/margin_4"
         android:text="@string/dialog_bindcar_content"
         android:textColor="@color/blow_gray"
         android:textSize="@dimen/font_16" />
 
-    <Button
-        android:id="@+id/btConfirm"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvConfirm"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@mipmap/ic_button_corner_bg"
+        android:gravity="center"
         android:text="@string/dialog_bindcar_confirm"
         android:textColor="@color/white"
         android:textSize="@dimen/font_16" />
 
-    <Button
-        android:id="@+id/btCancel"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvCancel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_bindcar_cancel"
-        android:textColor="@color/gary"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_5"
         android:background="@color/transparent"
+        android:gravity="center"
+        android:text="@string/dialog_bindcar_cancel"
+        android:padding="@dimen/margin_10"
+        android:textColor="@color/gary"
         android:textSize="@dimen/font_16" />
 </LinearLayout>

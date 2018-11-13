@@ -1,6 +1,5 @@
 package com.uroad.zhgs.activity
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
@@ -39,7 +38,6 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.PoiItemAdapter
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
-import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.helper.RouteSearchHelper
 import com.uroad.zhgs.model.PoiItemMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
@@ -359,7 +357,16 @@ class AMapNaviSearchActivity : BaseActivity() {
             isFocusable = false
             setBackgroundDrawable(ColorDrawable())
             isOutsideTouchable = true
-            PopupWindowCompat.showAsDropDown(this, llTop, 0, 0, Gravity.NO_GRAVITY)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                val location = IntArray(2)
+                llTop.getLocationInWindow(location)
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) { // 7.1 版本处理
+                    val screenHeight = DisplayUtils.getWindowHeight(this@AMapNaviSearchActivity)
+                    height = screenHeight - location[1] - llTop.height
+                }
+                showAtLocation(llTop, Gravity.NO_GRAVITY, location[0], location[1] + llTop.height)
+            } else
+                PopupWindowCompat.showAsDropDown(this, llTop, 0, 0, Gravity.NO_GRAVITY)
         }
         val adapter = PoiItemAdapter(this, items)
         recyclerView.adapter = adapter

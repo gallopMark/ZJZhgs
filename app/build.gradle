@@ -24,6 +24,10 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [
+                XG_ACCESS_ID : "2100315776",
+                XG_ACCESS_KEY: "A27LF82F8VSW",
+        ]
     }
     /*layout目录分类*/
     sourceSets {
@@ -65,7 +69,6 @@ dependencies {
     implementation project(':ijkplayer')
     implementation project(':cameraLibrary')
     implementation project(':sharelib')
-    implementation project(':PageRecyclerview')
     implementation 'top.zibin:Luban:1.1.8'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
     //没有使用特殊Header，可以不加这行
@@ -78,4 +81,18 @@ dependencies {
     implementation 'com.liulishuo.filedownloader:library:1.7.5'
     implementation files('libs/alipaySdk-20180601.jar')
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+
+    /*************************信鸽推送***********************/
+    implementation 'com.tencent.xinge:xinge:4.0.3-Release'
+    //jg包
+    implementation 'com.tencent.jg:jg:1.1'
+    //wup包
+    implementation 'com.tencent.wup:wup:1.0.0.E-release'
+    //mid包
+    implementation 'com.tencent.mid:mid:4.0.7'
+    /*************************信鸽推送***********************/
+
+    /*************************友盟统计***********************/
+    implementation 'com.umeng.sdk:common:1.5.0'
+    implementation 'com.umeng.sdk:analytics:7.5.0'
 }

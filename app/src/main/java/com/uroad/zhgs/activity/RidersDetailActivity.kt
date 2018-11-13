@@ -30,14 +30,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
+import com.tencent.mm.opensdk.modelmsg.WXTextObject
+import com.tencent.mm.opensdk.openapi.IWXAPI
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.library.widget.CircleImageView
 import com.uroad.mqtt.IMqttCallBack
 import com.uroad.mqtt.MqttService
 import com.uroad.share.tencent.QQShareManager
-import com.uroad.share.wechat.WechatShareManager
-import com.uroad.share.wechat.model.WXShareText
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.common.ThemeStyleActivity
@@ -84,6 +87,7 @@ class RidersDetailActivity : ThemeStyleActivity() {
     private var msgTarget: TeamSendMsgMDL? = null
     private var isOpenNav = false
     private lateinit var handler: Handler
+    private var mWXApi: IWXAPI? = null
 
     override fun themeSetUp(savedInstanceState: Bundle?) {
         setLayoutResID(R.layout.activity_riders_detail)
@@ -727,17 +731,32 @@ class RidersDetailActivity : ThemeStyleActivity() {
                 when (type) {
                     1 -> {    //分享至微信
                         dialog.dismiss()
-                        WechatShareManager.from(this@RidersDetailActivity, getString(R.string.WECHAT_APP_ID))
-                                .scene(WechatShareManager.WECHAT_SHARE_TYPE_TALK)
-                                .shareByWebchat(WXShareText(detailMDL?.team_data?.token_text))
+                        detailMDL?.team_data?.token_text?.let { shareToWeChat(it) }
+//                        WechatShareManager.from(this@RidersDetailActivity, getString(R.string.WECHAT_APP_ID))
+//                                .scene(WechatShareManager.WECHAT_SHARE_TYPE_TALK)
+//                                .shareByWebchat(WXShareText(detailMDL?.team_data?.token_text))
                     }
                     else -> {  //分享至QQ
                         dialog.dismiss()
-                        QQShareManager.shareTextToQQ(this@RidersDetailActivity, detailMDL?.team_data?.token_text)
+                        detailMDL?.team_data?.token_text?.let { shareToQQ(it) }
                     }
                 }
             }
         }).show()
+    }
+
+    private fun shareToWeChat(text: String?) {
+        mWXApi = WXAPIFactory.createWXAPI(this, getString(R.string.WECHAT_APP_ID)).apply { registerApp(getString(R.string.WECHAT_APP_ID)) }
+        val message = WXMediaMessage(WXTextObject().apply { this.text = text })
+        mWXApi?.sendReq(SendMessageToWX.Req().apply {
+            this.scene = SendMessageToWX.Req.WXSceneSession
+            this.transaction = "text${System.currentTimeMillis()}"
+            this.message = message
+        })
+    }
+
+    private fun shareToQQ(text: String?) {
+        QQShareManager.shareTextToQQ(this@RidersDetailActivity, text)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -777,6 +796,7 @@ class RidersDetailActivity : ThemeStyleActivity() {
     }
 
     override fun onDestroy() {
+        mWXApi?.unregisterApp()
         mapView.onDestroy()
         mqttService.disconnect()
         mediaPlayer?.let {

@@ -9,7 +9,7 @@ import com.uroad.zhgs.model.UserMDL
  */
 class UserPreferenceHelper {
     companion object {
-        private const val PREFS_USER = "Prefs_user"
+        private const val PREFS_USER = "Prefs_user_v2"
         const val USER_ID = "userid"
         const val PUSH_ID = "pushid"
         const val REAL_NAME = "realname"
@@ -52,6 +52,7 @@ class UserPreferenceHelper {
             return from(context).getString(USER_ID, "")
         }
 
+        fun getPushID(context: Context): String = from(context).getString(PUSH_ID, "")
         fun saveRealName(context: Context, realName: String) {
             from(context).edit().putString(REAL_NAME, realName).apply()
         }
