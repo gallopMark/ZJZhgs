@@ -446,7 +446,7 @@ class BindCarActivity : BaseActivity() {
      */
     private fun bindCar() {
         val params = HashMap<String, String?>().apply {
-            put("carno", "$numType${etCarNum.text}")
+            put("carno", "$numType${etCarNum.text.toString().toUpperCase()}")
             put("carcategory", carcategory)
             put("cartype", cartype)
             put("userid", getUserId())
