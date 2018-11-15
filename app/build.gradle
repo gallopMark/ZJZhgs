@@ -56,20 +56,11 @@ android {
             //7.0使用的APK Signature Scheme v2签名方案使外部打入渠道信息会修改签名导致没办法安装 所以目前这里我们需要先禁用掉
             v2SigningEnabled false
         }
-        debug {
-            storeFile file("zjgstkey")   //签名文件全路径
-            storePassword "uroadzjgst"
-            keyAlias "uroadzjgst"
-            keyPassword "uroadzjgst"
-            //7.0使用的APK Signature Scheme v2签名方案使外部打入渠道信息会修改签名导致没办法安装 所以目前这里我们需要先禁用掉
-            v2SigningEnabled false
-        }
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -100,7 +91,6 @@ dependencies {
     implementation 'com.liulishuo.filedownloader:library:1.7.5'
     implementation files('libs/alipaySdk-20180601.jar')
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
-
     /*************************信鸽推送***********************/
     implementation 'com.tencent.xinge:xinge:4.0.3-Release'
     //jg包
@@ -110,7 +100,6 @@ dependencies {
     //mid包
     implementation 'com.tencent.mid:mid:4.0.7'
     /*************************信鸽推送***********************/
-
     /*************************友盟统计***********************/
     implementation 'com.umeng.sdk:common:1.5.0'
     implementation 'com.umeng.sdk:analytics:7.5.0'
