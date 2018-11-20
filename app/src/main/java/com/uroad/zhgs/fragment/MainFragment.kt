@@ -41,6 +41,7 @@ import com.uroad.mqtt.IMqttCallBack
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
+import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.mqtt.AddTeamMDL
 import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.service.DownloadService
@@ -82,7 +83,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
     companion object {
         const val DELAY_MILLIS = 3000L
         const val UPDATE_TIME = 5 * 60 * 1000L  //我的附近，定时5分钟刷新一次
-        var cars: MutableList<CarMDL>? = null
     }
 
     private val nearByRun = Runnable { openLocation() }
@@ -513,6 +513,17 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
             subscribeAdapter.notifyDataSetChanged()
         } else { //返回到首页刷新我的订阅
             getSubscribe()
+            if (!AppLocalHelper.isAuth(context)) {
+                AuthenticationDialog(context).onViewClickListener(object : AuthenticationDialog.OnViewClickListener {
+                    override fun onViewClick(type: Int, dialog: AuthenticationDialog) {
+                        when (type) {
+                            1 -> openActivity(BindCarActivity::class.java)
+                            2 -> openActivity(PerfectUserInfoActivity::class.java)
+                        }
+                        dialog.dismiss()
+                    }
+                }).show()
+            }
         }
         getNewsList()  //返回到首页刷新资讯
         checkCarTeamSituation()
@@ -743,10 +754,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, WeatherSearch.OnWeath
 
     override fun onDestroyView() {
         isDestroyView = true
-        cars?.let {
-            it.clear()
-            cars = null
-        }
         disposable?.dispose()
         handler.removeCallbacksAndMessages(null)
         serviceIntent?.let { context.stopService(it) }

@@ -2,6 +2,8 @@ package com.uroad.zhgs.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.text.TextUtils
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -9,9 +11,13 @@ import com.uroad.library.utils.BitmapUtils
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.WheelViewDialog
-import com.uroad.zhgs.fragment.MainFragment
+import com.uroad.zhgs.model.CarInquiryMDL
 import com.uroad.zhgs.model.CarMDL
+import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.webservice.HttpRequestCallback
+import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_carinquiry.*
 
 /**
@@ -20,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_carinquiry.*
  * @describe 车辆诚信查询
  */
 class CarInquiryActivity : BaseActivity() {
+    private val cars = ArrayList<CarMDL>()
     private var index: Int = 0
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_carinquiry)
@@ -50,30 +57,29 @@ class CarInquiryActivity : BaseActivity() {
     }
 
     override fun initData() {
-        val mdLs = ArrayList<CarMDL>()
-        MainFragment.cars?.let { mdLs.addAll(it) }
-        updateData(mdLs)
+        CurrApplication.cars?.let { cars.addAll(it) }
+        updateData()
     }
 
-    private fun updateData(mdLs: MutableList<CarMDL>) {
+    private fun updateData() {
         var hasDefault = false
-        for (i in 0 until mdLs.size) {
-            if (mdLs[i].isdefault == 1) {  //如果有默认车辆则显示默认车辆
+        for (i in 0 until cars.size) {
+            if (cars[i].isdefault == 1) {  //如果有默认车辆则显示默认车辆
                 index = i
                 hasDefault = true
-                tvSelectCar.text = mdLs[i].carno
+                tvSelectCar.text = cars[i].carno
                 post()
                 break
             }
         }
-        if (!hasDefault && mdLs.size > 0) {  //如果没有默认车辆 则显示第一辆车
-            tvSelectCar.text = mdLs[0].carno
+        if (!hasDefault && cars.size > 0) {  //如果没有默认车辆 则显示第一辆车
+            tvSelectCar.text = cars[0].carno
             post()
         }
-        if (mdLs.size > 1) {
+        if (cars.size > 1) {
             tvSelectCar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_arrow_down_default, 0)
             val data = ArrayList<String>().apply {
-                for (item in mdLs) {
+                for (item in cars) {
                     item.carno?.let { add(it) }
                 }
             }
@@ -95,11 +101,65 @@ class CarInquiryActivity : BaseActivity() {
     }
 
     private fun post() {
-        ivContent.visibility = View.INVISIBLE
-        cpView.visibility = View.VISIBLE
-        cpView.postDelayed({
-            cpView.visibility = View.GONE
-            ivContent.visibility = View.VISIBLE
-        }, 2000)
+        if (index !in 0 until cars.size) return
+        val car = cars[index]
+        doRequest(WebApiService.CAR_INQUIRY, WebApiService.sincerityParams(car.carno, ""), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                cpView.visibility = View.VISIBLE
+                flContent.visibility = View.INVISIBLE
+            }
+
+            override fun onSuccess(data: String?) {
+                cpView.visibility = View.GONE
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, CarInquiryMDL::class.java)
+                    if (mdLs.size == 0) {
+                        showShortToast("暂无数据哦~")
+                    } else {
+                        flContent.visibility = View.VISIBLE
+                        val mdl = mdLs[0]
+                        updateUI(mdl)
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                cpView.visibility = View.GONE
+                onHttpError(e)
+            }
+        })
+    }
+
+    private fun updateUI(mdl: CarInquiryMDL) {
+        when {
+            TextUtils.equals(mdl.creditRank, "黑一") -> {
+                ivContent.setImageResource(R.mipmap.ic_car_blacklist)
+                tvStatus.text = "一级黑名单"
+                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_34))
+            }
+            TextUtils.equals(mdl.creditRank, "黑二") -> {
+                ivContent.setImageResource(R.mipmap.ic_car_blacklist)
+                tvStatus.text = "二级黑名单"
+                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_34))
+            }
+            TextUtils.equals(mdl.creditRank, "灰名单") -> {
+                ivContent.setImageResource(R.mipmap.ic_car_greylist)
+                tvStatus.text = "灰名单"
+                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_8d))
+            }
+            TextUtils.equals(mdl.creditRank, "正常") -> {
+                ivContent.setImageResource(R.mipmap.ic_car_normal)
+                tvStatus.text = "正常"
+                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_normal))
+            }
+            else -> {
+                ivContent.setImageResource(R.mipmap.ic_car_normal)
+                tvStatus.text = "正常"
+                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_normal))
+            }
+        }
+        tvScore.text = mdl.sinceScore
     }
 }

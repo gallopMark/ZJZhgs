@@ -47,14 +47,16 @@
                     android:textColor="@color/colorOrange"
                     android:textSize="@dimen/font_14" />
 
-                <TextView
-                    android:id="@+id/tvNumType"
+                <EditText
+                    android:id="@+id/etNumType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minWidth="@dimen/margin_40"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:drawableRight="@mipmap/ic_small_arrow_down"
                     android:drawablePadding="@dimen/margin_5"
+                    android:inputType="none"
                     android:padding="@dimen/margin_10"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/font_14" />
@@ -136,6 +138,44 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_10"
                     android:orientation="horizontal" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/color_f7" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/bindcar_enginno"
+                    android:textSize="@dimen/font_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/asterisk"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/font_14" />
+
+                <EditText
+                    android:id="@+id/etEnginno"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:hint="@string/bindcar_enginno_hint"
+                    android:maxLength="6"
+                    android:padding="@dimen/margin_14"
+                    android:textSize="@dimen/font_14" />
+
             </LinearLayout>
 
             <LinearLayout

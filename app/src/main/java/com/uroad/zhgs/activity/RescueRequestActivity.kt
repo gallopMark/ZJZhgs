@@ -9,16 +9,20 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.EditText
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.*
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CarNoType
+import com.uroad.zhgs.dialog.CarNoInputDialog
 import com.uroad.zhgs.dialog.WheelViewDialog
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.photopicker.data.ImagePicker
 import com.uroad.zhgs.utils.CheckUtils
 import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.utils.InputMethodUtils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
@@ -164,7 +168,7 @@ class RescueRequestActivity : BaseActivity() {
     }
 
     private fun initEditCarNum() {
-        etMyCarNum.addTextChangedListener(object : TextWatcher {
+        etCarNum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 usercarid = "0"
             }
@@ -175,6 +179,28 @@ class RescueRequestActivity : BaseActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
+        try {
+            val setSoftInputShownOnFocus = EditText::class.java.getMethod("setShowSoftInputOnFocus", Boolean::class.java)
+            setSoftInputShownOnFocus.isAccessible = true
+            setSoftInputShownOnFocus.invoke(etNumType, false)
+        } catch (e: Exception) {
+        }
+        etNumType.setText((CarNoType.getCarMulti()[10] as CarNoType.TextType).text)
+        etNumType.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                InputMethodUtils.hideSoftInput(this)
+                CarNoInputDialog(this@RescueRequestActivity).setOnCarNoClickListener(object : CarNoInputDialog.OnCarNoClickListener {
+                    override fun onCarNoClick(province: String, option: Int, dialog: CarNoInputDialog) {
+                        if (option == 1 || option == 2) {
+                            dialog.dismiss()
+                        } else {
+                            etNumType.setText(province)
+                            etNumType.setSelection(etNumType.text.length)
+                        }
+                    }
+                }).show()
+            }
+        }
     }
 
     override fun initData() {
@@ -268,8 +294,9 @@ class RescueRequestActivity : BaseActivity() {
     private fun updateMyCar(mdLs: MutableList<CarMDL>) {
         if (mdLs.size > 0) {
             tvChangeCarNum.visibility = View.VISIBLE
-            etMyCarNum.setText(mdLs[0].carno)
-            etMyCarNum.setSelection(etMyCarNum.text.length)
+            etNumType.setText(mdLs[0].getCarNum()[0])
+            etCarNum.setText(mdLs[0].getCarNum()[1])
+            etCarNum.setSelection(etCarNum.text.length)
             mdLs[0].carid?.let { usercarid = it }
             tvChangeCarNum.setOnClickListener { _ ->
                 WheelViewDialog(this@RescueRequestActivity).withData(ArrayList<String>().apply {
@@ -279,8 +306,9 @@ class RescueRequestActivity : BaseActivity() {
                 }).withItemNum(5).withListener(object : WheelViewDialog.OnItemSelectListener {
                     override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
                         mdLs[position].carid?.let { usercarid = it }
-                        etMyCarNum.setText(text)
-                        etMyCarNum.setSelection(etMyCarNum.text.length)
+                        etNumType.setText(mdLs[position].getCarNum()[0])
+                        etCarNum.setText(mdLs[position].getCarNum()[1])
+                        etCarNum.setSelection(etCarNum.text.length)
                         dialog.dismiss()
                     }
                 }).show()
@@ -361,11 +389,11 @@ class RescueRequestActivity : BaseActivity() {
                 showShortToast("所在方向名称不可为空")
                 return false
             }
-            TextUtils.isEmpty(etMyCarNum.text.toString()) -> {
-                showShortToast(etMyCarNum.hint)
+            TextUtils.isEmpty(etCarNum.text.toString()) -> {
+                showShortToast(etCarNum.hint)
                 return false
             }
-            !CheckUtils.isCarNum(etMyCarNum.text.toString().trim()) -> {
+            !CheckUtils.isCarNum(etCarNum.text.toString().trim()) -> {
                 showShortToast(getString(R.string.error_carNo_tips))
                 return false
             }
@@ -490,7 +518,7 @@ class RescueRequestActivity : BaseActivity() {
             put("longitude", longitude.toString())
             put("latitude", latitude.toString())
             put("usercarid", usercarid)
-            put("carno", etMyCarNum.text.toString())
+            put("carno", "${etNumType.text}${etCarNum.text.toString().toUpperCase()}")
             put("remark", etRemark.text.toString())
             if (!TextUtils.isEmpty(imageUrlSB.toString())) {
                 put("photourl", imageUrlSB.toString())

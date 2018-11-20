@@ -51,4 +51,7 @@
     <color name="white_trans30">#4dffffff</color>
     <color name="white_trans70">#b3ffffff</color>
     <color name="riders_inTeam">#ffad0e</color>
+    <color name="color_8d">#8d8d8d</color>
+    <color name="color_34">#343434</color>
+    <color name="color_normal">#dfa42c</color>
 </resources>

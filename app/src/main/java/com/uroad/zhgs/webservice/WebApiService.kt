@@ -228,7 +228,7 @@ class WebApiService {
             put("phone", phone)
             put("type", type)
             put("password", password)
-            put("lastmobilever",2.toString())
+            put("lastmobilever", 2.toString())
         }
 
         //1.22 新闻列表
@@ -695,6 +695,14 @@ class WebApiService {
         const val SHARE_LIST = "getShareList"
 
         fun shareListParams(userid: String?) = getBaseParams().apply { put("userid", userid) }
+
+        /*诚信信息*/
+        const val CAR_INQUIRY = "getSincerity"
+
+        fun sincerityParams(license: String?, licenseColor: String?) = getBaseParams().apply {
+            put("license", license)
+            put("licenseColor", licenseColor)
+        }
     }
 
 }

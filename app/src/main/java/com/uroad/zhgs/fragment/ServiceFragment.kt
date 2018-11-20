@@ -1,6 +1,8 @@
 package com.uroad.zhgs.fragment
 
+import android.os.Bundle
 import android.view.View
+import com.uroad.zhgs.activity.LocationWebViewActivity
 import com.uroad.zhgs.adapteRv.ServiceAdapter
 import com.uroad.zhgs.common.BaseRefreshRvFragment
 import com.uroad.zhgs.model.ServiceMDL
@@ -27,8 +29,13 @@ class ServiceFragment : BaseRefreshRvFragment() {
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
             override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until mDatas.size)
-                    openLocationWebActivity(mDatas[position].detailurl, mDatas[position].name)
+                if (position in 0 until mDatas.size) {
+                    openActivity(LocationWebViewActivity::class.java, Bundle().apply {
+                        putString(LocationWebViewActivity.WEB_URL, mDatas[position].detailurl)
+                        putString(LocationWebViewActivity.WEB_TITLE, mDatas[position].name)
+                        putBoolean("isService", true)
+                    })
+                }
             }
         })
     }

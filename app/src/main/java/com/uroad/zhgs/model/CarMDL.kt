@@ -16,4 +16,16 @@ class CarMDL {
     var carcategoryname: String? = null
     var cartypename: String? = null
     var isdefault: Int = 0
+    fun getCarNum(): Array<String?> {
+        val array = arrayOfNulls<String>(2)
+        carno?.let {
+            if (it.isNotEmpty()) {
+                array[0] = it.substring(0, 1)
+                if (it.length > 1) {
+                    array[1] = it.substring(1, it.length)
+                }
+            }
+        }
+        return array
+    }
 }

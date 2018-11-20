@@ -79,14 +79,41 @@
                         app:border_Width="@dimen/margin_5"
                         app:minSweepAngle="60" />
 
-                    <ImageView
-                        android:id="@+id/ivContent"
+                    <FrameLayout
+                        android:id="@+id/flContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="@dimen/margin_10"
-                        android:src="@mipmap/ic_carinquiry_image"
-                        android:visibility="invisible" />
+                        android:visibility="invisible">
+
+                        <ImageView
+                            android:id="@+id/ivContent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10"
+                            android:src="@mipmap/ic_car_normal" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/margin_15"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvScore"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/font_20" />
+
+                            <TextView
+                                android:id="@+id/tvStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/font_16" />
+                        </LinearLayout>
+                    </FrameLayout>
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>

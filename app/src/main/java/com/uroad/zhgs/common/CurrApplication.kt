@@ -17,6 +17,7 @@ import com.uroad.rxhttp.download.DownloadListener
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
+import com.uroad.zhgs.model.CarMDL
 import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.utils.AssetsUtils
 import com.uroad.zhgs.utils.DiagramUtils
@@ -45,6 +46,7 @@ class CurrApplication : BaseApplication() {
         var WISDOM_URL: String? = null  //小智问问url
         var ALIVE_URL: String? = null   //直播url
         var BREAK_RULES_URL: String? = null //违章查询url
+        var cars: MutableList<CarMDL>? = null
     }
 
     private val handler = Handler()

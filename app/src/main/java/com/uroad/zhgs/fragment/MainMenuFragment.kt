@@ -179,7 +179,7 @@ class MainMenuFragment : BaseFragment() {
 
     /*获取用户车辆（仅客车）*/
     private fun getMyCar() {
-        doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), Carcategory.COACH.code), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), ""), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading()
             }
@@ -189,8 +189,8 @@ class MainMenuFragment : BaseFragment() {
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
                     if (mdLs.size > 0) {
-                        MainFragment.cars?.clear()
-                        MainFragment.cars = ArrayList<CarMDL>().apply { addAll(mdLs) }
+                        CurrApplication.cars?.clear()
+                        CurrApplication.cars = ArrayList<CarMDL>().apply { addAll(mdLs) }
                         openActivity(CarInquiryActivity::class.java)
                     } else {
                         BindCarDialog(context).setOnConfirmClickListener(object : BindCarDialog.OnConfirmClickListener {

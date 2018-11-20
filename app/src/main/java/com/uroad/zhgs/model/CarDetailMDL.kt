@@ -20,6 +20,7 @@ import android.text.TextUtils
 class CarDetailMDL {
     var usercarid: String? = null
     var carno: String? = null
+    var enginno:String?=null
     var carcategory: String? = null
     var cartype: String? = null
     var isdefault: Int = 0

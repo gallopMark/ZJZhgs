@@ -9,7 +9,6 @@ import android.text.TextUtils
 import android.view.View
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.common.BaseActivity
-import com.uroad.zhgs.common.CarNoType
 import com.uroad.zhgs.model.EvaluateMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
@@ -21,8 +20,10 @@ import android.widget.*
 import android.os.Handler
 import android.text.method.ReplacementTransformationMethod
 import com.uroad.zhgs.R
+import com.uroad.zhgs.R.id.*
+import com.uroad.zhgs.common.CarNoType
+import com.uroad.zhgs.dialog.CarNoInputDialog
 import com.uroad.zhgs.dialog.MaterialDialog
-import com.uroad.zhgs.dialog.WheelViewDialog
 import com.uroad.zhgs.enumeration.Carcategory
 import com.uroad.zhgs.model.CarDetailMDL
 import com.uroad.zhgs.utils.CheckUtils
@@ -144,7 +145,6 @@ class BindCarActivity : BaseActivity() {
     private var cartype: String = "" //车辆类型
     private var axisnum: String = "" //轴数
     private var isdefault: Int = 0 // 是否默认车辆 否    0 否 ； 1 是
-    private var numType: String = ""
     private var isTruck = false
     private var isDetails = false   //是否是从列表进来查看详情
     private var carId = ""
@@ -184,20 +184,26 @@ class BindCarActivity : BaseActivity() {
     }
 
     private fun initNumTv() {
-        val data = CarNoType.getCarNoList()
-        numType = data[3]
-        tvNumType.text = numType
-        tvNumType.setOnClickListener {
-            WheelViewDialog(this@BindCarActivity)
-                    .withData(data)
-                    .default(3)
-                    .withListener(object : WheelViewDialog.OnItemSelectListener {
-                        override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
-                            numType = data[position]
-                            tvNumType.text = numType
-                            dialog.dismiss()
-                        }
-                    }).show()
+        try {
+            val setSoftInputShownOnFocus = EditText::class.java.getMethod("setShowSoftInputOnFocus", Boolean::class.java)
+            setSoftInputShownOnFocus.isAccessible = true
+            setSoftInputShownOnFocus.invoke(etNumType, false)
+        } catch (e: Exception) {
+        }
+        etNumType.setText((CarNoType.getCarMulti()[10] as CarNoType.TextType).text)
+        etNumType.setSelection(etNumType.text.length)
+        etNumType.setOnFocusChangeListener { _, hasFocus ->
+            InputMethodUtils.hideSoftInput(this)
+            CarNoInputDialog(this@BindCarActivity).setOnCarNoClickListener(object : CarNoInputDialog.OnCarNoClickListener {
+                override fun onCarNoClick(province: String, option: Int, dialog: CarNoInputDialog) {
+                    if (option == 1 || option == 2) {
+                        dialog.dismiss()
+                    } else {
+                        etNumType.setText(province)
+                        etNumType.setSelection(etNumType.text.length)
+                    }
+                }
+            }).show()
         }
     }
 
@@ -224,11 +230,11 @@ class BindCarActivity : BaseActivity() {
         rvCarType.layoutManager = GridLayoutManager(this, 3).apply { orientation = GridLayoutManager.VERTICAL }
         rvAxis.addItemDecoration(GridSpacingItemDecoration(4, DisplayUtils.dip2px(this, 10f), false))
         rvAxis.layoutManager = GridLayoutManager(this, 4).apply { orientation = GridLayoutManager.VERTICAL }
-        lbAdapter = CarCategoryAdapter(this, lbDatas)
+        lbAdapter = BindCarActivity.CarCategoryAdapter(this, lbDatas)
         rvCarCategory.adapter = lbAdapter
-        lxAdapter = CarTypeAdapter(this, lxDatas)
+        lxAdapter = BindCarActivity.CarTypeAdapter(this, lxDatas)
         rvCarType.adapter = lxAdapter
-        axAdapter = AxisAdapter(this, axDatas)
+        axAdapter = BindCarActivity.AxisAdapter(this, axDatas)
         rvAxis.adapter = axAdapter
     }
 
@@ -281,7 +287,7 @@ class BindCarActivity : BaseActivity() {
                 }
             }
         }
-        lbAdapter.setOnItemSelectedListener(object : CarCategoryAdapter.OnItemSelectedListener {
+        lbAdapter.setOnItemSelectedListener(object : BindCarActivity.CarCategoryAdapter.OnItemSelectedListener {
             override fun onItemSelected(position: Int) {
                 if (position == 1) {
                     isTruck = true
@@ -296,7 +302,7 @@ class BindCarActivity : BaseActivity() {
                 lbDatas[position].dictcode?.let { carcategory = it }
             }
         })
-        lxAdapter.setOnItemSelectedListener(object : CarTypeAdapter.OnItemSelectedListener {
+        lxAdapter.setOnItemSelectedListener(object : BindCarActivity.CarTypeAdapter.OnItemSelectedListener {
             override fun onItemSelected(position: Int) {
                 lxDatas[position].dictcode?.let { cartype = it }
             }
@@ -335,7 +341,7 @@ class BindCarActivity : BaseActivity() {
         if (axDatas.size > 0) {
             axDatas[0].dictcode?.let { axisnum = it }  //车辆类别默认第一个
         }
-        axAdapter.setOnItemSelectedListener(object : AxisAdapter.OnItemSelectedListener {
+        axAdapter.setOnItemSelectedListener(object : BindCarActivity.AxisAdapter.OnItemSelectedListener {
             override fun onItemSelected(position: Int) {
                 axDatas[position].dictcode?.let { axisnum = it }
             }
@@ -365,9 +371,9 @@ class BindCarActivity : BaseActivity() {
     private fun updateCarData(mdl: CarDetailMDL) {
         detailMDL = mdl
         mdl.usercarid?.let { usercarid = it }
-        mdl.getCarNum()[0]?.let { numType = it }
-        tvNumType.text = mdl.getCarNum()[0]
+        etNumType.setText(mdl.getCarNum()[0])
         etCarNum.setText(mdl.getCarNum()[1])
+        etEnginno.setText(mdl.enginno)
         etTotalWeight.setText(mdl.total)
         etFixedLoad.setText(mdl.fixedload)
         etCarLength.setText(mdl.carlength)
@@ -400,33 +406,28 @@ class BindCarActivity : BaseActivity() {
     private fun onSubmit() {
         if (TextUtils.isEmpty(etCarNum.text.toString().trim())) {
             showShortToast(etCarNum.hint)
-            return
-        }
-        val carNo = "${tvNumType.text}${etCarNum.text.toString().trim()}"
-        if (!CheckUtils.isCarNum(carNo)) {
+        } else if (!CheckUtils.isCarNum("${etNumType.text}${etCarNum.text.toString().trim()}")) {
             showShortToast(getString(R.string.error_carNo_tips))
-            return
-        }
-        if (TextUtils.isEmpty(carcategory)) {
+        } else if (TextUtils.isEmpty(carcategory)) {
             showShortToast("请选择车辆类别")
-            return
-        }
-        if (TextUtils.isEmpty(cartype)) {
+        } else if (TextUtils.isEmpty(cartype)) {
             showShortToast("请选择车辆类型")
-            return
-        }
-        if (isTruck) {  //如果选择了货车，则需要填如下信息
-            when {
-                TextUtils.isEmpty(etTotalWeight.text.toString().trim()) -> showShortToast(etTotalWeight.hint)
-                TextUtils.isEmpty(etFixedLoad.text.toString().trim()) -> showShortToast(etFixedLoad.hint)
-                TextUtils.isEmpty(etCarLength.text.toString().trim()) -> showShortToast(etCarLength.hint)
-                TextUtils.isEmpty(etCarWidth.text.toString().trim()) -> showShortToast(etCarWidth.hint)
-                TextUtils.isEmpty(etCarHigh.text.toString().trim()) -> showShortToast(etCarHigh.hint)
-                TextUtils.isEmpty(axisnum) -> showShortToast("请选择轴数")
-                else -> bindCar()
-            }
+        } else if (TextUtils.isEmpty(etEnginno.text.toString().trim())) {
+            showShortToast(etEnginno.hint)
         } else {
-            bindCar()
+            if (isTruck) {  //如果选择了货车，则需要填如下信息
+                when {
+                    TextUtils.isEmpty(etTotalWeight.text.toString().trim()) -> showShortToast(etTotalWeight.hint)
+                    TextUtils.isEmpty(etFixedLoad.text.toString().trim()) -> showShortToast(etFixedLoad.hint)
+                    TextUtils.isEmpty(etCarLength.text.toString().trim()) -> showShortToast(etCarLength.hint)
+                    TextUtils.isEmpty(etCarWidth.text.toString().trim()) -> showShortToast(etCarWidth.hint)
+                    TextUtils.isEmpty(etCarHigh.text.toString().trim()) -> showShortToast(etCarHigh.hint)
+                    TextUtils.isEmpty(axisnum) -> showShortToast("请选择轴数")
+                    else -> bindCar()
+                }
+            } else {
+                bindCar()
+            }
         }
     }
 
@@ -446,7 +447,8 @@ class BindCarActivity : BaseActivity() {
      */
     private fun bindCar() {
         val params = HashMap<String, String?>().apply {
-            put("carno", "$numType${etCarNum.text.toString().toUpperCase()}")
+            put("carno", "${etNumType.text}${etCarNum.text.toString().toUpperCase()}")
+            put("enginno", etEnginno.text.toString())
             put("carcategory", carcategory)
             put("cartype", cartype)
             put("userid", getUserId())

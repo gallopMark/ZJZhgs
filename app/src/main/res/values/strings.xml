@@ -409,6 +409,8 @@
     <string name="bindcar_car_type">车辆类型</string>
     <string name="bindcar_car_ton">吨</string>
     <string name="bindcar_car_rice">米</string>
+    <string name="bindcar_enginno">发动机号</string>
+    <string name="bindcar_enginno_hint">请输入发动机号后6位</string>
     <string name="bindcar_total_weight">总重量</string>
     <string name="bindcar_total_weight_hint">请输入货车总重量</string>
     <string name="bindcar_fixed_load">核定载重</string>
@@ -485,7 +487,7 @@
     <string name="roadToll_select_endPoi_hint">请选择终点收费站</string>
 
     <string name="dialog_bindcar_title">绑定车辆</string>
-    <string name="dialog_bindcar_content">暂仅支持客车车型诚信查询，使用本功能，请先绑定车辆</string>
+    <string name="dialog_bindcar_content">使用本功能，请先绑定车辆</string>
     <string name="dialog_bindcar_confirm">绑定车辆</string>
     <string name="dialog_bindcar_cancel">以后再说</string>
 
@@ -545,5 +547,8 @@
     <string name="customer_service">小智问问</string>
     <string name="pass_record_small_tips">查询结果仅供参考，实际通行费用请以实际支付为准</string>
     <string name="pass_money">通行费</string>
+    <string name="car_inquiry_tips">换卡、套牌、冲卡</string>
+    <string name="dialog_authentication_title">请选择认证方式</string>
+    <string name="dialog_authentication_tips">绑定车辆信息，我们可为您提供沿途丰富精准的路况等提示信息</string>
 </resources>
 

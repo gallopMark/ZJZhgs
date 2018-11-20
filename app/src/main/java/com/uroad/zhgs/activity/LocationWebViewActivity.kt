@@ -63,10 +63,13 @@ class LocationWebViewActivity : BaseWebViewActivity() {
         val longitude = location.longitude
         val latitude = location.latitude
         onLoad("uroadplus_web_lnglat", "('$longitude','$latitude')")
+        var isService = false
+        intent.extras?.let { isService = it.getBoolean("isService", false) }
+        if (isLogin() && isService) onLoad("uroadplus_web_setInfo", "('${getUserId()}','${getUserName()}','${getPhone()}','${getIconFile()}')")
         closeLocation()
     }
 
-    fun onLoad(callBackName: String, data: String) {
+    private fun onLoad(callBackName: String, data: String) {
         val js = "javascript:$callBackName$data"
         webView.loadUrl(js)
     }

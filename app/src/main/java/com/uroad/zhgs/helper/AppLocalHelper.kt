@@ -24,6 +24,7 @@ class AppLocalHelper {
         private const val WISDOM_URL = "wisdom_url"  //小智问问url
         private const val ALIVE_URL = "alive_url"  //直播url
         private const val BREAK_RULES_URL = "break_rules_url"  //违章查询url
+        private const val AUTHENTICATION = "Authentication" //是否弹过认证对话框
 
         private fun getPrefs(context: Context): SharedPreferences = context.getSharedPreferences(APP_FILE, Context.MODE_PRIVATE)
 
@@ -84,5 +85,8 @@ class AppLocalHelper {
         fun getAliveUrl(context: Context) = getPrefs(context).getString(ALIVE_URL, "")
         fun saveBreakRulesUrl(context: Context, url: String?) = getPrefs(context).edit().putString(BREAK_RULES_URL, url).apply()
         fun getBreakRulesUrl(context: Context) = getPrefs(context).getString(BREAK_RULES_URL, "")
+
+        fun saveAuth(context: Context) = getPrefs(context).edit().putBoolean(AUTHENTICATION, true).apply()
+        fun isAuth(context: Context) = getPrefs(context).getBoolean(AUTHENTICATION, false)
     }
 }
