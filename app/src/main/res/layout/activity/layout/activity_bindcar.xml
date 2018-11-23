@@ -68,6 +68,7 @@
                     android:background="@color/transparent"
                     android:digits="@string/bindcar_carNum_digits"
                     android:hint="@string/bindcar_carNum_hint"
+                    android:inputType="text"
                     android:padding="@dimen/margin_14"
                     android:textSize="@dimen/font_14" />
             </LinearLayout>

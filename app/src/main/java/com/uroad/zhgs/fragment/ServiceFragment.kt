@@ -1,8 +1,6 @@
 package com.uroad.zhgs.fragment
 
-import android.os.Bundle
 import android.view.View
-import com.uroad.zhgs.activity.LocationWebViewActivity
 import com.uroad.zhgs.adapteRv.ServiceAdapter
 import com.uroad.zhgs.common.BaseRefreshRvFragment
 import com.uroad.zhgs.model.ServiceMDL
@@ -17,10 +15,9 @@ import com.uroad.zhgs.webservice.WebApiService
 class ServiceFragment : BaseRefreshRvFragment() {
     private var index = 1
     private val size = 10
-    private var isFirstLoad = true
     private val mDatas = ArrayList<ServiceMDL>()
     private lateinit var adapter: ServiceAdapter
-    private var keyword: String = ""
+    private var keyword: String? = ""
     private var onDataSetChangedListener: OnDataSetChangedListener? = null
 
     override fun initViewData() {
@@ -30,20 +27,21 @@ class ServiceFragment : BaseRefreshRvFragment() {
         adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
             override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
                 if (position in 0 until mDatas.size) {
-                    openActivity(LocationWebViewActivity::class.java, Bundle().apply {
-                        putString(LocationWebViewActivity.WEB_URL, mDatas[position].detailurl)
-                        putString(LocationWebViewActivity.WEB_TITLE, mDatas[position].name)
-                        putBoolean("isService", true)
-                    })
+                    openLocationWebActivity(mDatas[position].detailurl, mDatas[position].name)
                 }
             }
         })
     }
 
+    fun onSearch(keyword: String?) {
+        this.keyword = keyword
+        pullToRefresh()
+    }
+
     override fun initData() {
         doRequest(WebApiService.SERVICE_LIST, WebApiService.serviceListParams(index, size, keyword), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
-                if (isFirstLoad) setPageLoading()
+                if (index == 1) setPageLoading()
             }
 
             override fun onSuccess(data: String?) {
@@ -55,15 +53,12 @@ class ServiceFragment : BaseRefreshRvFragment() {
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
                 }
-                if (isFirstLoad) isFirstLoad = false
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
                 finishLoad()
-                if (isFirstLoad) {
-                    setPageError()
-                } else
-                    onHttpError(e)
+                if (index == 1) setPageError()
+                else onHttpError(e)
             }
         })
     }

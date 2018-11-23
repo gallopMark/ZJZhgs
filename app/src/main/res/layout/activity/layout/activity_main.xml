@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
+            android:checked="true"
             android:drawablePadding="@dimen/margin_5"
             android:drawableTop="@drawable/bg_home_tab_home_selector"
             android:gravity="center"

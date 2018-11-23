@@ -40,6 +40,12 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!--有赞-->
+    <!-- 为了更好的体验需要获取地理信息的权限 (以下非必须权限) -->
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
+
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -192,6 +198,15 @@
 
         <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.VideoActivity" />
+        <activity
+            android:name=".activity.YouZanUserActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.X5WebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensor" />
+
         <!--保存足迹服务-->
         <service android:name=".service.MyTracksService" />
         <!--版本更新下载服务-->

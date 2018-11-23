@@ -186,21 +186,26 @@ class RescueRequestActivity : BaseActivity() {
         } catch (e: Exception) {
         }
         etNumType.setText((CarNoType.getCarMulti()[10] as CarNoType.TextType).text)
+        etNumType.setOnClickListener { showCustomInput() }
         etNumType.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                InputMethodUtils.hideSoftInput(this)
-                CarNoInputDialog(this@RescueRequestActivity).setOnCarNoClickListener(object : CarNoInputDialog.OnCarNoClickListener {
-                    override fun onCarNoClick(province: String, option: Int, dialog: CarNoInputDialog) {
-                        if (option == 1 || option == 2) {
-                            dialog.dismiss()
-                        } else {
-                            etNumType.setText(province)
-                            etNumType.setSelection(etNumType.text.length)
-                        }
-                    }
-                }).show()
+                showCustomInput()
             }
         }
+    }
+
+    private fun showCustomInput() {
+        InputMethodUtils.hideSoftInput(this)
+        CarNoInputDialog(this).setOnCarNoClickListener(object : CarNoInputDialog.OnCarNoClickListener {
+            override fun onCarNoClick(province: String, option: Int, dialog: CarNoInputDialog) {
+                if (option == 1 || option == 2) {
+                    dialog.dismiss()
+                } else {
+                    etNumType.setText(province)
+                    etNumType.setSelection(etNumType.text.length)
+                }
+            }
+        }).show()
     }
 
     override fun initData() {

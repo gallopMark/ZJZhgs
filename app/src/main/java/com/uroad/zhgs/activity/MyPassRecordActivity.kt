@@ -87,26 +87,40 @@ class MyPassRecordActivity : BaseActivity() {
     }
 
     override fun initData() {
-        doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), ""), object : HttpRequestCallback<String>() {
-            override fun onPreExecute() {
-                setPageLoading()
-            }
-
-            override fun onSuccess(data: String?) {
-                if (GsonUtils.isResultOk(data)) {
-                    val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
-                    if (mdLs.size > 0)
-                        updateCars(mdLs)
-                    else onEmptyCar()
-                } else {
-                    showShortToast(GsonUtils.getMsg(data))
+        if (!isAuth()) {
+            val dialog = MaterialDialog(this)
+            dialog.setTitle(getString(R.string.dialog_default_title))
+            dialog.setMessage("您未通过实名认证，无法使用通行记录功能")
+            dialog.hideDivider()
+            dialog.setPositiveButton(getString(R.string.i_got_it), object : MaterialDialog.ButtonClickListener {
+                override fun onClick(v: View, dialog: AlertDialog) {
+                    dialog.dismiss()
                 }
-            }
+            })
+            dialog.setOnDismissListener { finish() }
+            dialog.show()
+        } else {
+            doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), ""), object : HttpRequestCallback<String>() {
+                override fun onPreExecute() {
+                    setPageLoading()
+                }
 
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                setPageError()
-            }
-        })
+                override fun onSuccess(data: String?) {
+                    if (GsonUtils.isResultOk(data)) {
+                        val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
+                        if (mdLs.size > 0)
+                            updateCars(mdLs)
+                        else onEmptyCar()
+                    } else {
+                        showShortToast(GsonUtils.getMsg(data))
+                    }
+                }
+
+                override fun onFailure(e: Throwable, errorMsg: String?) {
+                    setPageError()
+                }
+            })
+        }
     }
 
     private fun onEmptyCar() {

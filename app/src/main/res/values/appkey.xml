@@ -30,4 +30,11 @@ ACCESS KEY ：A27LF82F8VSW
     <!--信鸽appkey-->
     <string name="XG_ACCESS_ID">934487c34aa3e</string>
     <string name="XG_ACCESS_KEY">8f0af6f873e1b2faf17d5704e3548076</string>
+
+    <!--client_id:06a9f7b8179539accf 隐藏 复制
+client_secret:9b5e478f350a12c9601345a7101d0057 隐藏 复制
+有赞商城地址：https://j.youzan.com/r6utT9
+授权店铺id：42093087-->
+    <string name="PRAISE_CLIENT_ID">06a9f7b8179539accf</string>
+    <string name="PRAISE_CLIENT_SECRET">9b5e478f350a12c9601345a7101d0057</string>
 </resources>

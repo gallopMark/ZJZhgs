@@ -33,6 +33,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.activity.CameraActivity
 import com.uroad.zhgs.activity.RidersReportActivity
 import com.uroad.zhgs.activity.VideoActivity
+import com.uroad.zhgs.common.CameraFragment
 import com.uroad.zhgs.rxbus.MessageEvent
 
 
@@ -41,7 +42,7 @@ import com.uroad.zhgs.rxbus.MessageEvent
  * @create 2018/10/9
  * @describe 车友爆料 （我的关注）
  */
-class RidersReportFollowFragment : BaseFragment() {
+class RidersReportFollowFragment : CameraFragment() {
     private val mDatas = ArrayList<RidersReportMDL>()
     private lateinit var adapter: RidersReportAdapter
     private var index = 1
@@ -143,7 +144,7 @@ class RidersReportFollowFragment : BaseFragment() {
         val listener = View.OnClickListener {
             when (it.id) {
                 R.id.ivVoice -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_VOICE })
-                R.id.ivVideo -> openActivityForResult(CameraActivity::class.java, 1)
+                R.id.ivVideo -> onVideoRecord()
                 else -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_DEFAULT })
             }
             closeMenu()
@@ -462,7 +463,7 @@ class RidersReportFollowFragment : BaseFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
             val url = data.getStringExtra("url")
             val firstFrame = data.getStringExtra("firstFrame")
             openActivity(Intent(context, RidersReportActivity::class.java)
@@ -500,6 +501,21 @@ class RidersReportFollowFragment : BaseFragment() {
             } catch (e: Exception) {
             }
         }
+    }
+
+    private fun onVideoRecord() {
+        if (hasCamera()) startCamera()
+        else {
+            requestCamera(object : OnRequestCameraCallback {
+                override fun onGranted() {
+                    startCamera()
+                }
+            })
+        }
+    }
+
+    private fun startCamera() {
+        openActivityForResult(CameraActivity::class.java, 123)
     }
 
     private fun stopPlay() {

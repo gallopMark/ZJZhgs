@@ -61,6 +61,7 @@ import kotlinx.android.synthetic.main.activity_riders_detail.*
 import kotlinx.android.synthetic.main.layout_theme_style_toolbar.*
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.IMqttToken
+import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 /**
@@ -82,6 +83,7 @@ class RidersDetailActivity : ThemeStyleActivity() {
     private lateinit var mqttService: MqttService
     private val msgDatas = ArrayList<TeamSendMsgMDL>()
     private var mediaPlayer: IjkMediaPlayer? = null
+    private var playerOnPause = false
     private val markerMap = ArrayMap<String, Marker>()
     private var animMarker: Marker? = null
     private var msgTarget: TeamSendMsgMDL? = null
@@ -296,44 +298,54 @@ class RidersDetailActivity : ThemeStyleActivity() {
     /*播放录音*/
     private fun playVoice() {
         if (isOpenNav || msgDatas.size == 0) return   //打开了导航页面，不播放语音
-        val msgMDL = msgDatas[0]
-        msgTarget = msgMDL
+        msgTarget = msgDatas[0]
         if (mediaPlayer == null) {
             mediaPlayer = IjkMediaPlayer().apply {
                 reset()
-                dataSource = msgMDL.voicefile
+                dataSource = msgTarget?.voicefile
             }
         } else {
             mediaPlayer?.let {
-                if (it.isPlaying) return
-                it.reset()
-                it.dataSource = msgMDL.voicefile
+                when {
+                    it.isPlaying -> return
+                    else -> {
+                        it.reset()
+                        it.dataSource = msgTarget?.voicefile
+                    }
+                }
             }
         }
-        mediaPlayer?.let {
-            it.prepareAsync()
-            it.setOnPreparedListener { _ ->
-                it.start()
-                renderMarker(msgMDL.userid)
+        try {
+            mediaPlayer?.let {
+                it.prepareAsync()
+                it.setOnPreparedListener(mOnPreparedListener)
+                it.setOnInfoListener(mOnInfoListener)
+                it.setOnCompletionListener(mOnCompleteListener)
+                it.setOnErrorListener(mOnErrorListener)
             }
-            it.setOnCompletionListener { _ ->
-                recyclerMarker(msgMDL.userid)
-                if (msgDatas.size > 0) {
-                    msgDatas.removeAt(0)
-                    if (msgDatas.size > 0) {
-                        playVoice()
-                    }
-                }
-            }
-            it.setOnErrorListener { _, _, _ ->
-                recyclerMarker(msgMDL.userid)
-                if (msgDatas.size > 0) {
-                    msgDatas.removeAt(0)
-                    if (msgDatas.size > 0) {
-                        playVoice()
-                    }
-                }
-                return@setOnErrorListener true
+        } catch (e: Exception) {
+        }
+    }
+
+    private val mOnPreparedListener = IMediaPlayer.OnPreparedListener { it.start() }
+    private val mOnInfoListener = IMediaPlayer.OnInfoListener { _, _, _ ->
+        msgTarget?.let { renderMarker(it.userid) }
+        return@OnInfoListener true
+    }
+
+    private val mOnCompleteListener = IMediaPlayer.OnCompletionListener { onCompleteOrError() }
+
+    private val mOnErrorListener = IMediaPlayer.OnErrorListener { _, _, _ ->
+        onCompleteOrError()
+        return@OnErrorListener true
+    }
+
+    private fun onCompleteOrError() {
+        msgTarget?.let { recyclerMarker(it.userid) }
+        if (msgDatas.size > 0) {
+            msgDatas.removeAt(0)
+            if (msgDatas.size > 0) {
+                playVoice()
             }
         }
     }
@@ -381,6 +393,7 @@ class RidersDetailActivity : ThemeStyleActivity() {
         }
         lottieView.playAnimation()
         audioButton.setOnRecordListener(object : TouchAudioButton.RecordListener {
+
             override fun onDismissPermission() {
                 ActivityCompat.requestPermissions(this@RidersDetailActivity, arrayOf(android.Manifest.permission.RECORD_AUDIO), 10)
             }
@@ -390,8 +403,8 @@ class RidersDetailActivity : ThemeStyleActivity() {
             }
 
             override fun onFinished(seconds: Float, filePath: String?) {
-                sendMsg(filePath)
                 stopAnim()
+                sendMsg(filePath)
             }
 
             override fun onRecordFailure(minRecordTime: Int, tooShort: Boolean) {
@@ -407,17 +420,19 @@ class RidersDetailActivity : ThemeStyleActivity() {
         if (!lottieView.isAnimating) lottieView.playAnimation()
         mediaPlayer?.let { player ->
             if (player.isPlaying) {
-                player.stop()
+                player.pause()
+                playerOnPause = true
             }
         }
         msgTarget?.let { recyclerMarker(it.userid) }
-        if (msgDatas.size > 0) msgDatas.removeAt(0)
     }
 
     private fun stopAnim() {
         ivVoice.visibility = View.VISIBLE
         lottieView.visibility = View.GONE
         lottieView.cancelAnimation()
+        if (playerOnPause) mediaPlayer?.start()
+        playerOnPause = false
     }
 
     /*发送语音文件*/
@@ -784,14 +799,12 @@ class RidersDetailActivity : ThemeStyleActivity() {
 
     override fun onResume() {
         mapView.onResume()
-        mediaPlayer?.let { playVoice() }
         isOpenNav = false
         super.onResume()
     }
 
     override fun onPause() {
         mapView.onPause()
-        mediaPlayer?.stop()
         super.onPause()
     }
 

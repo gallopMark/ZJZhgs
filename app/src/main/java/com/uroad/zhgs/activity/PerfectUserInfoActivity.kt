@@ -60,6 +60,7 @@ class PerfectUserInfoActivity : BaseActivity() {
                 if (GsonUtils.isResultOk(data)) {
                     if (isAlert) showShortToast("修改成功")
                     else showShortToast("保存成功")
+                    UserPreferenceHelper.saveAuth(this@PerfectUserInfoActivity, true)
                     UserPreferenceHelper.saveRealName(this@PerfectUserInfoActivity, name)
                     UserPreferenceHelper.saveCardNo(this@PerfectUserInfoActivity, cardno)
                     setResult(RESULT_OK)

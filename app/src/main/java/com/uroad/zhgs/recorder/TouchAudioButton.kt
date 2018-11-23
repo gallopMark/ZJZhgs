@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.widget.Button
 import com.uroad.zhgs.common.CurrApplication
@@ -33,7 +32,7 @@ class TouchAudioButton : Button, AudioManager.AudioStageListener {
     private var mMinRecordTime = 1
     //最大录音时长（单位:s def:30s)
     private var mMaxRecordTime = CurrApplication.VOICE_MAX_SEC
-    private lateinit var mStateHandler: StateHandler
+    private var mStateHandler: StateHandler
     private var voiceThread: VoiceThread? = null
     private var mListener: RecordListener? = null
 
@@ -122,7 +121,6 @@ class TouchAudioButton : Button, AudioManager.AudioStageListener {
                                 mStateHandler.sendEmptyMessage(MSG_TOO_SHORT)
                             } else {
                                 if (isOverTime) return true//超时
-                                mAudioManager.release() // release释放一个mediarecorder
                                 mStateHandler.sendEmptyMessage(MSG_VOICE_FINISHED)
                             }
                         }
@@ -174,6 +172,7 @@ class TouchAudioButton : Button, AudioManager.AudioStageListener {
                 }
                 MSG_VOICE_FINISHED -> {
                     voiceThread?.stopRecord()
+                    mAudioManager.release() // release释放一个mediarecorder
                     mListener?.onFinished(mTime, mAudioManager.getCurrentFilePath())
                 }
                 MSG_VOICE_CANCEL -> {
@@ -207,24 +206,6 @@ class TouchAudioButton : Button, AudioManager.AudioStageListener {
         fun stopRecord() {
             isRecording = false
             interrupt()
-        }
-    }
-
-    // 获取音量大小的runnable
-    private val runnable = Runnable {
-        while (isRecording) {
-            try {
-                //最长mMaxRecordTimes
-                if (mTime > mMaxRecordTime) {
-                    mStateHandler.sendEmptyMessage(MSG_VOICE_STOP)
-                    return@Runnable
-                }
-                Thread.sleep(100)
-                mTime += 0.1f
-                mStateHandler.sendEmptyMessage(MSG_VOICE_CHANGE)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
 

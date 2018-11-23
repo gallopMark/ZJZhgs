@@ -93,6 +93,11 @@ public class DeviceUtils {
         return Build.MANUFACTURER;
     }
 
+    /*设备的唯一标识。由设备的多个信息拼接合成。*/
+    public static String getFingerprint() {
+        return Build.FINGERPRINT;
+    }
+
     /**
      * 获取设备型号
      * <p>如MI2SC</p>

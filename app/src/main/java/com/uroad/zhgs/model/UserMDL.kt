@@ -23,7 +23,10 @@ class UserMDL {
     var requestcode: String? = null  //邀请码
     var QRCode: String? = null  //邀请二维码
     var isfollow: Int? = 0//	是否开启可关注 0 关闭；1开启
+    var isauthentication: Int? = 1
     var isLogin = false  // 用于保存用户登录信息的标记
 
     fun isFollow() = isfollow != 0
+
+    fun isAuth() = isauthentication == 2
 }

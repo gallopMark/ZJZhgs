@@ -10,14 +10,11 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.MimeTypeFilter
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import android.widget.*
-import com.amap.api.col.sln3.it
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -45,7 +42,6 @@ import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.MimeTypeTool
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
-import com.uroad.zhgs.webservice.upload.FileUploadObserver
 import com.uroad.zhgs.webservice.upload.RequestBodyWrapper
 import com.uroad.zhgs.webservice.upload.UploadFileCallback
 import com.uroad.zhgs.widget.CurrencyLoadView
@@ -514,6 +510,7 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         return UserPreferenceHelper.isLogin(context)
     }
 
+    fun isAuth() = UserPreferenceHelper.isAuth(context)
     //启动导航页面
     fun openNaviPage(start: Poi?, end: Poi) {
         AmapNaviPage.getInstance().showRouteActivity(context, AmapNaviParams(start, null, end, AmapNaviType.DRIVER), null)

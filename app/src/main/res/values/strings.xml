@@ -70,6 +70,7 @@
     <string name="home_nearby_empty">暂无附近数据</string>
     <string name="home_recommend_info">最新资讯</string>
     <string name="home_recommend_more">更多</string>
+    <string name="home_location_loading">正在获取位置信息…</string>
     <string name="home_location_failure_tips">定位失败，立即重试</string>
     <!--首页 end-->
 

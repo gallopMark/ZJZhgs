@@ -1,9 +1,6 @@
 package com.uroad.zhgs.fragment
 
-import android.os.Bundle
 import android.view.View
-import com.amap.api.col.sln3.va
-import com.uroad.zhgs.activity.LocationWebViewActivity
 import com.uroad.zhgs.adapteRv.ServiceAreaAdapter
 import com.uroad.zhgs.common.BaseRefreshRvFragment
 import com.uroad.zhgs.model.ServiceAreaMDL
@@ -31,12 +28,7 @@ class ServiceAreaFragment : BaseRefreshRvFragment() {
             }
 
             override fun itemClick(position: Int, service: ServiceMDL) {
-                val url = "http://zhgs.u-road.com/ZJAppView/serviceDetailTest.html?dataid=331101"
-                openActivity(LocationWebViewActivity::class.java, Bundle().apply {
-                    putString(LocationWebViewActivity.WEB_URL, url)
-                    putString(LocationWebViewActivity.WEB_TITLE, service.name)
-                    putBoolean("isService", true)
-                })
+                openLocationWebActivity(service.detailurl, service.name)
             }
         })
     }

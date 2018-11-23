@@ -53,19 +53,23 @@ class RidersReportAdapter(private val context: Activity, mData: MutableList<Ride
             holder.setVisibility(R.id.tvEventType, false)
             holder.setText(R.id.tvRemark, t.remark)
         }
+        if (t.isfollow == 0) {
+            holder.setImageResource(R.id.ivFollow, R.mipmap.ic_follow_ok)
+        } else {
+            holder.setImageResource(R.id.ivFollow, R.mipmap.ic_follow)
+        }
         if (TextUtils.equals(t.userid, currUserId)) {  //不能关注自己，隐藏关注按钮
             holder.setVisibility(R.id.ivFollow, View.GONE)
         } else {
             if (t.isfollowstatus == 1) {
                 holder.setVisibility(R.id.ivFollow, View.VISIBLE)
             } else {
-                holder.setVisibility(R.id.ivFollow, View.GONE)
+                if (t.isfollow == 0) { //用户关闭了被关注（在已关注的情况下可以取消关注）
+                    holder.setVisibility(R.id.ivFollow, View.VISIBLE)
+                } else {
+                    holder.setVisibility(R.id.ivFollow, View.GONE)
+                }
             }
-        }
-        if (t.isfollow == 0) {
-            holder.setImageResource(R.id.ivFollow, R.mipmap.ic_follow_ok)
-        } else {
-            holder.setImageResource(R.id.ivFollow, R.mipmap.ic_follow)
         }
         if (t.category == 2) {
             rvPics.visibility = View.GONE

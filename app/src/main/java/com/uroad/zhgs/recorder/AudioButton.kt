@@ -32,7 +32,7 @@ class AudioButton : Button, AudioManager.AudioStageListener, View.OnClickListene
     //是否触发过震动
     private var isShock: Boolean = false
     private var onRecordListener: OnRecordListener? = null
-
+    private var voiceThread: VoiceThread? = null
     fun setMaxRecordTime(max: Int) {
         this.mMaxRecordTime = max
     }
@@ -84,11 +84,12 @@ class AudioButton : Button, AudioManager.AudioStageListener, View.OnClickListene
                 MSG_AUDIO_PREPARED -> {
                     // 显示应该是在audio end prepare之后回调
                     isRecording = true
-                    Thread(mGetVoiceLevelRunnable).start()
+                    voiceThread = VoiceThread().apply { start() }
                 }
                 MSG_CAN_RECORD -> isEnabled = true
                 MSG_VOICE_CHANGE -> showRemainedTime()
                 MSG_VOICE_STOP -> {
+                    voiceThread?.stopRecord()
                     isOverTime = true//超时
                     mAudioManager.release()// release释放一个mediarecorder
                     onRecordListener?.onFinished(mTime, mAudioManager.getCurrentFilePath())
@@ -98,21 +99,27 @@ class AudioButton : Button, AudioManager.AudioStageListener, View.OnClickListene
         }
     }
 
-    // 获取音量大小的runnable
-    private val mGetVoiceLevelRunnable = Runnable {
-        while (isRecording) {
-            try {
-                //最长mMaxRecordTimes
-                if (mTime > mMaxRecordTime) {
-                    mStateHandler.sendEmptyMessage(MSG_VOICE_STOP)
-                    return@Runnable
+    private inner class VoiceThread : Thread() {
+        override fun run() {
+            while (isRecording) {
+                try {
+                    //最长mMaxRecordTimes
+                    if (mTime > mMaxRecordTime) {
+                        mStateHandler.sendEmptyMessage(MSG_VOICE_STOP)
+                        return
+                    }
+                    sleep(100)
+                    mTime += 0.1f
+                    mStateHandler.sendEmptyMessage(MSG_VOICE_CHANGE)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                Thread.sleep(100)
-                mTime += 0.1f
-                mStateHandler.sendEmptyMessage(MSG_VOICE_CHANGE)
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+        }
+
+        fun stopRecord() {
+            isRecording = false
+            interrupt()
         }
     }
 
@@ -153,10 +160,12 @@ class AudioButton : Button, AudioManager.AudioStageListener, View.OnClickListene
                 if (isRecording) {
                     if (mTime < mMinRecordTime) {
                         isRecording = false
+                        voiceThread?.stopRecord()
                         mAudioManager.cancel()
                         onRecordListener?.onRecordFailure(mMinRecordTime, true)
                     } else {
                         if (isOverTime) return //超时
+                        voiceThread?.stopRecord()
                         mAudioManager.release()// release释放一个mediarecorder
                         onRecordListener?.onFinished(mTime, mAudioManager.getCurrentFilePath())
                     }

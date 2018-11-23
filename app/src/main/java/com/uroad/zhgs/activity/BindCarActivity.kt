@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_bindcar.*
 import android.widget.*
 import android.os.Handler
 import android.text.method.ReplacementTransformationMethod
+import com.amap.api.col.sln3.et
 import com.uroad.zhgs.R
 import com.uroad.zhgs.R.id.*
 import com.uroad.zhgs.common.CarNoType
@@ -192,19 +193,26 @@ class BindCarActivity : BaseActivity() {
         }
         etNumType.setText((CarNoType.getCarMulti()[10] as CarNoType.TextType).text)
         etNumType.setSelection(etNumType.text.length)
+        etNumType.setOnClickListener { showCustomInput() }
         etNumType.setOnFocusChangeListener { _, hasFocus ->
-            InputMethodUtils.hideSoftInput(this)
-            CarNoInputDialog(this@BindCarActivity).setOnCarNoClickListener(object : CarNoInputDialog.OnCarNoClickListener {
-                override fun onCarNoClick(province: String, option: Int, dialog: CarNoInputDialog) {
-                    if (option == 1 || option == 2) {
-                        dialog.dismiss()
-                    } else {
-                        etNumType.setText(province)
-                        etNumType.setSelection(etNumType.text.length)
-                    }
-                }
-            }).show()
+            if (hasFocus) {
+                showCustomInput()
+            }
         }
+    }
+
+    private fun showCustomInput(){
+        InputMethodUtils.hideSoftInput(this)
+        CarNoInputDialog(this@BindCarActivity).setOnCarNoClickListener(object : CarNoInputDialog.OnCarNoClickListener {
+            override fun onCarNoClick(province: String, option: Int, dialog: CarNoInputDialog) {
+                if (option == 1 || option == 2) {
+                    dialog.dismiss()
+                } else {
+                    etNumType.setText(province)
+                    etNumType.setSelection(etNumType.text.length)
+                }
+            }
+        }).show()
     }
 
     /*要将输入的小写字母自动转化为大写字母并显示在EditText上,比较简便的方法是设置EditText的setTransformationMethod*/

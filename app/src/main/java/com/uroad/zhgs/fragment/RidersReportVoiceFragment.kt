@@ -214,7 +214,6 @@ class RidersReportVoiceFragment : BaseFragment(), AudioButton.OnRecordListener, 
         } else {
             this.seconds = seconds.toInt()
             voiceFile = File(filePath)
-            tvRecordTime.text = TimeUtil.milliSecond2Second((seconds * 1000).toLong())
             ivVoice.visibility = View.INVISIBLE
             audioButton.visibility = View.INVISIBLE
             ivPlayVoice.visibility = View.VISIBLE

@@ -703,6 +703,17 @@ class WebApiService {
             put("license", license)
             put("licenseColor", licenseColor)
         }
+
+        /*有赞登录接口*/
+        const val PRAISE_LOGIN = "loginYZ"
+
+        fun praiseLoginParams(useruuid: String?, device_id: String?, extra: String?) = getBaseParams().apply {
+            put("useruuid", useruuid)
+            put("device_id", device_id)
+            put("extra", extra)
+        }
+
+        const val PRAISE_INIT = "initTokenYZ"
     }
 
 }

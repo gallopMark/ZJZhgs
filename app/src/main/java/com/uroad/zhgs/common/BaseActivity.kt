@@ -52,7 +52,6 @@ import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.MimeTypeTool
 import com.uroad.zhgs.utils.StatusBarUtils
 import com.uroad.zhgs.webservice.ApiService
-import com.uroad.zhgs.webservice.upload.FileUploadObserver
 import com.uroad.zhgs.webservice.upload.RequestBodyWrapper
 import com.uroad.zhgs.webservice.upload.UploadFileCallback
 import com.uroad.zhgs.widget.CurrencyLoadView
@@ -63,7 +62,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import java.lang.StringBuilder
-import java.net.URLConnection
 
 
 /**
@@ -662,7 +660,7 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
     }
 
     /*用户选择了禁止不再提示 则显示此对话框，引导用户到app应用设置页面打开*/
-    fun showProhibitLocationDialog() {
+    open fun showProhibitLocationDialog() {
         showDialog(getString(R.string.rescue_main_without_location_title), getString(R.string.rescue_main_location_ban),
                 getString(R.string.dialog_button_cancel), getString(R.string.gotoSettings)
                 , object : MaterialDialog.ButtonClickListener {
@@ -775,6 +773,8 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
     fun getRequestCode() = UserPreferenceHelper.getRequestCode(this)
 
     fun getQRCode() = UserPreferenceHelper.getQRCode(this)
+
+    fun isAuth() = UserPreferenceHelper.isAuth(this)
     //启动导航页面
     fun openNaviPage(start: Poi?, end: Poi) {
         AmapNaviPage.getInstance().showRouteActivity(this, AmapNaviParams(start, null, end, AmapNaviType.DRIVER), null)

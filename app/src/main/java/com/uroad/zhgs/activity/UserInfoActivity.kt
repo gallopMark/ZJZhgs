@@ -2,7 +2,6 @@ package com.uroad.zhgs.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.zhgs.R
@@ -40,7 +39,7 @@ class UserInfoActivity : BaseActivity() {
         tvUserName.text = getUserName()
         tvPhone.text = getPhone()
         //如果已经实名认证则显示已认证图标
-        if (!TextUtils.isEmpty(getRealName()) && !TextUtils.isEmpty(getCardNo())) {
+        if (isAuth()) {
             ivStatus.visibility = View.VISIBLE
         } else {
             ivStatus.visibility = View.GONE
@@ -60,35 +59,35 @@ class UserInfoActivity : BaseActivity() {
         llPerfect.setOnClickListener { openActivityForResult(PerfectUserInfoActivity::class.java, REQUEST_PERFECT) }
     }
 
-    override fun initData() {
-        doRequest(WebApiService.USER_DATA, WebApiService.userDataParams(getUserId()), object : HttpRequestCallback<String>() {
-            override fun onPreExecute() {
-                showLoading()
-            }
-
-            override fun onSuccess(data: String?) {
-                endLoading()
-                if (GsonUtils.isResultOk(data)) {
-                    val mdl = GsonUtils.fromDataBean(data, UserMDL::class.java)
-                    if (mdl == null) showShortToast("数据解析异常")
-                    else updateData(mdl)
-                } else {
-                    showShortToast(GsonUtils.getMsg(data))
-                }
-            }
-
-            override fun onFailure(e: Throwable, errorMsg: String?) {
-                endLoading()
-                onHttpError(e)
-            }
-        })
-    }
-
-    private fun updateData(mdl: UserMDL) {
-        ImageLoaderV4.getInstance().displayImage(this, mdl.iconfile, ivUserIcon)
-        tvUserName.text = mdl.username
-        tvPhone.text = mdl.phone
-    }
+//    override fun initData() {
+//        doRequest(WebApiService.USER_DATA, WebApiService.userDataParams(getUserId()), object : HttpRequestCallback<String>() {
+//            override fun onPreExecute() {
+//                showLoading()
+//            }
+//
+//            override fun onSuccess(data: String?) {
+//                endLoading()
+//                if (GsonUtils.isResultOk(data)) {
+//                    val mdl = GsonUtils.fromDataBean(data, UserMDL::class.java)
+//                    if (mdl == null) showShortToast("数据解析异常")
+//                    else updateData(mdl)
+//                } else {
+//                    showShortToast(GsonUtils.getMsg(data))
+//                }
+//            }
+//
+//            override fun onFailure(e: Throwable, errorMsg: String?) {
+//                endLoading()
+//                onHttpError(e)
+//            }
+//        })
+//    }
+//
+//    private fun updateData(mdl: UserMDL) {
+//        ImageLoaderV4.getInstance().displayImage(this, mdl.iconfile, ivUserIcon)
+//        tvUserName.text = mdl.username
+//        tvPhone.text = mdl.phone
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

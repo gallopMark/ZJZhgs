@@ -17,7 +17,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.uroad.library.utils.NetworkUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.RidersReportAdapter
-import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.model.RidersReportMDL
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.InputMethodUtils
@@ -31,6 +30,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.activity.CameraActivity
 import com.uroad.zhgs.activity.RidersReportActivity
 import com.uroad.zhgs.activity.VideoActivity
+import com.uroad.zhgs.common.CameraFragment
 import com.uroad.zhgs.rxbus.MessageEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
@@ -41,7 +41,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
  * @create 2018/10/9
  * @describe 车友爆料
  */
-class RidersReportFragment : BaseFragment() {
+class RidersReportFragment : CameraFragment() {
     private val mDatas = ArrayList<RidersReportMDL>()
     private lateinit var adapter: RidersReportAdapter
     private var index = 1
@@ -175,7 +175,7 @@ class RidersReportFragment : BaseFragment() {
         val listener = View.OnClickListener {
             when (it.id) {
                 R.id.ivVoice -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_VOICE })
-                R.id.ivVideo -> openActivityForResult(CameraActivity::class.java, 1)
+                R.id.ivVideo -> onVideoRecord()
                 else -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_DEFAULT })
             }
             closeMenu()
@@ -487,7 +487,7 @@ class RidersReportFragment : BaseFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
             val url = data.getStringExtra("url")
             val firstFrame = data.getStringExtra("firstFrame")
             openActivity(Intent(context, RidersReportActivity::class.java)
@@ -537,6 +537,21 @@ class RidersReportFragment : BaseFragment() {
             it.release()
             mediaPlayer = null
         }
+    }
+
+    private fun onVideoRecord() {
+        if (hasCamera()) startCamera()
+        else {
+            requestCamera(object : OnRequestCameraCallback {
+                override fun onGranted() {
+                    startCamera()
+                }
+            })
+        }
+    }
+
+    private fun startCamera() {
+        openActivityForResult(CameraActivity::class.java, 123)
     }
 
     override fun onPause() {

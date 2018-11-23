@@ -4,10 +4,10 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import com.amap.api.maps.model.LatLng
 import com.tencent.android.tpush.XGPushManager
 import com.tencent.bugly.crashreport.CrashReport
+import com.tencent.smtt.sdk.TbsVideo
 import com.umeng.commonsdk.UMConfigure
 import com.uroad.library.utils.VersionUtils
 import com.uroad.library.utils.ZipUtils
@@ -18,6 +18,7 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.model.CarMDL
+import com.uroad.zhgs.model.YouZanMDL
 import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.utils.AssetsUtils
 import com.uroad.zhgs.utils.DiagramUtils
@@ -25,6 +26,9 @@ import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
+import com.youzan.androidsdk.YouzanSDK
+import com.youzan.androidsdk.YouzanToken
+import com.youzan.androidsdkx5.YouZanSDKX5Adapter
 import java.io.File
 
 /**
@@ -33,6 +37,7 @@ import java.io.File
 class CurrApplication : BaseApplication() {
 
     companion object {
+        private val handler = Handler()
         val APP_LATLNG = LatLng(30.3, 120.2)   //杭州经纬度
         lateinit var DIAGRAM_PATH: String
         lateinit var COMPRESSOR_PATH: String
@@ -46,10 +51,11 @@ class CurrApplication : BaseApplication() {
         var WISDOM_URL: String? = null  //小智问问url
         var ALIVE_URL: String? = null   //直播url
         var BREAK_RULES_URL: String? = null //违章查询url
+        var PRAISE_URL: String? = null //有赞url
+        var PRAISE_USER_URL: String? = null //有赞用户中心url
         var cars: MutableList<CarMDL>? = null
     }
 
-    private val handler = Handler()
     override fun onCreate() {
         super.onCreate()
         initHttpService()
@@ -57,6 +63,7 @@ class CurrApplication : BaseApplication() {
         downloadDiagram()
         initXG()
         initUM()
+        initYouZan()
         initBugly()
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
     }
@@ -67,32 +74,7 @@ class CurrApplication : BaseApplication() {
         RxHttpManager.get().config().setBaseUrl(baseUrl)
     }
 
-    /*初始化讯飞语音*/
-//    private fun initXunFei() {
-//        //SpeechUtility.createUtility(this, "${SpeechConstant.APPID}=${resources.getString(R.string.msc_appId)}")
-//    }
-
-    /*初始化tencent bugly*/
-    private fun initBugly() {
-        if (ApiService.isDebug) return
-        CrashReport.initCrashReport(this, resources.getString(R.string.bugly_appid), false)
-    }
-
-    /*注册信鸽推送*/
-    private fun initXG() {
-        val pushID = UserPreferenceHelper.getPushID(this)
-        if (!TextUtils.isEmpty(pushID)) {
-            XGPushManager.bindAccount(this, pushID)
-        } else {
-            XGPushManager.registerPush(this)
-        }
-    }
-
-    /*友盟统计初始化*/
-    private fun initUM() {
-        UMConfigure.init(this, getString(R.string.UMENG_APP_ID), "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "")
-    }
-
+    /*初始化相关文件存放的目录*/
     private fun initFilePath() {
         initCompressorPath()
         initDiagramPath()
@@ -127,6 +109,78 @@ class CurrApplication : BaseApplication() {
     private fun initVideoPath() {
         VIDEO_PATH = "${filesDir.absolutePath}${File.separator}/video"
         File(RECORDER_PATH).apply { if (!exists()) this.mkdirs() }
+    }
+
+    /*初始化讯飞语音*/
+//    private fun initXunFei() {
+//        //SpeechUtility.createUtility(this, "${SpeechConstant.APPID}=${resources.getString(R.string.msc_appId)}")
+//    }
+    /*注册信鸽推送*/
+    private fun initXG() {
+        val pushID = UserPreferenceHelper.getPushID(this)
+        if (!TextUtils.isEmpty(pushID)) {
+            XGPushManager.bindAccount(this, pushID)
+        } else {
+            XGPushManager.registerPush(this)
+        }
+    }
+
+    /*友盟统计初始化*/
+    private fun initUM() {
+        UMConfigure.init(this, getString(R.string.UMENG_APP_ID), "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "")
+    }
+
+    /*有赞SDK初始化*/
+    private fun initYouZan() {
+        // 腾讯X5版本使用
+        YouzanSDK.init(this, getString(R.string.PRAISE_CLIENT_ID), YouZanSDKX5Adapter())
+        //(可选)预下载店铺主页------------------------------
+        // YouzanPreloader.preloadHtml(this, "preload_html_url");
+        // 对html预加载时调用， 提升html打开速度，preload_html_url不能是重定向页面
+        /**
+         * 自6.4.5以后，获取到token信息后，同步到SDK时，需要做出一定变更。
+        //调用login接口, 获取数据, 组装成YouzanToken, 回传给SDK
+        YouzanToken token = new YouzanToken()
+        token.setAccessToken("接口返回的access_token")
+        token.setCookieKey("接口返回的cookie_key")
+        token.setCookieValue("接口返回的cookie_value")
+        // 注意：这里注意调用顺序。先传递给sdk，再刷新view
+        YouzanSDK.sync(getApplicationContext(), token);
+        mView.sync(token);
+         */
+    }
+
+    fun onPraiseLogin(useruuid: String?, deviceID: String?, extra: String?) {
+        doRequest(WebApiService.PRAISE_LOGIN, WebApiService.praiseLoginParams(useruuid, deviceID, extra), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)
+                    if (mdl == null) handler.postDelayed({ onPraiseLogin(useruuid, deviceID, extra) }, 3000)
+                    else initYouZanToken(mdl.access_token, mdl.cookie_key, mdl.cookie_value)
+                } else {
+                    handler.postDelayed({ onPraiseLogin(useruuid, deviceID, extra) }, 3000)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ onPraiseLogin(useruuid, deviceID, extra) }, 3000)
+            }
+        })
+    }
+
+    private fun initYouZanToken(access_token: String?, cookie_key: String?, cookie_value: String?) {
+        val token = YouzanToken().apply {
+            this.accessToken = access_token
+            this.cookieKey = cookie_key
+            this.cookieValue = cookie_value
+        }
+        YouzanSDK.sync(this, token)
+    }
+
+    /*初始化tencent bugly*/
+    private fun initBugly() {
+//        if (ApiService.isDebug) return
+        CrashReport.initCrashReport(this, resources.getString(R.string.bugly_appid), false)
     }
 
     /*下载简图*/

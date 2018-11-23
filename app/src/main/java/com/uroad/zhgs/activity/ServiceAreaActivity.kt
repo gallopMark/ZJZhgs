@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
@@ -46,19 +45,6 @@ class ServiceAreaActivity : BaseActivity() {
     private fun initMapView() {
         aMap = mapView.map
         moveCamera()
-//        aMap.setOnMarkerClickListener { marker ->
-//            oldMarker?.let { restoreMarker(it) }
-//            enlargeMarkerIcon(marker)
-//            return@setOnMarkerClickListener true
-//        }
-    }
-
-    private fun moveCamera() {
-        aMap.apply {
-            //移动到浙江省 120.226989,30.283935 30.3, 120.2
-            animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(CurrApplication.APP_LATLNG, this.cameraPosition.zoom, 0f, 0f)))
-            maxZoomLevel = 10f
-        }
         aMap.setOnMarkerClickListener {
             it.showInfoWindow()
             return@setOnMarkerClickListener true
@@ -77,6 +63,14 @@ class ServiceAreaActivity : BaseActivity() {
         aMap.setOnInfoWindowClickListener {
             val mdl = it.`object` as ServiceMDL
             openLocationWebActivity(mdl.detailurl, mdl.name)
+        }
+    }
+
+    private fun moveCamera() {
+        aMap.apply {
+            //移动到浙江省 120.226989,30.283935 30.3, 120.2
+            animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(CurrApplication.APP_LATLNG, this.cameraPosition.zoom, 0f, 0f)))
+            maxZoomLevel = 10f
         }
     }
 
@@ -116,27 +110,40 @@ class ServiceAreaActivity : BaseActivity() {
 
     private fun setTab(tab: Int) {
         val transaction = supportFragmentManager.beginTransaction()
+        for (fragment in supportFragmentManager.fragments) transaction.hide(fragment)
         if (tab == 1) {
-            val fragment = ServiceAreaFragment()
-            fragment.setOnItemOpenCloseListener(object : ServiceAreaFragment.OnItemOpenCloseListener {
-                override fun onItemOpenClose(position: Int, serviceList: MutableList<ServiceMDL>, isOpen: Boolean) {
-                    if (isOpen) {
-                        addMarkers(position, serviceList)
-                    } else {
-                        removeMarkers(position)
-                    }
-                }
-            })
-            transaction.replace(R.id.container, fragment)
+            val fragment = supportFragmentManager.findFragmentByTag("tab1")
+            if (fragment == null) {
+                transaction.add(R.id.container, ServiceAreaFragment().apply {
+                    setOnItemOpenCloseListener(object : ServiceAreaFragment.OnItemOpenCloseListener {
+                        override fun onItemOpenClose(position: Int, serviceList: MutableList<ServiceMDL>, isOpen: Boolean) {
+                            if (isOpen) {
+                                addMarkers(position, serviceList)
+                            } else {
+                                removeMarkers(position)
+                            }
+                        }
+                    })
+                }, "tab1")
+            } else {
+                transaction.show(fragment)
+            }
         } else {
             for ((k, _) in arrayMap) removeMarkers(k)
-            val fragment = ServiceFragment().apply { arguments = Bundle().apply { putString("keyword", keyword) } }
-            fragment.setOnDataSetChangedListener(object : ServiceFragment.OnDataSetChangedListener {
-                override fun dataSetChanged(mdls: MutableList<ServiceMDL>) {
-                    addMarkers(0, mdls)
-                }
-            })
-            transaction.replace(R.id.container, fragment)
+            val fragment = supportFragmentManager.findFragmentByTag("tab2")
+            if (fragment != null && fragment is ServiceFragment) {
+                fragment.onSearch(keyword)
+                transaction.show(fragment)
+            } else {
+                transaction.add(R.id.container,ServiceFragment().apply {
+                    arguments = Bundle().apply { putString("keyword", keyword) }
+                    setOnDataSetChangedListener(object : ServiceFragment.OnDataSetChangedListener {
+                        override fun dataSetChanged(mdls: MutableList<ServiceMDL>) {
+                            addMarkers(0, mdls)
+                        }
+                    })
+                },"tab2")
+            }
         }
         transaction.commit()
     }
@@ -169,34 +176,6 @@ class ServiceAreaActivity : BaseActivity() {
             aMap.reloadMap() //刷新地图
         }
     }
-
-    //还原上次点击的marker
-//    private fun restoreMarker(marker: Marker) {
-//        marker.setIcon(BitmapDescriptorFactory.fromResource((marker.`object` as ServiceMDL).markerIcon))
-//    }
-
-    //放大点击的marker
-//    private fun enlargeMarkerIcon(marker: Marker) {
-//        val mdl = marker.`object` as ServiceMDL
-//        marker.setIcon(BitmapDescriptorFactory.fromResource(mdl.markerBigIco))
-//        val dialog = ServiceAreaDialog(this, mdl)
-//        dialog.setOnButtonClickListener(object : ServiceAreaDialog.OnButtonClickListener {
-//            override fun onDetail(dataMDL: ServiceMDL) {
-//                openLocationWebActivity(dataMDL.detailurl, dataMDL.name)
-//                dialog.dismiss()
-//            }
-//
-//            override fun onNavigation(dataMDL: ServiceMDL) {
-//                var poiName = ""
-//                dataMDL.name?.let { poiName = it }
-//                val end = Poi(poiName, LatLng(dataMDL.latitude(), dataMDL.longitude()), "")
-//                openNaviPage(null, end)
-//                dialog.dismiss()
-//            }
-//        })
-//        dialog.show()
-//        dialog.setOnDismissListener { restoreMarker(marker) }
-//    }
 
     override fun onResume() {
         mapView.onResume()

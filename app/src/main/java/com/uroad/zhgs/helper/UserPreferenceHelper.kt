@@ -24,6 +24,7 @@ class UserPreferenceHelper {
         const val REQUEST_CODE = "requestcode"
         const val ISFOLLOW = "isfollow"
         const val QRCODE = "QRCode"
+        const val ISAUTH = "isAuth"
 
         private fun from(context: Context): SharedPreferences {
             return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
@@ -44,6 +45,7 @@ class UserPreferenceHelper {
                 putString(QRCODE, userMDL.QRCode)
                 putString(REQUEST_CODE, userMDL.requestcode)
                 putBoolean(ISFOLLOW, userMDL.isFollow())
+                putBoolean(ISAUTH, userMDL.isAuth())
                 putBoolean(LOGIN_STAYUS, userMDL.isLogin)
             }.apply()
         }
@@ -128,5 +130,8 @@ class UserPreferenceHelper {
         fun clear(context: Context) {
             from(context).edit().clear().apply()
         }
+
+        fun saveAuth(context: Context, isAuth: Boolean) = from(context).edit().putBoolean(ISAUTH, isAuth).apply()
+        fun isAuth(context: Context): Boolean = from(context).getBoolean(ISAUTH, false)
     }
 }

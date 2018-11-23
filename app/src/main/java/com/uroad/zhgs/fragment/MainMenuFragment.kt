@@ -146,7 +146,12 @@ class MainMenuFragment : BaseFragment() {
                         TextUtils.equals(key, MainMenuMDL.GSZX) -> openActivity(NewsMainActivity::class.java)  //高速资讯
                         TextUtils.equals(key, MainMenuMDL.CXCX) -> if (!isLogin()) openActivity(LoginActivity::class.java)
                         else getMyCar()
-                        TextUtils.equals(key, MainMenuMDL.GSZB) -> CurrApplication.ALIVE_URL?.let { openWebActivity(it, mdl.menuname) }
+                        TextUtils.equals(key, MainMenuMDL.GSZB) -> CurrApplication.ALIVE_URL?.let {
+                            openActivity(X5WebViewActivity::class.java, Bundle().apply {
+                                putString("url", it)
+                                putString("title", mdl.menuname)
+                            })
+                        }
                     }
                 }
             })

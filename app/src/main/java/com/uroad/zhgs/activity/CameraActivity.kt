@@ -1,9 +1,6 @@
 package com.uroad.zhgs.activity
 
-import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import com.uroad.cameralibrary.listener.JCameraListener
@@ -11,12 +8,8 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
 import kotlinx.android.synthetic.main.activity_camera.*
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.view.View
 import android.view.WindowManager
 import com.uroad.cameralibrary.JCameraView
-import com.uroad.zhgs.dialog.MaterialDialog
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -30,7 +23,6 @@ import java.util.*
  * @describe 仿微信拍照或短视频录制
  */
 class CameraActivity : BaseActivity(), JCameraListener {
-    private var granted = false
     override fun requestWindow() {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
@@ -43,7 +35,6 @@ class CameraActivity : BaseActivity(), JCameraListener {
         jCameraView.setDuration(CurrApplication.VIDEO_MAX_SEC * 1000)
         jCameraView.setJCameraLisenter(this)
         jCameraView.setLeftClickListener { onBackPressed() }
-        requestPermissions()
     }
 
     override fun captureSuccess(bitmap: Bitmap?) {
@@ -61,77 +52,8 @@ class CameraActivity : BaseActivity(), JCameraListener {
         }
     }
 
-    private fun requestPermissions() {
-        granted = if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            true
-        } else {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                showTipsDialog(0)
-            } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO), 1)
-            }
-            false
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == 1 && grantResults.isNotEmpty()) {
-            granted = true
-            for (result in grantResults) {
-                if (result == PackageManager.PERMISSION_GRANTED) {
-                    granted = false
-                    break
-                }
-            }
-            if (granted) jCameraView.onResume()
-            else {
-                var prohibit = false
-                for (permission in permissions) {
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                        prohibit = true
-                        break
-                    }
-                }
-                if (prohibit) {
-                    showTipsDialog(0)
-                } else {
-                    showTipsDialog(1)
-                }
-            }
-        }
-    }
-
-    private fun showTipsDialog(type: Int) {
-        val dialog = MaterialDialog(this)
-        dialog.setTitle(getString(R.string.dialog_default_title))
-        if (type == 1)
-            dialog.setMessage("相机权限已被禁止，请重新打开")
-        else
-            dialog.setMessage("相机权限已被禁止，请到设置——权限管理中开启“相机”")
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setPositiveButton(getString(R.string.reopen), object : MaterialDialog.ButtonClickListener {
-            override fun onClick(v: View, dialog: AlertDialog) {
-                dialog.dismiss()
-                if (type == 1)
-                    requestPermissions()
-                else {
-                    openSettings()
-                }
-            }
-        })
-        dialog.setNegativeButton(getString(R.string.dialog_button_cancel), object : MaterialDialog.ButtonClickListener {
-            override fun onClick(v: View, dialog: AlertDialog) {
-                dialog.dismiss()
-                finish()
-            }
-        })
-        dialog.show()
-    }
-
     override fun onResume() {
-        if (granted) jCameraView.onResume()
+        jCameraView.onResume()
         super.onResume()
     }
 
