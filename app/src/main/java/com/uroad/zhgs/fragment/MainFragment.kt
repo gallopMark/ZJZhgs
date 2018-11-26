@@ -10,10 +10,6 @@ import android.view.View
 import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.common.BaseFragment
 import kotlinx.android.synthetic.main.fragment_main.*
-import com.amap.api.services.weather.WeatherSearch
-import com.amap.api.services.weather.WeatherSearchQuery
-import com.amap.api.services.weather.LocalWeatherForecastResult
-import com.amap.api.services.weather.LocalWeatherLiveResult
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -39,20 +35,16 @@ import org.eclipse.paho.client.mqttv3.IMqttToken
  * 说明：app首
  * 18802076493 a123456
  */
-class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
+class MainFragment : BaseFragment() {
     private var isLocationSuccess = false  //是否已经点位成功
-    private var weatherSearch: WeatherSearch? = null    //高德api天气搜索
-    private var isDestroyView = false
     private var onMenuClickListener: OnMenuClickListener? = null
     private var longitude = CurrApplication.APP_LATLNG.longitude
     private var latitude = CurrApplication.APP_LATLNG.latitude
-    private lateinit var mainSubscribeFragment: MainSubscribeFragment
-    private lateinit var mainNearByFragment: MainNearByFragment
-    private lateinit var mainNewsFragment: MainNewsFragment
     private val handler = Handler()
 
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
+        const val TAG_OTHER = "other"
         const val TAG_MENU = "menu"
         const val TAG_SUBSCRIBE = "subscribe"
         const val TAG_NEARBY = "nearby"
@@ -70,6 +62,7 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
             if (!isLogin()) openActivity(LoginActivity::class.java)
             else checkRescue()
         }
+        initWeatherOther()
         initMenu()
         initSubscribe()
         initNearBy()
@@ -128,22 +121,31 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
         }
     }
 
+    /*首页天气（活动入口）等 用fragment替换*/
+    private fun initWeatherOther() {
+        val fragment = childFragmentManager.findFragmentByTag(TAG_OTHER)
+        if (fragment != null) {
+            childFragmentManager.popBackStack(MainOtherFragment::class.java.name, 0)
+            childFragmentManager.beginTransaction().remove(fragment).commit()
+        }
+        childFragmentManager.beginTransaction().replace(R.id.llTop, MainOtherFragment(), TAG_OTHER).commit()
+    }
+
     /*菜单列表(用fragment替换)*/
     private fun initMenu() {
         /*防止系统内存不足GC导致fragment重叠问题*/
         val fragment = childFragmentManager.findFragmentByTag(TAG_MENU)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainMenuFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().detach(fragment).remove(fragment).commit()
-        } else {
-            childFragmentManager.beginTransaction().replace(R.id.flMenu, MainMenuFragment().apply {
-                setOnShopClickListener(object : MainMenuFragment.OnShopClickListener {
-                    override fun onShopClick() {
-                        onMenuClickListener?.onMenuClick()
-                    }
-                })
-            }, TAG_MENU).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commit()
         }
+        childFragmentManager.beginTransaction().replace(R.id.flMenu, MainMenuFragment().apply {
+            setOnShopClickListener(object : MainMenuFragment.OnShopClickListener {
+                override fun onShopClick() {
+                    onMenuClickListener?.onMenuClick()
+                }
+            })
+        }, TAG_MENU).commit()
     }
 
     /*我的订阅(用fragment替换)*/
@@ -151,18 +153,16 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
         val fragment = childFragmentManager.findFragmentByTag(TAG_SUBSCRIBE)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainSubscribeFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().detach(fragment).remove(fragment).commit()
-        } else {
-            mainSubscribeFragment = MainSubscribeFragment().apply {
-                setOnSubscribeEvent(object : MainSubscribeFragment.OnSubscribeEvent {
-                    override fun onEvent(isEmpty: Boolean) {
-                        if (isEmpty) this@MainFragment.flSubscribe.visibility = View.GONE
-                        else this@MainFragment.flSubscribe.visibility = View.VISIBLE
-                    }
-                })
-            }
-            childFragmentManager.beginTransaction().replace(R.id.flSubscribe, mainSubscribeFragment, TAG_SUBSCRIBE).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commit()
         }
+        childFragmentManager.beginTransaction().replace(R.id.flSubscribe, MainSubscribeFragment().apply {
+            setOnSubscribeEvent(object : MainSubscribeFragment.OnSubscribeEvent {
+                override fun onEvent(isEmpty: Boolean) {
+                    if (isEmpty) this@MainFragment.flSubscribe.visibility = View.GONE
+                    else this@MainFragment.flSubscribe.visibility = View.VISIBLE
+                }
+            })
+        }, TAG_SUBSCRIBE).commit()
     }
 
     /*我的附近（用fragment替代）*/
@@ -170,17 +170,15 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
         val fragment = childFragmentManager.findFragmentByTag(TAG_NEARBY)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainNearByFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().detach(fragment).remove(fragment).commit()
-        } else {
-            mainNearByFragment = MainNearByFragment().apply {
-                setOnRequestLocationListener(object : MainNearByFragment.OnRequestLocationListener {
-                    override fun onRequest() {
-                        applyLocationPermissions()
-                    }
-                })
-            }
-            childFragmentManager.beginTransaction().replace(R.id.flNearBy, mainNearByFragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commit()
         }
+        childFragmentManager.beginTransaction().replace(R.id.flNearBy, MainNearByFragment().apply {
+            setOnRequestLocationListener(object : MainNearByFragment.OnRequestLocationListener {
+                override fun onRequest() {
+                    applyLocationPermissions()
+                }
+            })
+        }, TAG_NEARBY).commit()
     }
 
     /*最新资讯（用fragment替换）*/
@@ -188,19 +186,16 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
         val fragment = childFragmentManager.findFragmentByTag(TAG_NEWS)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainNewsFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().detach(fragment).remove(fragment).commit()
-        } else {
-            mainNewsFragment = MainNewsFragment().apply {
-                setOnRequestCallback(object : MainNewsFragment.OnRequestCallback {
-                    override fun callback() {
-                        this@MainFragment.refreshLayout.finishRefresh()
-                    }
-                })
-            }
-            childFragmentManager.beginTransaction().replace(R.id.flNews, mainNewsFragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commit()
         }
+        childFragmentManager.beginTransaction().replace(R.id.flNews, MainNewsFragment().apply {
+            setOnRequestCallback(object : MainNewsFragment.OnRequestCallback {
+                override fun callback() {
+                    this@MainFragment.refreshLayout.finishRefresh()
+                }
+            })
+        }, TAG_NEWS).commit()
     }
-
 
     /*下拉刷新 重新打开定位，刷新我的附近，我的订阅，最新资讯*/
     private fun initRefresh() {
@@ -213,23 +208,26 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
     }
 
     private fun removeSubscribe() {
-        if (mainSubscribeFragment.isAdded) {
+        val fragment = childFragmentManager.findFragmentByTag(TAG_SUBSCRIBE)
+        if (fragment != null) {
             childFragmentManager.popBackStack(MainSubscribeFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().detach(mainSubscribeFragment).remove(mainSubscribeFragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commit()
         }
     }
 
     /*刷新我的订阅*/
     private fun updateSubscribe() {
-        if (!mainSubscribeFragment.isAdded) {
+        val fragment = childFragmentManager.findFragmentByTag(TAG_SUBSCRIBE)
+        if (fragment == null || !fragment.isAdded) {
             initSubscribe()
         } else {
-            mainSubscribeFragment.initData()
+            if (fragment is MainSubscribeFragment) fragment.initData()
         }
     }
 
     private fun updateNews() {
-        if (mainNewsFragment.isAdded) mainNewsFragment.initData()
+        val fragment = childFragmentManager.findFragmentByTag(TAG_NEWS)
+        if (fragment != null && fragment is MainNewsFragment) fragment.initData()
     }
 
     override fun setListener() {
@@ -238,12 +236,9 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
 
     override fun afterLocation(location: AMapLocation) {
         isLocationSuccess = true
-        val city = location.city
-        val mQuery = WeatherSearchQuery(city, WeatherSearchQuery.WEATHER_TYPE_LIVE)
-        weatherSearch = WeatherSearch(context).apply {
-            setOnWeatherSearchListener(this@MainFragment)
-            query = mQuery
-            searchWeatherAsyn() //异步搜索
+        val fragment = childFragmentManager.findFragmentByTag(TAG_OTHER)
+        if (fragment != null && fragment is MainOtherFragment) {
+            fragment.onLocationSuccess(location)
         }
         longitude = location.longitude
         latitude = location.latitude
@@ -254,7 +249,10 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
     }
 
     private fun locationUpdate(longitude: Double, latitude: Double) {
-        if (mainNearByFragment.isAdded) mainNearByFragment.locationUpdate(longitude, latitude)
+        val fragment = childFragmentManager.findFragmentByTag(TAG_NEARBY)
+        if (fragment != null && fragment is MainNearByFragment) {
+            fragment.locationUpdate(longitude, latitude)
+        }
     }
 
     override fun locationFailure() {
@@ -264,26 +262,10 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
     }
 
     private fun onLocationFailure() {
-        if (mainNearByFragment.isAdded) mainNearByFragment.onLocationFailure()
-    }
-
-    override fun onWeatherLiveSearched(weatherLiveResult: LocalWeatherLiveResult?, rCode: Int) {
-        if (isDestroyView) return
-        if (rCode == 1000 && weatherLiveResult != null && weatherLiveResult.liveResult != null) {
-            val result = weatherLiveResult.liveResult
-            llWeather.visibility = View.VISIBLE
-            val temperature = result.temperature + "℃"
-            val weather = result.weather
-            iv_weather.setImageResource(WeatherMDL.getWeatherIco(weather))
-            tv_temperature.text = temperature
-            tv_city.text = result.city
-        } else {
-            handler.postDelayed({ weatherSearch?.searchWeatherAsyn() }, DELAY_MILLIS)
+        val fragment = childFragmentManager.findFragmentByTag(TAG_NEARBY)
+        if (fragment != null && fragment is MainNearByFragment) {
+            fragment.onLocationFailure()
         }
-    }
-
-    override fun onWeatherForecastSearched(localWeatherForecastResult: LocalWeatherForecastResult, rCode: Int) {
-
     }
 
     override fun onResume() {
@@ -536,7 +518,6 @@ class MainFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener {
     }
 
     override fun onDestroyView() {
-        isDestroyView = true
         handler.removeCallbacksAndMessages(null)
         super.onDestroyView()
     }

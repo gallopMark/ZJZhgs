@@ -65,7 +65,7 @@ class AMapNaviSearchActivity : BaseActivity() {
                 RouteSearchHelper.deleteItem(context, t)
                 mDatas.remove(t)
                 notifyDataSetChanged()
-                if (mDatas.size == 0) llHirstoryData.visibility = View.GONE
+                if (mDatas.size == 0) llHistoryData.visibility = View.GONE
             })
             holder.itemView.setOnClickListener {
                 etMyLocation.setText(RouteSearchHelper.getStartPos(t))
@@ -75,7 +75,7 @@ class AMapNaviSearchActivity : BaseActivity() {
                 val startPoint = RouteSearchHelper.getStartPoint(t)
                 val endPoint = RouteSearchHelper.getEndPoint(t)
                 if (startPoint != null && endPoint != null) {
-                    llHirstoryData.visibility = View.GONE
+                    llHistoryData.visibility = View.GONE
                     doRouteSearch(startPoint, endPoint)
                 }
             }
@@ -109,13 +109,13 @@ class AMapNaviSearchActivity : BaseActivity() {
         mapView.onCreate(savedInstanceState)
         initMapView()
         initSearchView()
-        llNavigation.setOnClickListener { _ ->
+        llNavigation.setOnClickListener {
             naviPath?.let { path ->
                 openActivity(RouteNaviActivity::class.java, Bundle().apply {
                     putParcelable("start", path.startPoint)
                     putParcelable("end", path.endPoint)
                     //  mAMapNavi.selectRouteId(selectRouteId)
-                    selectRouteId?.let { putInt("selectRouteId", it) }
+                    selectRouteId?.let { routeId -> putInt("selectRouteId", routeId) }
                     //   putInt("strategy", path.strategy)
                 })
             }
@@ -130,15 +130,18 @@ class AMapNaviSearchActivity : BaseActivity() {
         historyAdapter = HistoryAdapter(this, data)
         rvHistory.adapter = historyAdapter
         if (data.size > 0) {
-            llHirstoryData.visibility = View.VISIBLE
+            llHistoryData.visibility = View.VISIBLE
+            tvEmptyHis.visibility = View.GONE
         } else {
-            llHirstoryData.visibility = View.GONE
+            llHistoryData.visibility = View.GONE
+            tvEmptyHis.visibility = View.VISIBLE
         }
         tvClear.setOnClickListener {
             RouteSearchHelper.clear(this@AMapNaviSearchActivity)
             data.clear()
             historyAdapter.notifyDataSetChanged()
-            llHirstoryData.visibility = View.GONE
+            llHistoryData.visibility = View.GONE
+            tvEmptyHis.visibility = View.VISIBLE
         }
     }
 
@@ -289,19 +292,21 @@ class AMapNaviSearchActivity : BaseActivity() {
 
             override fun onTextChanged(s: CharSequence, p1: Int, p2: Int, p3: Int) {
                 val content = s.toString()
-                if (isOnItemClick2) {
-                    isOnItemClick2 = false
-                } else {
-                    disposable?.dispose()
-                    popupWindow?.dismiss()
-                    doPoiSearch(content, 2)
+                if (!TextUtils.isEmpty(content.trim())) {
+                    if (isOnItemClick2) {
+                        isOnItemClick2 = false
+                    } else {
+                        disposable?.dispose()
+                        popupWindow?.dismiss()
+                        doPoiSearch(content, 2)
+                    }
                 }
             }
 
             override fun afterTextChanged(editable: Editable) {
             }
         })
-        ivChange.setOnClickListener { _ ->
+        ivChange.setOnClickListener {
             val temp = startPoint
             startPoint = endPoint
             endPoint = temp
@@ -310,7 +315,7 @@ class AMapNaviSearchActivity : BaseActivity() {
             etEndPos.text = tempText
             etMyLocation.setSelection(etMyLocation.text.length)
             etEndPos.setSelection(etEndPos.text.length)
-            startPoint?.let { start -> endPoint?.let { doRouteSearch(start, it) } }
+            startPoint?.let { start -> endPoint?.let { end -> doRouteSearch(start, end) } }
         }
     }
 
@@ -402,7 +407,7 @@ class AMapNaviSearchActivity : BaseActivity() {
     private fun doRouteSearch(startPoint: LatLonPoint, endPoint: LatLonPoint) {
         this.startPoint = startPoint
         this.endPoint = endPoint
-        if (llHirstoryData.visibility != View.GONE) llHirstoryData.visibility = View.GONE
+        if (flHistory.visibility != View.GONE) flHistory.visibility = View.GONE
         RouteSearchHelper.saveContent(this, etMyLocation.text.toString(), startPoint, etEndPos.text.toString(), endPoint)
         disposable?.dispose()
         popupWindow?.dismiss()

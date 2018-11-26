@@ -18,6 +18,7 @@ import com.uroad.zhgs.model.EventMDL
 import com.uroad.zhgs.model.HighwayPreViewMDL
 import com.uroad.zhgs.model.RtmpMDL
 import com.uroad.zhgs.model.SnapShotMDL
+import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
@@ -49,7 +50,14 @@ class HighwayPreviewFragment : BasePageFragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
         tvPoiname.text = arguments?.getString("poiname")
         recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.VERTICAL }
-        adapter = HighwayPreViewAdapter(context, mDatas)
+        adapter = HighwayPreViewAdapter(context, mDatas).apply {
+            setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
+                override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                    if (position in 0 until mDatas.size)
+                        openLocationWebActivity(mDatas[position].detailurl, mDatas[position].name)
+                }
+            })
+        }
         recyclerView.adapter = adapter
         adapter.setOnEventClickListener(object : HighwayPreViewAdapter.OnEventClickListener {
             override fun onEventClickListener(eventIds: String) {

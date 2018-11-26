@@ -127,7 +127,7 @@ class YouZanUserActivity : BaseActivity() {
     private fun initLogin() {
         val deviceID = DeviceUtils.getAndroidID(this)
         val extra = DeviceUtils.getFingerprint()
-        doRequest(WebApiService.PRAISE_LOGIN, WebApiService.praiseLoginParams(getUserId(), deviceID, extra), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.PRAISE_LOGIN, WebApiService.praiseLoginParams(getUserUUID(), deviceID, extra), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)

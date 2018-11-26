@@ -738,6 +738,8 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
         return UserPreferenceHelper.getUserId(this)
     }
 
+    fun getUserUUID(): String = UserPreferenceHelper.getUserUUID(this)
+
     fun getRealName(): String {
         return UserPreferenceHelper.getRealName(this)
     }

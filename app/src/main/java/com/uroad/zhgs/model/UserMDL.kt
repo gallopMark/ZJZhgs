@@ -12,6 +12,7 @@ cardno	身份证
 class UserMDL {
     var userid: String? = null
     var pushid: String? = null  //推送
+    var useruuid: String? = null
     var name: String? = null
     var username: String? = null
     var userpassword: String? = null

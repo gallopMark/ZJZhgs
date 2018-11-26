@@ -483,9 +483,9 @@
     <string name="roadToll_bottom_tips">以上费用仅供参考，实际发生费用以收费站收取金额为准</string>
     <string name="roadToll_search">查询</string>
     <string name="roadToll_startPoi_hint">请输入起点收费站名称</string>
-    <string name="roadToll_select_startPoi_hint">请选择起点收费站</string>
+    <string name="roadToll_select_startPoi_hint">起点</string>
     <string name="roadToll_endPoi_hint">请输入终点收费站名称</string>
-    <string name="roadToll_select_endPoi_hint">请选择终点收费站</string>
+    <string name="roadToll_select_endPoi_hint">终点</string>
 
     <string name="dialog_bindcar_title">绑定车辆</string>
     <string name="dialog_bindcar_content">使用本功能，请先绑定车辆</string>
@@ -551,5 +551,14 @@
     <string name="car_inquiry_tips">换卡、套牌、冲卡</string>
     <string name="dialog_authentication_title">请选择认证方式</string>
     <string name="dialog_authentication_tips">绑定车辆信息，我们可为您提供沿途丰富精准的路况等提示信息</string>
+
+    <string name="invitecourtesy_title">邀请有礼</string>
+    <string name="invitecourtesy_activity_rule">活动规则</string>
+    <string name="invitecourtesy_share">立即分享</string>
+    <string name="invitecourtesy_code">邀请码</string>
+    <string name="invitecourtesy_tips">邀请更多新用户获得更多奖励</string>
+    <string name="myHarvest_title">我的成果</string>
+    <string name="myHarvest_total_personal">累计邀请人</string>
+    <string name="myHarvest_reward">奖励</string>
 </resources>
 

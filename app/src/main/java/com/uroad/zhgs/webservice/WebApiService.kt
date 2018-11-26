@@ -714,6 +714,25 @@ class WebApiService {
         }
 
         const val PRAISE_INIT = "initTokenYZ"
+
+        /*进行中活动*/
+        const val MAIN_ACTIVITY = "getActivity"
+
+        /*活动详情*/
+        const val ACTIVITY_DETAIL = "getActivityDetails"
+
+        fun activityDetailParams(activityid: String?, useruuid: String?) = getBaseParams().apply {
+            put("activityid", activityid)
+            put("useruuid", useruuid)
+        }
+
+        /*我的成果*/
+        const val MY_HARVEST = "getMyHarvest"
+
+        fun myHarvestParams(useruuid: String?, activityid: String?) = getBaseParams().apply {
+            put("useruuid", useruuid)
+            put("activityid", activityid)
+        }
     }
 
 }

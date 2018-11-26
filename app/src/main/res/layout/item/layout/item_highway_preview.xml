@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/margin_20"
-        android:paddingRight="@dimen/margin_20">
+        android:paddingRight="@dimen/margin_5">
 
         <FrameLayout
             android:layout_width="@dimen/margin_30"
@@ -48,10 +48,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
-                android:maxHeight="@dimen/margin_30"
                 android:maxWidth="@dimen/margin_30"
-                android:minHeight="@dimen/margin_20"
+                android:maxHeight="@dimen/margin_30"
                 android:minWidth="@dimen/margin_20"
+                android:minHeight="@dimen/margin_20"
                 android:src="@mipmap/ic_road_traffic_normal" />
         </FrameLayout>
 
@@ -59,7 +59,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
             android:orientation="vertical">
 
             <LinearLayout
@@ -82,11 +81,11 @@
                     android:layout_marginLeft="@dimen/margin_5"
                     android:layout_marginRight="@dimen/margin_5"
                     android:background="@drawable/bg_highway_roadname"
-                    android:gravity="center"
-                    android:paddingBottom="@dimen/margin_2"
+                    android:gravity="center|left"
                     android:paddingLeft="@dimen/margin_10"
-                    android:paddingRight="@dimen/margin_10"
                     android:paddingTop="@dimen/margin_2"
+                    android:paddingRight="@dimen/margin_10"
+                    android:paddingBottom="@dimen/margin_2"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_12"
                     android:visibility="gone" />
@@ -96,8 +95,8 @@
                 android:id="@+id/rvEvent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_20"
                 android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginBottom="@dimen/margin_20"
                 android:minHeight="@dimen/margin_20"
                 android:overScrollMode="never" />
         </LinearLayout>

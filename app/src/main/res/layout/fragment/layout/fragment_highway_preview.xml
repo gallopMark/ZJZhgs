@@ -26,19 +26,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvPoiname"
+                android:id="@+id/tvShortname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/appTextColor"
-                android:textSize="@dimen/font_16" />
+                android:textSize="@dimen/font_14" />
 
             <TextView
-                android:id="@+id/tvShortname"
+                android:id="@+id/tvPoiname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_3"
                 android:textColor="@color/darkgrey"
-                android:textSize="@dimen/font_14" />
+                android:textSize="@dimen/font_16" />
+
         </LinearLayout>
 
         <View
@@ -52,8 +53,8 @@
             android:id="@+id/tvChange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/margin_3"
             android:drawableTop="@mipmap/ic_highway_change"
+            android:drawablePadding="@dimen/margin_3"
             android:padding="@dimen/margin_5"
             android:text="@string/highwayPreview_change"
             android:textSize="@dimen/font_14" />

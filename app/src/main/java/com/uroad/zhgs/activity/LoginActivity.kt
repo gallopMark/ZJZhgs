@@ -200,7 +200,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             XGPushManager.bindAccount(this, mdl.pushid)
         }
         val currApplication = application as CurrApplication
-        currApplication.onPraiseLogin(mdl.userid, DeviceUtils.getAndroidID(this), DeviceUtils.getFingerprint())
+        currApplication.onPraiseLogin(mdl.useruuid, DeviceUtils.getAndroidID(this), DeviceUtils.getFingerprint())
         /*登录成功，开启记录足迹的后台服务*/
         startService(Intent(this, MyTracksService::class.java))
         if (firstLogin) {   //如果是首次登录（从未登录过，从启动页进来）

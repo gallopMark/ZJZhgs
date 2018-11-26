@@ -63,10 +63,8 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
     lateinit var context: Activity
     private var rootView: View? = null
     open lateinit var baseParent: RelativeLayout
-    lateinit var flBaseTop: FrameLayout
     lateinit var flBaseContent: FrameLayout
     lateinit var flBaseLoad: FrameLayout
-    lateinit var flBaseBottom: FrameLayout
     private val rxDisposables = CompositeDisposable()
     private val disposables = ArrayList<Disposable>()
     private var mShortToast: Toast? = null
@@ -88,10 +86,8 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_base, container, false).apply {
                 baseParent = findViewById(R.id.baseParent)
-                flBaseTop = findViewById(R.id.flBaseTop)
                 flBaseContent = findViewById(R.id.flBaseContent)
                 flBaseLoad = findViewById(R.id.flBaseLoad)
-                flBaseBottom = findViewById(R.id.flBaseBottom)
                 LayoutInflater.from(context).inflate(setBaseLayoutResID(), flBaseContent)
             }
         }
@@ -478,6 +474,7 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         return UserPreferenceHelper.getUserId(context)
     }
 
+    fun getUserUUID(): String = UserPreferenceHelper.getUserUUID(context)
     fun getRealName(): String {
         return UserPreferenceHelper.getRealName(context)
     }

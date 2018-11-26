@@ -37,14 +37,18 @@ class PraiseFragment : BaseFragment() {
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         initBrowser()
         initBack()
+        if (!TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) ivUserCenter.visibility = View.VISIBLE
         ivUserCenter.setOnClickListener { openActivity(YouZanUserActivity::class.java) }
     }
 
     override fun initData() {
         if (TextUtils.isEmpty(CurrApplication.PRAISE_URL)) {
-            initTokenYZ()
+            initTokenYZ(1)
         } else {
             loadUrl(CurrApplication.PRAISE_URL)
+        }
+        if (TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) {
+            initTokenYZ(2)
         }
     }
 
@@ -54,24 +58,30 @@ class PraiseFragment : BaseFragment() {
         browser.subscribe(mAbsChooserEvent)
     }
 
-    private fun initTokenYZ() {
+    private fun initTokenYZ(type: Int) {
         doRequest(WebApiService.PRAISE_INIT, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)
-                    if (mdl == null) handler.postDelayed({ initTokenYZ() }, 3000)
+                    if (mdl == null) handler.postDelayed({ initTokenYZ(type) }, CurrApplication.DELAY_MILLIS)
                     else {
                         CurrApplication.PRAISE_URL = mdl.shop_url
                         CurrApplication.PRAISE_USER_URL = mdl.personal_center_url
-                        loadUrl(CurrApplication.PRAISE_URL)
+                        if (type == 1) {
+                            loadUrl(CurrApplication.PRAISE_URL)
+                        } else {
+                            if (!TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) {
+                                ivUserCenter.visibility = View.VISIBLE
+                            }
+                        }
                     }
                 } else {
-                    handler.postDelayed({ initTokenYZ() }, 3000)
+                    handler.postDelayed({ initTokenYZ(type) }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ initTokenYZ() }, 3000)
+                handler.postDelayed({ initTokenYZ(type) }, CurrApplication.DELAY_MILLIS)
             }
         })
     }
@@ -143,19 +153,19 @@ class PraiseFragment : BaseFragment() {
     private fun initLogin() {
         val deviceID = DeviceUtils.getAndroidID(context)
         val extra = DeviceUtils.getFingerprint()
-        doRequest(WebApiService.PRAISE_LOGIN, WebApiService.praiseLoginParams(getUserId(), deviceID, extra), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.PRAISE_LOGIN, WebApiService.praiseLoginParams(getUserUUID(), deviceID, extra), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)
                     if (mdl == null) handler.postDelayed({ initLogin() }, 3000)
                     else syncYouSDK(mdl)
                 } else {
-                    handler.postDelayed({ initLogin() }, 3000)
+                    handler.postDelayed({ initLogin() }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ initLogin() }, 3000)
+                handler.postDelayed({ initLogin() }, CurrApplication.DELAY_MILLIS)
             }
         })
     }

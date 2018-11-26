@@ -206,6 +206,15 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="sensor" />
+        <activity
+            android:name=".activity.InviteCourtesyActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.MyHarvestActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.ActivityRuleActivity"
+            android:launchMode="singleTop" />
 
         <!--保存足迹服务-->
         <service android:name=".service.MyTracksService" />

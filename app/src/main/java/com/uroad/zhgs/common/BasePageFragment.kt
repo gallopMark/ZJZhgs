@@ -97,10 +97,8 @@ abstract class BasePageFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = rootView ?: inflater.inflate(R.layout.fragment_base, container, false).apply {
             baseParent = findViewById(R.id.baseParent)
-            flBaseTop = findViewById(R.id.flBaseTop)
             flBaseContent = findViewById(R.id.flBaseContent)
             flBaseLoad = findViewById(R.id.flBaseLoad)
-            flBaseBottom = findViewById(R.id.flBaseBottom)
             LayoutInflater.from(this@BasePageFragment.context).inflate(setBaseLayoutResID(), flBaseContent)
             setUp(this)
             setListener()
@@ -469,6 +467,7 @@ abstract class BasePageFragment : Fragment() {
         return UserPreferenceHelper.getUserId(context)
     }
 
+    fun getUserUUID(): String = UserPreferenceHelper.getUserUUID(context)
     fun getRealName(): String {
         return UserPreferenceHelper.getRealName(context)
     }

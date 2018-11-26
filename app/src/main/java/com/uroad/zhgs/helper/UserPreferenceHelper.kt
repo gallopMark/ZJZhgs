@@ -11,6 +11,7 @@ class UserPreferenceHelper {
     companion object {
         private const val PREFS_USER = "Prefs_user_v2"
         const val USER_ID = "userid"
+        const val USER_UUID = "useruuid"
         const val PUSH_ID = "pushid"
         const val REAL_NAME = "realname"
         const val CARD_NO = "cardno"
@@ -33,6 +34,7 @@ class UserPreferenceHelper {
         fun save(context: Context, userMDL: UserMDL) {
             from(context).edit().apply {
                 putString(USER_ID, userMDL.userid)
+                putString(USER_UUID, userMDL.useruuid)
                 putString(PUSH_ID, userMDL.pushid)
                 putString(REAL_NAME, userMDL.name)
                 putString(CARD_NO, userMDL.cardno)
@@ -54,6 +56,7 @@ class UserPreferenceHelper {
             return from(context).getString(USER_ID, "")
         }
 
+        fun getUserUUID(context: Context): String = from(context).getString(USER_UUID, "")
         fun getPushID(context: Context): String = from(context).getString(PUSH_ID, "")
         fun saveRealName(context: Context, realName: String) {
             from(context).edit().putString(REAL_NAME, realName).apply()

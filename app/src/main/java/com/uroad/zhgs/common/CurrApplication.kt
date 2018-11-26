@@ -17,6 +17,7 @@ import com.uroad.rxhttp.download.DownloadListener
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
+import com.uroad.zhgs.model.ActivityMDL
 import com.uroad.zhgs.model.CarMDL
 import com.uroad.zhgs.model.YouZanMDL
 import com.uroad.zhgs.model.sys.AppConfigMDL
@@ -54,6 +55,7 @@ class CurrApplication : BaseApplication() {
         var PRAISE_URL: String? = null //有赞url
         var PRAISE_USER_URL: String? = null //有赞用户中心url
         var cars: MutableList<CarMDL>? = null
+        var activityMDL: ActivityMDL? = null  //是否有活动
     }
 
     override fun onCreate() {

@@ -64,10 +64,10 @@
                     android:drawableLeft="@mipmap/ic_location_coloraccept"
                     android:drawablePadding="@dimen/margin_10"
                     android:hint="@string/routeSearch_endPos_hint"
-                    android:selectAllOnFocus="true"
                     android:inputType="text"
                     android:maxLines="1"
                     android:padding="@dimen/margin_10"
+                    android:selectAllOnFocus="true"
                     android:textColor="@color/gainsboro"
                     android:textColorHint="@color/darkgrey"
                     android:textSize="@dimen/font_16">
@@ -90,33 +90,52 @@
                 android:src="@mipmap/ic_highway_change" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/llHirstoryData"
+        <FrameLayout
+            android:id="@+id/flHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
             android:clickable="true"
-            android:focusable="true"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:focusable="true">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvHistory"
+            <LinearLayout
+                android:id="@+id/llHistoryData"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never" />
+
+                <TextView
+                    android:id="@+id/tvClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/routeSearch_clear_history"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/font_16" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvClear"
+                android:id="@+id/tvEmptyHis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_10"
-                android:padding="@dimen/margin_5"
-                android:text="@string/routeSearch_clear_history"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/font_16" />
-        </LinearLayout>
+                android:drawableTop="@mipmap/ic_nocollect"
+                android:drawablePadding="@dimen/margin_10"
+                android:gravity="center"
+                android:text="@string/highwayhotline_empty_history"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/font_16"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout

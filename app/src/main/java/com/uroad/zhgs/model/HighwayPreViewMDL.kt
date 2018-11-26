@@ -7,6 +7,7 @@ import com.amap.api.col.sln3.it
 import com.uroad.zhgs.R
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.photopicker.model.ImageItem
+import java.lang.StringBuilder
 
 /**
  *Created by MFB on 2018/8/16.
@@ -97,9 +98,14 @@ class HighwayPreViewMDL {
 
         fun getRoadName(): String {
             roads?.let { roads ->
-                if (roads.size > 0) {
-                    roads[0].shortname?.let { return it }
+                val sb = StringBuilder()
+                for(i in 0 until roads.size){
+                    sb.append(roads[i].shortname)
+                    if(i < roads.size - 1){
+                        sb.append("，")
+                    }
                 }
+                return sb.toString()
             }
             return ""
         }

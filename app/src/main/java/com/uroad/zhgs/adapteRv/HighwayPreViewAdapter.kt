@@ -6,8 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.View
-import android.widget.FrameLayout
-import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.HighwayPreViewMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
@@ -43,8 +41,15 @@ class HighwayPreViewAdapter(private val context: Context, mDatas: MutableList<Hi
         } else {
             holder.setBackgroundColor(R.id.vColorTop, ContextCompat.getColor(context, R.color.transparent))
         }
-        holder.setBackgroundColor(R.id.vColor, t.getColor(context))
         val rvEvent = holder.obtainView<RecyclerView>(R.id.rvEvent)
+        if (position == itemCount - 1) {
+            holder.setVisibility(R.id.vColor, View.GONE)
+            rvEvent.visibility = View.GONE
+        } else {
+            holder.setVisibility(R.id.vColor, View.VISIBLE)
+            rvEvent.visibility = View.VISIBLE
+        }
+        holder.setBackgroundColor(R.id.vColor, t.getColor(context))
         rvEvent.isNestedScrollingEnabled = false
         rvEvent.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
         rvEvent.adapter = EventAdapter(context, t.getEventList())

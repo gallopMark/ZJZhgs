@@ -1,12 +1,15 @@
 package com.uroad.zhgs.fragment
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.zhgs.*
 import com.uroad.zhgs.activity.*
 import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.helper.UserPreferenceHelper
+import com.uroad.zhgs.model.ActivityMDL
 import kotlinx.android.synthetic.main.fragment_mine.*
 
 /**
@@ -69,7 +72,32 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             R.id.tvMyCar -> openActivity(MyCar2Activity::class.java) //我的车辆
             R.id.tvPassRecord -> openActivity(MyPassRecordActivity::class.java) //通行记录
             R.id.tvMyTracks -> openActivity(MyTracksActivity::class.java) //我的足迹
-            R.id.tvMyCode -> openActivity(MyInvitationCodeActivity::class.java) //我的邀请码
+            R.id.tvMyCode -> {
+                val activityMDL = CurrApplication.activityMDL
+                if (activityMDL == null) openActivity(MyInvitationCodeActivity::class.java) //我的邀请码
+                else {   //如果有活动
+                    if (TextUtils.equals(activityMDL.transitionstype, ActivityMDL.Type.H5.code)) {  //跳转h5
+                        var content = activityMDL.transitionscontent
+                        if (content == null || content.isEmpty()) return
+                        if (activityMDL.islogin == 1) {  //需要登录
+                            if (isLogin()) {
+                                content += if (!content.contains("?"))  //是否已经拼了参数
+                                    "?activityid=${activityMDL.activityid}&useruuid=${getUserId()}"
+                                else
+                                    "&activityid=${activityMDL.activityid}&useruuid=${getUserId()}"
+                                openWebActivity(content, "")
+                            } else {
+                                openActivity(LoginActivity::class.java)
+                            }
+                        } else {
+                            openWebActivity(content, "")
+                        }
+                    } else if (TextUtils.equals(activityMDL.transitionstype, ActivityMDL.Type.NATIVE.code)) {
+                        if (!isLogin()) openActivity(LoginActivity::class.java)
+                        else openActivity(InviteCourtesyActivity::class.java, Bundle().apply { putString("activityId", activityMDL.activityid) })
+                    }
+                }
+            }
         }
     }
 

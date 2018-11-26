@@ -5,27 +5,13 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/flBaseTop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <FrameLayout
         android:id="@+id/flBaseContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/flBaseBottom"
-        android:layout_below="@+id/flBaseTop" />
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/flBaseLoad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <FrameLayout
-        android:id="@+id/flBaseBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:visibility="gone" />
 </RelativeLayout>
