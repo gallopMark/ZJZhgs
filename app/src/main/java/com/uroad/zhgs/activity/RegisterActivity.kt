@@ -40,6 +40,28 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
     override fun setUp(savedInstanceState: Bundle?) {
         withTitle(resources.getString(R.string.register_title))
         setBaseContentLayout(R.layout.activity_register)
+        initEtQCode()
+    }
+
+    private fun initEtQCode() {
+        etQRCode.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(cs: CharSequence, p1: Int, p2: Int, p3: Int) {
+                //用户长按粘贴，如果是邀请码口令（自动识别邀请码内容）
+                val content = cs.toString()
+                if (!TextUtils.isEmpty(content) && ClipboardUtils.isRegisterToken(content)) {
+                    etQRCode.setText(ClipboardUtils.getRegisterToken(this@RegisterActivity))
+                    etQRCode.setSelection(etQRCode.text.length)
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
     }
 
     override fun setListener() {
@@ -172,8 +194,8 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
             override fun onSuccess(data: String?) {
                 endLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    val mdl = GsonUtils.fromDataBean(data,UserMDL::class.java)
-                    if(mdl == null) onJsonParseError()
+                    val mdl = GsonUtils.fromDataBean(data, UserMDL::class.java)
+                    if (mdl == null) onJsonParseError()
                     else {
                         showShortToast("注册成功")
                         saveUserInfo(mdl)
