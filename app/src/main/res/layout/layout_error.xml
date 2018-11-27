@@ -10,7 +10,6 @@
         android:id="@+id/mErrorTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableTop="@mipmap/ic_nonetwork"
         android:drawablePadding="@dimen/margin_20"
         android:gravity="center"
         android:text="@string/nonetwork"

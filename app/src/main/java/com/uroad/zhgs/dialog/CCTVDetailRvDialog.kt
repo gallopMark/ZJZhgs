@@ -2,11 +2,9 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -65,12 +63,13 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
             holder.setText(R.id.tvTitle, t.shortname)
             val recyclerView = holder.obtainView<RecyclerView>(R.id.recyclerView)
             recyclerView.isNestedScrollingEnabled = false
-            if (t.getPicUrls().size > 0) {
+            val urls = t.getPicUrls()
+            if (urls.size > 0) {
                 holder.setVisibility(R.id.tvEmpty, false)
                 recyclerView.visibility = View.VISIBLE
-                recyclerView.addItemDecoration(GridSpacingItemDecoration(3, DisplayUtils.dip2px(context, 10f), false))
+                recyclerView.addItemDecoration(GridSpacingItemDecoration(urls.size, DisplayUtils.dip2px(context, 10f), false))
                 recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
-                val adapter = PicAdapter(context, t.getPicUrls())
+                val adapter = PicAdapter(context, urls)
                 recyclerView.adapter = adapter
                 adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
                     override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
@@ -92,13 +91,25 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
 
     private inner class PicAdapter(context: Activity, mDatas: MutableList<String>)
         : BaseArrayRecyclerAdapter<String>(context, mDatas) {
-        val size = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 10f) * 4) / 3
+        val mWidth: Int
+        val mHeight: Int
+
+        init {
+            if (mDatas.size == 1) {
+                mWidth = DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f)
+                mHeight = mWidth / 5 * 3
+            } else {
+                mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / mDatas.size
+                mHeight = mWidth
+            }
+        }
+
         override fun bindView(viewType: Int): Int = R.layout.item_snapshot
 
         override fun onBindHoder(holder: RecyclerHolder, t: String, position: Int) {
             holder.itemView.layoutParams = holder.itemView.layoutParams.apply {
-                width = size
-                height = size
+                this.width = mWidth
+                this.height = mHeight
             }
             holder.displayImage(R.id.ivPic, t, R.color.whitesmoke)
         }

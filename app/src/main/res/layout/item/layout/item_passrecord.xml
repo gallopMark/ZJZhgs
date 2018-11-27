@@ -42,6 +42,7 @@
                     android:gravity="center"
                     android:textColor="@color/gary"
                     android:textSize="@dimen/font_14" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -71,6 +72,14 @@
                     android:textColor="@color/gary"
                     android:textSize="@dimen/font_14" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvMileage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_4"
+                android:textColor="@color/gary"
+                android:textSize="@dimen/font_14" />
         </LinearLayout>
 
         <LinearLayout

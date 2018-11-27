@@ -37,6 +37,7 @@ class PassRecordMDL {
     var n_en_station_name: String? = null
     var n_ex_station_name: String? = null
     var money: Double? = null
+    var d_fee_length: String? = null
 
     fun getEnDateTime(): String {
         var text = ""

@@ -68,23 +68,15 @@ class MainOtherFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener 
         ImageLoaderV4.getInstance().displayImage(context, mdl.activityicon, ivActivity)
         ivActivity.setOnClickListener {
             if (TextUtils.equals(mdl.transitionstype, ActivityMDL.Type.H5.code)) {  //跳转h5
-                var content = mdl.transitionscontent
+                val content = mdl.transitionscontent
                 if (content == null || content.isEmpty()) return@setOnClickListener
                 if (mdl.islogin == 1) {  //需要登录
                     if (isLogin()) {
-                        content += if (!content.contains("?"))  //是否已经拼了参数
-                            "?activityid=${mdl.activityid}&useruuid=${getUserUUID()}"
-                        else
-                            "&activityid=${mdl.activityid}&useruuid=${getUserUUID()}"
                         openWebActivity(content, "")
                     } else {
                         openActivity(LoginActivity::class.java)
                     }
                 } else {
-                    content += if (!content.contains("?"))  //是否已经拼了参数
-                        "?activityid=${mdl.activityid}}"
-                    else
-                        "&activityid=${mdl.activityid}}"
                     openWebActivity(content, "")
                 }
             } else if (TextUtils.equals(mdl.transitionstype, ActivityMDL.Type.NATIVE.code)) {

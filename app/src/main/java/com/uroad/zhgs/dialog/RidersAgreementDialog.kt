@@ -2,11 +2,11 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.os.Build
 import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
@@ -19,6 +19,7 @@ import com.uroad.zhgs.R
  * @create 2018/10/17
  * @describe 车友组队协议对话框
  */
+@Suppress("DEPRECATION")
 class RidersAgreementDialog(private val context: Activity)
     : Dialog(context, R.style.supportDialog) {
     private var onViewClickListener: OnViewClickListener? = null
@@ -47,7 +48,12 @@ class RidersAgreementDialog(private val context: Activity)
             val btDisagree = contentView.findViewById<Button>(R.id.btDisagree)
             val btAgree = contentView.findViewById<Button>(R.id.btAgree)
             tvTitle.text = context.resources.getString(R.string.dialog_riders_agreement_title)
-            message?.let { tvMessage.text = Html.fromHtml(it) }
+            message?.let {
+                tvMessage.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
+                else
+                    Html.fromHtml(it)
+            }
             tvMessage.movementMethod = ScrollingMovementMethod.getInstance()
             btDisagree.setOnClickListener { onViewClickListener?.onViewClick(1, this@RidersAgreementDialog) }
             btAgree.setOnClickListener { onViewClickListener?.onViewClick(2, this@RidersAgreementDialog) }

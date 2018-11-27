@@ -546,7 +546,7 @@
     <string name="thatsOk">不用了</string>
     <string name="join">加入</string>
     <string name="customer_service">小智问问</string>
-    <string name="pass_record_small_tips">查询结果仅供参考，实际通行费用请以实际支付为准</string>
+    <string name="pass_record_small_tips">通行数据逐步完善中，查询结果仅供参考，实际通行费用请以实际支付为准</string>
     <string name="pass_money">通行费</string>
     <string name="car_inquiry_tips">换卡、套牌、冲卡</string>
     <string name="dialog_authentication_title">请选择认证方式</string>

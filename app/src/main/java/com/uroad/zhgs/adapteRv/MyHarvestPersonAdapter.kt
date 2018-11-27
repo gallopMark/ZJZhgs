@@ -20,10 +20,7 @@ class MyHarvestPersonAdapter(private val context: Activity, mDatas: MutableList<
     override fun onBindHoder(holder: RecyclerHolder, t: HarvestMDL.Person, position: Int) {
         val ivIconFile = holder.obtainView<ImageView>(R.id.ivIconFile)
         ImageLoaderV4.getInstance().displayCircleImage(context, t.iconfile, ivIconFile, R.mipmap.ic_user_default)
-        var text = ""
-        t.name?.let { text += it }
-        text += "已注册成功"
-        holder.setText(R.id.tvName, text)
+        holder.setText(R.id.tvName, t.name)
         holder.setText(R.id.tvTime, t.invitetime)
     }
 }

@@ -20,5 +20,8 @@ class PassRecordAdapter(context: Activity, mDatas: MutableList<PassRecordMDL>)
         holder.setText(R.id.tvEnterTime, t.getEnDateTime())
         holder.setText(R.id.tvExitTime, t.getExDateTime())
         holder.setText(R.id.tvMoney, t.getMoney())
+        var mileage = "里程："
+        t.d_fee_length?.let { mileage += it }
+        holder.setText(R.id.tvMileage, mileage)
     }
 }

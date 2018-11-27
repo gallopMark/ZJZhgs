@@ -134,7 +134,6 @@
             android:drawableLeft="@mipmap/ic_drawable_qrcode"
             android:drawablePadding="@dimen/margin_10"
             android:hint="@string/register_QRCode_hint"
-            android:inputType="textPassword"
             android:maxLines="1"
             android:paddingLeft="@dimen/margin_10"
             android:paddingTop="@dimen/margin_15"

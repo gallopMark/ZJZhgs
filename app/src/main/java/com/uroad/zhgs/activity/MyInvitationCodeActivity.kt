@@ -179,17 +179,11 @@ class MyInvitationCodeActivity : ThemeStyleActivity() {
         Glide.with(this).asBitmap().load(mdl.icon).apply(RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .into(object : SimpleTarget<Bitmap>() {
-                    override fun onStart() {
-                        showLoading()
-                    }
-
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        endLoading()
                         if (!isDialogShare) shareToWeChatByType(mdl.linkurl, mdl.title, mdl.desc, resource, scene)
                     }
 
                     override fun onLoadFailed(errorDrawable: Drawable?) {
-                        endLoading()
                         if (!isDialogShare) shareToWeChatByType(mdl.linkurl, mdl.title, mdl.desc, BitmapFactory.decodeResource(resources, R.mipmap.ic_logo), scene)
                     }
                 })

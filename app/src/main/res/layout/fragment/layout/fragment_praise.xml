@@ -48,7 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_margin="@dimen/margin_16"
+            android:layout_marginBottom="@dimen/margin_50"
+            android:layout_marginRight="@dimen/margin_16"
             android:src="@mipmap/ic_praise_usercenter"
             android:visibility="gone" />
     </FrameLayout>

@@ -2,7 +2,7 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -10,12 +10,12 @@ import android.text.TextUtils
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.EventMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
-import com.uroad.zhgs.rv.BaseRecyclerAdapter
 
 /**
  *Created by MFB on 2018/9/5.
@@ -24,11 +24,11 @@ class EventDetailRvDialog(private val context: Activity,
                           private val mDatas: MutableList<EventMDL>)
     : Dialog(context, R.style.transparentDialog) {
 
-    private var onSubscribeListener: OnSubscribeListener? = null
+    private var onViewClickListener: OnViewClickListener? = null
     private var adapter: EventAdapter? = null
 
-    fun setOnSubscribeListener(onSubscribeListener: OnSubscribeListener) {
-        this.onSubscribeListener = onSubscribeListener
+    fun setOnViewClickListener(onViewClickListener: OnViewClickListener) {
+        this.onViewClickListener = onViewClickListener
     }
 
     override fun show() {
@@ -44,14 +44,7 @@ class EventDetailRvDialog(private val context: Activity,
             recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
             val helper = PagerSnapHelper()
             helper.attachToRecyclerView(recyclerView)
-            adapter = EventAdapter(context, mDatas).apply {
-                setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
-                    override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                        if (position in 0 until mDatas.size)
-                            onSubscribeListener?.onSubscribe(mDatas[position], position)
-                    }
-                })
-            }
+            adapter = EventAdapter(context, mDatas)
             recyclerView.adapter = adapter
             ivClose.setOnClickListener { dismiss() }
             window.setContentView(contentView)
@@ -75,6 +68,8 @@ class EventDetailRvDialog(private val context: Activity,
             holder.setText(R.id.tvEventName, t.eventtypename)
             holder.setText(R.id.tvTitle, t.roadtitle)
             holder.setText(R.id.tvContent, t.reportout)
+            val tvUseful = holder.obtainView<TextView>(R.id.tvUseful)
+            val tvUseless = holder.obtainView<TextView>(R.id.tvUseless)
             if (TextUtils.isEmpty(t.getOccTime())) {
                 holder.setText(R.id.tvOccTime, "--")
             } else {
@@ -91,6 +86,23 @@ class EventDetailRvDialog(private val context: Activity,
             } else {
                 holder.setText(R.id.tvUpdateTime, t.getUpdateTime())
             }
+            if (t.isuseful == 1) {
+                tvUseful.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useful_pressed), null, null, null)
+            } else {
+                tvUseful.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useful_default), null, null, null)
+            }
+            if (t.isuseful == 2) {
+                tvUseless.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useless_pressed), null, null, null)
+            } else {
+                tvUseless.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useless_default), null, null, null)
+            }
+            if (t.isuseful == 1 || t.isuseful == 2) {
+                tvUseful.isEnabled = false
+                tvUseless.isEnabled = false
+            } else {
+                tvUseful.setOnClickListener { onViewClickListener?.onViewClick(t, position, 1) }
+                tvUseless.setOnClickListener { onViewClickListener?.onViewClick(t, position, 2) }
+            }
             if (t.subscribestatus == 1) {
                 holder.setText(R.id.tvSubscribe, context.resources.getString(R.string.usersubscribe_hasSubscribe))
                 holder.setEnabled(R.id.tvSubscribe, false)
@@ -98,11 +110,11 @@ class EventDetailRvDialog(private val context: Activity,
                 holder.setText(R.id.tvSubscribe, context.resources.getString(R.string.usersubscribe_subscribe))
                 holder.setEnabled(R.id.tvSubscribe, true)
             }
-            holder.bindChildClick(R.id.tvSubscribe)
+            holder.setOnClickListener(R.id.tvSubscribe, View.OnClickListener { onViewClickListener?.onViewClick(t, position, 3) })
         }
     }
 
-    interface OnSubscribeListener {
-        fun onSubscribe(dataMDL: EventMDL, position: Int)
+    interface OnViewClickListener {
+        fun onViewClick(dataMDL: EventMDL, position: Int, type: Int)
     }
 }

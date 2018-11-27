@@ -30,25 +30,16 @@
         android:id="@+id/llContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tvMoney"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/gary"
-            android:layout_margin="@dimen/margin_16"
-            android:textSize="@dimen/font_16" />
+        android:visibility="visible"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/color_f7"
-            android:paddingLeft="@dimen/margin_16"
-            android:paddingTop="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_16"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingTop="@dimen/margin_5"
+            android:paddingRight="@dimen/margin_10"
             android:paddingBottom="@dimen/margin_5"
             android:text="@string/pass_record_small_tips"
             android:textColor="@color/colorOrange"

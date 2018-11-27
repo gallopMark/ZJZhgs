@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
-import com.uroad.zhgs.activity.ShowImageActivity
 import com.uroad.zhgs.model.SnapShotMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
@@ -51,10 +49,11 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
             ivIcon.setImageResource(R.mipmap.ic_menu_jtss_spot_p)
             tvEventName.text = context.resources.getString(R.string.monitor_video)
             tvTitle.text = dataMDL.shortname
-            if (dataMDL.getPicUrls().size > 0) {
+            val urls = dataMDL.getPicUrls()
+            if (urls.size > 0) {
                 tvEmpty.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
-                recyclerView.addItemDecoration(GridSpacingItemDecoration(3, DisplayUtils.dip2px(context, 10f), false))
+                recyclerView.addItemDecoration(GridSpacingItemDecoration(urls.size, DisplayUtils.dip2px(context, 10f), false))
                 recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
                 val adapter = PicAdapter(context, dataMDL.getPicUrls())
                 recyclerView.adapter = adapter
@@ -81,13 +80,25 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
 
     private class PicAdapter(context: Activity, mDatas: MutableList<String>)
         : BaseArrayRecyclerAdapter<String>(context, mDatas) {
-        val size = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 10f) * 4) / 3
+        val mWidth: Int
+        val mHeight: Int
+
+        init {
+            if (mDatas.size == 1) {
+                mWidth = DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f)
+                mHeight = mWidth / 5 * 3
+            } else {
+                mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / mDatas.size
+                mHeight = mWidth
+            }
+        }
+
         override fun bindView(viewType: Int): Int = R.layout.item_snapshot
 
         override fun onBindHoder(holder: RecyclerHolder, t: String, position: Int) {
             holder.itemView.layoutParams = holder.itemView.layoutParams.apply {
-                width = size
-                height = size
+                this.width = mWidth
+                this.height = mHeight
             }
             holder.displayImage(R.id.ivPic, t, R.color.whitesmoke)
         }

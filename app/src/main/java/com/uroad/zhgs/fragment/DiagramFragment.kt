@@ -5,7 +5,6 @@ import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
@@ -144,36 +143,65 @@ class DiagramFragment : BaseFragment() {
             return
         }
         val dialog = EventDetailRvDialog(context, mdLs)
-        dialog.setOnSubscribeListener(object : EventDetailRvDialog.OnSubscribeListener {
-            override fun onSubscribe(dataMDL: EventMDL, position: Int) {
+        dialog.setOnViewClickListener(object : EventDetailRvDialog.OnViewClickListener {
+            override fun onViewClick(dataMDL: EventMDL, position: Int, type: Int) {
                 if (!isLogin()) openActivity(LoginActivity::class.java)
-                else {
-                    dataMDL.eventid?.let {
-                        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), dataMDL.getSubType(), it),
-                                object : HttpRequestCallback<String>() {
-                                    override fun onPreExecute() {
-                                        showLoading("保存订阅…")
-                                    }
-
-                                    override fun onSuccess(data: String?) {
-                                        endLoading()
-                                        if (GsonUtils.isResultOk(data)) {
-                                            showShortToast("订阅成功")
-                                            dataMDL.subscribestatus = 1
-                                            dialog.notifyItemChanged(position, dataMDL)
-                                        } else showShortToast(GsonUtils.getMsg(data))
-                                    }
-
-                                    override fun onFailure(e: Throwable, errorMsg: String?) {
-                                        endLoading()
-                                        onHttpError(e)
-                                    }
-                                })
-                    }
+                else when (type) {
+                    1 -> saveIsUseful(dataMDL, 1, position, dialog)
+                    2 -> saveIsUseful(dataMDL, 2, position, dialog)
+                    3 -> saveSubscribe(dataMDL, position, dialog)
                 }
             }
         })
         dialog.show()
+    }
+
+    /*是否有用*/
+    private fun saveIsUseful(dataMDL: EventMDL, type: Int, position: Int, dialog: EventDetailRvDialog) {
+        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(dataMDL.eventid, getUserId(), type), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    dataMDL.isuseful = type
+                    dialog.notifyItemChanged(position, dataMDL)
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
+    }
+
+    /*保存订阅*/
+    private fun saveSubscribe(dataMDL: EventMDL, position: Int, dialog: EventDetailRvDialog) {
+        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), dataMDL.getSubType(), dataMDL.eventid),
+                object : HttpRequestCallback<String>() {
+                    override fun onPreExecute() {
+                        showLoading("保存订阅…")
+                    }
+
+                    override fun onSuccess(data: String?) {
+                        endLoading()
+                        if (GsonUtils.isResultOk(data)) {
+                            showShortToast("订阅成功")
+                            dataMDL.subscribestatus = 1
+                            dialog.notifyItemChanged(position, dataMDL)
+                        } else showShortToast(GsonUtils.getMsg(data))
+                    }
+
+                    override fun onFailure(e: Throwable, errorMsg: String?) {
+                        endLoading()
+                        onHttpError(e)
+                    }
+                })
     }
 
     private fun getCCTVDetailsById(cctvIds: String) {
@@ -255,10 +283,6 @@ class DiagramFragment : BaseFragment() {
             return true
         }
 
-        override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-            setPageError()
-        }
-
         override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
             handler.proceed()
         }
@@ -271,11 +295,6 @@ class DiagramFragment : BaseFragment() {
             callback?.invoke(origin, true, false)
             super.onGeolocationPermissionsShowPrompt(origin, callback)
         }
-    }
-
-    override fun onReLoad(view: View) {
-        setPageEndLoading()
-        webView.reload()
     }
 
     override fun initData() {
@@ -347,6 +366,7 @@ class DiagramFragment : BaseFragment() {
         loadEvent(DiagramEventType.Construction.code, 0)  //默认关闭施工
         loadEvent(DiagramEventType.Control.code, 1)
         loadEvent(DiagramEventType.TollGate.code, 1)
+        loadEvent(DiagramEventType.PileNumber.code, 0)  //桩号默认关闭
         loadEvent(DiagramEventType.ServiceArea.code, 1)
         loadEvent(DiagramEventType.Snapshot.code, 1)
     }

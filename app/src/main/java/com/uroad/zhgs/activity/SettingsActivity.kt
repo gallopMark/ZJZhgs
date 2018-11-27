@@ -32,7 +32,7 @@ class SettingsActivity : BaseActivity() {
         init()
         setCache()
         llClearCache.setOnClickListener {
-            showDialog("清除缓存", "清除缓存会导致下载的内容删除，确定清除吗?",
+            showDialog("清除缓存", "确定清除缓存？",
                     "取消", "确定", object : MaterialDialog.ButtonClickListener {
                 override fun onClick(v: View, dialog: AlertDialog) {
                     dialog.dismiss()

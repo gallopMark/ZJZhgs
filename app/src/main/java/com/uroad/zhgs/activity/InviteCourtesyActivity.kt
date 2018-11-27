@@ -121,17 +121,11 @@ class InviteCourtesyActivity : BaseActivity() {
         Glide.with(this).asBitmap().load(mdl.shareicon).apply(RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
                 .into(object : SimpleTarget<Bitmap>() {
-                    override fun onStart() {
-                        showLoading()
-                    }
-
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        endLoading()
                         if (!isDialogShare) shareToWeChatByType(mdl.shareurl, mdl.sharetitle, mdl.sharedesc, resource, scene)
                     }
 
                     override fun onLoadFailed(errorDrawable: Drawable?) {
-                        endLoading()
                         if (!isDialogShare) shareToWeChatByType(mdl.shareurl, mdl.sharetitle, mdl.sharedesc, BitmapFactory.decodeResource(resources, R.mipmap.ic_logo), scene)
                     }
                 })

@@ -11,7 +11,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.helper.AppLocalHelper
 
-class AuthenticationDialog(private val context: Activity) : Dialog(context) {
+class AuthenticationDialog(private val context: Activity) : Dialog(context, R.style.translucentDialog) {
     private var onViewClickListener: OnViewClickListener? = null
 
     fun onViewClickListener(onViewClickListener: OnViewClickListener?): AuthenticationDialog {

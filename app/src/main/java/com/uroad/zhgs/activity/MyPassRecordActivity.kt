@@ -9,9 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.widget.PopupWindowCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.SpannableString
 import android.text.TextUtils
-import android.text.style.AbsoluteSizeSpan
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
@@ -33,7 +31,6 @@ import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.CurrencyLoadView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_passrecord.*
-import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -195,7 +192,7 @@ class MyPassRecordActivity : BaseActivity() {
 
     //获取通行记录
     private fun getCurrentRecordData() {
-        doRequest(WebApiService.PASS_RECORD, WebApiService.passRecordParams("浙G135UF", "201509", "1000002"), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.PASS_RECORD, WebApiService.passRecordParams(carno, startDate, type), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 llContent.visibility = View.GONE
                 loadView.setState(CurrencyLoadView.STATE_LOADING)
@@ -223,26 +220,25 @@ class MyPassRecordActivity : BaseActivity() {
             mDatas.clear()
             mDatas.addAll(mdLs)
             adapter.notifyDataSetChanged()
-            updateMoney()
         } else {
             loadView.setState(CurrencyLoadView.STATE_EMPTY)
         }
     }
 
-    private fun updateMoney() {
-        var money = 0.00
-        for (item in mDatas) {
-            item.money?.let { money += it }
-        }
-        val bigDecimal = BigDecimal(money)
-        money = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
-        val text = "本月消费 / 元\n"
-        val source = text + money
-        tvMoney.text = SpannableString(source).apply {
-            val ts26 = resources.getDimensionPixelOffset(R.dimen.font_26)
-            setSpan(AbsoluteSizeSpan(ts26, false), text.length, source.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-    }
+//    private fun updateMoney() {
+//        var money = 0.00
+//        for (item in mDatas) {
+//            item.money?.let { money += it }
+//        }
+//        val bigDecimal = BigDecimal(money)
+//        money = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
+//        val text = "本月消费 / 元\n"
+//        val source = text + money
+//        tvMoney.text = SpannableString(source).apply {
+//            val ts26 = resources.getDimensionPixelOffset(R.dimen.font_26)
+//            setSpan(AbsoluteSizeSpan(ts26, false), text.length, source.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+//        }
+//    }
 
     private fun onError() {
         if (!NetworkUtils.isConnected(this)) loadView.setState(CurrencyLoadView.STATE_NONETWORK)
