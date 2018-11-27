@@ -66,16 +66,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvReward"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/myHarvest_reward"
                     android:padding="@dimen/margin_5"
+                    android:text="@string/myHarvest_reward"
                     android:textColor="@color/tv_myharvest_color_selector"
                     android:textSize="@dimen/font_16" />
 
@@ -90,20 +90,59 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvPersonal"
+    <FrameLayout
+        android:id="@+id/flPersonal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never" />
+        android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvReward"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPersonal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+
+        <TextView
+            android:id="@+id/tvEmptyP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableTop="@mipmap/ic_nodata"
+            android:drawablePadding="@dimen/margin_10"
+            android:gravity="center"
+            android:text="@string/page_nodata"
+            android:textColor="@color/blow_gray"
+            android:textSize="@dimen/font_16"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flReward"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_f7"
-        android:overScrollMode="never"
-        android:paddingLeft="@dimen/margin_16"
-        android:paddingTop="@dimen/margin_10"
-        android:paddingRight="@dimen/margin_16"
-        android:visibility="gone" />
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvReward"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_f7"
+            android:overScrollMode="never"
+            android:paddingLeft="@dimen/margin_16"
+            android:paddingTop="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_16" />
+
+        <TextView
+            android:id="@+id/tvEmptyR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableTop="@mipmap/ic_nodata"
+            android:drawablePadding="@dimen/margin_10"
+            android:gravity="center"
+            android:text="@string/page_nodata"
+            android:textColor="@color/blow_gray"
+            android:textSize="@dimen/font_16"
+            android:visibility="gone" />
+    </FrameLayout>
+
 </LinearLayout>

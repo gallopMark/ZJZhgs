@@ -9,7 +9,8 @@ import com.uroad.zhgs.model.UserMDL
  */
 class UserPreferenceHelper {
     companion object {
-        private const val PREFS_USER = "Prefs_user_v2"
+        //历史版本Prefs_user、Prefs_user_v2
+        private const val PREFS_USER = "userInfo_v2"
         const val USER_ID = "userid"
         const val USER_UUID = "useruuid"
         const val PUSH_ID = "pushid"

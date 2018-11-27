@@ -282,6 +282,10 @@
                 <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
             </intent-filter>
         </receiver>
+
+        <!--友盟-->
+        <meta-data android:value="@string/UMENG_APP_ID" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="Umeng" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

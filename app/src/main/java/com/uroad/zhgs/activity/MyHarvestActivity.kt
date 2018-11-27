@@ -58,18 +58,18 @@ class MyHarvestActivity : BaseActivity() {
         tvReward.isSelected = false
         vTab1.visibility = View.INVISIBLE
         vTab2.visibility = View.INVISIBLE
-        rvPersonal.visibility = View.GONE
-        rvReward.visibility = View.GONE
+        flPersonal.visibility = View.GONE
+        flReward.visibility = View.GONE
         when (tab) {
             1 -> {
                 tvTotal.isSelected = true
                 vTab1.visibility = View.VISIBLE
-                rvPersonal.visibility = View.VISIBLE
+                flPersonal.visibility = View.VISIBLE
             }
             else -> {
                 tvReward.isSelected = true
                 vTab2.visibility = View.VISIBLE
-                rvReward.visibility = View.VISIBLE
+                flReward.visibility = View.VISIBLE
             }
         }
     }
@@ -106,11 +106,25 @@ class MyHarvestActivity : BaseActivity() {
             this.personnel.addAll(it)
             personAdapter.notifyDataSetChanged()
         }
+        if (personnel.size > 0) {
+            rvPersonal.visibility = View.VISIBLE
+            tvEmptyP.visibility = View.GONE
+        } else {
+            rvPersonal.visibility = View.GONE
+            tvEmptyP.visibility = View.VISIBLE
+        }
         mdl.prize?.let {
             val prize = "${getString(R.string.myHarvest_reward)}\n${it.size}"
             tvReward.text = prize
             this.prize.addAll(it)
             prizeAdapter.notifyDataSetChanged()
+        }
+        if(prize.size > 0) {
+            rvReward.visibility = View.VISIBLE
+            tvEmptyR.visibility = View.GONE
+        } else {
+            rvReward.visibility = View.GONE
+            tvEmptyR.visibility = View.VISIBLE
         }
     }
 }
