@@ -23,8 +23,8 @@ interface ApiService {
         // http://zhgs.u-road.com/ZJAppApi/index.php/api/
         //http://10.126.241.9
         // http://zjzhgs.u-road.com:11001  zhgs.u-road.com  http://zjgd.u-road.com/ZJAppApi/index.php/api
-        const val BASE_URL = "http://10.126.241.9/ZJAppApi/index.php/api/"
-        const val BASE_DEBUG_URL = "http://zhgs.u-road.com/ZJAppApi/index.php/api/"
+        const val BASE_URL = "http://zjzhgs.u-road.com:11001/ZJAppApi/index.php/api/"
+        const val BASE_DEBUG_URL = "http://zjgd.u-road.com/ZJAppApi/index.php/api"
         const val SHOPPING_URL = "https://h5.youzan.com/wscshop/feature/FzaSlSjOX1"
         const val MQTT_SERVICEURL = "tcp://47.96.92.29:9000"
         const val MQTT_USER = "zhejiang"

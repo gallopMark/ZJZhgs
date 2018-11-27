@@ -20,7 +20,7 @@ import com.amap.api.navi.model.AMapNaviPath
 import com.amap.api.navi.model.NaviLatLng
 import com.amap.api.navi.model.RouteOverlayOptions
 import com.amap.api.navi.view.RouteOverLay
-import com.uroad.amaplib.driveroute.util.AMapUtil
+import com.uroad.amaplib.utils.AMapUtil
 import com.uroad.amaplib.navi.simple.SimpleNavigationListener
 import com.uroad.library.utils.DeviceUtils
 import com.uroad.library.utils.DisplayUtils

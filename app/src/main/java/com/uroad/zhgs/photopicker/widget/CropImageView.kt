@@ -54,8 +54,7 @@ class CropImageView @JvmOverloads constructor(context: Context, attrs: Attribute
     /**
      * 返回焦点框边框颜色
      */
-    var focusColor = -0x557f7f80
-        private set //焦点框的边框颜色
+    private var focusColor = -0x557f7f80
     private var mBorderWidth = 1         //焦点边框的宽度（画笔宽度）
     private var mFocusWidth = 250         //焦点框的宽度
     private var mFocusHeight = 250        //焦点框的高度
@@ -259,15 +258,13 @@ class CropImageView @JvmOverloads constructor(context: Context, attrs: Attribute
      * 计算边界缩放比例 isMinScale 是否最小比例，true 最小缩放比例， false 最大缩放比例
      */
     private fun getScale(bitmapWidth: Int, bitmapHeight: Int, minWidth: Int, minHeight: Int, isMinScale: Boolean): Float {
-        val scale: Float
         val scaleX = minWidth.toFloat() / bitmapWidth
         val scaleY = minHeight.toFloat() / bitmapHeight
-        if (isMinScale) {
-            scale = if (scaleX > scaleY) scaleX else scaleY
+        return if (isMinScale) {
+            if (scaleX > scaleY) scaleX else scaleY
         } else {
-            scale = if (scaleX < scaleY) scaleX else scaleY
+            if (scaleX < scaleY) scaleX else scaleY
         }
-        return scale
     }
 
     /**
@@ -279,7 +276,7 @@ class CropImageView @JvmOverloads constructor(context: Context, attrs: Attribute
             mFocusPath.addRect(mFocusRect, Path.Direction.CCW)
             canvas.save()
             canvas.clipRect(0, 0, width, height)
-            canvas.clipPath(mFocusPath, Region.Op.DIFFERENCE)
+            canvas.clipPath(mFocusPath)
             canvas.drawColor(mMaskColor)
             canvas.restore()
         } else if (Style.CIRCLE == mStyle) {
@@ -287,7 +284,7 @@ class CropImageView @JvmOverloads constructor(context: Context, attrs: Attribute
             mFocusPath.addCircle(mFocusMidPoint.x, mFocusMidPoint.y, radius, Path.Direction.CCW)
             canvas.save()
             canvas.clipRect(0, 0, width, height)
-            canvas.clipPath(mFocusPath, Region.Op.DIFFERENCE)
+            canvas.clipPath(mFocusPath)
             canvas.drawColor(mMaskColor)
             canvas.restore()
         }
@@ -331,12 +328,10 @@ class CropImageView @JvmOverloads constructor(context: Context, attrs: Attribute
                     if (a >= 10) {
                         val cosB = (a * a + c * c - b * b) / (2.0 * a * c)
                         val angleB = Math.acos(cosB)
-                        val PID4 = Math.PI / 4
+                        val pid4 = Math.PI / 4
                         //旋转时，默认角度在 45 - 135 度之间
-                        if (angleB > PID4 && angleB < 3 * PID4)
-                            mode = ROTATE
-                        else
-                            mode = ZOOM
+                        mode = if (angleB > pid4 && angleB < 3 * pid4) ROTATE
+                        else ZOOM
                     }
                 }
                 if (mode == DRAG) {
@@ -506,7 +501,7 @@ class CropImageView @JvmOverloads constructor(context: Context, attrs: Attribute
      * @param isSaveRectangle 是否按矩形区域保存图片
      * @return 裁剪后的Bitmap
      */
-    fun getCropBitmap(expectWidth: Int, exceptHeight: Int, isSaveRectangle: Boolean): Bitmap? {
+    private fun getCropBitmap(expectWidth: Int, exceptHeight: Int, isSaveRectangle: Boolean): Bitmap? {
         if (expectWidth <= 0 || exceptHeight < 0) return null
         var srcBitmap: Bitmap? = (drawable as BitmapDrawable).bitmap
         srcBitmap = rotate(srcBitmap, sumRotateLevel * 90)  //最好用level，因为角度可能不是90的整数
@@ -637,7 +632,8 @@ class CropImageView @JvmOverloads constructor(context: Context, attrs: Attribute
             mListener?.onBitmapSaveError(saveFile)
         }, {}, {
             it.request(1)
-            mListener?.onSavingBitmap() })
+            mListener?.onSavingBitmap()
+        })
     }
 
     interface OnBitmapSaveCompleteListener {

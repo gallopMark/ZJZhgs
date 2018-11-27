@@ -9,7 +9,6 @@ import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.dialog.EditDialog
 import com.uroad.zhgs.model.UploadMDL
-import com.uroad.zhgs.model.UserMDL
 import com.uroad.zhgs.photopicker.data.ImagePicker
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -47,7 +46,7 @@ class UserInfoActivity : BaseActivity() {
     }
 
     override fun setListener() {
-        llImage.setOnClickListener { ImagePicker.from(this).requestCode(REQUEST_IMAGE).start() }
+        llImage.setOnClickListener { ImagePicker.from(this).isCompress(true).requestCode(REQUEST_IMAGE).start() }
         llUserName.setOnClickListener {
             EditDialog(this).withHint("请输入昵称").withButtonText("确定").withButtonClickListener(object : EditDialog.OnButtonClickListener {
                 override fun onButtonClick(content: String, dialog: EditDialog) {

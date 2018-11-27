@@ -91,9 +91,9 @@ class ImageGridActivity : BaseActivity() {
             isSaveRectangle = it.getBoolean("isSaveRectangle", false)
         }
         if (isMutily) {
-            rlFolder.visibility = View.VISIBLE
+            tvPreview.visibility = View.VISIBLE
         } else {
-            rlFolder.visibility = View.GONE
+            tvPreview.visibility = View.GONE
         }
         rvFolder.layoutManager = LinearLayoutManager(this).apply { LinearLayoutManager.VERTICAL }
         folderAdapter = ImageFolderAdapter(this, folders)

@@ -1,9 +1,6 @@
 package com.uroad.zhgs.fragment
 
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -22,6 +19,7 @@ import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
 import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.mqtt.AddTeamMDL
+import com.uroad.zhgs.utils.ClipboardUtils
 import com.uroad.zhgs.webservice.ApiService
 import kotlinx.android.synthetic.main.layout_fragment_main.*
 import kotlinx.android.synthetic.main.layout_riders_message.*
@@ -455,21 +453,10 @@ class MainFragment : BaseFragment() {
     /*获取系统粘贴板内容，判断是否存在车队口令*/
     private fun clipboard() {
         if (!isLogin()) return
-        val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val data = cm.primaryClip
-        if (data != null && data.itemCount > 0) {
-            val item = data.getItemAt(0)
-            val content = item.text.toString()
-            if (!TextUtils.isEmpty(content)
-                    && content.contains("智慧高速车友组队")
-                    && content.contains("¢")) {
-                //从口令中截取口令
-                val start = content.indexOf("¢") + 1
-                val end = content.lastIndexOf("¢")
-                val inToken = content.substring(start, end)
-                getCarTeamData(inToken)
-                cm.primaryClip = ClipData.newPlainText(null, "")
-            }
+        val inToken = ClipboardUtils.getRiderToken(context)
+        if(!TextUtils.isEmpty(inToken)){
+            getCarTeamData(inToken)
+            ClipboardUtils.clear(context)
         }
     }
 

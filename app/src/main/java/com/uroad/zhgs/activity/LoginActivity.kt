@@ -44,7 +44,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         withTitle(resources.getString(R.string.login_title))
         setBaseContentLayout(R.layout.activity_login)
         intent.extras?.let { firstLogin = it.getBoolean("firstLogin", false) }
-        tvRegister.setOnClickListener { openActivity(RegisterActivity::class.java) }
+        tvRegister.setOnClickListener { openActivityForResult(RegisterActivity::class.java, 456) }
         tvForgetPw.setOnClickListener { openActivity(ForgetPasswordActivity::class.java) }
     }
 
@@ -208,6 +208,14 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             finish()
         } else {
             setResult(RESULT_OK)
+            finish()
+        }
+    }
+
+    /*注册成功返回首页*/
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 456 && resultCode == RESULT_OK) {
             finish()
         }
     }

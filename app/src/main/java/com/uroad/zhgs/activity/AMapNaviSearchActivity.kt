@@ -30,7 +30,7 @@ import com.amap.api.navi.view.RouteOverLay
 import com.amap.api.services.core.LatLonPoint
 import com.amap.api.services.core.PoiItem
 import com.amap.api.services.poisearch.PoiSearch
-import com.uroad.amaplib.driveroute.util.AMapUtil
+import com.uroad.amaplib.utils.AMapUtil
 import com.uroad.amaplib.navi.simple.SimpleNavigationListener
 import com.uroad.amaplib.utils.NaviUtils
 import com.uroad.library.utils.DisplayUtils

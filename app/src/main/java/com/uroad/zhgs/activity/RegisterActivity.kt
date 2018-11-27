@@ -1,17 +1,25 @@
 package com.uroad.zhgs.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v4.content.ContextCompat
 import android.text.*
 import android.view.View
+import com.tencent.android.tpush.XGPushManager
+import com.uroad.library.utils.DeviceUtils
 import com.uroad.library.utils.SecurityUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.enumeration.VerificationCode
+import com.uroad.zhgs.helper.UserPreferenceHelper
+import com.uroad.zhgs.model.UserMDL
+import com.uroad.zhgs.service.MyTracksService
 import com.uroad.zhgs.utils.CheckUtils
+import com.uroad.zhgs.utils.ClipboardUtils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.InputMethodUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -33,7 +41,6 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
         withTitle(resources.getString(R.string.register_title))
         setBaseContentLayout(R.layout.activity_register)
     }
-
 
     override fun setListener() {
         tvGetCode.setOnClickListener(this)
@@ -165,8 +172,14 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
             override fun onSuccess(data: String?) {
                 endLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    showShortToast("注册成功")
-                    Handler().postDelayed({ if (!isFinishing) finish() }, 1500)
+                    val mdl = GsonUtils.fromDataBean(data,UserMDL::class.java)
+                    if(mdl == null) onJsonParseError()
+                    else {
+                        showShortToast("注册成功")
+                        saveUserInfo(mdl)
+                        setResult(RESULT_OK)
+                        Handler().postDelayed({ if (!isFinishing) finish() }, 1500)
+                    }
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
                 }
@@ -177,6 +190,24 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
                 onHttpError(e)
             }
         })
+    }
+
+    /*注册成功保存用户信息*/
+    private fun saveUserInfo(mdl: UserMDL) {
+        mdl.isLogin = true
+        UserPreferenceHelper.save(this, mdl)
+        if (!TextUtils.isEmpty(mdl.pushid)) {
+            XGPushManager.bindAccount(this, mdl.pushid)
+        }
+        val currApplication = application as CurrApplication
+        currApplication.onPraiseLogin(mdl.useruuid, DeviceUtils.getAndroidID(this), DeviceUtils.getFingerprint())
+        /*登录成功，开启记录足迹的后台服务*/
+        startService(Intent(this, MyTracksService::class.java))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        etQRCode.setText(ClipboardUtils.getRegisterToken(this))
     }
 
     override fun onDestroy() {

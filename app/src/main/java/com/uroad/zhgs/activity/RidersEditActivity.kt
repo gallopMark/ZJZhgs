@@ -1,7 +1,6 @@
 package com.uroad.zhgs.activity
 
 import android.app.AlertDialog
-import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -14,22 +13,18 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
-import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import com.amap.api.col.sln3.it
-import com.amap.api.col.sln3.pw
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.amap.api.services.core.PoiItem
 import com.amap.api.services.poisearch.PoiSearch
-import com.uroad.amaplib.driveroute.util.AMapUtil
+import com.uroad.amaplib.utils.AMapUtil
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.mqtt.IMqttCallBack
 import com.uroad.mqtt.MqttService
 import com.uroad.zhgs.R
-import com.uroad.zhgs.R.id.mapView
 import com.uroad.zhgs.adapteRv.AMapPoiAdapter
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.common.ThemeStyleActivity
@@ -39,7 +34,6 @@ import com.uroad.zhgs.model.mqtt.TeamPlaceUpdateMDL
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.InputMethodUtils
-import com.uroad.zhgs.utils.PopupWindowUtils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
