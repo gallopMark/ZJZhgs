@@ -6,5 +6,6 @@
     android:layout_gravity="center"
     android:drawableTop="@mipmap/ic_nodata"
     android:drawablePadding="@dimen/margin_20"
+    android:textSize="@dimen/font_16"
     android:gravity="center"
     android:text="@string/page_nodata" />
