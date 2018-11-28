@@ -20,8 +20,7 @@
                 android:id="@+id/ivTopPic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@mipmap/ic_carinquiry_topbg" />
+                android:scaleType="fitXY" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,10 +28,13 @@
                 android:layout_marginLeft="@dimen/margin_15"
                 android:layout_marginTop="@dimen/minus_50"
                 android:layout_marginRight="@dimen/margin_15"
-                android:layout_marginBottom="@dimen/margin_15"
+                android:layout_marginBottom="@dimen/margin_10"
                 android:background="@drawable/bg_corners_white_5dp"
                 android:orientation="vertical"
-                android:padding="@dimen/margin_30">
+                android:paddingLeft="@dimen/margin_30"
+                android:paddingTop="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_30"
+                android:paddingBottom="@dimen/margin_10">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,10 +52,10 @@
                     android:layout_marginTop="@dimen/margin_5"
                     android:background="@drawable/bg_carselect"
                     android:drawablePadding="@dimen/margin_10"
-                    android:paddingLeft="@dimen/margin_20"
-                    android:paddingTop="@dimen/margin_10"
-                    android:paddingRight="@dimen/margin_20"
-                    android:paddingBottom="@dimen/margin_10"
+                    android:paddingLeft="@dimen/margin_16"
+                    android:paddingTop="@dimen/margin_8"
+                    android:paddingRight="@dimen/margin_16"
+                    android:paddingBottom="@dimen/margin_8"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/font_18"
                     android:textStyle="bold" />
@@ -66,9 +68,10 @@
                     android:background="@color/color_f2" />
 
                 <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center">
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1">
 
                     <com.uroad.zhgs.widget.CircularProgressView
                         android:id="@+id/cpView"
@@ -79,41 +82,70 @@
                         app:border_Width="@dimen/margin_5"
                         app:minSweepAngle="60" />
 
-                    <FrameLayout
-                        android:id="@+id/flContent"
+                    <TextView
+                        android:id="@+id/tvEmpty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:visibility="invisible">
+                        android:drawableTop="@mipmap/ic_nodata"
+                        android:drawablePadding="@dimen/margin_10"
+                        android:gravity="center"
+                        android:text="@string/car_inquiry_empty"
+                        android:textColor="@color/blow_gray"
+                        android:textSize="@dimen/font_16"
+                        android:visibility="gone" />
 
-                        <ImageView
-                            android:id="@+id/ivContent"
+                    <LinearLayout
+                        android:id="@+id/llContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <FrameLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_10"
-                            android:src="@mipmap/ic_car_normal" />
+                            android:layout_gravity="center">
 
-                        <LinearLayout
+                            <ImageView
+                                android:id="@+id/ivContent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/margin_10"
+                                android:src="@mipmap/ic_car_normal" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="@dimen/margin_15"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvScore"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_18" />
+
+                                <TextView
+                                    android:id="@+id/tvStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_14" />
+                            </LinearLayout>
+                        </FrameLayout>
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/margin_15"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tvScore"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="@dimen/font_20" />
-
-                            <TextView
-                                android:id="@+id/tvStatus"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="@dimen/font_16" />
-                        </LinearLayout>
-                    </FrameLayout>
+                            android:layout_marginLeft="@dimen/margin_15"
+                            android:layout_marginRight="@dimen/margin_10"
+                            android:lineSpacingExtra="@dimen/margin_3"
+                            android:text="@string/carInquiry_bottom_tips"
+                            android:textColor="@color/blow_gray"
+                            android:textSize="@dimen/font_14" />
+                    </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>

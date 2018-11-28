@@ -26,7 +26,8 @@ interface ApiService {
         const val BASE_URL = "http://zjzhgs.u-road.com:11001/ZJAppApi/index.php/api/"
         const val BASE_DEBUG_URL = "http://zjgd.u-road.com/ZJAppApi/index.php/api/"
         const val SHOPPING_URL = "https://h5.youzan.com/wscshop/feature/FzaSlSjOX1"
-        const val MQTT_SERVICEURL = "tcp://47.96.92.29:9000"
+        //115.238.84.148 11012  47.96.92.29:9000
+        const val MQTT_SERVICEURL = "tcp://115.238.84.148:11012"
         const val MQTT_USER = "zhejiang"
         const val MQTT_PASSWORD = "uroad123"
         const val MQTT_TOPIC = "Rescue/"

@@ -2,7 +2,6 @@ package com.uroad.zhgs.activity
 
 import android.os.Bundle
 import android.text.TextUtils
-import com.uroad.library.utils.IdCardUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
@@ -34,13 +33,7 @@ class PerfectUserInfoActivity : BaseActivity() {
             etCardNo.setText(getCardNo())
             etCardNo.setSelection(etCardNo.text.length)
         }
-        if (!TextUtils.isEmpty(getRealName()) || !TextUtils.isEmpty(getCardNo())) {
-            btSave.text = resources.getString(R.string.perfect_userinfo_change)
-            isAlert = true
-        } else {
-            btSave.text = resources.getString(R.string.perfect_userinfo_save)
-            isAlert = false
-        }
+        isAlert = !TextUtils.isEmpty(getRealName()) || !TextUtils.isEmpty(getCardNo())
     }
 
     private fun onSave() {
@@ -56,7 +49,11 @@ class PerfectUserInfoActivity : BaseActivity() {
 
     private fun save(name: String, cardno: String) {
         doRequest(WebApiService.PERFECT_DATA, WebApiService.perfectDataParams(getUserId(), name, cardno), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
             override fun onSuccess(data: String?) {
+                endLoading()
                 if (GsonUtils.isResultOk(data)) {
                     if (isAlert) showShortToast("修改成功")
                     else showShortToast("保存成功")
@@ -71,6 +68,7 @@ class PerfectUserInfoActivity : BaseActivity() {
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
                 onHttpError(e)
             }
         })

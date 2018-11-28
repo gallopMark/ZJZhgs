@@ -18,7 +18,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 20181127
-        versionName "2.0.0"
+        versionName "2.0.2"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         ndk {

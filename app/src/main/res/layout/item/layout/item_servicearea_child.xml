@@ -4,16 +4,34 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@mipmap/ic_menu_jtss_service_p"
-        android:drawablePadding="@dimen/margin_5"
-        android:gravity="center|left"
-        android:padding="@dimen/margin_8"
-        android:textColor="@color/gainsboro"
-        android:textSize="@dimen/font_16" />
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_8">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableLeft="@mipmap/ic_menu_jtss_service_p"
+            android:drawablePadding="@dimen/margin_5"
+            android:gravity="center|left"
+            android:textColor="@color/blow_gray"
+            android:textSize="@dimen/font_16" />
+
+        <TextView
+            android:id="@+id/tvRemark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/blow_gray"
+            android:textSize="@dimen/font_16" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

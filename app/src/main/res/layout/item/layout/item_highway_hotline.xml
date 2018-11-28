@@ -48,8 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="@dimen/margin_5"
-            android:src="@mipmap/ic_highway_hotline_call"
-            android:visibility="gone" />
+            android:src="@mipmap/ic_highway_hotline_call" />
     </LinearLayout>
 
     <View

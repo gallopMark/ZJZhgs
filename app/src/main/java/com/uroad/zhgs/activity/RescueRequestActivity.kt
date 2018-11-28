@@ -303,14 +303,14 @@ class RescueRequestActivity : BaseActivity() {
             etCarNum.setText(mdLs[0].getCarNum()[1])
             etCarNum.setSelection(etCarNum.text.length)
             mdLs[0].carid?.let { usercarid = it }
-            tvChangeCarNum.setOnClickListener { _ ->
+            tvChangeCarNum.setOnClickListener {
                 WheelViewDialog(this@RescueRequestActivity).withData(ArrayList<String>().apply {
                     for (item in mdLs) {
-                        item.carno?.let { this.add(it) }
+                        item.carno?.let { num -> this.add(num) }
                     }
-                }).withItemNum(5).withListener(object : WheelViewDialog.OnItemSelectListener {
+                }).withListener(object : WheelViewDialog.OnItemSelectListener {
                     override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
-                        mdLs[position].carid?.let { usercarid = it }
+                        mdLs[position].carid?.let { id -> usercarid = id }
                         etNumType.setText(mdLs[position].getCarNum()[0])
                         etCarNum.setText(mdLs[position].getCarNum()[1])
                         etCarNum.setSelection(etCarNum.text.length)

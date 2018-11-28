@@ -25,17 +25,18 @@ class HighwayHotlineFragment : BasePageRefreshRvFragment() {
     override fun initViewData(view: View) {
         arguments?.getString("phonetype")?.let { phonetype = it }
         refreshLayout.isEnableLoadMore = false
-        adapter = HighwayHotlineAdapter(context, mDatas)
-        recyclerView.adapter = adapter
-        adapter.setOnItemClickListener(object :BaseRecyclerAdapter.OnItemClickListener{
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until mDatas.size) {
-                    if (!TextUtils.isEmpty(mDatas[position].phone)) {
-                        PhoneUtils.call(context, mDatas[position].phone)
+        adapter = HighwayHotlineAdapter(context, mDatas).apply {
+            setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
+                override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                    if (position in 0 until mDatas.size) {
+                        if (!TextUtils.isEmpty(mDatas[position].phone)) {
+                            PhoneUtils.call(context, mDatas[position].phone)
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
+        recyclerView.adapter = adapter
     }
 
     override fun initData() {

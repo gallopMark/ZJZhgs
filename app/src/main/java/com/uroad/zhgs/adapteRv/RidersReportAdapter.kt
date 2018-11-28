@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.SpannableString
 import android.text.TextUtils
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.FrameLayout
@@ -32,6 +34,8 @@ class RidersReportAdapter(private val context: Activity, mData: MutableList<Ride
     private val height = (width * 1.3).toInt()
     private var onAdapterChildClickListener: OnAdapterChildClickListener? = null
     private val currUserId = UserPreferenceHelper.getUserId(context)
+    private val colorWhite = ContextCompat.getColor(context, R.color.white)
+    private val sp13 = context.resources.getDimensionPixelOffset(R.dimen.font_13)
 
     override fun bindView(viewType: Int): Int = R.layout.item_ridersreport
 
@@ -42,17 +46,7 @@ class RidersReportAdapter(private val context: Activity, mData: MutableList<Ride
         val rvPics = holder.obtainView<RecyclerView>(R.id.rvPics)
         val flVideo = holder.obtainView<FrameLayout>(R.id.flVideo)
         val lottieView = holder.obtainView<LottieAnimationView>(R.id.lottieView)
-        if (!TextUtils.isEmpty(t.getEventType())) {
-            holder.setVisibility(R.id.tvEventType, true)
-            holder.setText(R.id.tvEventType, t.getEventType())
-            holder.setBackgroundColor(R.id.tvEventType, t.getColor(context))
-            var remark = "\u3000\u3000\u3000\u2000"
-            t.remark?.let { remark += it }
-            holder.setText(R.id.tvRemark, remark)
-        } else {
-            holder.setVisibility(R.id.tvEventType, false)
-            holder.setText(R.id.tvRemark, t.remark)
-        }
+        holder.setText(R.id.tvRemark, getTextStyle(t.getEventType(), t.remark, t.getColor(context)))
         if (t.isfollow == 0) {
             holder.setImageResource(R.id.ivFollow, R.mipmap.ic_follow_ok)
         } else {
@@ -128,6 +122,19 @@ class RidersReportAdapter(private val context: Activity, mData: MutableList<Ride
         holder.setOnClickListener(R.id.ivFollow, View.OnClickListener { onAdapterChildClickListener?.onFollowClick(position) })
         holder.setOnClickListener(R.id.tvCommentCount, View.OnClickListener { onAdapterChildClickListener?.onCommentClick(position, holder.obtainView(R.id.bottomView)) })
         holder.setOnClickListener(R.id.tvSupportCount, View.OnClickListener { onAdapterChildClickListener?.onSupportClick(position, holder.itemView) })
+    }
+
+    private fun getTextStyle(eventType: String?, remark: String?, color: Int): SpannableString {
+        var content = ""
+        val end: Int
+        content += if (!TextUtils.isEmpty(eventType)) "\u2000$eventType\u2000" else ""
+        end = content.length
+        content += if (!TextUtils.isEmpty(content)) "\u2000$remark" else remark
+        val ss = SpannableString(content)
+        ss.setSpan(BackgroundColorSpan(color), 0, end, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE)
+        ss.setSpan(ForegroundColorSpan(colorWhite), 0, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        ss.setSpan(AbsoluteSizeSpan(sp13, false), 0, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return ss
     }
 
     inner class PicAdapter(context: Context, private val photos: MutableList<String>)

@@ -695,9 +695,9 @@ class RidersDetailActivity : ThemeStyleActivity() {
     }
 
     override fun setListener() {
-        ivInvitation.setOnClickListener { _ ->
-            detailMDL?.team_data?.let {
-                RidersInvitingDialog(this).token(it.intoken).viewClickListener(object : RidersInvitingDialog.OnViewClickListener {
+        ivInvitation.setOnClickListener {
+            detailMDL?.team_data?.let { data ->
+                RidersInvitingDialog(this).token(data.intoken).viewClickListener(object : RidersInvitingDialog.OnViewClickListener {
                     override fun onViewClick(type: Int, dialogRiders: RidersInvitingDialog) {
                         when (type) {
                             1 -> {
@@ -713,8 +713,8 @@ class RidersDetailActivity : ThemeStyleActivity() {
                 }).show()
             }
         }
-        ivLocation.setOnClickListener { _ -> location?.let { aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.latitude, it.longitude), aMap.cameraPosition.zoom, 0f, 0f))) } }
-        tvEdit.setOnClickListener { _ ->
+        ivLocation.setOnClickListener { location?.let { location -> aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), aMap.cameraPosition.zoom, 0f, 0f))) } }
+        tvEdit.setOnClickListener {
             detailMDL?.team_data?.let {
                 val bundle = Bundle().apply {
                     putBoolean("isModify", true)
@@ -726,10 +726,10 @@ class RidersDetailActivity : ThemeStyleActivity() {
                 openActivity(RidersEditActivity::class.java, bundle)
             }
         }
-        tvNavigation.setOnClickListener { _ ->
-            detailMDL?.team_data?.let {
+        tvNavigation.setOnClickListener {
+            detailMDL?.team_data?.let { data ->
                 isOpenNav = true
-                val end = Poi(it.toplace, it.getLatLng(), "")
+                val end = Poi(data.toplace, data.getLatLng(), "")
                 openNaviPage(null, end)
             }
         }
@@ -761,13 +761,14 @@ class RidersDetailActivity : ThemeStyleActivity() {
     }
 
     private fun shareToWeChat(text: String?) {
-        mWXApi = WXAPIFactory.createWXAPI(this, getString(R.string.WECHAT_APP_ID)).apply { registerApp(getString(R.string.WECHAT_APP_ID)) }
-        val message = WXMediaMessage(WXTextObject().apply { this.text = text })
-        mWXApi?.sendReq(SendMessageToWX.Req().apply {
-            this.scene = SendMessageToWX.Req.WXSceneSession
-            this.transaction = "text${System.currentTimeMillis()}"
-            this.message = message
-        })
+        val message = WXMediaMessage(WXTextObject().apply { this.text = text }).apply { this.description = text }
+        mWXApi = WXAPIFactory.createWXAPI(this, getString(R.string.WECHAT_APP_ID)).apply { registerApp(getString(R.string.WECHAT_APP_ID)) }.apply {
+            this.sendReq(SendMessageToWX.Req().apply {
+                this.scene = SendMessageToWX.Req.WXSceneSession
+                this.transaction = "text${System.currentTimeMillis()}"
+                this.message = message
+            })
+        }
     }
 
     private fun shareToQQ(text: String?) {

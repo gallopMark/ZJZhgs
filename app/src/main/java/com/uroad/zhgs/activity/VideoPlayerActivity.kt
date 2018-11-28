@@ -67,6 +67,7 @@ class VideoPlayerActivity : BaseActivity() {
         zPlayer.setLive(isLive)
                 .setTitle(title)
                 .setShowCenterControl(true)
+                .setNetChangeListener(false)
                 .onPrepared { handler.sendEmptyMessageDelayed(CODE_MSG, 1000) }
                 .setScaleType(ZPlayer.SCALETYPE_FITXY)
                 .setPlayerWH(0, videoHeight)

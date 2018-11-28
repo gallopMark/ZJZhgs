@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/transparent"
-        android:paddingTop="@dimen/margin_15"
-        android:paddingBottom="@dimen/margin_15"
+        android:paddingTop="@dimen/margin_25"
+        android:paddingBottom="@dimen/margin_25"
         android:textColor="@color/white"
         android:textSize="@dimen/font_16" />
 </FrameLayout>

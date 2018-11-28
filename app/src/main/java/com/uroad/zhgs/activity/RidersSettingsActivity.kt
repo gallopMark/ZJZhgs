@@ -3,7 +3,10 @@ package com.uroad.zhgs.activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import com.uroad.mqtt.IMqttCallBack
 import com.uroad.mqtt.MqttService
@@ -120,8 +123,17 @@ class RidersSettingsActivity : ThemeStyleActivity() {
     private fun updateUI(mdLs: MutableList<RidersDetailMDL.TeamMember>) {
         mDatas.clear()
         mDatas.addAll(mdLs)
+        setMemberSize(mDatas.size)
         mDatas.add(AddPicItem())
         adapter.notifyDataSetChanged()
+    }
+
+    private fun setMemberSize(size: Int) {
+        var source = getString(R.string.riders_members)
+        val start = source.length
+        source += "${size}人"
+        val end = source.length - 1
+        tvMembers.text = SpannableString(source).apply { setSpan(ForegroundColorSpan(ContextCompat.getColor(this@RidersSettingsActivity, R.color.riders_inTeam)), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE) }
     }
 
     private fun onDialogTips(type: Int) {

@@ -153,6 +153,7 @@ class MainFragment : BaseFragment() {
             childFragmentManager.popBackStack(MainSubscribeFragment::class.java.name, 0)
             childFragmentManager.beginTransaction().remove(fragment).commit()
         }
+        flSubscribe.visibility = View.GONE
         childFragmentManager.beginTransaction().replace(R.id.flSubscribe, MainSubscribeFragment().apply {
             setOnSubscribeEvent(object : MainSubscribeFragment.OnSubscribeEvent {
                 override fun onEvent(isEmpty: Boolean) {
@@ -216,10 +217,13 @@ class MainFragment : BaseFragment() {
     /*刷新我的订阅*/
     private fun updateSubscribe() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_SUBSCRIBE)
-        if (fragment == null || !fragment.isAdded) {
+        if (fragment == null) {
             initSubscribe()
         } else {
-            if (fragment is MainSubscribeFragment) fragment.initData()
+            if (!isLogin()) flSubscribe.visibility = View.GONE
+            else {
+                if (fragment is MainSubscribeFragment) fragment.initData()
+            }
         }
     }
 
@@ -454,7 +458,7 @@ class MainFragment : BaseFragment() {
     private fun clipboard() {
         if (!isLogin()) return
         val inToken = ClipboardUtils.getRiderToken(context)
-        if(!TextUtils.isEmpty(inToken)){
+        if (!TextUtils.isEmpty(inToken)) {
             getCarTeamData(inToken)
             ClipboardUtils.clear(context)
         }

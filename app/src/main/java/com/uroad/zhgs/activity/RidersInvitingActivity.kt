@@ -119,7 +119,7 @@ class RidersInvitingActivity : ThemeStyleActivity() {
 
     private fun onEmptyData(emptyTips: CharSequence) {
         recyclerView.visibility = View.GONE
-        llEmpty.visibility = View.VISIBLE
+        mEmptyTv.visibility = View.VISIBLE
         mEmptyTv.text = emptyTips
     }
 

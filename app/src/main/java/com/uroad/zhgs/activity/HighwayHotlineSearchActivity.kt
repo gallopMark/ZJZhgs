@@ -84,17 +84,18 @@ class HighwayHotlineSearchActivity : BaseActivity() {
 
     private fun initRv() {
         recyclerView.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.VERTICAL }
-        adapter = HighwayHotlineAdapter(this, mDatas)
-        recyclerView.adapter = adapter
-        adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-                if (position in 0 until mDatas.size) {
-                    if (!TextUtils.isEmpty(mDatas[position].phone)) {
-                        PhoneUtils.call(this@HighwayHotlineSearchActivity, mDatas[position].phone)
+        adapter = HighwayHotlineAdapter(this, mDatas).apply {
+            setOnItemChildClickListener(object : BaseRecyclerAdapter.OnItemChildClickListener {
+                override fun onItemChildClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                    if (position in 0 until mDatas.size) {
+                        if (!TextUtils.isEmpty(mDatas[position].phone)) {
+                            PhoneUtils.call(this@HighwayHotlineSearchActivity, mDatas[position].phone)
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
+        recyclerView.adapter = adapter
     }
 
     private fun initSearch() {

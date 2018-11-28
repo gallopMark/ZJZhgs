@@ -44,6 +44,7 @@ class MyPassRecordActivity : BaseActivity() {
     private var startDate: String? = null
     private var type: String? = null
     private val cars = ArrayList<CarMDL>()
+    private var selected: Int = 0
     private val mDatas = ArrayList<PassRecordMDL>()
     private lateinit var adapter: PassRecordAdapter
 
@@ -163,12 +164,14 @@ class MyPassRecordActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@MyPassRecordActivity).apply { orientation = LinearLayoutManager.VERTICAL }
         }
         val popupWindow = PopupWindow(recyclerView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        recyclerView.adapter = CarAdapter(this, cars).apply {
+        recyclerView.adapter = CarAdapter(this, cars, selected).apply {
             setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
                 override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
                     if (position in 0 until cars.size) {
+                        selected = position
                         carno = cars[position].carno
                         type = cars[position].carcategory
+                        withTitle(carno)
                         getCurrentRecordData()
                         popupWindow.dismiss()
                     }
@@ -250,8 +253,9 @@ class MyPassRecordActivity : BaseActivity() {
         })
     }
 
-    private inner class CarAdapter(context: Activity, cars: MutableList<CarMDL>) : BaseArrayRecyclerAdapter<CarMDL>(context, cars) {
-        private var selected: Int = 0
+    private inner class CarAdapter(context: Activity
+                                   , cars: MutableList<CarMDL>
+                                   , private var selected: Int) : BaseArrayRecyclerAdapter<CarMDL>(context, cars) {
         override fun bindView(viewType: Int): Int = R.layout.item_select_default
 
         override fun onBindHoder(holder: RecyclerHolder, t: CarMDL, position: Int) {

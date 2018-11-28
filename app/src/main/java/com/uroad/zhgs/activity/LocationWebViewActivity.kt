@@ -5,6 +5,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import com.amap.api.location.AMapLocation
@@ -30,6 +32,7 @@ class LocationWebViewActivity : BaseWebViewActivity() {
     }
 
     private var url: String? = null
+    private lateinit var handler: Handler
 
     @SuppressLint("JavascriptInterface", "AddJavascriptInterface")
     override fun setUp(savedInstanceState: Bundle?) {
@@ -44,6 +47,7 @@ class LocationWebViewActivity : BaseWebViewActivity() {
         webView.settings.setAppCacheEnabled(false)
         webView.addJavascriptInterface(JavascriptInterface(), "uroadhtml")
         url?.let { loadUrl(it) }
+        handler = Handler(Looper.getMainLooper())
     }
 
     inner class JavascriptInterface {
@@ -51,7 +55,7 @@ class LocationWebViewActivity : BaseWebViewActivity() {
         @android.webkit.JavascriptInterface
         fun uroadplus_login() {
             if (!isLogin()) openActivityForResult(LoginActivity::class.java, 123)
-            else plusWebUserInfo()
+            else handler.postDelayed({ plusWebUserInfo() }, 500)
         }
 
         @android.webkit.JavascriptInterface
@@ -74,7 +78,7 @@ class LocationWebViewActivity : BaseWebViewActivity() {
         val longitude = location.longitude
         val latitude = location.latitude
         onLoad("uroadplus_web_lnglat", "('$longitude','$latitude')")
-        if (isLogin()) plusWebUserInfo()
+//        if (isLogin()) plusWebUserInfo()
         closeLocation()
     }
 
@@ -95,6 +99,7 @@ class LocationWebViewActivity : BaseWebViewActivity() {
     }
 
     override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
         webView.clearCache(true)
         webView.clearFormData()
         webView.clearHistory()

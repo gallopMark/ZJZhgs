@@ -50,10 +50,8 @@ class CarInquiryActivity : BaseActivity() {
         val width2 = DisplayUtils.getWindowWidth(this) - DisplayUtils.dip2px(this, 110f)
         ivContent.layoutParams = ivContent.layoutParams.apply {
             this.width = width2
-            this.height = width2
+            this.height = (width2 * 0.66).toInt()
         }
-        ivContent.scaleType = ImageView.ScaleType.FIT_XY
-        ivContent.setImageBitmap(BitmapUtils.decodeSampledBitmapFromResource(resources, R.mipmap.ic_carinquiry_image, width2, width2))
     }
 
     override fun initData() {
@@ -85,9 +83,7 @@ class CarInquiryActivity : BaseActivity() {
             }
             tvSelectCar.setOnClickListener {
                 if (data.size < 2) return@setOnClickListener
-                val itemNum = if (data.size < 3) 3 else if (data.size > 7) 7 else data.size
                 WheelViewDialog(this).withData(data).default(index)
-                        .withItemNum(itemNum)
                         .withListener(object : WheelViewDialog.OnItemSelectListener {
                             override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
                                 index = position
@@ -105,18 +101,16 @@ class CarInquiryActivity : BaseActivity() {
         val car = cars[index]
         doRequest(WebApiService.CAR_INQUIRY, WebApiService.sincerityParams(car.carno, ""), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
-                cpView.visibility = View.VISIBLE
-                flContent.visibility = View.INVISIBLE
+                onLoading()
             }
 
             override fun onSuccess(data: String?) {
-                cpView.visibility = View.GONE
+                finishLoad()
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, CarInquiryMDL::class.java)
                     if (mdLs.size == 0) {
-                        showShortToast("暂无数据哦~")
+                        onEmpty()
                     } else {
-                        flContent.visibility = View.VISIBLE
                         val mdl = mdLs[0]
                         updateUI(mdl)
                     }
@@ -126,40 +120,62 @@ class CarInquiryActivity : BaseActivity() {
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                cpView.visibility = View.GONE
+                finishLoad()
                 onHttpError(e)
             }
         })
     }
 
+    private fun onLoading() {
+        cpView.visibility = View.VISIBLE
+        tvEmpty.visibility = View.GONE
+        llContent.visibility = View.GONE
+    }
+
+    private fun finishLoad() {
+        cpView.visibility = View.GONE
+    }
+
+    private fun onEmpty() {
+        tvEmpty.visibility = View.VISIBLE
+        llContent.visibility = View.GONE
+    }
+
     private fun updateUI(mdl: CarInquiryMDL) {
-        when {
-            TextUtils.equals(mdl.creditRank, "黑一") -> {
-                ivContent.setImageResource(R.mipmap.ic_car_blacklist)
-                tvStatus.text = "一级黑名单"
-                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_34))
+        if (TextUtils.isEmpty(mdl.creditRank) && TextUtils.isEmpty(mdl.sinceScore)) {
+            onEmpty()
+        } else {
+            tvEmpty.visibility = View.GONE
+            llContent.visibility = View.VISIBLE
+            when {
+                TextUtils.equals(mdl.creditRank, "黑一") -> {
+                    ivContent.setImageResource(R.mipmap.ic_car_blacklist)
+                    tvStatus.text = "一级黑名单"
+                    tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_34))
+                }
+                TextUtils.equals(mdl.creditRank, "黑二") -> {
+                    ivContent.setImageResource(R.mipmap.ic_car_blacklist)
+                    tvStatus.text = "二级黑名单"
+                    tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_34))
+                }
+                TextUtils.equals(mdl.creditRank, "灰名单") -> {
+                    ivContent.setImageResource(R.mipmap.ic_car_greylist)
+                    tvStatus.text = "灰名单"
+                    tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_8d))
+                }
+                TextUtils.equals(mdl.creditRank, "正常") -> {
+                    ivContent.setImageResource(R.mipmap.ic_car_normal)
+                    tvStatus.text = "正常"
+                    tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_normal))
+                }
+                else -> {
+                    ivContent.setImageResource(R.mipmap.ic_car_normal)
+                    tvStatus.text = "正常"
+                    tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_normal))
+                }
             }
-            TextUtils.equals(mdl.creditRank, "黑二") -> {
-                ivContent.setImageResource(R.mipmap.ic_car_blacklist)
-                tvStatus.text = "二级黑名单"
-                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_34))
-            }
-            TextUtils.equals(mdl.creditRank, "灰名单") -> {
-                ivContent.setImageResource(R.mipmap.ic_car_greylist)
-                tvStatus.text = "灰名单"
-                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_8d))
-            }
-            TextUtils.equals(mdl.creditRank, "正常") -> {
-                ivContent.setImageResource(R.mipmap.ic_car_normal)
-                tvStatus.text = "正常"
-                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_normal))
-            }
-            else -> {
-                ivContent.setImageResource(R.mipmap.ic_car_normal)
-                tvStatus.text = "正常"
-                tvScore.setTextColor(ContextCompat.getColor(this,R.color.color_normal))
-            }
+            if (TextUtils.isEmpty(mdl.sinceScore)) tvScore.text = "0"
+            else tvScore.text = mdl.sinceScore
         }
-        tvScore.text = mdl.sinceScore
     }
 }

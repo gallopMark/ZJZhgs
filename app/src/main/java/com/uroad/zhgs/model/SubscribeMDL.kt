@@ -73,7 +73,7 @@ class SubscribeMDL {
     var statusname: String? = null
     var statuscolor: String? = null
     var updatetime: String? = null
-
+    var isuseful:Int?=0
     /*1170004 拥堵 显示格式跟拥堵详情一致
     * "eventid": "330515349170521",
 		"shortname": "练杭高速",
@@ -297,6 +297,7 @@ eventtype	事件类型
         mdl.statusname = statusname
         mdl.statuscolor = statuscolor
         mdl.updatetime = updatetime
+        mdl.isuseful = isuseful
         val markerIcon: Int
         val markerBigIco: Int
         when (mdl.getSubType()) {
@@ -337,6 +338,7 @@ eventtype	事件类型
         mdl.statuscolor = statuscolor
         mdl.content = content
         mdl.updatetime = content
+        mdl.isuseful = isuseful
         mdl.markerIcon = R.mipmap.ic_marker_yd_icon
         mdl.markerBigIco = R.mipmap.ic_marker_yd_big_icon
         return mdl
