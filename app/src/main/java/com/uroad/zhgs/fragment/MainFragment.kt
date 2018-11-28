@@ -456,7 +456,7 @@ class MainFragment : BaseFragment() {
 
     /*获取系统粘贴板内容，判断是否存在车队口令*/
     private fun clipboard() {
-        if (!isLogin()) return
+        if (!isLogin() || !isAuth()) return
         val inToken = ClipboardUtils.getRiderToken(context)
         if (!TextUtils.isEmpty(inToken)) {
             getCarTeamData(inToken)
