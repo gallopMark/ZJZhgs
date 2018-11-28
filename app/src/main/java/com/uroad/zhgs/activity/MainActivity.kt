@@ -81,7 +81,7 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     private fun hideFragments(transaction: FragmentTransaction) {

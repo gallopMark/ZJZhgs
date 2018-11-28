@@ -145,7 +145,7 @@ class ServiceAreaActivity : BaseActivity() {
                 },"tab2")
             }
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     private fun addMarkers(position: Int, serviceList: MutableList<ServiceMDL>) {

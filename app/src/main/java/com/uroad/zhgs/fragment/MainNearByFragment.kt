@@ -87,7 +87,7 @@ class MainNearByFragment : BaseFragment() {
         if (!tollFragment.isAdded) transaction.add(R.id.flNearby, tollFragment)
         if (!serviceFragment.isAdded) transaction.add(R.id.flNearby, serviceFragment)
         if (!scenicFragment.isAdded) transaction.add(R.id.flNearby, scenicFragment)
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     /*我的附近tab 1->附近收费站 2->附近服务区 3->附近景点*/
@@ -101,7 +101,7 @@ class MainNearByFragment : BaseFragment() {
             2 -> transaction.show(serviceFragment)
             3 -> transaction.show(scenicFragment)
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     fun locationUpdate(longitude: Double, latitude: Double) {

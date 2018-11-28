@@ -94,7 +94,7 @@ class RoadNavigationActivity : BaseActivity() {
                 llTraffic.visibility = View.VISIBLE
             }
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     private fun resetTab() {
