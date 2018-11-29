@@ -205,14 +205,8 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_16" />
 
-                <RadioGroup
-                    android:id="@+id/radioGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/rbRepair"
+                    <CheckBox
+                        android:id="@+id/cbRepair"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_15"
@@ -224,8 +218,8 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_16" />
 
-                    <RadioButton
-                        android:id="@+id/rbGas"
+                    <CheckBox
+                        android:id="@+id/cbGas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_15"
@@ -237,8 +231,8 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_16" />
 
-                    <RadioButton
-                        android:id="@+id/rbScenic"
+                    <CheckBox
+                        android:id="@+id/cbScenic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_15"
@@ -250,8 +244,8 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_16" />
 
-                    <RadioButton
-                        android:id="@+id/rbService"
+                    <CheckBox
+                        android:id="@+id/cbService"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_15"
@@ -263,8 +257,8 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_16" />
 
-                    <RadioButton
-                        android:id="@+id/rbToll"
+                    <CheckBox
+                        android:id="@+id/cbToll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_15"
@@ -275,7 +269,6 @@
                         android:text="@string/roadNavigation_menu_toll"
                         android:textColor="@color/white"
                         android:textSize="@dimen/font_16" />
-                </RadioGroup>
             </LinearLayout>
         </RelativeLayout>
 

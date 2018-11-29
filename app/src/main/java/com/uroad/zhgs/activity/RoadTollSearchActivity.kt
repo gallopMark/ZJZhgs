@@ -11,6 +11,7 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.RoadTollGSAdapter
 import com.uroad.zhgs.adapteRv.RoadTollZDAdapter
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.helper.RoadTollSearchHelper
 import com.uroad.zhgs.model.RoadTollGSMDL
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
@@ -28,6 +29,7 @@ class RoadTollSearchActivity : BaseActivity() {
     private var type: Int = 1
     private var keyword: String = ""
     private var firstLoad = true  //是否是首次加载
+    private var historyMDL: RoadTollGSMDL? = null
     private var mDatas: MutableList<RoadTollGSMDL>? = null
     private val gsData = ArrayList<RoadTollGSMDL>()
     private val zdData = ArrayList<RoadTollGSMDL.Poi>()
@@ -47,6 +49,32 @@ class RoadTollSearchActivity : BaseActivity() {
         }
         initSearch()
         initRv()
+        initHistory()
+    }
+
+    private fun initSearch() {
+        etContent.addTextChangedListener(object : TextWatcher {
+            private var isFirstChange = true
+            override fun afterTextChanged(p0: Editable) {
+            }
+
+            override fun beforeTextChanged(cs: CharSequence, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(cs: CharSequence, p1: Int, p2: Int, p3: Int) {
+                if (isFirstChange) isFirstChange = false
+                else {
+                    if (TextUtils.isEmpty(cs.trim())) {
+                        mDatas?.let { updateData(it) }
+                    }
+                }
+            }
+        })
+        ivSearch.setOnClickListener {
+            InputMethodUtils.hideSoftInput(this@RoadTollSearchActivity, etContent)
+            keyword = etContent.text.toString()
+            initData()
+        }
     }
 
     private fun initRv() {
@@ -77,6 +105,30 @@ class RoadTollSearchActivity : BaseActivity() {
         })
     }
 
+    private fun initHistory() {
+        val data = RoadTollSearchHelper.getHistoryList(this)
+        val list = ArrayList<RoadTollGSMDL.Poi>()
+        for (item in data) {
+            val startMDL = RoadTollGSMDL.Poi().apply {
+                poiid = RoadTollSearchHelper.getStartPoiId(item)
+                name = RoadTollSearchHelper.getStartPoi(item)
+            }
+            val endMDL = RoadTollGSMDL.Poi().apply {
+                poiid = RoadTollSearchHelper.getEndPoiId(item)
+                name = RoadTollSearchHelper.getEndPoi(item)
+            }
+            if (!list.contains(startMDL)) list.add(startMDL)
+            if (!list.contains(endMDL)) list.add(endMDL)
+        }
+        if (list.size > 0) {
+            historyMDL = RoadTollGSMDL().apply {
+                type = 0
+                shortname = "我的历史"
+                pois = list
+            }
+        }
+    }
+
     /*选择站点后返回结果给上一级调用页面*/
     private fun onResult(poi: RoadTollGSMDL.Poi) {
         val intent = Intent().apply {
@@ -85,31 +137,6 @@ class RoadTollSearchActivity : BaseActivity() {
         }
         setResult(RESULT_OK, intent)
         finish()
-    }
-
-    private fun initSearch() {
-        etContent.addTextChangedListener(object : TextWatcher {
-            private var isFirstChange = true
-            override fun afterTextChanged(p0: Editable) {
-            }
-
-            override fun beforeTextChanged(cs: CharSequence, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(cs: CharSequence, p1: Int, p2: Int, p3: Int) {
-                if (isFirstChange) isFirstChange = false
-                else {
-                    if (TextUtils.isEmpty(cs.trim())) {
-                        mDatas?.let { updateData(it) }
-                    }
-                }
-            }
-        })
-        ivSearch.setOnClickListener {
-            InputMethodUtils.hideSoftInput(this@RoadTollSearchActivity, etContent)
-            keyword = etContent.text.toString()
-            initData()
-        }
     }
 
     override fun initData() {
@@ -136,13 +163,19 @@ class RoadTollSearchActivity : BaseActivity() {
     }
 
     private fun updateData(mdLs: MutableList<RoadTollGSMDL>) {
-        if (firstLoad) {
-            mDatas = mdLs
-            firstLoad = false
-        }
         gsData.clear()
         zdData.clear()
-        if (mdLs.size > 0) {
+        if (firstLoad) {
+            mDatas = ArrayList<RoadTollGSMDL>().apply {
+                historyMDL?.let { add(it) }
+                addAll(mdLs)
+                gsData.addAll(this)
+            }
+            firstLoad = false
+        } else {
+            gsData.addAll(mdLs)
+        }
+        if (gsData.size > 0) {
             llDefault.visibility = View.VISIBLE
             tvEmpty.visibility = View.GONE
             gsData.addAll(mdLs)
@@ -155,5 +188,6 @@ class RoadTollSearchActivity : BaseActivity() {
             llDefault.visibility = View.GONE
             tvEmpty.visibility = View.VISIBLE
         }
+
     }
 }

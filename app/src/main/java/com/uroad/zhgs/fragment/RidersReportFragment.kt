@@ -25,6 +25,7 @@ import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.fragment_riders_report.*
 import android.widget.ImageView
 import com.airbnb.lottie.LottieAnimationView
+import com.amap.api.location.AMapLocation
 import com.uroad.library.rxbus.RxBus
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.activity.CameraActivity
@@ -44,6 +45,8 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
 class RidersReportFragment : CameraFragment() {
     private val mDatas = ArrayList<RidersReportMDL>()
     private lateinit var adapter: RidersReportAdapter
+    private var longitude: Double = 0.toDouble()
+    private var latitude: Double = 0.toDouble()
     private var index = 1
     private val size = 10
     private val hashMap = ArrayMap<Int, String>()
@@ -84,7 +87,6 @@ class RidersReportFragment : CameraFragment() {
             }
         })
         initMenuButton()
-        refreshLayout.autoRefresh()
         addDisposable(RxBus.getDefault().toObservable(MessageEvent::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { event ->
@@ -99,6 +101,26 @@ class RidersReportFragment : CameraFragment() {
                         loadData()
                     }
                 })
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+                refreshLayout.autoRefresh()
+            }
+        })
+    }
+
+    override fun afterLocation(location: AMapLocation) {
+        this.longitude = location.longitude
+        this.latitude = location.latitude
+        refreshLayout.autoRefresh()
+        closeLocation()
+    }
+
+    override fun locationFailure() {
+        refreshLayout.autoRefresh()
     }
 
     private fun initRv() {
@@ -266,7 +288,7 @@ class RidersReportFragment : CameraFragment() {
     private fun getAngle(total: Int, index: Int): Double = Math.toRadians((90 / (total - 1) * index + 90).toDouble())
 
     private fun loadData() {
-        doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), type, index, size),
+        doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), longitude, latitude, type, index, size),
                 object : HttpRequestCallback<String>() {
                     override fun onSuccess(data: String?) {
                         finishLoad()

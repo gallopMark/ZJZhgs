@@ -562,5 +562,7 @@
     <string name="myHarvest_title">我的成果</string>
     <string name="myHarvest_total_personal">累计邀请人</string>
     <string name="myHarvest_reward">奖励</string>
+
+    <string name="its_over">已经到底啦</string>
 </resources>
 

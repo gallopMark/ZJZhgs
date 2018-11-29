@@ -27,7 +27,6 @@ class RoadNavigationActivity : BaseActivity() {
     private var diagramFragment: DiagramFragment? = null
     private var currTab = 1
     private var isShow = false
-    private var checkType = 0
     private var fromHome: Boolean = false
 
     override fun setUp(savedInstanceState: Bundle?) {
@@ -208,31 +207,45 @@ class RoadNavigationActivity : BaseActivity() {
         }
         rlAddBill.setOnClickListener { hideBill() }
         tvMenuList.setOnClickListener { openActivity(MyNearByTabActivity::class.java) }
-        radioGroup.setOnCheckedChangeListener { _, checkId ->
-            if (checkType > 0) onStandardEvent(checkType, false)
-            when (checkId) {
-                R.id.rbRepair -> {
-                    checkType = 7
-                    onStandardEvent(7, true)
-                }
-                R.id.rbGas -> {
-                    checkType = 8
-                    onStandardEvent(8, true)
-                }
-                R.id.rbScenic -> {
-                    checkType = 9
-                    onStandardEvent(9, true)
-                }
-                R.id.rbService -> {
-                    checkType = 10
-                    onStandardEvent(10, true)
-                }
-                R.id.rbToll -> {
-                    checkType = 11
-                    onStandardEvent(11, true)
-                }
+        val onCheckChangeListener = CompoundButton.OnCheckedChangeListener { cb, isChecked ->
+            when (cb.id) {
+                R.id.cbRepair -> onStandardEvent(7, isChecked)
+                R.id.cbGas -> onStandardEvent(8, isChecked)
+                R.id.cbScenic -> onStandardEvent(9, isChecked)
+                R.id.cbService -> onStandardEvent(10, isChecked)
+                R.id.cbToll -> onStandardEvent(11, isChecked)
             }
         }
+        cbRepair.setOnCheckedChangeListener(onCheckChangeListener)
+        cbGas.setOnCheckedChangeListener(onCheckChangeListener)
+        cbScenic.setOnCheckedChangeListener(onCheckChangeListener)
+        cbService.setOnCheckedChangeListener(onCheckChangeListener)
+        cbToll.setOnCheckedChangeListener(onCheckChangeListener)
+//        radioGroup.setOnCheckedChangeListener { _, checkId ->
+//            if (checkType > 0) onStandardEvent(checkType, false)
+//            when (checkId) {
+//                R.id.rbRepair -> {
+//                    checkType = 7
+//                    onStandardEvent(7, true)
+//                }
+//                R.id.rbGas -> {
+//                    checkType = 8
+//                    onStandardEvent(8, true)
+//                }
+//                R.id.rbScenic -> {
+//                    checkType = 9
+//                    onStandardEvent(9, true)
+//                }
+//                R.id.rbService -> {
+//                    checkType = 10
+//                    onStandardEvent(10, true)
+//                }
+//                R.id.rbToll -> {
+//                    checkType = 11
+//                    onStandardEvent(11, true)
+//                }
+//            }
+//        }
     }
 
     private fun hideBill() {

@@ -28,6 +28,7 @@ import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.fragment_riders_report.*
 import android.widget.ImageView
 import com.airbnb.lottie.LottieAnimationView
+import com.amap.api.location.AMapLocation
 import com.uroad.library.rxbus.RxBus
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.activity.CameraActivity
@@ -45,6 +46,8 @@ import com.uroad.zhgs.rxbus.MessageEvent
 class RidersReportFollowFragment : CameraFragment() {
     private val mDatas = ArrayList<RidersReportMDL>()
     private lateinit var adapter: RidersReportAdapter
+    private var longitude: Double = 0.toDouble()
+    private var latitude: Double = 0.toDouble()
     private var index = 1
     private val size = 10
     private val hashMap = ArrayMap<Int, String>()
@@ -59,6 +62,30 @@ class RidersReportFollowFragment : CameraFragment() {
     override fun setBaseLayoutResID(): Int = R.layout.fragment_riders_report
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
+        initRv()
+        refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+            override fun onRefresh(refreshLayout: RefreshLayout?) {
+                index = 1
+                loadData()
+            }
+
+            override fun onLoadMore(refreshLayout: RefreshLayout?) {
+                loadData()
+            }
+        })
+        initMenuButton()
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+                refreshLayout.autoRefresh()
+            }
+        })
+    }
+
+    private fun initRv() {
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.VERTICAL }
         adapter = RidersReportAdapter(context, mDatas).apply {
@@ -115,18 +142,17 @@ class RidersReportFollowFragment : CameraFragment() {
         }
         recyclerView.adapter = adapter
         recyclerView.isNestedScrollingEnabled = false
-        refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
-            override fun onRefresh(refreshLayout: RefreshLayout?) {
-                index = 1
-                loadData()
-            }
+    }
 
-            override fun onLoadMore(refreshLayout: RefreshLayout?) {
-                loadData()
-            }
-        })
+    override fun afterLocation(location: AMapLocation) {
+        this.longitude = location.longitude
+        this.latitude = location.latitude
         refreshLayout.autoRefresh()
-        initMenuButton()
+        closeLocation()
+    }
+
+    override fun locationFailure() {
+        refreshLayout.autoRefresh()
     }
 
     private fun initMenuButton() {
@@ -243,7 +269,7 @@ class RidersReportFollowFragment : CameraFragment() {
     }
 
     private fun loadData() {
-        doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), type, index, size),
+        doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), longitude, latitude, type, index, size),
                 object : HttpRequestCallback<String>() {
                     override fun onPreExecute() {
                         refreshLayout.visibility = View.VISIBLE

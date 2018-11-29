@@ -178,9 +178,11 @@ class WebApiService {
         size	每页显示的数量
         type	类型		默认全部；传 my 获取我的报料 ;传 myfollow 获取我的关注
          */
-        fun userEventListParams(userid: String?, type: String?, index: Int, size: Int) = getBaseParams().apply {
+        fun userEventListParams(userid: String?, longitude: Double, latitude: Double, type: String?, index: Int, size: Int) = getBaseParams().apply {
             put("userid", userid)
             type?.let { put("type", it) }
+            put("longitude", longitude.toString())
+            put("latitude", latitude.toString())
             put("index", index.toString())
             put("size", size.toString())
         }
@@ -532,7 +534,7 @@ class WebApiService {
         //resid	视频的resid videotype hls；rtmp 默认 rtmp
         fun roadVideoParams(resid: String?) = getBaseParams().apply {
             put("resid", resid)
-            put("videotype","hls")
+            put("videotype", "hls")
         }
 
         const val CLOSE_VIDEO = "closeVideo"

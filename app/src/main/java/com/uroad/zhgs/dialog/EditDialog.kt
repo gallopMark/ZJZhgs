@@ -2,7 +2,6 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher

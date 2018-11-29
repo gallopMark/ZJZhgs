@@ -18,6 +18,8 @@ import com.amap.api.maps.model.*
 import com.amap.api.maps.model.animation.AlphaAnimation
 import com.amap.api.maps.model.animation.Animation
 import com.uroad.library.utils.DisplayUtils
+import com.uroad.rxhttp.RxHttpManager
+import com.uroad.rxhttp.interceptor.Transformer
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.LoginActivity
 import com.uroad.zhgs.activity.AMapNaviSearchActivity
@@ -30,10 +32,13 @@ import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.*
+import com.uroad.zhgs.utils.AndroidBase64Utils
 import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.CustomView
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_nav_standard.*
 
 /**
@@ -55,6 +60,7 @@ class NavStandardFragment : BaseFragment() {
     private val clusterMap = ArrayMap<String, ArrayList<CustomClusterItem>>()
     private val mAddMarkers = ArrayList<Marker>()
     private val weatherMarkers = ArrayList<Marker>()
+    private val statusMap = ArrayMap<String, Disposable>()
 
     override fun setBaseLayoutResID(): Int {
         return R.layout.fragment_nav_standard
@@ -100,9 +106,7 @@ class NavStandardFragment : BaseFragment() {
                 if (cluster.getClusterItems().size >= 2) {
                     enlargeMap()
                 } else {
-                    cluster.getObject()?.let {
-                        enlargeMarkerIcon(cluster, marker)
-                    }
+                    cluster.getObject()?.let { enlargeMarkerIcon(cluster, marker) }
                 }
                 return@setOnMarkerClickListener true
             } else {
@@ -203,11 +207,10 @@ class NavStandardFragment : BaseFragment() {
             aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), aMap.cameraPosition.zoom, 0f, 0f)))
             //路况导航-地图模式默认开启图层：事故、管制、施工、拥堵
 //            aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(CurrApplication.APP_LATLNG, aMap.cameraPosition.zoom, 0f, 0f)))
-            getMapDataByType(MapDataType.ACCIDENT.code)
-            getMapDataByType(MapDataType.CONTROL.code)
-//            getMapDataByType(MapDataType.CONSTRUCTION.code)  //默认关闭施工
-            getMapDataByType(MapDataType.TRAFFIC_JAM.code)
-            getMapDataByType(MapDataType.SNAPSHOT.code)
+            onEvent(1, true)
+            onEvent(2, true)
+            onEvent(4, true)
+            onEvent(5, true)
         }
         closeLocation()
     }
@@ -252,6 +255,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.ACCIDENT.code)
                 } else {
+                    statusMap[MapDataType.ACCIDENT.code]?.dispose()
                     clusterMap.remove(MapDataType.ACCIDENT.code)
                     onReCluster()
                 }
@@ -260,6 +264,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.CONTROL.code)
                 } else {
+                    statusMap[MapDataType.CONTROL.code]?.dispose()
                     clusterMap.remove(MapDataType.CONTROL.code)
                     onReCluster()
                 }
@@ -268,6 +273,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.CONSTRUCTION.code)
                 } else {
+                    statusMap[MapDataType.CONSTRUCTION.code]?.dispose()
                     clusterMap.remove(MapDataType.CONSTRUCTION.code)
                     onReCluster()
                 }
@@ -276,6 +282,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.TRAFFIC_JAM.code)
                 } else {
+                    statusMap[MapDataType.TRAFFIC_JAM.code]?.dispose()
                     clusterMap.remove(MapDataType.TRAFFIC_JAM.code)
                     onReCluster()
                 }
@@ -284,6 +291,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.SNAPSHOT.code)
                 } else {
+                    statusMap[MapDataType.SNAPSHOT.code]?.dispose()
                     clusterMap.remove(MapDataType.SNAPSHOT.code)
                     onReCluster()
                 }
@@ -292,6 +300,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.WEATHER.code)
                 } else {
+                    statusMap[MapDataType.WEATHER.code]?.dispose()
                     for (marker in weatherMarkers) {
                         marker.remove() //移除当前Marker
                         marker.destroy()
@@ -302,6 +311,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.REPAIR_SHOP.code)
                 } else {
+                    statusMap[MapDataType.REPAIR_SHOP.code]?.dispose()
                     clusterMap.remove(MapDataType.REPAIR_SHOP.code)
                     onReCluster()
                 }
@@ -310,6 +320,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.GAS_STATION.code)
                 } else {
+                    statusMap[MapDataType.GAS_STATION.code]?.dispose()
                     clusterMap.remove(MapDataType.GAS_STATION.code)
                     onReCluster()
                 }
@@ -318,6 +329,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.SCENIC.code)
                 } else {
+                    statusMap[MapDataType.SCENIC.code]?.dispose()
                     clusterMap.remove(MapDataType.SCENIC.code)
                     onReCluster()
                 }
@@ -326,6 +338,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.SERVICE_AREA.code)
                 } else {
+                    statusMap[MapDataType.SERVICE_AREA.code]?.dispose()
                     clusterMap.remove(MapDataType.SERVICE_AREA.code)
                     onReCluster()
                 }
@@ -334,6 +347,7 @@ class NavStandardFragment : BaseFragment() {
                 if (isChecked) {
                     getMapDataByType(MapDataType.TOLL_GATE.code)
                 } else {
+                    statusMap[MapDataType.TOLL_GATE.code]?.dispose()
                     clusterMap.remove(MapDataType.TOLL_GATE.code)
                     onReCluster()
                 }
@@ -343,28 +357,28 @@ class NavStandardFragment : BaseFragment() {
 
     private fun getMapDataByType(type: String) {
         targetLatLng?.let {
-            doRequest(WebApiService.MAP_DATA, WebApiService.mapDataByTypeParams(type,
-                    it.longitude, it.latitude, "", ""),
-                    object : HttpRequestCallback<String>() {
-                        override fun onPreExecute() {
-                            startAnim()
-                        }
-
-                        override fun onSuccess(data: String?) {
-                            stopAnim()
-                            if (GsonUtils.isResultOk(data)) {
-                                updateData(type, data)
-                            } else {
-                                showShortToast(GsonUtils.getMsg(data))
-                            }
-                        }
-
-                        override fun onFailure(e: Throwable, errorMsg: String?) {
-                            stopAnim()
-                            onHttpError(e)
-                        }
-                    })
+            val body = ApiService.createRequestBody(WebApiService.mapDataByTypeParams(type, it.longitude, it.latitude, "", ""), WebApiService.MAP_DATA)
+            val disposable = RxHttpManager.createApi(ApiService::class.java).doPost(body).compose(Transformer.switchSchedulers())
+                    .subscribe({ data -> onSuccess(type, data) }, { e -> onError(e) }, {}, { startAnim() })
+            statusMap[type] = disposable
         }
+    }
+
+    /*接口数据返回*/
+    private fun onSuccess(type: String, json: String?) {
+        stopAnim()
+        val data = AndroidBase64Utils.decodeToString(json)
+        if (GsonUtils.isResultOk(data)) {
+            updateData(type, data)
+        } else {
+            showShortToast(GsonUtils.getMsg(data))
+        }
+    }
+
+    /*访问异常*/
+    private fun onError(e: Throwable) {
+        stopAnim()
+        onHttpError(e)
     }
 
     //根据不同类型进行解析数据

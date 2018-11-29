@@ -91,9 +91,7 @@
                     <FrameLayout
                         android:id="@+id/flNews"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/margin_15"
-                        android:paddingBottom="@dimen/margin_15" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

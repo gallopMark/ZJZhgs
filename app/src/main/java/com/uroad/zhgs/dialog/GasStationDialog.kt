@@ -2,14 +2,12 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.amap.api.col.sln3.it
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.GasStationMDL

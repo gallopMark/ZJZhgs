@@ -2,7 +2,6 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView

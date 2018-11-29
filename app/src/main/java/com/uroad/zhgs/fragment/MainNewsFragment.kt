@@ -57,6 +57,10 @@ class MainNewsFragment : BaseFragment() {
     /*获取资讯列表*/
     override fun initData() {
         doRequest(WebApiService.HOME_NEWS, HashMap(), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                tvOver.visibility = View.GONE
+            }
+
             override fun onSuccess(data: String?) {
                 onRequestCallback?.callback()
                 if (GsonUtils.isResultOk(data)) {
@@ -78,6 +82,7 @@ class MainNewsFragment : BaseFragment() {
         this.mdLs.clear()
         this.mdLs.addAll(mdLs)
         adapter.notifyDataSetChanged()
+        tvOver.visibility = View.VISIBLE
     }
 
     interface OnRequestCallback {

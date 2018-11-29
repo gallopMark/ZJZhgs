@@ -172,6 +172,7 @@ class RoadTollActivity : BaseActivity() {
     private fun search() {
         doRequest(WebApiService.QUERY_ROAD_TOLL, WebApiService.queryRoadTollParams(startPoiId, endPoiId), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
+                llResult.visibility = View.GONE
                 showLoading()
             }
 
