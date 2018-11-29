@@ -1,12 +1,3 @@
-/*
- * *********************************************************
- *   author   colin
- *   company  telchina
- *   email    wanglin2046@126.com
- *   date     18-1-9 下午2:12
- * ********************************************************
- */
-
 package com.uroad.ijkplayer;
 
 import android.annotation.SuppressLint;
@@ -111,13 +102,14 @@ public class ZPlayer extends RelativeLayout {
     private int STATUS_PLAYING = 2;
     private int STATUS_PAUSE = 3;
     private int STATUS_COMPLETED = 4;
-    private long pauseTime;
     private boolean isFullScreen;
     private int status = STATUS_IDLE;
     private boolean isLive = false;// 是否为直播
+    private boolean isShowLoading = true;  //是否显示正在加载框
     private boolean isShowCenterControl = false;// 是否显示中心控制器
     private boolean isAlwaysHideControl = false;//是否一直隐藏视频控制栏
     private boolean isAlwaysShowControl = false;//是否一直显示视频控制栏
+    private boolean isShowErrorControl = true;  //是否显示错误提示
     private boolean isShowTopControl = true;//是否显示头部显示栏，true：竖屏也显示 false：竖屏不显示，横屏显示
     private boolean isSupportGesture = false;//是否至此手势操作，false ：小屏幕的时候不支持，全屏的支持；true : 小屏幕还是全屏都支持
     private boolean isPrepare = false;// 是否已经初始化播放
@@ -214,8 +206,9 @@ public class ZPlayer extends RelativeLayout {
      *
      * @param defaultRetryTime millisecond,0 will stop retry,default is 5000 millisecond
      */
-    public void setDefaultRetryTime(long defaultRetryTime) {
+    public ZPlayer setDefaultRetryTime(long defaultRetryTime) {
         this.defaultRetryTime = defaultRetryTime;
+        return this;
     }
 
     private int currentPosition;
@@ -322,9 +315,6 @@ public class ZPlayer extends RelativeLayout {
      */
     private void showCenterControl(boolean show) {
         $.id(R.id.view_jky_player_center_control).visibility(show ? View.VISIBLE : View.GONE);
-        if (isLive) {// 对直播特定控件隐藏显示
-
-        }
     }
 
     private long duration;
@@ -417,6 +407,7 @@ public class ZPlayer extends RelativeLayout {
             IjkMediaPlayer.native_profileBegin("libijkplayer.so");
             playerSupport = true;
         } catch (Throwable e) {
+            e.printStackTrace();
         }
         int width = activity.getResources().getDisplayMetrics().widthPixels;
         int height = activity.getResources().getDisplayMetrics().heightPixels;
@@ -495,9 +486,9 @@ public class ZPlayer extends RelativeLayout {
         $.id(R.id.view_jky_player_iv_share).clicked(onClickListener);
 
         audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-        mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        if (audioManager != null)
+            mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         final GestureDetector gestureDetector = new GestureDetector(activity, new PlayerGestureListener());
-
         View liveBox = contentView.findViewById(R.id.app_video_box);
         liveBox.setClickable(true);
         liveBox.setOnTouchListener(new OnTouchListener() {
@@ -576,17 +567,20 @@ public class ZPlayer extends RelativeLayout {
         } else if (newStatus == STATUS_ERROR) {
             handler.removeMessages(MESSAGE_SHOW_PROGRESS);
             hideAll();
-            if (isLive) {
-                showStatus(activity.getResources().getString(R.string.IjkPlayer_small_problem_alive), "重试");
-                if (defaultRetryTime > 0) {
-                    handler.sendEmptyMessageDelayed(MESSAGE_RESTART_PLAY, defaultRetryTime);
+            if (isShowErrorControl) {
+                if (isLive) {
+                    showStatus(activity.getResources().getString(R.string.IjkPlayer_small_problem_alive), "重试");
+                } else {
+                    showStatus(activity.getResources().getString(R.string.IjkPlayer_small_problem), "重试");
                 }
-            } else {
-                showStatus(activity.getResources().getString(R.string.IjkPlayer_small_problem), "重试");
+            }
+            if (isLive) {
+                handler.removeMessages(MESSAGE_RESTART_PLAY);
+                handler.sendEmptyMessageDelayed(MESSAGE_RESTART_PLAY, defaultRetryTime);
             }
         } else if (newStatus == STATUS_LOADING) {
             hideAll();
-            $.id(R.id.app_video_loading).visible();
+            if (isShowLoading) $.id(R.id.app_video_loading).visible();
         } else if (newStatus == STATUS_PLAYING) {
             hideAll();
         }
@@ -691,7 +685,6 @@ public class ZPlayer extends RelativeLayout {
      * 在activity中的onResume中需要回调
      */
     public void onResume() {
-        pauseTime = 0;
         if (status == STATUS_PLAYING) {
             if (isLive) {
                 videoView.seekTo(0);
@@ -709,7 +702,6 @@ public class ZPlayer extends RelativeLayout {
      * 在activity中的onPause中需要回调
      */
     public void onPause() {
-        pauseTime = System.currentTimeMillis();
         show(0);// 把系统状态栏显示出来
         if (status == STATUS_PLAYING) {
             videoView.pause();
@@ -791,7 +783,8 @@ public class ZPlayer extends RelativeLayout {
             $.id(R.id.view_jky_player_tip_control).visible();
         } else {
             if (playerSupport) {
-                $.id(R.id.app_video_loading).visible();
+                if (isShowLoading) $.id(R.id.app_video_loading).visible();
+                if (videoView == null) return;
                 videoView.setVideoPath(url);
                 if (isLive) {
                     videoView.seekTo(0);
@@ -957,9 +950,9 @@ public class ZPlayer extends RelativeLayout {
 
     }
 
-    private long setProgress() {
+    private void setProgress() {
         if (isDragging) {
-            return 0;
+            return;
         }
 
         long position = videoView.getCurrentPosition();
@@ -976,7 +969,6 @@ public class ZPlayer extends RelativeLayout {
         this.duration = duration;
         $.id(R.id.app_video_currentTime).text(generateTime(position));
         $.id(R.id.app_video_endTime).text(generateTime(this.duration));
-        return position;
     }
 
     public void hide(boolean force) {
@@ -1044,11 +1036,11 @@ public class ZPlayer extends RelativeLayout {
     }
 
     public void start() {
-        videoView.start();
+        if (videoView != null) videoView.start();
     }
 
     public void pause() {
-        videoView.pause();
+        if (videoView != null) videoView.pause();
     }
 
     public void setLiveNumber(boolean showLiveNumber) {
@@ -1108,7 +1100,7 @@ public class ZPlayer extends RelativeLayout {
         }
 
         public Query text(CharSequence text) {
-            if (view != null && view instanceof TextView) {
+            if (view instanceof TextView) {
                 ((TextView) view).setText(text);
             }
             return this;
@@ -1467,6 +1459,11 @@ public class ZPlayer extends RelativeLayout {
         return this;
     }
 
+    public ZPlayer setShowLoading(boolean isShowLoading) {
+        this.isShowLoading = isShowLoading;
+        return this;
+    }
+
     /**
      * 是否显示中心控制器
      *
@@ -1498,8 +1495,13 @@ public class ZPlayer extends RelativeLayout {
     /**
      * 是否一直显示控制栏
      */
-    public ZPlayer setAlwaysShowControl() {
-        this.isAlwaysShowControl = true;
+    public ZPlayer setAlwaysShowControl(boolean isAlwaysShowControl) {
+        this.isAlwaysShowControl = isAlwaysShowControl;
+        return this;
+    }
+
+    public ZPlayer setShowErrorControl(boolean isShowErrorControl) {
+        this.isShowErrorControl = isShowErrorControl;
         return this;
     }
 

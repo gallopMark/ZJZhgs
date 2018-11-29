@@ -512,12 +512,13 @@ class WebApiService {
         startpoiid	开始站点ID
         endpoiid	结束站点ID
          */
-        fun queryRoadTollParmas(startpoiid: String?, endpoiid: String?) = getBaseParams().apply {
+        fun queryRoadTollParams(startpoiid: String?, endpoiid: String?) = getBaseParams().apply {
             put("startpoiid", startpoiid)
             put("endpoiid", endpoiid)
         }
 
         //1.50 获取最新版本号
+        @Deprecated("use getAppConfig")
         const val APP_VERSION = "getVersionByType"
 
         fun appVersionParams(ver: String) = getBaseParams().apply {
@@ -528,8 +529,11 @@ class WebApiService {
         //获取请求流地址
         const val ROAD_VIDEO = "getRoadVideo"
 
-        //resid	视频的resid
-        fun roadVideoParams(resid: String?) = getBaseParams().apply { put("resid", resid) }
+        //resid	视频的resid videotype hls；rtmp 默认 rtmp
+        fun roadVideoParams(resid: String?) = getBaseParams().apply {
+            put("resid", resid)
+            put("videotype","hls")
+        }
 
         const val CLOSE_VIDEO = "closeVideo"
 

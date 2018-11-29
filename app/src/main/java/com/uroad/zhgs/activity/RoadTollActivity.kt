@@ -170,7 +170,7 @@ class RoadTollActivity : BaseActivity() {
     }
 
     private fun search() {
-        doRequest(WebApiService.QUERY_ROAD_TOLL, WebApiService.queryRoadTollParmas(startPoiId, endPoiId), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.QUERY_ROAD_TOLL, WebApiService.queryRoadTollParams(startPoiId, endPoiId), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading()
             }

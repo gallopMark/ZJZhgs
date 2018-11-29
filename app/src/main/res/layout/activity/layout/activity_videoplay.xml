@@ -6,18 +6,17 @@
     android:background="@color/black"
     android:orientation="vertical">
 
-    <com.uroad.zhgs.widget.CircularProgressView
-        android:id="@+id/cpv"
-        android:layout_width="@dimen/margin_60"
-        android:layout_height="@dimen/margin_60"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:border_Width="@dimen/margin_5" />
-
     <com.uroad.ijkplayer.ZPlayer
         android:id="@+id/zPlayer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+    <com.uroad.zhgs.widget.CircularProgressView
+        android:id="@+id/cpv"
+        android:layout_width="@dimen/margin_50"
+        android:layout_height="@dimen/margin_50"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:border_Width="@dimen/margin_4" />
 </FrameLayout>
