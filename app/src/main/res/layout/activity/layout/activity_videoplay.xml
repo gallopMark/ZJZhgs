@@ -12,6 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+    <Button
+        android:id="@+id/btOpenWeb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_30"
+        android:background="@color/transparent"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/font_16" />
+
     <com.uroad.zhgs.widget.CircularProgressView
         android:id="@+id/cpv"
         android:layout_width="@dimen/margin_50"

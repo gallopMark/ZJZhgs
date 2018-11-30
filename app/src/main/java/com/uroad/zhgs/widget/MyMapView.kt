@@ -32,6 +32,7 @@ class MyMapView : MapView {
             uiSettings.isRotateGesturesEnabled = false// 禁用旋转手势 }
             //隐藏左下角Logo
             uiSettings.setLogoBottomMargin(-DisplayUtils.dip2px(context, 50f))
+            isTrafficEnabled = true    //显示路况信息
         }
     }
 }

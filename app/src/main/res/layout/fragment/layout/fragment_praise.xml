@@ -42,16 +42,6 @@
             android:layout_gravity="top"
             android:progressDrawable="@drawable/bg_webview_progressbar"
             android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/ivUserCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="@dimen/margin_50"
-            android:layout_marginRight="@dimen/margin_16"
-            android:src="@mipmap/ic_praise_usercenter"
-            android:visibility="gone" />
     </FrameLayout>
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.uroad.zhgs.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import com.uroad.imageloader_v4.ImageLoaderV4
@@ -10,6 +12,10 @@ import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.model.ActivityMDL
+import com.uroad.zhgs.model.YouZanMDL
+import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.webservice.HttpRequestCallback
+import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.fragment_mine.*
 
 /**
@@ -17,22 +23,44 @@ import kotlinx.android.synthetic.main.fragment_mine.*
  */
 class MineFragment : BaseFragment(), View.OnClickListener {
 
+    private lateinit var handler: Handler
     override fun setBaseLayoutResID(): Int {
         return R.layout.fragment_mine
     }
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
-        //loginStatus()
+        if (!TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) llShopping.visibility = View.VISIBLE
+        llShopping.setOnClickListener { openActivity(YouZanUserActivity::class.java) }
+        handler = Handler(Looper.getMainLooper())
     }
 
-    private fun loginStatus() {
-        if (UserPreferenceHelper.isLogin(context)) {
-            setUserInfo()
-        } else {
-            llUserInfo.visibility = View.GONE
-            llNotLogged.visibility = View.VISIBLE
-            ivUserIcon.setImageResource(R.mipmap.ic_user_default)
+    override fun initData() {
+        if (TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) {
+            initTokenYZ()
         }
+    }
+
+    private fun initTokenYZ() {
+        doRequest(WebApiService.PRAISE_INIT, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)
+                    if (mdl == null) handler.postDelayed({ initTokenYZ() }, CurrApplication.DELAY_MILLIS)
+                    else {
+                        if (!TextUtils.isEmpty(mdl.personal_center_url)) {
+                            CurrApplication.PRAISE_USER_URL = mdl.personal_center_url
+                            llShopping.visibility = View.VISIBLE
+                        }
+                    }
+                } else {
+                    handler.postDelayed({ initTokenYZ() }, CurrApplication.DELAY_MILLIS)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ initTokenYZ() }, CurrApplication.DELAY_MILLIS)
+            }
+        })
     }
 
     private fun setUserInfo() {
@@ -104,5 +132,15 @@ class MineFragment : BaseFragment(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         loginStatus()
+    }
+
+    private fun loginStatus() {
+        if (UserPreferenceHelper.isLogin(context)) {
+            setUserInfo()
+        } else {
+            llUserInfo.visibility = View.GONE
+            llNotLogged.visibility = View.VISIBLE
+            ivUserIcon.setImageResource(R.mipmap.ic_user_default)
+        }
     }
 }

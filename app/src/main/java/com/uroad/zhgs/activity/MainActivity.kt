@@ -237,8 +237,10 @@ class MainActivity : BaseActivity() {
                     val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)
                     if (mdl == null) handler.postDelayed({ initTokenYZ() }, 3000)
                     else {
-                        CurrApplication.PRAISE_URL = mdl.shop_url
-                        CurrApplication.PRAISE_USER_URL = mdl.personal_center_url
+                        if (!TextUtils.isEmpty(mdl.shop_url))
+                            CurrApplication.PRAISE_URL = mdl.shop_url
+                        if (!TextUtils.isEmpty(mdl.personal_center_url))
+                            CurrApplication.PRAISE_USER_URL = mdl.personal_center_url
                     }
                 } else {
                     handler.postDelayed({ initTokenYZ() }, 3000)

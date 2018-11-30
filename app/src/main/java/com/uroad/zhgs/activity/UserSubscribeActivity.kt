@@ -72,7 +72,7 @@ class UserSubscribeActivity : BaseRefreshRvActivity(), RecyclerTouchListener.Rec
         mDatas.clear()
         mDatas.addAll(mdLs)
         adapter.notifyDataSetChanged()
-        if (mDatas.size == 0) setPageNoData()
+        if (mDatas.size == 0) setPageNoData(getString(R.string.empty_subscriptions))
     }
 
     override fun pullToRefresh() {

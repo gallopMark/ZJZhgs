@@ -93,6 +93,7 @@ class MyCar2Activity : BaseRefreshRvActivity() {
     private fun onPageNoData() {
         refreshLayout.visibility = View.GONE
         cLoadView.setState(CurrencyLoadView.STATE_EMPTY)
+        cLoadView.setEmptyText(getString(R.string.empty_my_cars))
     }
 
     override fun pullToRefresh() {

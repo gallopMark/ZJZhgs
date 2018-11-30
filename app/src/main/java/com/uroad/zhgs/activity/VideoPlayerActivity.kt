@@ -1,6 +1,8 @@
 package com.uroad.zhgs.activity
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -12,6 +14,7 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
 import kotlinx.android.synthetic.main.activity_videoplay.*
+import org.jetbrains.anko.startActivity
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import java.lang.ref.WeakReference
 
@@ -57,6 +60,7 @@ class VideoPlayerActivity : BaseActivity() {
         }
         handler = MHandler(this)
         initZPlayer()
+        initWebButton()
     }
 
     private fun initZPlayer() {
@@ -68,6 +72,7 @@ class VideoPlayerActivity : BaseActivity() {
                 .setShowCenterControl(false)
                 .setShowLoading(false)
                 .setShowErrorControl(false)
+                .setSupportAspectRatio(false)
                 .setDefaultRetryTime(2000L)
                 .onPrepared { handler.sendEmptyMessageDelayed(CODE_MSG, 1000) }
                 .onInfo { what, _ ->
@@ -91,6 +96,19 @@ class VideoPlayerActivity : BaseActivity() {
                 .setPlayerWH(0, videoHeight)
                 .play(url)
         cpv.visibility = View.VISIBLE
+    }
+
+    private fun initWebButton() {
+        btOpenWeb.text = "浏览器打开"
+        btOpenWeb.setOnClickListener { openBrowser() }
+    }
+
+    private fun openBrowser() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) {
+            showShortToast("无法打开此链接")
+        }
     }
 
     override fun onResume() {

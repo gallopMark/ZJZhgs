@@ -389,11 +389,20 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
     }
 
     open fun setPageNoData() {
+        setPageNoData(null)
+    }
+
+    open fun setPageNoData(emptyTips: CharSequence?) {
         baseContent.visibility = View.GONE
         val cLoadView = CurrencyLoadView(this)
         val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
         cLoadView.layoutParams = params
         cLoadView.setState(CurrencyLoadView.STATE_EMPTY)
+        if (!TextUtils.isEmpty(emptyTips)) {
+            cLoadView.setEmptyText(emptyTips)
+        } else {
+            cLoadView.setEmptyText(getString(R.string.page_nodata))
+        }
         flBaseLoad.removeAllViews()
         flBaseLoad.addView(cLoadView)
         flBaseLoad.visibility = View.VISIBLE
@@ -613,13 +622,11 @@ abstract class BaseActivity : AppCompatActivity(), AMapLocationListener {
                 if (allGranted) {
                     permissionCallback?.doAfterGrand()
                 } else {
+                    permissionCallback?.doAfterDenied()
                     for (permission in permissions) {
                         //可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                             showProhibitLocationDialog()
-                            break
-                        } else {
-                            permissionCallback?.doAfterDenied()
                             break
                         }
                     }

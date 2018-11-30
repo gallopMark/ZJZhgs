@@ -1,6 +1,5 @@
 package com.uroad.zhgs.activity
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -99,7 +98,7 @@ class RescueRecordActivity : BaseRefreshRvActivity() {
         mDatas.clear()
         mDatas.addAll(list)
         adapter.notifyDataSetChanged()
-        if (mDatas.size == 0) setPageNoData()
+        if (mDatas.size == 0) setPageNoData(getString(R.string.empty_rescue_record))
     }
 
     override fun pullToRefresh() {

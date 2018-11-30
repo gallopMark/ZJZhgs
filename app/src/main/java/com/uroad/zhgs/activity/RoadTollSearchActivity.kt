@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
+import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.RoadTollGSAdapter
 import com.uroad.zhgs.adapteRv.RoadTollZDAdapter
@@ -28,6 +29,8 @@ import kotlinx.android.synthetic.main.activity_roadtoll_search.*
 class RoadTollSearchActivity : BaseActivity() {
     private var type: Int = 1
     private var keyword: String = ""
+    private var longitude: Double = 0.toDouble()
+    private var latitude: Double = 0.toDouble()
     private var firstLoad = true  //是否是首次加载
     private var historyMDL: RoadTollGSMDL? = null
     private var mDatas: MutableList<RoadTollGSMDL>? = null
@@ -50,6 +53,15 @@ class RoadTollSearchActivity : BaseActivity() {
         initSearch()
         initRv()
         initHistory()
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+                onRequestTollGate()
+            }
+        })
     }
 
     private fun initSearch() {
@@ -73,7 +85,7 @@ class RoadTollSearchActivity : BaseActivity() {
         ivSearch.setOnClickListener {
             InputMethodUtils.hideSoftInput(this@RoadTollSearchActivity, etContent)
             keyword = etContent.text.toString()
-            initData()
+            onRequestTollGate()
         }
     }
 
@@ -139,8 +151,17 @@ class RoadTollSearchActivity : BaseActivity() {
         finish()
     }
 
-    override fun initData() {
-        doRequest(WebApiService.TOLL_GATE_LIST, WebApiService.tollGateListParams(keyword), object : HttpRequestCallback<String>() {
+    override fun afterLocation(location: AMapLocation) {
+        onRequestTollGate()
+        closeLocation()
+    }
+
+    override fun onLocationFail(errorInfo: String?) {
+        onRequestTollGate()
+    }
+
+    private fun onRequestTollGate() {
+        doRequest(WebApiService.TOLL_GATE_LIST, WebApiService.tollGateListParams(keyword,longitude, latitude), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading()
             }

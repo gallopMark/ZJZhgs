@@ -12,7 +12,6 @@ import com.tencent.smtt.sdk.WebView
 import com.uroad.library.utils.DeviceUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.LoginActivity
-import com.uroad.zhgs.activity.YouZanUserActivity
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.model.YouZanMDL
@@ -37,19 +36,17 @@ class PraiseFragment : BaseFragment() {
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         initBrowser()
         initBack()
-        if (!TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) ivUserCenter.visibility = View.VISIBLE
-        ivUserCenter.setOnClickListener { openActivity(YouZanUserActivity::class.java) }
     }
 
     override fun initData() {
         if (TextUtils.isEmpty(CurrApplication.PRAISE_URL)) {
-            initTokenYZ(1)
+            initTokenYZ()
         } else {
             loadUrl(CurrApplication.PRAISE_URL)
         }
-        if (TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) {
-            initTokenYZ(2)
-        }
+//        if (TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) {
+//            initTokenYZ(2)
+//        }
     }
 
     private fun loadUrl(url: String?) {
@@ -58,30 +55,25 @@ class PraiseFragment : BaseFragment() {
         browser.subscribe(mAbsChooserEvent)
     }
 
-    private fun initTokenYZ(type: Int) {
+    private fun initTokenYZ() {
         doRequest(WebApiService.PRAISE_INIT, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)
-                    if (mdl == null) handler.postDelayed({ initTokenYZ(type) }, CurrApplication.DELAY_MILLIS)
+                    if (mdl == null) handler.postDelayed({ initTokenYZ() }, CurrApplication.DELAY_MILLIS)
                     else {
-                        CurrApplication.PRAISE_URL = mdl.shop_url
-                        CurrApplication.PRAISE_USER_URL = mdl.personal_center_url
-                        if (type == 1) {
-                            loadUrl(CurrApplication.PRAISE_URL)
-                        } else {
-                            if (!TextUtils.isEmpty(CurrApplication.PRAISE_USER_URL)) {
-                                ivUserCenter.visibility = View.VISIBLE
-                            }
+                        if (!TextUtils.isEmpty(mdl.shop_url)) {
+                            CurrApplication.PRAISE_URL = mdl.shop_url
+                            loadUrl(mdl.shop_url)
                         }
                     }
                 } else {
-                    handler.postDelayed({ initTokenYZ(type) }, CurrApplication.DELAY_MILLIS)
+                    handler.postDelayed({ initTokenYZ() }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ initTokenYZ(type) }, CurrApplication.DELAY_MILLIS)
+                handler.postDelayed({ initTokenYZ() }, CurrApplication.DELAY_MILLIS)
             }
         })
     }

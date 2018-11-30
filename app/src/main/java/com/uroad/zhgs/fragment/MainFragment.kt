@@ -124,9 +124,9 @@ class MainFragment : BaseFragment() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_OTHER)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainOtherFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().remove(fragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
-        childFragmentManager.beginTransaction().replace(R.id.llTop, MainOtherFragment(), TAG_OTHER).commit()
+        childFragmentManager.beginTransaction().replace(R.id.llTop, MainOtherFragment(), TAG_OTHER).commitAllowingStateLoss()
     }
 
     /*菜单列表(用fragment替换)*/
@@ -135,7 +135,7 @@ class MainFragment : BaseFragment() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_MENU)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainMenuFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().remove(fragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
         childFragmentManager.beginTransaction().replace(R.id.flMenu, MainMenuFragment().apply {
             setOnShopClickListener(object : MainMenuFragment.OnShopClickListener {
@@ -143,7 +143,7 @@ class MainFragment : BaseFragment() {
                     onMenuClickListener?.onMenuClick()
                 }
             })
-        }, TAG_MENU).commit()
+        }, TAG_MENU).commitAllowingStateLoss()
     }
 
     /*我的订阅(用fragment替换)*/
@@ -151,7 +151,7 @@ class MainFragment : BaseFragment() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_SUBSCRIBE)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainSubscribeFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().remove(fragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
         flSubscribe.visibility = View.GONE
         childFragmentManager.beginTransaction().replace(R.id.flSubscribe, MainSubscribeFragment().apply {
@@ -161,7 +161,7 @@ class MainFragment : BaseFragment() {
                     else this@MainFragment.flSubscribe.visibility = View.VISIBLE
                 }
             })
-        }, TAG_SUBSCRIBE).commit()
+        }, TAG_SUBSCRIBE).commitAllowingStateLoss()
     }
 
     /*我的附近（用fragment替代）*/
@@ -169,7 +169,7 @@ class MainFragment : BaseFragment() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_NEARBY)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainNearByFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().remove(fragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
         childFragmentManager.beginTransaction().replace(R.id.flNearBy, MainNearByFragment().apply {
             setOnRequestLocationListener(object : MainNearByFragment.OnRequestLocationListener {
@@ -177,7 +177,7 @@ class MainFragment : BaseFragment() {
                     applyLocationPermissions()
                 }
             })
-        }, TAG_NEARBY).commit()
+        }, TAG_NEARBY).commitAllowingStateLoss()
     }
 
     /*最新资讯（用fragment替换）*/
@@ -185,7 +185,7 @@ class MainFragment : BaseFragment() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_NEWS)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainNewsFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().remove(fragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
         childFragmentManager.beginTransaction().replace(R.id.flNews, MainNewsFragment().apply {
             setOnRequestCallback(object : MainNewsFragment.OnRequestCallback {
@@ -193,7 +193,7 @@ class MainFragment : BaseFragment() {
                     this@MainFragment.refreshLayout.finishRefresh()
                 }
             })
-        }, TAG_NEWS).commit()
+        }, TAG_NEWS).commitAllowingStateLoss()
     }
 
     /*下拉刷新 重新打开定位，刷新我的附近，我的订阅，最新资讯*/
@@ -210,7 +210,7 @@ class MainFragment : BaseFragment() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_SUBSCRIBE)
         if (fragment != null) {
             childFragmentManager.popBackStack(MainSubscribeFragment::class.java.name, 0)
-            childFragmentManager.beginTransaction().remove(fragment).commit()
+            childFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
         }
     }
 

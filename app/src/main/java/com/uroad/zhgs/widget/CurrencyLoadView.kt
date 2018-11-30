@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.uroad.zhgs.R
@@ -55,7 +54,10 @@ class CurrencyLoadView : FrameLayout {
         params.gravity = Gravity.CENTER
         addView(loadingView, params)
         addView(errorView)
-        addView(emptyView, params)
+        addView(emptyView, params.apply {
+            leftMargin = mContext.resources.getDimensionPixelOffset(R.dimen.margin_30)
+            rightMargin = mContext.resources.getDimensionPixelOffset(R.dimen.margin_30)
+        })
         setState(STATE_IDEA)
         findViews()
     }

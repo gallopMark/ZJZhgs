@@ -88,7 +88,7 @@ class MyPassRecordActivity : BaseActivity() {
         if (!isAuth()) {
             val dialog = MaterialDialog(this)
             dialog.setTitle(getString(R.string.dialog_default_title))
-            dialog.setMessage("您未通过实名认证，无法使用通行记录功能")
+            dialog.setMessage(getString(R.string.empty_my_passRecord))
             dialog.hideDivider()
             dialog.setPositiveButton(getString(R.string.i_got_it), object : MaterialDialog.ButtonClickListener {
                 override fun onClick(v: View, dialog: AlertDialog) {
@@ -124,7 +124,7 @@ class MyPassRecordActivity : BaseActivity() {
     private fun onEmptyCar() {
         val dialog = MaterialDialog(this)
         dialog.setTitle(getString(R.string.dialog_default_title))
-        dialog.setMessage("您暂未绑定车辆，使用本功能，请先绑定车辆")
+        dialog.setMessage(getString(R.string.empty_cars_inPassRecord))
         dialog.hideDivider()
         dialog.setPositiveButton(getString(R.string.i_got_it), object : MaterialDialog.ButtonClickListener {
             override fun onClick(v: View, dialog: AlertDialog) {

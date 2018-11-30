@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_perfect_userinfo.*
 
 /**
  *Created by MFB on 2018/8/13.
- * 完善个人信息
+ * 实名认证
  */
 class PerfectUserInfoActivity : BaseActivity() {
     private var isAlert = false

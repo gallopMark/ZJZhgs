@@ -4,9 +4,10 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Message
+import android.support.v4.content.ContextCompat
 import android.support.v4.util.ArrayMap
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SimpleItemAnimator
@@ -19,7 +20,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.uroad.library.utils.NetworkUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.RidersReportAdapter
-import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.model.RidersReportMDL
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.utils.InputMethodUtils
@@ -36,6 +36,8 @@ import com.uroad.zhgs.activity.RidersReportActivity
 import com.uroad.zhgs.activity.VideoActivity
 import com.uroad.zhgs.common.CameraFragment
 import com.uroad.zhgs.rxbus.MessageEvent
+import kotlinx.android.synthetic.main.layout_empty.*
+import kotlinx.android.synthetic.main.layout_error.*
 
 
 /**
@@ -272,9 +274,7 @@ class RidersReportFollowFragment : CameraFragment() {
         doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), longitude, latitude, type, index, size),
                 object : HttpRequestCallback<String>() {
                     override fun onPreExecute() {
-                        refreshLayout.visibility = View.VISIBLE
-                        tvEmpty.visibility = View.GONE
-                        llError.visibility = View.GONE
+                        onLoadingStart()
                     }
 
                     override fun onSuccess(data: String?) {
@@ -295,6 +295,12 @@ class RidersReportFollowFragment : CameraFragment() {
                             onHttpError(e)
                     }
                 })
+    }
+
+    private fun onLoadingStart() {
+        refreshLayout.visibility = View.VISIBLE
+        mEmptyTv.visibility = View.GONE
+        llErrorLayout.visibility = View.GONE
     }
 
     private fun finishLoad() {
@@ -318,21 +324,24 @@ class RidersReportFollowFragment : CameraFragment() {
 
     private fun onPageNoData() {
         refreshLayout.visibility = View.GONE
-        tvEmpty.visibility = View.VISIBLE
+        mEmptyTv.visibility = View.VISIBLE
+        mEmptyTv.text = context.getString(R.string.empty_riders_report_follow)
     }
 
     private fun onPageError() {
         refreshLayout.visibility = View.GONE
-        llError.visibility = View.VISIBLE
+        llErrorLayout.visibility = View.VISIBLE
+        val drawableTop: Drawable?
         if (!NetworkUtils.isConnected(context)) {
-            tvErrorTips.text = resources.getString(R.string.nonetwork)
-            ivErrorIcon.setImageResource(R.mipmap.ic_nonetwork)
+            mErrorTv.text = resources.getString(R.string.nonetwork)
+            drawableTop = ContextCompat.getDrawable(context, R.mipmap.ic_nonetwork)
         } else {
-            tvErrorTips.text = resources.getString(R.string.connect_error)
-            ivErrorIcon.setImageResource(R.mipmap.ic_connect_error)
+            mErrorTv.text = resources.getString(R.string.connect_error)
+            drawableTop = ContextCompat.getDrawable(context, R.mipmap.ic_connect_error)
         }
+        mErrorTv.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
         tvReload.setOnClickListener {
-            llError.visibility = View.GONE
+            llErrorLayout.visibility = View.GONE
             refreshLayout.visibility = View.VISIBLE
             loadData()
         }

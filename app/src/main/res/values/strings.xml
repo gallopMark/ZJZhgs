@@ -82,6 +82,7 @@
     <string name="mine_my_subscribe">我的订阅</string>
     <string name="mine_rescue_record">救援记录</string>
     <string name="mine_my_notice">我的关注</string>
+    <string name="mine_my_shopping">我的商城</string>
     <string name="mine_message_center">消息中心</string>
     <string name="mine_my_car">我的车辆</string>
     <string name="mine_my_passRecord">通行记录</string>
@@ -362,14 +363,13 @@
     <string name="userinfo_icon">头像</string>
     <string name="userinfo_nickname">用户昵称</string>
     <string name="userinfo_phone">手机号码</string>
-    <string name="userinfo_perfect_info">完善信息</string>
-    <string name="perfect_userinfo_title">完善信息</string>
+    <string name="userinfo_perfect_info">实名认证</string>
+    <string name="perfect_userinfo_title">实名认证</string>
     <string name="perfect_userinfo_name">姓\u3000\u3000名</string>
     <string name="perfect_userinfo_name_hint">请输入真实姓名</string>
     <string name="perfect_userinfo_cardno">身份证号</string>
     <string name="perfect_userinfo_cardno_hint">请输入身份证号</string>
-    <string name="perfect_userinfo_save">保存</string>
-    <string name="perfect_userinfo_change">修改</string>
+    <string name="perfect_userinfo_save">认\u3000\u3000证</string>
     <!--个人信息 end-->
     <!--设置 start-->
     <string name="settings_title">设置</string>
@@ -564,5 +564,14 @@
     <string name="myHarvest_reward">奖励</string>
 
     <string name="its_over">已经到底啦</string>
+
+    <string name="empty_riders_report">尚未发布报料内容，您可前往首页>车友报料模块发布语音、视频、文字报料哦~</string>
+    <string name="empty_riders_report_follow">尚未关注好友，前往车友互动关注好友即可在此处查看好友报料哦~</string>
+    <string name="empty_subscriptions">尚未订阅路况事件，您可前往路况导航模块点击“我要订阅”进行订阅哦~</string>
+    <string name="empty_rescue_record">尚无救援记录，在首页>高速救援模块提交的救援记录可在此处查看哦~</string>
+    <string name="empty_my_message">暂无消息内容</string>
+    <string name="empty_my_cars">尚未绑定车辆，点击“+”绑定车辆可以查询通行记录与车辆诚信分数哦~</string>
+    <string name="empty_my_passRecord">完成实名认证与车辆绑定就可查询车辆通行记录了哦~</string>
+    <string name="empty_cars_inPassRecord">您暂未绑定车辆，使用本功能，请先绑定车辆</string>
 </resources>
 

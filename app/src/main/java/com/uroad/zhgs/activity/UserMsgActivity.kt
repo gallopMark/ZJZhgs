@@ -71,7 +71,7 @@ class UserMsgActivity : BaseRefreshRvActivity() {
         } else {
             refreshLayout.setNoMoreData(false)
         }
-        if (index == 1 && mDatas.size == 0) setPageNoData()
+        if (index == 1 && mDatas.size == 0) setPageNoData(getString(R.string.empty_my_message))
         else index += 1
     }
 

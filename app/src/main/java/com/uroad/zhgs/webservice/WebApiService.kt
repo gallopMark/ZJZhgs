@@ -506,7 +506,11 @@ class WebApiService {
         //路径路费
         const val TOLL_GATE_LIST = "getTollGateList"
 
-        fun tollGateListParams(keyword: String) = getBaseParams().apply { put("keyword", keyword) }
+        fun tollGateListParams(keyword: String, longitude: Double, latitude: Double) = getBaseParams().apply {
+            put("keyword", keyword)
+            put("longitude", longitude.toString())
+            put("latitude", latitude.toString())
+        }
 
         const val QUERY_ROAD_TOLL = "getRouteFee"
         //路径路费查询

@@ -34,7 +34,7 @@ class YouZanUserActivity : BaseActivity() {
     private lateinit var handler: Handler
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_youzan)
-        withTitle(getString(R.string.home_tab_mine))
+        withTitle(getString(R.string.mine_my_shopping))
         initBrowser()
         handler = Handler(Looper.getMainLooper())
     }

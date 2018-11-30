@@ -4,7 +4,9 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.util.ArrayMap
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SimpleItemAnimator
@@ -34,6 +36,8 @@ import com.uroad.zhgs.activity.VideoActivity
 import com.uroad.zhgs.common.CameraFragment
 import com.uroad.zhgs.rxbus.MessageEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.layout_empty.*
+import kotlinx.android.synthetic.main.layout_error.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 
@@ -290,6 +294,10 @@ class RidersReportFragment : CameraFragment() {
     private fun loadData() {
         doRequest(WebApiService.USER_EVELT_LIST, WebApiService.userEventListParams(getUserId(), longitude, latitude, type, index, size),
                 object : HttpRequestCallback<String>() {
+                    override fun onPreExecute() {
+                        onLoadingStart()
+                    }
+
                     override fun onSuccess(data: String?) {
                         finishLoad()
                         if (GsonUtils.isResultOk(data)) {
@@ -308,6 +316,12 @@ class RidersReportFragment : CameraFragment() {
                             onHttpError(e)
                     }
                 })
+    }
+
+    private fun onLoadingStart() {
+        refreshLayout.visibility = View.VISIBLE
+        mEmptyTv.visibility = View.GONE
+        llErrorLayout.visibility = View.GONE
     }
 
     private fun finishLoad() {
@@ -331,21 +345,24 @@ class RidersReportFragment : CameraFragment() {
 
     private fun onPageNoData() {
         refreshLayout.visibility = View.GONE
-        tvEmpty.visibility = View.VISIBLE
+        mEmptyTv.visibility = View.VISIBLE
+        mEmptyTv.text = context.getString(R.string.empty_riders_report)
     }
 
     private fun onPageError() {
         refreshLayout.visibility = View.GONE
-        llError.visibility = View.VISIBLE
+        llErrorLayout.visibility = View.VISIBLE
+        val drawableTop: Drawable?
         if (!NetworkUtils.isConnected(context)) {
-            tvErrorTips.text = resources.getString(R.string.nonetwork)
-            ivErrorIcon.setImageResource(R.mipmap.ic_nonetwork)
+            mErrorTv.text = resources.getString(R.string.nonetwork)
+            drawableTop = ContextCompat.getDrawable(context, R.mipmap.ic_nonetwork)
         } else {
-            tvErrorTips.text = resources.getString(R.string.connect_error)
-            ivErrorIcon.setImageResource(R.mipmap.ic_connect_error)
+            mErrorTv.text = resources.getString(R.string.connect_error)
+            drawableTop = ContextCompat.getDrawable(context, R.mipmap.ic_connect_error)
         }
+        mErrorTv.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
         tvReload.setOnClickListener {
-            llError.visibility = View.GONE
+            llErrorLayout.visibility = View.GONE
             refreshLayout.visibility = View.VISIBLE
             loadData()
         }
