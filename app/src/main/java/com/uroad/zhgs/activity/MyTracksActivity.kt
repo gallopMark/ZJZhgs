@@ -3,6 +3,7 @@ package com.uroad.zhgs.activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.support.v4.content.ContextCompat
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
@@ -29,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_mytracks.*
 /*我的足迹*/
 class MyTracksActivity : BaseActivity() {
     private lateinit var aMap: AMap
+    private lateinit var handler: Handler
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_mytracks)
         customToolbar.setNavigationOnClickListener { onBackPressed() }
@@ -38,6 +40,7 @@ class MyTracksActivity : BaseActivity() {
         mapView.onCreate(savedInstanceState)
         initMapView()
         applyLocationPermission(false)
+        handler = Handler(Looper.getMainLooper())
     }
 
     private fun initMapView() {
@@ -67,6 +70,7 @@ class MyTracksActivity : BaseActivity() {
 
     override fun afterLocation(location: AMapLocation) {
         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), aMap.cameraPosition.zoom))
+        closeLocation()
     }
 
     override fun initData() {
@@ -77,13 +81,13 @@ class MyTracksActivity : BaseActivity() {
                     updateUI(mdl)
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
-                    Handler().postDelayed({}, 3000)
+                    handler.postDelayed({ initData() }, 3000)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
                 onHttpError(e)
-                Handler().postDelayed({}, 3000)
+                handler.postDelayed({ initData() }, 3000)
             }
         })
     }
@@ -91,6 +95,7 @@ class MyTracksActivity : BaseActivity() {
     private fun updateUI(mdl: FootprintMDL) {
         var total = mdl.num?.total_footprint
         if (total == null) total = 0
+        if (total == 0) showTipsDialog(getString(R.string.dialog_default_title), getString(R.string.empty_my_tracks), getString(R.string.i_got_it))
         val source1 = "$total\n足迹点"
         val span = AbsoluteSizeSpan(resources.getDimensionPixelSize(R.dimen.font_30), false)
         tvTrackPoints.text = SpannableString(source1).apply {

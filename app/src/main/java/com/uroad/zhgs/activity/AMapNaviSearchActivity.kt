@@ -43,7 +43,7 @@ import com.uroad.zhgs.model.PoiItemMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.InputMethodUtils
-import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -68,6 +68,8 @@ class AMapNaviSearchActivity : BaseActivity() {
                 if (mDatas.size == 0) llHistoryData.visibility = View.GONE
             })
             holder.itemView.setOnClickListener {
+                isCustomSetText1 = true
+                isCustomSetText2 = true
                 etMyLocation.setText(RouteSearchHelper.getStartPos(t))
                 etMyLocation.setSelection(etMyLocation.text.length)
                 etEndPos.setText(RouteSearchHelper.getEndPos(t))
@@ -88,8 +90,8 @@ class AMapNaviSearchActivity : BaseActivity() {
     private var currLocation: AMapLocation? = null
     private var isLocationComplete = false
     private lateinit var handler: Handler
-    private var isOnItemClick1 = false
-    private var isOnItemClick2 = false
+    private var isCustomSetText1 = false
+    private var isCustomSetText2 = false
     private var isFirstSetText = true
     private var startPoint: LatLonPoint? = null
     private var endPoint: LatLonPoint? = null
@@ -267,16 +269,13 @@ class AMapNaviSearchActivity : BaseActivity() {
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val content = s.toString()
                 if (!TextUtils.isEmpty(content.trim())) {
-                    if (isFirstSetText) {
-                        isFirstSetText = false
-                        return
-                    }
-                    if (isOnItemClick1) {
-                        isOnItemClick1 = false
-                    } else {
-                        disposable?.dispose()
-                        popupWindow?.dismiss()
-                        doPoiSearch(content, 1)
+                    when {
+                        isFirstSetText -> isFirstSetText = false
+                        isCustomSetText1 -> isCustomSetText1 = false
+                        else -> {
+                            cancelSearchPop()
+                            doPoiSearch(content, 1)
+                        }
                     }
                 }
             }
@@ -293,11 +292,10 @@ class AMapNaviSearchActivity : BaseActivity() {
             override fun onTextChanged(s: CharSequence, p1: Int, p2: Int, p3: Int) {
                 val content = s.toString()
                 if (!TextUtils.isEmpty(content.trim())) {
-                    if (isOnItemClick2) {
-                        isOnItemClick2 = false
+                    if (isCustomSetText2) {
+                        isCustomSetText2 = false
                     } else {
-                        disposable?.dispose()
-                        popupWindow?.dismiss()
+                        cancelSearchPop()
                         doPoiSearch(content, 2)
                     }
                 }
@@ -307,6 +305,8 @@ class AMapNaviSearchActivity : BaseActivity() {
             }
         })
         ivChange.setOnClickListener {
+            isCustomSetText1 = true
+            isCustomSetText2 = true
             val temp = startPoint
             startPoint = endPoint
             endPoint = temp
@@ -329,13 +329,20 @@ class AMapNaviSearchActivity : BaseActivity() {
         closeLocation()
     }
 
+    private fun cancelSearchPop() {
+        disposable?.let { if (!it.isDisposed) it.dispose() }
+        popupWindow?.let {
+            it.dismiss()
+            popupWindow = null
+        }
+    }
+
     private fun doPoiSearch(keyWord: String, type: Int) {
         val query = PoiSearch.Query(keyWord, "", "")
         val poiSearch = PoiSearch(this, query)
-        disposable = Flowable.fromCallable { poiSearch.searchPOI() }
+        addDisposable(Observable.fromCallable { poiSearch.searchPOI() }
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ poiResult -> poiResult?.pois?.let { showPopupWindow(it, type) } }, {})
-        addDisposable(disposable)
+                .subscribe({ poiResult -> poiResult?.pois?.let { showPopupWindow(it, type) } }, {}, {}, { disposable = it }))
     }
 
     private fun showPopupWindow(poiItems: ArrayList<PoiItem>, type: Int) {
@@ -380,13 +387,13 @@ class AMapNaviSearchActivity : BaseActivity() {
                 if (position in 0 until items.size) {
                     if (type == 1) {
                         startPoint = items[position].latLonPoint
-                        isOnItemClick1 = true
+                        isCustomSetText1 = true
                         etMyLocation.setText(items[position].title)
                         etMyLocation.setSelection(etMyLocation.text.length)
                         startPoint?.let { start -> endPoint?.let { doRouteSearch(start, it) } }
                     } else {
                         endPoint = items[position].latLonPoint
-                        isOnItemClick2 = true
+                        isCustomSetText2 = true
                         etEndPos.setText(items[position].title)
                         etEndPos.setSelection(etEndPos.text.length)
                         endPoint?.let { end -> startPoint?.let { doRouteSearch(it, end) } }
@@ -409,8 +416,7 @@ class AMapNaviSearchActivity : BaseActivity() {
         this.endPoint = endPoint
         if (flHistory.visibility != View.GONE) flHistory.visibility = View.GONE
         RouteSearchHelper.saveContent(this, etMyLocation.text.toString(), startPoint, etEndPos.text.toString(), endPoint)
-        disposable?.dispose()
-        popupWindow?.dismiss()
+        cancelSearchPop()
         val start = ArrayList<NaviLatLng>().apply { add(NaviLatLng(startPoint.latitude, startPoint.longitude)) }
         val end = ArrayList<NaviLatLng>().apply { add(NaviLatLng(endPoint.latitude, endPoint.longitude)) }
         InputMethodUtils.hideSoftInput(this)

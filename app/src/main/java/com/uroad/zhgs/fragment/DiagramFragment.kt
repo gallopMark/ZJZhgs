@@ -1,6 +1,7 @@
 package com.uroad.zhgs.fragment
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.CCTVDetailRvDialog
 import com.uroad.zhgs.dialog.EventDetailRvDialog
+import com.uroad.zhgs.dialog.TrafficJamDetailRvDialog
 import com.uroad.zhgs.enumeration.DiagramEventType
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.model.sys.AppConfigMDL
@@ -39,16 +41,17 @@ class DiagramFragment : BaseFragment() {
         /**
          * 事件1006001
         施工1006002
-        管制1006005
+        管制1006003
         快拍 1004001
         服务区 1003001
         收费站 100200
          */
         ACCIDENT("1006001"),
         CONSTRUCTION("1006002"),
+        CONTROL("1006003"),
         SNAPSHOT("1006004"),
-        SERVICEAREA("1003001"),
-        CONTROL("1006005"),
+        TRAFFIC_JAM("1006005"),
+        SERVICE_AREA("1003001"),
         TOLLGATE("1002001")
     }
 
@@ -108,6 +111,8 @@ class DiagramFragment : BaseFragment() {
                     poitype == PoiType.CONSTRUCTION.code ||
                     poitype == PoiType.CONTROL.code) {
                 getEventDetailsById(poiid)
+            } else if (poitype == PoiType.TRAFFIC_JAM.code) {
+                getJamEventDetailsById(poiid)
             } else if (poitype == PoiType.SNAPSHOT.code) {
                 getCCTVDetailsById(poiid)
             }
@@ -147,9 +152,9 @@ class DiagramFragment : BaseFragment() {
             override fun onViewClick(dataMDL: EventMDL, position: Int, type: Int) {
                 if (!isLogin()) openActivity(LoginActivity::class.java)
                 else when (type) {
-                    1 -> saveIsUseful(dataMDL, 1, position, dialog)
-                    2 -> saveIsUseful(dataMDL, 2, position, dialog)
-                    3 -> saveSubscribe(dataMDL, position, dialog)
+                    1 -> saveIsUseful(dataMDL, 1, 1, position, dialog)
+                    2 -> saveIsUseful(dataMDL, 1, 2, position, dialog)
+                    3 -> saveSubscribe(dataMDL, 1, position, dialog)
                 }
             }
         })
@@ -157,8 +162,13 @@ class DiagramFragment : BaseFragment() {
     }
 
     /*是否有用*/
-    private fun saveIsUseful(dataMDL: EventMDL, type: Int, position: Int, dialog: EventDetailRvDialog) {
-        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(dataMDL.eventid, getUserId(), type), object : HttpRequestCallback<String>() {
+    private fun saveIsUseful(item: MutilItem, itemType: Int, type: Int, position: Int, dialog: Dialog) {
+        val eventId: String? = if (itemType == 1) {
+            (item as EventMDL).eventid
+        } else {
+            (item as TrafficJamMDL).eventid
+        }
+        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(eventId, getUserId(), type), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading()
             }
@@ -166,8 +176,15 @@ class DiagramFragment : BaseFragment() {
             override fun onSuccess(data: String?) {
                 endLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    dataMDL.isuseful = type
-                    dialog.notifyItemChanged(position, dataMDL)
+                    if (itemType == 1) {
+                        val mdl = item as EventMDL
+                        mdl.isuseful = type
+                        (dialog as EventDetailRvDialog).notifyItemChanged(position, mdl)
+                    } else {
+                        val mdl = item as TrafficJamMDL
+                        mdl.isuseful = type
+                        (dialog as TrafficJamDetailRvDialog).notifyItemChanged(position, mdl)
+                    }
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
                 }
@@ -181,8 +198,19 @@ class DiagramFragment : BaseFragment() {
     }
 
     /*保存订阅*/
-    private fun saveSubscribe(dataMDL: EventMDL, position: Int, dialog: EventDetailRvDialog) {
-        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), dataMDL.getSubType(), dataMDL.eventid),
+    private fun saveSubscribe(item: MutilItem, itemType: Int, position: Int, dialog: Dialog) {
+        val eventId: String?
+        val subType: String?
+        if (itemType == 1) {
+            val mdl = item as EventMDL
+            eventId = mdl.eventid
+            subType = mdl.getSubType()
+        } else {
+            val mdl = item as TrafficJamMDL
+            eventId = mdl.eventid
+            subType = mdl.getSubType()
+        }
+        doRequest(WebApiService.SAVE_SUBSCRIBE, WebApiService.saveSubscribeParams(getUserId(), subType, eventId),
                 object : HttpRequestCallback<String>() {
                     override fun onPreExecute() {
                         showLoading("保存订阅…")
@@ -192,8 +220,15 @@ class DiagramFragment : BaseFragment() {
                         endLoading()
                         if (GsonUtils.isResultOk(data)) {
                             showShortToast("订阅成功")
-                            dataMDL.subscribestatus = 1
-                            dialog.notifyItemChanged(position, dataMDL)
+                            if (itemType == 1) {
+                                val mdl = item as EventMDL
+                                mdl.subscribestatus = 1
+                                (dialog as EventDetailRvDialog).notifyItemChanged(position, mdl)
+                            } else {
+                                val mdl = item as TrafficJamMDL
+                                mdl.subscribestatus = 1
+                                (dialog as TrafficJamDetailRvDialog).notifyItemChanged(position, mdl)
+                            }
                         } else showShortToast(GsonUtils.getMsg(data))
                     }
 
@@ -204,6 +239,49 @@ class DiagramFragment : BaseFragment() {
                 })
     }
 
+    /*获取拥堵详情*/
+    private fun getJamEventDetailsById(jamids: String?) {
+        doRequest(WebApiService.TRAFFIC_JAM_DETAIL, WebApiService.trafficJamDetailsByIdParams(jamids, getUserId()), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, TrafficJamMDL::class.java)
+                    if (mdLs.size == 0) {
+                        showShortToast("暂无数据哟~")
+                    } else {
+                        onTrafficJamDetail(mdLs)
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
+    }
+
+    /*拥堵详情*/
+    private fun onTrafficJamDetail(mdLs: MutableList<TrafficJamMDL>) {
+        TrafficJamDetailRvDialog(context, mdLs).setOnViewClickListener(object : TrafficJamDetailRvDialog.OnViewClickListener {
+            override fun onViewClick(mdl: TrafficJamMDL, position: Int, type: Int, dialog: TrafficJamDetailRvDialog) {
+                if (!isLogin()) openActivity(LoginActivity::class.java)
+                else when (type) {
+                    1 -> saveIsUseful(mdl, 2, 1, position, dialog)
+                    2 -> saveIsUseful(mdl, 2, 2, position, dialog)
+                    3 -> saveSubscribe(mdl, 2, position, dialog)
+                }
+            }
+        }).show()
+    }
+
+    /*获取快拍数据*/
     private fun getCCTVDetailsById(cctvIds: String) {
         doRequest(WebApiService.CCTV_DETAIL, WebApiService.cctvDetailParams(cctvIds), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
@@ -229,14 +307,9 @@ class DiagramFragment : BaseFragment() {
 
     //监控快拍类型
     private fun onSnapShotDetail(mdLs: MutableList<SnapShotMDL>) {
-        if (mdLs.size == 0) {
-            showShortToast("暂无数据哟~")
-            return
-        }
         val dialog = CCTVDetailRvDialog(context, mdLs)
         dialog.setOnPhotoClickListener(object : CCTVDetailRvDialog.OnPhotoClickListener {
             override fun onPhotoClick(position: Int, mdl: SnapShotMDL) {
-//                showBigPic(position, photos)
                 getRoadVideo(mdl.resid, mdl.shortname)
             }
         })
@@ -366,6 +439,7 @@ class DiagramFragment : BaseFragment() {
         loadEvent(DiagramEventType.Construction.code, 0)  //默认关闭施工
         loadEvent(DiagramEventType.Control.code, 1)
         loadEvent(DiagramEventType.TollGate.code, 1)
+        loadEvent(DiagramEventType.TrafficJam.code, 0) //默认关闭拥堵
         loadEvent(DiagramEventType.PileNumber.code, 0)  //桩号默认关闭
         loadEvent(DiagramEventType.ServiceArea.code, 1)
         loadEvent(DiagramEventType.Snapshot.code, 1)
@@ -377,10 +451,11 @@ class DiagramFragment : BaseFragment() {
             1 -> loadEvent(DiagramEventType.Accident.code, isDisplay) //事故是否选中
             2 -> loadEvent(DiagramEventType.Control.code, isDisplay) //管制
             3 -> loadEvent(DiagramEventType.Construction.code, isDisplay) //施工
-            4 -> loadEvent(DiagramEventType.PileNumber.code, isDisplay)//桩号
-            5 -> loadEvent(DiagramEventType.TollGate.code, isDisplay) //收费站
-            6 -> loadEvent(DiagramEventType.ServiceArea.code, isDisplay) //服务区
-            7 -> loadEvent(DiagramEventType.Snapshot.code, isDisplay) //快拍
+            4 -> loadEvent(DiagramEventType.TrafficJam.code, isDisplay) //拥堵
+            5 -> loadEvent(DiagramEventType.PileNumber.code, isDisplay)//桩号
+            6 -> loadEvent(DiagramEventType.TollGate.code, isDisplay) //收费站
+            7 -> loadEvent(DiagramEventType.ServiceArea.code, isDisplay) //服务区
+            8 -> loadEvent(DiagramEventType.Snapshot.code, isDisplay) //快拍
         }
     }
 

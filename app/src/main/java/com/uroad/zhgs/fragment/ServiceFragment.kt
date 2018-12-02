@@ -39,7 +39,7 @@ class ServiceFragment : BaseRefreshRvFragment() {
     }
 
     override fun initData() {
-        doRequest(WebApiService.SERVICE_LIST, WebApiService.serviceListParams(index, size, keyword), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.SERVICE_LIST, WebApiService.serviceListParams(index, size, keyword, 0.toDouble(), 0.toDouble()), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 if (index == 1) setPageLoading()
             }

@@ -377,9 +377,9 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 mMediaPlayer = new TextureMediaPlayer(mMediaPlayer);
             }
             // a context for the subtitle renderers
-            final Context context = getContext();
             // REMOVED: SubtitleController
             // REMOVED: mAudioSession
+            if(mMediaPlayer == null) return;
             mMediaPlayer.setOnPreparedListener(mPreparedListener);
             mMediaPlayer.setOnVideoSizeChangedListener(mSizeChangedListener);
             mMediaPlayer.setOnCompletionListener(mCompletionListener);
@@ -401,18 +401,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             // target state that was there before.
             mCurrentState = STATE_PREPARING;
             attachMediaController();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
-        } catch (IllegalArgumentException ex) {
-            Log.w(TAG, "Unable to open content: " + mUri, ex);
-            mCurrentState = STATE_ERROR;
-            mTargetState = STATE_ERROR;
-            mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
-        } finally {
-            // REMOVED: mPendingSubtitleTracks.clear();
         }
     }
 

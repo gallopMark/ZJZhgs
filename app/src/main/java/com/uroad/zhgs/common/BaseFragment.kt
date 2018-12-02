@@ -606,13 +606,11 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
                 if (allGranted) {
                     permissionCallback?.doAfterGrand()
                 } else {
+                    permissionCallback?.doAfterDenied()
                     for (permission in permissions) {
                         //可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
                         if (!shouldShowRequestPermissionRationale(permission)) {
                             showDismissLocationDialog()
-                            break
-                        } else {
-                            permissionCallback?.doAfterDenied()
                             break
                         }
                     }

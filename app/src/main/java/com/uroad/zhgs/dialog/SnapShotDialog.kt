@@ -55,16 +55,10 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
                 recyclerView.visibility = View.VISIBLE
                 recyclerView.addItemDecoration(GridSpacingItemDecoration(urls.size, DisplayUtils.dip2px(context, 10f), false))
                 recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
-                val adapter = PicAdapter(context, dataMDL.getPicUrls())
+                val adapter = PicAdapter(context, urls)
                 recyclerView.adapter = adapter
                 adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
                     override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-//                        val pics = ArrayList<String>()
-//                        for (i in 0 until dataMDL.getPicUrls().size) {
-//                            if (!TextUtils.isEmpty(dataMDL.getPicUrls()[i])) {
-//                                pics.add(dataMDL.getPicUrls()[i])
-//                            }
-//                        }
                         onItemClickListener?.onItemClick(dataMDL)
                     }
                 })
@@ -85,11 +79,16 @@ class SnapShotDialog(private val context: Activity, private val dataMDL: SnapSho
 
         init {
             if (mDatas.size == 1) {
-                mWidth = DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f)
+                mWidth = DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 40f)
                 mHeight = mWidth / 5 * 3
             } else {
-                mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / mDatas.size
-                mHeight = mWidth
+                if (mDatas.size <= 3) {
+                    mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 40f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / mDatas.size
+                    mHeight = mWidth
+                } else {
+                    mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 40f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / 3
+                    mHeight = mWidth
+                }
             }
         }
 

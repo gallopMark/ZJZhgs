@@ -472,6 +472,7 @@ public class ZPlayer extends RelativeLayout {
                 if (onPreparedListener != null) {
                     onPreparedListener.onPrepared();
                 }
+                videoView.start();
             }
         });
         seekBar = contentView.findViewById(R.id.app_video_seekBar);
@@ -574,10 +575,10 @@ public class ZPlayer extends RelativeLayout {
                     showStatus(activity.getResources().getString(R.string.IjkPlayer_small_problem), "重试");
                 }
             }
-            if (isLive) {
-                handler.removeMessages(MESSAGE_RESTART_PLAY);
-                handler.sendEmptyMessageDelayed(MESSAGE_RESTART_PLAY, defaultRetryTime);
-            }
+//            if (isLive) {
+//                handler.removeMessages(MESSAGE_RESTART_PLAY);
+//                handler.sendEmptyMessageDelayed(MESSAGE_RESTART_PLAY, defaultRetryTime);
+//            }
         } else if (newStatus == STATUS_LOADING) {
             hideAll();
             if (isShowLoading) $.id(R.id.app_video_loading).visible();

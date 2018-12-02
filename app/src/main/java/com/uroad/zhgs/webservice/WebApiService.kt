@@ -474,6 +474,13 @@ class WebApiService {
             put("userid", userid)
         }
 
+        const val TRAFFIC_JAM_DETAIL = "getJamEventDetailsById"
+
+        fun trafficJamDetailsByIdParams(jamids: String?, userid: String?) = getBaseParams().apply {
+            put("jamids", jamids)
+            put("userid", userid)
+        }
+
         //快拍详情
         const val CCTV_DETAIL = "getCCTVDetailsById"
 
@@ -490,10 +497,12 @@ class WebApiService {
         //服务区列表
         const val SERVICE_LIST = "getServiceList"
 
-        fun serviceListParams(index: Int, size: Int, keyword: String?) = getBaseParams().apply {
+        fun serviceListParams(index: Int, size: Int, keyword: String?, longitude: Double, latitude: Double) = getBaseParams().apply {
             put("index", index.toString())
             put("size", size.toString())
             put("keyword", keyword)
+            put("longitude", longitude.toString())
+            put("latitude", latitude.toString())
         }
 
         //1.46 获取对应类型资讯

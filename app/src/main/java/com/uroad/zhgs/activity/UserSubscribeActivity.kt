@@ -72,7 +72,11 @@ class UserSubscribeActivity : BaseRefreshRvActivity(), RecyclerTouchListener.Rec
         mDatas.clear()
         mDatas.addAll(mdLs)
         adapter.notifyDataSetChanged()
-        if (mDatas.size == 0) setPageNoData(getString(R.string.empty_subscriptions))
+        if (mDatas.size == 0) onNoData()
+    }
+
+    private fun onNoData() {
+        setPageNoData(getString(R.string.empty_subscriptions))
     }
 
     override fun pullToRefresh() {
@@ -95,7 +99,7 @@ class UserSubscribeActivity : BaseRefreshRvActivity(), RecyclerTouchListener.Rec
                         RxBus.getDefault().post(MessageEvent().apply { obj = mDatas[position] })
                         mDatas.removeAt(position)
                         adapter.notifyDataSetChanged()
-                        if (mDatas.size == 0) setPageNoData()
+                        if (mDatas.size == 0) onNoData()
                     } else {
                         showShortToast(GsonUtils.getMsg(data))
                     }

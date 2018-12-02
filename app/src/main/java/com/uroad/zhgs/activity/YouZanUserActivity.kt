@@ -62,34 +62,26 @@ class YouZanUserActivity : BaseActivity() {
 
     private fun initTokenYZ() {
         doRequest(WebApiService.PRAISE_INIT, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
-            override fun onPreExecute() {
-                setPageLoading()
-            }
-
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, YouZanMDL::class.java)
                     if (mdl == null) {
-                        setPageError()
-                        onJsonParseError()
+                        handler.postDelayed({ initTokenYZ() }, 3000)
                     } else {
-                        CurrApplication.PRAISE_USER_URL = mdl.personal_center_url
-                        loadUrl(CurrApplication.PRAISE_USER_URL)
+                        if (!TextUtils.isEmpty(mdl.personal_center_url)) {
+                            CurrApplication.PRAISE_USER_URL = mdl.personal_center_url
+                            loadUrl(CurrApplication.PRAISE_USER_URL)
+                        }
                     }
                 } else {
-                    setPageError()
-                    showShortToast(GsonUtils.getMsg(data))
+                    handler.postDelayed({ initTokenYZ() }, 3000)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                setPageError()
+                handler.postDelayed({ initTokenYZ() }, 3000)
             }
         })
-    }
-
-    override fun onReload(view: View) {
-        initTokenYZ()
     }
 
     private fun loadUrl(url: String?) {

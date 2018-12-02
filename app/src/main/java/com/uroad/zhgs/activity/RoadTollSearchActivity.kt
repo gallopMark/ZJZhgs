@@ -152,6 +152,8 @@ class RoadTollSearchActivity : BaseActivity() {
     }
 
     override fun afterLocation(location: AMapLocation) {
+        this.longitude = location.longitude
+        this.latitude = location.latitude
         onRequestTollGate()
         closeLocation()
     }

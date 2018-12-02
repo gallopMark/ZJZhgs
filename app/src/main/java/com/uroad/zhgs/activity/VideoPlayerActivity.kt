@@ -91,15 +91,29 @@ class VideoPlayerActivity : BaseActivity() {
                         }
                     }
                 }
-                .onError { _, _ -> cpv.visibility = View.VISIBLE }
+                .onError { _, _ ->
+                    cpv.visibility = View.VISIBLE
+                    openVideoFromX5Web()
+//                    openBrowser()
+//                    zPlayer.play(url)
+                }
                 .setScaleType(ZPlayer.SCALETYPE_FITXY)
                 .setPlayerWH(0, videoHeight)
                 .play(url)
         cpv.visibility = View.VISIBLE
     }
 
+    private fun openVideoFromX5Web() {
+        openActivity(X5WebViewActivity::class.java, Bundle().apply {
+            putString("url", url)
+            putString("title", title)
+            putBoolean("isSnapShot", true)
+        })
+        finish()
+    }
+
     private fun initWebButton() {
-        btOpenWeb.text = "浏览器打开"
+        btOpenWeb.text = "如果此视频无法播放，点击到浏览器播放"
         btOpenWeb.setOnClickListener { openBrowser() }
     }
 

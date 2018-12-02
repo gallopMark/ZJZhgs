@@ -19,7 +19,7 @@ class ClipboardUtils {
             val cm = getClipboard(context)
             val data = cm.primaryClip
             if (data != null && data.itemCount > 0) {
-                val item = data.getItemAt(0)
+                val item = data.getItemAt(0) ?: return ""
                 val content = item.text.toString()
                 if (TextUtils.isEmpty(content)) return ""
                 return content

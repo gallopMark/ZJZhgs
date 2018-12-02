@@ -19,6 +19,7 @@ enum class DiagramEventType(val code: String) {
     Accident("event"),
     Construction("plan"),
     Control("control"),
+    TrafficJam("jam"),
     Snapshot("cctv"),
     ServiceArea("servicearea"),
     TollGate("station"),

@@ -1,6 +1,7 @@
 package com.uroad.zhgs.fragment
 
 import android.view.View
+import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.adapteRv.ServiceAreaAdapter
 import com.uroad.zhgs.common.BaseRefreshRvFragment
 import com.uroad.zhgs.model.ServiceAreaMDL
@@ -13,6 +14,8 @@ import com.uroad.zhgs.webservice.WebApiService
  *Created by MFB on 2018/8/21.
  */
 class ServiceAreaFragment : BaseRefreshRvFragment() {
+    private var longitude: Double = 0.toDouble()
+    private var latitude: Double = 0.toDouble()
     private var index = 1
     private val size = 10
     private var isFirstLoad = true
@@ -31,10 +34,30 @@ class ServiceAreaFragment : BaseRefreshRvFragment() {
                 openLocationWebActivity(service.detailurl, service.name)
             }
         })
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+                onRequestService()
+            }
+        })
     }
 
-    override fun initData() {
-        doRequest(WebApiService.SERVICE_LIST, WebApiService.serviceListParams(index, size, ""), object : HttpRequestCallback<String>() {
+    override fun afterLocation(location: AMapLocation) {
+        this.longitude = location.longitude
+        this.latitude = location.latitude
+        onRequestService()
+        closeLocation()
+    }
+
+    override fun locationFailure() {
+        onRequestService()
+    }
+
+    private fun onRequestService() {
+        doRequest(WebApiService.SERVICE_LIST, WebApiService.serviceListParams(index, size, "",longitude, latitude), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 if (isFirstLoad) setPageLoading()
             }
@@ -78,15 +101,15 @@ class ServiceAreaFragment : BaseRefreshRvFragment() {
 
     override fun pullToRefresh() {
         index = 1
-        initData()
+        onRequestService()
     }
 
     override fun pullToLoadMore() {
-        initData()
+        onRequestService()
     }
 
     override fun onReLoad(view: View) {
-        initData()
+        onRequestService()
     }
 
     interface OnItemOpenCloseListener {

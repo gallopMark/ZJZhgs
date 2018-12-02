@@ -11,6 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.SnapShotMDL
@@ -40,13 +41,21 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
             val contentView = LayoutInflater.from(context).inflate(R.layout.dialog_mapdata_rv, LinearLayout(context), false)
             val ivClose = contentView.findViewById<ImageView>(R.id.ivClose)
             val recyclerView = contentView.findViewById<RecyclerView>(R.id.recyclerView)
-            recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
-            val helper = PagerSnapHelper()
-            helper.attachToRecyclerView(recyclerView)
-            recyclerView.adapter = SnapShotAdapter(context, mDatas)
+            val tvEmpty = contentView.findViewById<TextView>(R.id.tvEmpty)
+            if (mDatas.size > 0) {
+                recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
+                val helper = PagerSnapHelper()
+                helper.attachToRecyclerView(recyclerView)
+                recyclerView.adapter = SnapShotAdapter(context, mDatas)
+                recyclerView.visibility = View.VISIBLE
+                tvEmpty.visibility = View.GONE
+            } else {
+                recyclerView.visibility = View.GONE
+                tvEmpty.visibility = View.VISIBLE
+            }
             ivClose.setOnClickListener { dismiss() }
             window.setContentView(contentView)
-            window.setLayout(DisplayUtils.getWindowWidth(context), WindowManager.LayoutParams.WRAP_CONTENT)
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
             window.setWindowAnimations(R.style.dialog_anim)
             window.setGravity(Gravity.BOTTOM)
         }
@@ -73,12 +82,6 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
                 recyclerView.adapter = adapter
                 adapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
                     override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
-//                        val pics = ArrayList<String>()
-//                        for (i in 0 until t.getPicUrls().size) {
-//                            if (!TextUtils.isEmpty(t.getPicUrls()[i])) {
-//                                pics.add(t.getPicUrls()[i])
-//                            }
-//                        }
                         onPhotoClickListener?.onPhotoClick(position, t)
                     }
                 })
@@ -96,11 +99,16 @@ class CCTVDetailRvDialog(private val context: Activity, private val mDatas: Muta
 
         init {
             if (mDatas.size == 1) {
-                mWidth = DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f)
+                mWidth = DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 40f)
                 mHeight = mWidth / 5 * 3
             } else {
-                mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 70f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / mDatas.size
-                mHeight = mWidth
+                if (mDatas.size <= 3) {
+                    mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 40f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / mDatas.size
+                    mHeight = mWidth
+                } else {
+                    mWidth = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 40f) - DisplayUtils.dip2px(context, 10f) * (mDatas.size - 1)) / 3
+                    mHeight = mWidth
+                }
             }
         }
 

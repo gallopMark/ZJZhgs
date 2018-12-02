@@ -114,6 +114,7 @@ class RoadNavigationActivity : BaseActivity() {
         cbEventSG2.isChecked = true
         cbEventGZ2.isChecked = true
         cbEventShiG2.isChecked = false
+        cbEventYD2.isChecked = false
         cbTrafficPile.isChecked = false
         cbTrafficToll.isChecked = true
         cbTrafficService.isChecked = true
@@ -147,11 +148,12 @@ class RoadNavigationActivity : BaseActivity() {
                 R.id.cbEventSG2 -> onDiagram(1, isChecked) //简图
                 R.id.cbEventGZ2 -> onDiagram(2, isChecked)
                 R.id.cbEventShiG2 -> onDiagram(3, isChecked)
+                R.id.cbEventYD2 -> onDiagram(4, isChecked)
                 R.id.cbTrafficSpot1 -> onStandardEvent(5, isChecked)  //地图快拍
-                R.id.cbTrafficPile -> onDiagram(4, isChecked)   //桩号  简图才有
-                R.id.cbTrafficToll -> onDiagram(5, isChecked)
-                R.id.cbTrafficService -> onDiagram(6, isChecked)
-                R.id.cbTrafficSpot -> onDiagram(7, isChecked)
+                R.id.cbTrafficPile -> onDiagram(5, isChecked)   //桩号  简图才有
+                R.id.cbTrafficToll -> onDiagram(6, isChecked)
+                R.id.cbTrafficService -> onDiagram(7, isChecked)
+                R.id.cbTrafficSpot -> onDiagram(8, isChecked)
                 R.id.cbOtherWeather -> onStandardEvent(6, isChecked) //WEATHER    地图才有
             }
         }
@@ -162,6 +164,7 @@ class RoadNavigationActivity : BaseActivity() {
         cbEventSG2.setOnCheckedChangeListener(onCheckChangeListener)
         cbEventGZ2.setOnCheckedChangeListener(onCheckChangeListener)
         cbEventShiG2.setOnCheckedChangeListener(onCheckChangeListener)
+        cbEventYD2.setOnCheckedChangeListener(onCheckChangeListener)
         cbTrafficSpot1.setOnCheckedChangeListener(onCheckChangeListener)
         cbTrafficPile.setOnCheckedChangeListener(onCheckChangeListener)
         cbTrafficToll.setOnCheckedChangeListener(onCheckChangeListener)
@@ -169,18 +172,19 @@ class RoadNavigationActivity : BaseActivity() {
         cbTrafficSpot.setOnCheckedChangeListener(onCheckChangeListener)
         cbOtherWeather.setOnCheckedChangeListener(onCheckChangeListener)
         if (fromHome) {  //从首页我的订阅点击进来  关闭所有默认开启
-            cbEventSG.isChecked = false
-            cbEventGZ.isChecked = false
-            cbEventShiG.isChecked = false
-            cbEventYD.isChecked = false
+            clearLayers()
         } else {
-            //路况导航-地图模式默认开启图层：事故、管制、拥堵、快拍
-            cbEventSG.isChecked = true
-            cbEventGZ.isChecked = true
-            cbEventShiG.isChecked = false
-            cbEventYD.isChecked = true
-            cbTrafficSpot1.isChecked = true
+            openDefaultLayer()
         }
+    }
+
+    //路况导航-地图模式默认开启图层：事故、管制、拥堵、快拍
+    private fun openDefaultLayer() {
+        cbEventSG.isChecked = true
+        cbEventGZ.isChecked = true
+        cbEventShiG.isChecked = false
+        cbEventYD.isChecked = true
+        cbTrafficSpot1.isChecked = true
     }
 
     //地图回调
@@ -208,6 +212,8 @@ class RoadNavigationActivity : BaseActivity() {
         rlAddBill.setOnClickListener { hideBill() }
         tvMenuList.setOnClickListener { openActivity(MyNearByTabActivity::class.java) }
         val onCheckChangeListener = CompoundButton.OnCheckedChangeListener { cb, isChecked ->
+            //点击附近 移除地图所有图层
+            clearLayers()
             when (cb.id) {
                 R.id.cbRepair -> onStandardEvent(7, isChecked)
                 R.id.cbGas -> onStandardEvent(8, isChecked)
@@ -221,31 +227,16 @@ class RoadNavigationActivity : BaseActivity() {
         cbScenic.setOnCheckedChangeListener(onCheckChangeListener)
         cbService.setOnCheckedChangeListener(onCheckChangeListener)
         cbToll.setOnCheckedChangeListener(onCheckChangeListener)
-//        radioGroup.setOnCheckedChangeListener { _, checkId ->
-//            if (checkType > 0) onStandardEvent(checkType, false)
-//            when (checkId) {
-//                R.id.rbRepair -> {
-//                    checkType = 7
-//                    onStandardEvent(7, true)
-//                }
-//                R.id.rbGas -> {
-//                    checkType = 8
-//                    onStandardEvent(8, true)
-//                }
-//                R.id.rbScenic -> {
-//                    checkType = 9
-//                    onStandardEvent(9, true)
-//                }
-//                R.id.rbService -> {
-//                    checkType = 10
-//                    onStandardEvent(10, true)
-//                }
-//                R.id.rbToll -> {
-//                    checkType = 11
-//                    onStandardEvent(11, true)
-//                }
-//            }
-//        }
+    }
+
+    /*关闭地图图层（施工、管制、事故、拥堵、快拍、天气等）*/
+    private fun clearLayers() {
+        cbEventSG.isChecked = false
+        cbEventGZ.isChecked = false
+        cbEventShiG.isChecked = false
+        cbEventYD.isChecked = false
+        cbTrafficSpot1.isChecked = false
+        cbOtherWeather.isChecked = false
     }
 
     private fun hideBill() {

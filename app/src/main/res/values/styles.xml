@@ -248,4 +248,8 @@
         <item name="android:layout_marginLeft">@dimen/margin_12</item>
         <item name="android:layout_marginRight">@dimen/margin_12</item>
     </style>
+    
+    <style name="NoAnimationTheme" parent="AppTheme">
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    </style>
 </resources>

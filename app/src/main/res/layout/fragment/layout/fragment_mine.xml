@@ -137,28 +137,20 @@
             style="@style/Divider_f7_1dp"
             android:layout_height="@dimen/margin_8" />
 
-        <LinearLayout
-            android:id="@+id/llShopping"
+        <TextView
+            android:id="@+id/tvShopping"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:drawableLeft="@mipmap/ic_mine_draw_shopping"
+            android:drawableRight="@mipmap/ic_arrow_right_grey"
+            android:drawablePadding="@dimen/margin_10"
+            android:gravity="center|left"
+            android:padding="@dimen/margin_12"
+            android:text="@string/mine_my_shopping"
+            android:textColor="@color/appTextColor"
+            android:textSize="@dimen/font_14" />
 
-            <TextView
-                android:id="@+id/tvShopping"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/ic_mine_draw_shopping"
-                android:drawableRight="@mipmap/ic_arrow_right_grey"
-                android:drawablePadding="@dimen/margin_10"
-                android:gravity="center|left"
-                android:padding="@dimen/margin_12"
-                android:text="@string/mine_my_shopping"
-                android:textColor="@color/appTextColor"
-                android:textSize="@dimen/font_14" />
-
-            <View style="@style/Divider_f7_1dp_margin12" />
-        </LinearLayout>
+        <View style="@style/Divider_f7_1dp_margin12" />
 
         <RelativeLayout
             android:id="@+id/rlMessage"
