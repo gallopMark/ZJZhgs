@@ -147,33 +147,26 @@ class CarInquiryActivity : BaseActivity() {
         } else {
             tvEmpty.visibility = View.GONE
             llContent.visibility = View.VISIBLE
+            var creditRank = ""
+            mdl.creditRank?.let { creditRank = it }
             when {
-                TextUtils.equals(mdl.creditRank, "黑一") -> {
+                creditRank.contains("黑") -> {
                     ivContent.setImageResource(R.mipmap.ic_car_blacklist)
-                    tvStatus.text = "一级黑名单"
+                    tvStatus.setTextColor(ContextCompat.getColor(this, R.color.color_34))
                     tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_34))
                 }
-                TextUtils.equals(mdl.creditRank, "黑二") -> {
-                    ivContent.setImageResource(R.mipmap.ic_car_blacklist)
-                    tvStatus.text = "二级黑名单"
-                    tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_34))
-                }
-                TextUtils.equals(mdl.creditRank, "灰名单") -> {
+                creditRank.contains("灰") -> {
                     ivContent.setImageResource(R.mipmap.ic_car_greylist)
-                    tvStatus.text = "灰名单"
+                    tvStatus.setTextColor(ContextCompat.getColor(this, R.color.color_8d))
                     tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_8d))
-                }
-                TextUtils.equals(mdl.creditRank, "正常") -> {
-                    ivContent.setImageResource(R.mipmap.ic_car_normal)
-                    tvStatus.text = "正常"
-                    tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_normal))
                 }
                 else -> {
                     ivContent.setImageResource(R.mipmap.ic_car_normal)
-                    tvStatus.text = "正常"
+                    tvStatus.setTextColor(ContextCompat.getColor(this, R.color.color_normal))
                     tvScore.setTextColor(ContextCompat.getColor(this, R.color.color_normal))
                 }
             }
+            tvStatus.text = creditRank
             if (TextUtils.isEmpty(mdl.sinceScore)) tvScore.text = "0"
             else tvScore.text = mdl.sinceScore
         }

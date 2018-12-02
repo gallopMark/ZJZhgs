@@ -39,6 +39,7 @@ class MainFragment : BaseFragment() {
     private var longitude = CurrApplication.APP_LATLNG.longitude
     private var latitude = CurrApplication.APP_LATLNG.latitude
     private val handler = Handler()
+    private var isShowAuthDialog = false
 
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
@@ -277,21 +278,27 @@ class MainFragment : BaseFragment() {
             removeSubscribe()
         } else { //返回到首页刷新我的订阅
             updateSubscribe()
-            if (!AppLocalHelper.isAuth(context)) {
-                AuthenticationDialog(context).onViewClickListener(object : AuthenticationDialog.OnViewClickListener {
-                    override fun onViewClick(type: Int, dialog: AuthenticationDialog) {
-                        when (type) {
-                            1 -> openActivity(BindCarActivity::class.java)
-                            2 -> openActivity(PerfectUserInfoActivity::class.java)
-                        }
-                        dialog.dismiss()
-                    }
-                }).show()
-            }
+            onAuthStatus()
         }
         updateNews() //返回到首页刷新资讯
         checkCarTeamSituation()
         clipboard()
+    }
+
+    /*登录之后（用户未实名认证提示用户）*/
+    private fun onAuthStatus() {
+        if (!isAuth() && !isShowAuthDialog) {
+            AuthenticationDialog(context).onViewClickListener(object : AuthenticationDialog.OnViewClickListener {
+                override fun onViewClick(type: Int, dialog: AuthenticationDialog) {
+                    when (type) {
+                        1 -> openActivity(BindCarActivity::class.java)
+                        2 -> openActivity(PerfectUserInfoActivity::class.java)
+                    }
+                    dialog.dismiss()
+                }
+            }).show()
+            isShowAuthDialog = true
+        }
     }
 
     /*检查是否有车队或者邀请*/

@@ -49,7 +49,10 @@ class WheelViewDialog(private val context: Activity) : Dialog(context, R.style.s
             val wheelView = contentView.findViewById<WheelView>(R.id.wheelView)
             tvCancel.setOnClickListener { dismiss() }
             wheelView.setData(data)
-            if (defaultIndex in 0 until data.size) wheelView.setDefault(defaultIndex)
+            if (defaultIndex in 0 until data.size) {
+                selected = defaultIndex
+                wheelView.setDefault(defaultIndex)
+            }
             wheelView.setOnSelectListener(object : WheelView.OnSelectListener {
                 override fun endSelect(id: Int, text: String?) {
                     setSelected(id)
