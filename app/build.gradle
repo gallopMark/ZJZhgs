@@ -101,8 +101,8 @@ dependencies {
     implementation 'com.tencent.mid:mid:4.0.7'
     /*************************信鸽推送***********************/
     /*************************友盟统计***********************/
-    implementation 'com.umeng.sdk:common:1.5.0'
-    implementation 'com.umeng.sdk:analytics:7.5.0'
+    implementation 'com.umeng.umsdk:analytics:7.5.4'
+    implementation 'com.umeng.umsdk:common:1.5.4'
 
     /*有赞SDK*/
     implementation 'com.youzanyun.open.mobile:x5sdk:6.4.5', {

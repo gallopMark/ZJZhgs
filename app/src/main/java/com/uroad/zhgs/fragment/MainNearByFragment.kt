@@ -42,32 +42,32 @@ class MainNearByFragment : BaseFragment() {
     }
 
     private fun initTab() {
-        val ts12 = context.resources.getDimension(R.dimen.font_12)
         val ts14 = context.resources.getDimension(R.dimen.font_14)
-        tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        val ts16 = context.resources.getDimension(R.dimen.font_16)
+        tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
         tvNearByToll.isSelected = true
-        tvNearByMore.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+        tvNearByMore.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
         tvNearByMore.isSelected = true
         val listener = View.OnClickListener { v ->
-            tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
+            tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
             tvNearByToll.isSelected = false
-            tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
+            tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
             tvNearByService.isSelected = false
-            tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts12)
+            tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
             tvNearByScenic.isSelected = false
             when (v.id) {
                 R.id.tvNearByToll -> {
-                    tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+                    tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     tvNearByToll.isSelected = true
                     setTab(1)
                 }
                 R.id.tvNearByService -> {
-                    tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+                    tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     tvNearByService.isSelected = true
                     setTab(2)
                 }
                 R.id.tvNearByScenic -> {
-                    tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts14)
+                    tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     tvNearByScenic.isSelected = true
                     setTab(3)
                 }

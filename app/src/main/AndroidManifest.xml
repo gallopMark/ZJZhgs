@@ -240,11 +240,11 @@
         <activity android:name=".photopicker.ui.ImageCropActivity" />
 
         <!--微信分享-->
-        <activity
+        <!--<activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
         <!--QQ分享-->
         <activity
             android:name="com.tencent.tauth.AuthActivity"

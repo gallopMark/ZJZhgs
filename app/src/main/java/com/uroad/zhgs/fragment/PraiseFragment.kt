@@ -38,6 +38,39 @@ class PraiseFragment : BaseFragment() {
         initBack()
     }
 
+    private fun initBrowser() {
+        browser.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                if (newProgress == 100) {
+                    progressBar.visibility = View.GONE
+                } else {
+                    if (progressBar.visibility != View.VISIBLE) progressBar.visibility = View.VISIBLE
+                    progressBar.progress = newProgress
+                }
+                if (browser.canGoBack()) {
+                    ivBack.visibility = View.VISIBLE
+                } else {
+                    ivBack.visibility = View.GONE
+                }
+            }
+        }
+        browser.subscribe(mAbsAuthEvent)
+        browser.subscribe(mAbsChooserEvent)
+    }
+
+    private fun initBack() {
+        ivBack.setOnClickListener {
+            if (browser.canGoBack()) {
+                browser.goBack()
+                if (!browser.canGoBack()) {
+                    ivBack.visibility = View.GONE
+                }
+            } else {
+                ivBack.visibility = View.GONE
+            }
+        }
+    }
+
     override fun initData() {
         if (TextUtils.isEmpty(CurrApplication.PRAISE_URL)) {
             initTokenYZ()
@@ -50,9 +83,7 @@ class PraiseFragment : BaseFragment() {
     }
 
     private fun loadUrl(url: String?) {
-        browser.loadUrl(url)
-        browser.subscribe(mAbsAuthEvent)
-        browser.subscribe(mAbsChooserEvent)
+       browser.loadUrl(url)
     }
 
     private fun initTokenYZ() {
@@ -83,37 +114,6 @@ class PraiseFragment : BaseFragment() {
     fun onKeyEvent() {
         browser.goBack()// 返回前一个页面
         if (!browser.canGoBack()) ivBack.visibility = View.GONE
-    }
-
-    private fun initBrowser() {
-        browser.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                if (newProgress == 100) {
-                    progressBar.visibility = View.GONE
-                } else {
-                    if (progressBar.visibility != View.VISIBLE) progressBar.visibility = View.VISIBLE
-                    progressBar.progress = newProgress
-                }
-                if (browser.canGoBack()) {
-                    ivBack.visibility = View.VISIBLE
-                } else {
-                    ivBack.visibility = View.GONE
-                }
-            }
-        }
-    }
-
-    private fun initBack() {
-        ivBack.setOnClickListener {
-            if (browser.canGoBack()) {
-                browser.goBack()
-                if (!browser.canGoBack()) {
-                    ivBack.visibility = View.GONE
-                }
-            } else {
-                ivBack.visibility = View.GONE
-            }
-        }
     }
 
     //认证事件(AbsAuthEvent)

@@ -7,7 +7,7 @@ import android.text.TextUtils
 import com.amap.api.maps.model.LatLng
 import com.tencent.android.tpush.XGPushManager
 import com.tencent.bugly.crashreport.CrashReport
-import com.tencent.smtt.sdk.TbsVideo
+import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.uroad.library.utils.VersionUtils
 import com.uroad.library.utils.ZipUtils
@@ -130,6 +130,7 @@ class CurrApplication : BaseApplication() {
     /*友盟统计初始化*/
     private fun initUM() {
         UMConfigure.init(this, getString(R.string.UMENG_APP_ID), "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "")
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL)
     }
 
     /*有赞SDK初始化*/
@@ -238,9 +239,13 @@ class CurrApplication : BaseApplication() {
     }
 
     private val activityLifecycleCallbacks = object : ActivityLifecycleCallbacks {
-        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {
+            MobclickAgent.onPause(activity)
+        }
 
-        override fun onActivityResumed(activity: Activity) {}
+        override fun onActivityResumed(activity: Activity) {
+            MobclickAgent.onResume(activity)
+        }
 
         override fun onActivityStarted(activity: Activity) {
         }
