@@ -1,23 +1,15 @@
 package com.uroad.zhgs.activity
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.view.View
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Poi
-import com.uroad.zhgs.R.id.webView
 import com.uroad.zhgs.common.BaseWebViewActivity
-import com.uroad.zhgs.dialog.MaterialDialog
-import com.uroad.zhgs.helper.UserPreferenceHelper.Companion.getIconFile
-import com.uroad.zhgs.helper.UserPreferenceHelper.Companion.getPhone
-import com.uroad.zhgs.helper.UserPreferenceHelper.Companion.getUserName
 import kotlinx.android.synthetic.main.activity_base_webview.*
 
 

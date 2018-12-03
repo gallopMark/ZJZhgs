@@ -265,7 +265,7 @@ class RoadNavigationActivity : BaseActivity() {
                 drawerLayout.openDrawer(Gravity.END)
             }
         }
-        tvList.setOnClickListener { openActivity(HighWayListActivty::class.java) }
+        tvList.setOnClickListener { openActivity(HighWayListActivity::class.java) }
         ivLocation.setOnClickListener { onStandard(1) }
         tvPlus.setOnClickListener {
             if (currTab == 1) {

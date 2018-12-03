@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat
 import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.AbsoluteSizeSpan
-import android.text.style.SubscriptSpan
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView

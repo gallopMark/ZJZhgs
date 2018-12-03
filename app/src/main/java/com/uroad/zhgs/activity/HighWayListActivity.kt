@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_highway_list.*
  *Created by MFB on 2018/8/9.
  * 高速列表
  */
-class HighWayListActivty : BaseActivity() {
+class HighWayListActivity : BaseActivity() {
     private var location: AMapLocation? = null
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_highway_list)
@@ -39,11 +39,11 @@ class HighWayListActivty : BaseActivity() {
                 R.id.rbTab2 -> setCurrentTab(1)
             }
         }
-        ivSearch.setOnClickListener { _ ->
+        ivSearch.setOnClickListener {
             openActivity(HighwaySearchActivity::class.java, Bundle().apply {
-                location?.let {
-                    putDouble("longitude", it.longitude)
-                    putDouble("latitude", it.latitude)
+                location?.let { location ->
+                    putDouble("longitude", location.longitude)
+                    putDouble("latitude", location.latitude)
                 }
             })
             overridePendingTransition(0, 0)

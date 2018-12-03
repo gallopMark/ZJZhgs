@@ -19,9 +19,7 @@ import kotlinx.android.synthetic.main.activity_bindcar.*
 import android.widget.*
 import android.os.Handler
 import android.text.method.ReplacementTransformationMethod
-import com.amap.api.col.sln3.et
 import com.uroad.zhgs.R
-import com.uroad.zhgs.R.id.*
 import com.uroad.zhgs.common.CarNoType
 import com.uroad.zhgs.dialog.CarNoInputDialog
 import com.uroad.zhgs.dialog.MaterialDialog
@@ -201,7 +199,7 @@ class BindCarActivity : BaseActivity() {
         }
     }
 
-    private fun showCustomInput(){
+    private fun showCustomInput() {
         InputMethodUtils.hideSoftInput(this)
         CarNoInputDialog(this@BindCarActivity).setOnCarNoClickListener(object : CarNoInputDialog.OnCarNoClickListener {
             override fun onCarNoClick(province: String, option: Int, dialog: CarNoInputDialog) {
@@ -360,7 +358,12 @@ class BindCarActivity : BaseActivity() {
     //车辆详情
     private fun requestCarDetail() {
         doRequest(WebApiService.CAR_DETAILS, WebApiService.carDetailsParams(carId), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
             override fun onSuccess(data: String?) {
+                endLoading()
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, CarDetailMDL::class.java)
                     if (mdl == null) showShortToast("数据解析异常")
@@ -371,6 +374,7 @@ class BindCarActivity : BaseActivity() {
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
                 onHttpError(e)
             }
         })

@@ -143,7 +143,7 @@
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activity.RouteNaviActivity" />
-        <activity android:name=".activity.HighWayListActivty" />
+        <activity android:name=".activity.HighWayListActivity" />
         <activity
             android:name=".activity.HighwaySearchActivity"
             android:windowSoftInputMode="adjustPan" />
