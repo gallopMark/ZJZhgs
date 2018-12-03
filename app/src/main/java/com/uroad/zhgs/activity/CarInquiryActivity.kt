@@ -3,7 +3,10 @@ package com.uroad.zhgs.activity
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.text.SpannableString
 import android.text.TextUtils
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.SubscriptSpan
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -167,8 +170,8 @@ class CarInquiryActivity : BaseActivity() {
                 }
             }
             tvStatus.text = creditRank
-            if (TextUtils.isEmpty(mdl.sinceScore)) tvScore.text = "0"
-            else tvScore.text = mdl.sinceScore
+            val score = "${mdl.sinceScore}分"
+            tvScore.text = SpannableString(score).apply { setSpan(AbsoluteSizeSpan(resources.getDimensionPixelSize(R.dimen.font_14), false), score.length - 1, score.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE) }
         }
     }
 }

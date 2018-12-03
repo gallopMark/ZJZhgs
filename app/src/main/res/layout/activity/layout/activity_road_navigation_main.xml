@@ -4,7 +4,6 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".activity.RoadNavigationActivity">
 
     <FrameLayout
@@ -26,6 +25,7 @@
             android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/llLayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

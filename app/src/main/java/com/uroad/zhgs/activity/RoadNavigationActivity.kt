@@ -1,5 +1,6 @@
 package com.uroad.zhgs.activity
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
@@ -32,7 +33,7 @@ class RoadNavigationActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_road_navigation_main)
         intent.extras?.let { fromHome = it.getBoolean("fromHome") }
-        ivDiagramBack.setOnClickListener { onBackPressed() }
+        initLayout()
         initMenu()
         initNearBy()
         if (fromHome) {
@@ -47,6 +48,18 @@ class RoadNavigationActivity : BaseActivity() {
         }
         if (AppLocalHelper.isFirstNav(this)) {
             NewFunctionDialog(this).show()
+        }
+    }
+
+    private fun initLayout() {
+        ivDiagramBack.setOnClickListener { onBackPressed() }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ivDiagramBack.layoutParams = (ivDiagramBack.layoutParams as FrameLayout.LayoutParams).apply {
+                this.topMargin = this.topMargin + DisplayUtils.getStatusHeight(this@RoadNavigationActivity)
+            }
+            llLayer.layoutParams = (llLayer.layoutParams as FrameLayout.LayoutParams).apply {
+                this.topMargin = this.topMargin + DisplayUtils.getStatusHeight(this@RoadNavigationActivity)
+            }
         }
     }
 

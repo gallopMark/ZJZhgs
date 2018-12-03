@@ -136,6 +136,7 @@
         <activity
             android:name=".activity.RoadNavigationActivity"
             android:launchMode="singleTop"
+            android:theme="@style/TranslucentTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.AMapNaviSearchActivity"

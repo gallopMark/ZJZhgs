@@ -2,6 +2,7 @@ package com.uroad.zhgs.fragment
 
 import android.app.Dialog
 import android.graphics.drawable.AnimationDrawable
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.util.ArrayMap
 import android.view.LayoutInflater
@@ -67,14 +68,13 @@ class NavStandardFragment : BaseFragment() {
     }
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
-        ivBack.setOnClickListener { context.onBackPressed() }
         myLocationView = layoutInflater.inflate(R.layout.mapview_mylocation2, FrameLayout(context), false)
         val ivDiffuse = myLocationView.findViewById<ImageView>(R.id.ivDiffuse)
         animationDrawable = ivDiffuse.drawable as AnimationDrawable
         arguments?.let { fromHome = it.getBoolean("fromHome", false) }
+        initTopSearch()
         mapView.onCreate(savedInstanceState)
         initMapView()
-        llSearch.setOnClickListener { openActivity(AMapNaviSearchActivity::class.java) }
         requestLocationPermissions(object : RequestLocationPermissionCallback {
             override fun doAfterGrand() {
                 openLocation()
@@ -84,6 +84,17 @@ class NavStandardFragment : BaseFragment() {
                 showDismissLocationDialog()
             }
         })
+    }
+
+    private fun initTopSearch() {
+        ivBack.setOnClickListener { context.onBackPressed() }
+        llSearch.setOnClickListener { openActivity(AMapNaviSearchActivity::class.java) }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            val params = llSearch.layoutParams as FrameLayout.LayoutParams
+            val topMargin = params.topMargin + DisplayUtils.getStatusHeight(context)
+            params.topMargin = topMargin
+            llSearch.layoutParams = params
+        }
     }
 
     private fun initMapView() {
