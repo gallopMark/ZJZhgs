@@ -19,7 +19,7 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
-import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.BaseLocationActivity
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.model.FootprintMDL
 import com.uroad.zhgs.utils.GsonUtils
@@ -28,7 +28,7 @@ import com.uroad.zhgs.webservice.WebApiService
 import kotlinx.android.synthetic.main.activity_mytracks.*
 
 /*我的足迹*/
-class MyTracksActivity : BaseActivity() {
+class MyTracksActivity : BaseLocationActivity() {
     private lateinit var aMap: AMap
     private lateinit var handler: Handler
     override fun setUp(savedInstanceState: Bundle?) {

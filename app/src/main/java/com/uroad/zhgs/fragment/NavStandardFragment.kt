@@ -28,7 +28,7 @@ import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.cluster.Cluster
 import com.uroad.zhgs.cluster.ClusterItem
 import com.uroad.zhgs.cluster.CustomClusterItem
-import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
 import com.uroad.zhgs.enumeration.MapDataType
@@ -46,7 +46,7 @@ import kotlinx.android.synthetic.main.fragment_nav_standard.*
  *Created by MFB on 2018/8/10.
  * 路况导航 地图模式
  */
-class NavStandardFragment : BaseFragment() {
+class NavStandardFragment : BaseLocationFragment() {
 
     private var fromHome: Boolean = false
     private var isOpenLocation = false

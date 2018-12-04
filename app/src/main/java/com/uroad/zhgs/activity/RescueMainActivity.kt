@@ -22,7 +22,7 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.uroad.library.utils.PhoneUtils
 import com.uroad.zhgs.R
-import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.BaseLocationActivity
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.MaterialDialog
 import kotlinx.android.synthetic.main.activity_rescue_main.*
@@ -38,7 +38,7 @@ import com.uroad.zhgs.webservice.WebApiService
  * Copyright  2018年 浙江综合交通大数据开发有限公司.
  * 说明：救援首页
  */
-class RescueMainActivity : BaseActivity(), AMap.OnCameraChangeListener {
+class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
     /*高德地图类*/
     private lateinit var amap: AMap
     private var isFirstMove = true

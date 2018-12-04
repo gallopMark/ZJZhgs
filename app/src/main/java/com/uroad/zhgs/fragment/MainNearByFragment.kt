@@ -12,8 +12,10 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.RelativeLayout
 import com.uroad.zhgs.R
+import com.uroad.zhgs.R.id.flBaseContent
 import com.uroad.zhgs.activity.MyNearByActivity
 import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.BaseLocationFragment
 import kotlinx.android.synthetic.main.fragment_mainnearby.*
 
 /**
@@ -21,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_mainnearby.*
  * @create 2018/11/22
  * @describe 首页（我的附近）
  */
-class MainNearByFragment : BaseFragment() {
+class MainNearByFragment : BaseLocationFragment() {
 
     private lateinit var tollFragment: NearByTollCFragment
     private lateinit var serviceFragment: NearByServiceCFragment

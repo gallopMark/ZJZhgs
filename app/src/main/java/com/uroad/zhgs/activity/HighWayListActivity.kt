@@ -9,7 +9,7 @@ import android.util.TypedValue
 import android.view.View
 import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.R
-import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.BaseLocationActivity
 import com.uroad.zhgs.fragment.HighwayListFragment
 import kotlinx.android.synthetic.main.activity_highway_list.*
 
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_highway_list.*
  *Created by MFB on 2018/8/9.
  * 高速列表
  */
-class HighWayListActivity : BaseActivity() {
+class HighWayListActivity : BaseLocationActivity() {
     private var location: AMapLocation? = null
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_highway_list)

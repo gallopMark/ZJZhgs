@@ -4,6 +4,7 @@ import android.view.View
 import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.adapteRv.ServiceAreaAdapter
 import com.uroad.zhgs.common.BaseRefreshRvFragment
+import com.uroad.zhgs.common.BaseRefreshRvLocationFragment
 import com.uroad.zhgs.model.ServiceAreaMDL
 import com.uroad.zhgs.model.ServiceMDL
 import com.uroad.zhgs.utils.GsonUtils
@@ -13,7 +14,7 @@ import com.uroad.zhgs.webservice.WebApiService
 /**
  *Created by MFB on 2018/8/21.
  */
-class ServiceAreaFragment : BaseRefreshRvFragment() {
+class ServiceAreaFragment : BaseRefreshRvLocationFragment() {
     private var longitude: Double = 0.toDouble()
     private var latitude: Double = 0.toDouble()
     private var index = 1

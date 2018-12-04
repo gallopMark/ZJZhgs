@@ -18,7 +18,6 @@ import com.uroad.zhgs.adaptervp.MainMenuVpAdapter
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.BindCarDialog
-import com.uroad.zhgs.enumeration.Carcategory
 import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.CarMDL
 import com.uroad.zhgs.model.sys.AppConfigMDL

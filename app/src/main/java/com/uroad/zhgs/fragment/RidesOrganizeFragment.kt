@@ -11,7 +11,7 @@ import com.uroad.mqtt.IMqttCallBack
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.RidersEditActivity
 import com.uroad.zhgs.activity.RidersDetailActivity
-import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.dialog.RidersAgreementDialog
 import com.uroad.zhgs.enumeration.NewsType
 import com.uroad.zhgs.model.HtmlMDL
@@ -31,7 +31,7 @@ import org.eclipse.paho.client.mqttv3.IMqttToken
  * @create 2018/10/9
  * @describe 车友组队
  */
-class RidesOrganizeFragment : BaseFragment() {
+class RidesOrganizeFragment : BaseLocationFragment() {
     private var location: AMapLocation? = null
     private var htmlMDL: HtmlMDL? = null
     private var isResultOk = false

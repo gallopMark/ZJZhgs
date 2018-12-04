@@ -36,7 +36,7 @@ import com.uroad.amaplib.utils.NaviUtils
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.PoiItemAdapter
-import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.BaseLocationActivity
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.helper.RouteSearchHelper
 import com.uroad.zhgs.model.PoiItemMDL
@@ -53,7 +53,7 @@ import kotlinx.android.synthetic.main.activity_maproute_search.*
  *Created by MFB on 2018/8/27.
  *  路径规划和导航
  */
-class AMapNaviSearchActivity : BaseActivity() {
+class AMapNaviSearchActivity : BaseLocationActivity() {
 
     private inner class HistoryAdapter(private val context: Context, mDatas: MutableList<String>)
         : BaseArrayRecyclerAdapter<String>(context, mDatas) {

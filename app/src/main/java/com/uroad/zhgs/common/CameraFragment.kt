@@ -13,7 +13,7 @@ import com.uroad.zhgs.dialog.MaterialDialog
  * @create 2018/11/22
  * @describe
  */
-abstract class CameraFragment : BaseFragment() {
+abstract class CameraFragment : BaseLocationFragment() {
 
     private var onRequestCameraCallback: OnRequestCameraCallback? = null
     fun hasCamera(): Boolean {

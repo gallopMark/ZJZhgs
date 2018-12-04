@@ -13,7 +13,7 @@ import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.uroad.zhgs.R
-import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.BaseLocationActivity
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.ScenicDialog
 import com.uroad.zhgs.dialog.ServiceAreaDialog
@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.activity_mynearby.*
 /**
  *Created by MFB on 2018/8/23.
  */
-class MyNearByActivity : BaseActivity() {
+class MyNearByActivity : BaseLocationActivity() {
 
     private var location: AMapLocation? = null
     private lateinit var aMap: AMap

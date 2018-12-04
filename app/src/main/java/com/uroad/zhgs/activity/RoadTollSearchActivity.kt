@@ -11,7 +11,7 @@ import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.RoadTollGSAdapter
 import com.uroad.zhgs.adapteRv.RoadTollZDAdapter
-import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.BaseLocationActivity
 import com.uroad.zhgs.helper.RoadTollSearchHelper
 import com.uroad.zhgs.model.RoadTollGSMDL
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_roadtoll_search.*
  * @create 2018/9/19
  * @describe 路径路费 高速站点查询页面
  */
-class RoadTollSearchActivity : BaseActivity() {
+class RoadTollSearchActivity : BaseLocationActivity() {
     private var type: Int = 1
     private var keyword: String = ""
     private var longitude: Double = 0.toDouble()

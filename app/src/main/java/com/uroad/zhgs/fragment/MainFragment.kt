@@ -15,6 +15,7 @@ import android.text.TextUtils
 import com.uroad.zhgs.activity.*
 import com.uroad.mqtt.IMqttCallBack
 import com.uroad.zhgs.R
+import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
 import com.uroad.zhgs.helper.AppLocalHelper
@@ -33,7 +34,7 @@ import org.eclipse.paho.client.mqttv3.IMqttToken
  * 说明：app首
  * 18802076493 a123456
  */
-class MainFragment : BaseFragment() {
+class MainFragment : BaseLocationFragment() {
     private var isLocationSuccess = false  //是否已经点位成功
     private var onMenuClickListener: OnMenuClickListener? = null
     private var longitude = CurrApplication.APP_LATLNG.longitude

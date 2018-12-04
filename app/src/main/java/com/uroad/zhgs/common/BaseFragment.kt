@@ -1,24 +1,17 @@
 package com.uroad.zhgs.common
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.amap.api.location.AMapLocation
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps.model.Poi
 import com.amap.api.navi.AmapNaviPage
 import com.amap.api.navi.AmapNaviParams
@@ -59,7 +52,7 @@ import java.lang.StringBuilder
 import java.net.URLConnection
 
 @Suppress("UNCHECKED_CAST")
-abstract class BaseFragment : Fragment(), AMapLocationListener {
+abstract class BaseFragment : Fragment() {
     lateinit var context: Activity
     private var rootView: View? = null
     open lateinit var baseParent: RelativeLayout
@@ -70,12 +63,6 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
     private var mShortToast: Toast? = null
     private var mLongToast: Toast? = null
     private var loadingDialog: LoadingDialog? = null
-    private var permissionCallback: RequestLocationPermissionCallback? = null
-    private var mLocationClient: AMapLocationClient? = null
-
-    companion object {
-        private const val CODE_PERMISSION = 0x0001
-    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -513,129 +500,6 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
         AmapNaviPage.getInstance().showRouteActivity(context, AmapNaviParams(start, null, end, AmapNaviType.DRIVER), null)
     }
 
-    fun hasLocationPermissions(): Boolean {
-        return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-    }
-
-    fun requestLocationPermissions(permissionCallback: RequestLocationPermissionCallback) {
-        this.permissionCallback = permissionCallback
-        requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION), CODE_PERMISSION)
-    }
-
-    fun applyLocationPermission(finishAfterDenied: Boolean) {
-        requestLocationPermissions(object : RequestLocationPermissionCallback {
-            override fun doAfterGrand() {
-                openLocation()
-            }
-
-            override fun doAfterDenied() {
-                var isOpen = false
-                val dialog = MaterialDialog(context)
-                dialog.setTitle(getString(R.string.dialog_default_title))
-                dialog.setMessage(getString(R.string.dismiss_location_message))
-                dialog.setNegativeButton(getString(R.string.dialog_button_cancel), object : MaterialDialog.ButtonClickListener {
-                    override fun onClick(v: View, dialog: AlertDialog) {
-                        dialog.dismiss()
-                    }
-                })
-                dialog.setPositiveButton(getString(R.string.reopen), object : MaterialDialog.ButtonClickListener {
-                    override fun onClick(v: View, dialog: AlertDialog) {
-                        isOpen = true
-                        dialog.dismiss()
-                        applyLocationPermission(finishAfterDenied)
-                    }
-                })
-                dialog.show()
-                dialog.setOnDismissListener { if (!isOpen && finishAfterDenied) context.finish() }
-            }
-        })
-    }
-
-    open fun openLocation() {
-        openLocation(null)
-    }
-
-    open fun openLocation(option: AMapLocationClientOption?) {
-        if (mLocationClient == null) {
-            val mOption: AMapLocationClientOption
-            if (option == null) {
-                mOption = AMapLocationClientOption().apply { locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy }
-            } else {
-                option.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
-                mOption = option
-            }
-            mLocationClient = AMapLocationClient(context).apply {
-                setLocationOption(mOption)
-                setLocationListener(this@BaseFragment)
-                startLocation()
-            }
-        } else {
-            mLocationClient?.startLocation()
-        }
-    }
-
-    override fun onLocationChanged(location: AMapLocation?) {
-        if (location != null && location.errorCode == AMapLocation.LOCATION_SUCCESS) {
-            afterLocation(location)
-        } else {
-            locationFailure()
-        }
-    }
-
-    open fun afterLocation(location: AMapLocation) {
-
-    }
-
-    open fun locationFailure() {
-
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            CODE_PERMISSION -> {
-                var allGranted = true
-                for (grant in grantResults) {
-                    if (grant != PackageManager.PERMISSION_GRANTED) {
-                        allGranted = false
-                        break
-                    }
-                }
-                if (allGranted) {
-                    permissionCallback?.doAfterGrand()
-                } else {
-                    permissionCallback?.doAfterDenied()
-                    for (permission in permissions) {
-                        //可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
-                        if (!shouldShowRequestPermissionRationale(permission)) {
-                            showDismissLocationDialog()
-                            break
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun isShouldShowRequestPermissionRationale(permission: String): Boolean = shouldShowRequestPermissionRationale(permission)
-
-    fun showDismissLocationDialog() {
-        showDialog(getString(R.string.rescue_main_without_location_title), getString(R.string.rescue_main_location_ban),
-                getString(R.string.dialog_button_cancel), getString(R.string.gotoSettings)
-                , object : MaterialDialog.ButtonClickListener {
-            override fun onClick(v: View, dialog: AlertDialog) {
-                dialog.dismiss()
-            }
-        }, object : MaterialDialog.ButtonClickListener {
-            override fun onClick(v: View, dialog: AlertDialog) {
-                dialog.dismiss()
-                openSettings() //引导用户至设置页手动授权
-            }
-        })
-    }
-
     fun openSettings() {
         try {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -648,7 +512,6 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
 
     override fun onDestroyView() {
         cancelRequest()
-        closeLocation()
         rxDisposables.dispose()
         mShortToast?.cancel()
         mLongToast?.cancel()
@@ -662,19 +525,5 @@ abstract class BaseFragment : Fragment(), AMapLocationListener {
                 d.dispose()
             }
         }
-    }
-
-    open fun closeLocation() {
-        mLocationClient?.let {
-            it.stopLocation()
-            it.onDestroy()
-            mLocationClient = null
-        }
-    }
-
-    interface RequestLocationPermissionCallback {
-        fun doAfterGrand()
-
-        fun doAfterDenied()
     }
 }

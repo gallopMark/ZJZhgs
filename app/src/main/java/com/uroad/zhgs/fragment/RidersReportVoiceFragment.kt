@@ -12,7 +12,7 @@ import android.view.View
 import com.amap.api.location.AMapLocation
 import com.uroad.library.rxbus.RxBus
 import com.uroad.zhgs.R
-import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.enumeration.EventType
@@ -34,7 +34,7 @@ import java.io.File
  * @create 2018/10/20
  * @describe 车友爆料（发送语音）
  */
-class RidersReportVoiceFragment : BaseFragment(), AudioButton.OnRecordListener, View.OnClickListener {
+class RidersReportVoiceFragment : BaseLocationFragment(), AudioButton.OnRecordListener, View.OnClickListener {
     private var eventtype = EventType.TRAFFIC_JAM.code
     private var longitude: Double = CurrApplication.APP_LATLNG.longitude
     private var latitude: Double = CurrApplication.APP_LATLNG.latitude

@@ -7,16 +7,13 @@ import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
-import com.amap.api.col.sln3.it
 import com.amap.api.location.AMapLocation
 import com.uroad.library.rxbus.RxBus
 import com.uroad.library.utils.DisplayUtils
-import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.RidersReportPicAdapter
-import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.enumeration.EventType
 import com.uroad.zhgs.model.*
@@ -24,18 +21,12 @@ import com.uroad.zhgs.photopicker.data.ImagePicker
 import com.uroad.zhgs.photopicker.ui.ImageGridActivity
 import com.uroad.zhgs.rxbus.MessageEvent
 import com.uroad.zhgs.utils.GsonUtils
-import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
-import com.uroad.zhgs.webservice.upload.FileUploadObserver
 import com.uroad.zhgs.webservice.upload.UploadFileCallback
 import com.uroad.zhgs.widget.GridSpacingItemDecoration
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_ridersreport_default.*
-import okhttp3.ResponseBody
 import java.io.File
 
 /**
@@ -43,7 +34,7 @@ import java.io.File
  * @create 2018/10/20
  * @describe 车友爆料（文字图片发布）
  */
-class RidersReportDefaultFragment : BaseFragment(), View.OnClickListener {
+class RidersReportDefaultFragment : BaseLocationFragment(), View.OnClickListener {
     private var eventtype = EventType.TRAFFIC_JAM.code
     private var longitude: Double = CurrApplication.APP_LATLNG.longitude
     private var latitude: Double = CurrApplication.APP_LATLNG.latitude

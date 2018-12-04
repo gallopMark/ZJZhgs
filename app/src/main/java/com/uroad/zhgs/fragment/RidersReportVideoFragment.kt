@@ -13,6 +13,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoActivity
 import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.enumeration.EventType
 import com.uroad.zhgs.model.RoadMDL
@@ -30,7 +31,7 @@ import java.io.File
  * @create 2018/10/20
  * @describe 车友爆料（发送语音、文字）
  */
-class RidersReportVideoFragment : BaseFragment(), View.OnClickListener {
+class RidersReportVideoFragment : BaseLocationFragment(), View.OnClickListener {
     private var eventtype = EventType.TRAFFIC_JAM.code
     private var longitude: Double = CurrApplication.APP_LATLNG.longitude
     private var latitude: Double = CurrApplication.APP_LATLNG.latitude

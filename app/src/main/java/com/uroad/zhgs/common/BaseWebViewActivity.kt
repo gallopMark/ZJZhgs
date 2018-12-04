@@ -19,7 +19,7 @@ import com.uroad.library.utils.NetworkUtils
 /**
  *Created by MFB on 2018/8/2.
  */
-abstract class BaseWebViewActivity : BaseActivity() {
+abstract class BaseWebViewActivity : BaseLocationActivity() {
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_base_webview)

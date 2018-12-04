@@ -9,14 +9,14 @@ import android.util.TypedValue
 import android.view.View
 import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.R
-import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.common.BaseLocationActivity
 import com.uroad.zhgs.fragment.*
 import kotlinx.android.synthetic.main.activity_mynearby_tab.*
 
 /**
  *Created by MFB on 2018/8/23.
  */
-class MyNearByTabActivity : BaseActivity() {
+class MyNearByTabActivity : BaseLocationActivity() {
 
     override fun setUp(savedInstanceState: Bundle?) {
         withTitle(resources.getString(R.string.mynearby_title))

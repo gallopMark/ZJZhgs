@@ -43,7 +43,7 @@ import com.uroad.mqtt.MqttService
 import com.uroad.share.tencent.QQShareManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.CurrApplication
-import com.uroad.zhgs.common.ThemeStyleActivity
+import com.uroad.zhgs.common.ThemeStyleLocationActivity
 import com.uroad.zhgs.dialog.RidersInvitingDialog
 import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.dialog.RidersTokenInvitingDialog
@@ -69,7 +69,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
  * @create 2018/10/18
  * @describe 车队聊天页面
  */
-class RidersDetailActivity : ThemeStyleActivity() {
+class RidersDetailActivity : ThemeStyleLocationActivity() {
     private lateinit var aMap: AMap
     private var location: AMapLocation? = null
     private var toPlaceMarker: Marker? = null  //目的地marker

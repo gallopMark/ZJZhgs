@@ -4,7 +4,6 @@ import android.os.*
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
-import com.tencent.smtt.export.external.interfaces.ClientCertRequest
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
 import com.tencent.smtt.sdk.WebChromeClient
 import com.tencent.smtt.sdk.WebView
