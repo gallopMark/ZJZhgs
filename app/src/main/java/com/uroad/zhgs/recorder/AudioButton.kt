@@ -16,7 +16,7 @@ import com.uroad.zhgs.common.CurrApplication
 class AudioButton : Button, AudioManager.AudioStageListener, View.OnClickListener {
     private val mContext: Context
     private val mAudioManager: AudioManager
-    private lateinit var mStateHandler: StateHandler
+    private var mStateHandler: StateHandler
     // 正在录音标记
     private var isRecording = false
     //当前录音时长

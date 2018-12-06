@@ -52,16 +52,20 @@ class MainSubscribeFragment : BaseFragment() {
             setOnPageTouchListener(object : UserSubscribePageAdapter.OnPageTouchListener {
                 override fun onPageClick(position: Int, mdl: SubscribeMDL) {
                     if (position in 0 until mdLs.size) {
-                        val bundle = Bundle()
-                        bundle.putBoolean("fromHome", true)
                         if (mdl.getSubType() == SubscribeMDL.SubType.TrafficJam.code) {
-                            bundle.putSerializable("mdl", mdl.getTrafficJamMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
-                            openActivity(RoadNavigationActivity::class.java, bundle)
+                            openActivity(RoadNavigationActivity::class.java, Bundle().apply {
+                                putBoolean("fromHome", true)
+                                putSerializable("mdl", mdl.getTrafficJamMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
+                            })
                         } else if (mdl.getSubType() == SubscribeMDL.SubType.Control.code
                                 || mdl.getSubType() == SubscribeMDL.SubType.Emergencies.code
-                                || mdl.getSubType() == SubscribeMDL.SubType.Planned.code) {
-                            bundle.putSerializable("mdl", mdl.getEventMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
-                            openActivity(RoadNavigationActivity::class.java, bundle)
+                                || mdl.getSubType() == SubscribeMDL.SubType.Planned.code
+                                || mdl.getSubType() == SubscribeMDL.SubType.BadWeather.code
+                                || mdl.getSubType() == SubscribeMDL.SubType.TrafficIncident.code) {
+                            openActivity(RoadNavigationActivity::class.java, Bundle().apply {
+                                putBoolean("fromHome", true)
+                                putSerializable("mdl", mdl.getEventMDL().apply { if (subscribestatus != 1) subscribestatus = 1 })
+                            })
                         } else if (mdl.getSubType() == SubscribeMDL.SubType.RescuePay.code) {
                             openActivity(RescuePayActivity::class.java, Bundle().apply { putString("rescueid", mdl.dataid) })
                         } else if (mdl.getSubType() == SubscribeMDL.SubType.RescueProgress.code) {
