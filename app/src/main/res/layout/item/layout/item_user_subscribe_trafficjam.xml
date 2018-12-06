@@ -10,8 +10,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:drawablePadding="@dimen/margin_5"
         android:drawableTop="@mipmap/ic_delete_red"
+        android:drawablePadding="@dimen/margin_5"
         android:gravity="center"
         android:padding="@dimen/margin_20"
         android:text="@string/delete"
@@ -54,54 +54,35 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginRight="@dimen/margin_10"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvEventName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:ellipsize="end"
+                            android:maxLines="1"
                             android:textColor="@color/appTextColor"
                             android:textSize="@dimen/font_16" />
 
                         <TextView
-                            android:id="@+id/tvStatus"
+                            android:id="@+id/tvTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="@dimen/margin_5"
-                            android:paddingBottom="@dimen/margin_2"
-                            android:paddingLeft="@dimen/margin_5"
-                            android:paddingRight="@dimen/margin_5"
-                            android:paddingTop="@dimen/margin_2"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/font_12" />
-
-                        <TextView
-                            android:id="@+id/tvUpdateTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="@dimen/margin_5"
-                            android:textColor="@color/darkgrey"
+                            android:layout_marginTop="@dimen/margin_3"
+                            android:textColor="@color/grey"
                             android:textSize="@dimen/font_14" />
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_3"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/font_14" />
                 </LinearLayout>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_1"
-                android:layout_marginBottom="@dimen/margin_5"
                 android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_5"
                 android:background="@color/color_f7" />
 
             <TextView

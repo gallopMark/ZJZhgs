@@ -91,14 +91,14 @@ class UserSubscribeAdapter(private val context: Context, mDatas: MutableList<Sub
     private fun convertTraffic(holder: BaseRecyclerAdapter.RecyclerHolder, t: SubscribeMDL) {
         holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_event_yd_p)
         holder.setText(R.id.tvEventName, t.eventstatus)
-        if (TextUtils.isEmpty(t.statusname)) {
-            holder.setVisibility(R.id.tvStatus, false)
-        } else {
-            holder.setVisibility(R.id.tvStatus, true)
-            holder.setText(R.id.tvStatus, t.statusname)
-            holder.setBackgroundColor(R.id.tvStatus, t.getStatusColor(context))
-        }
-        holder.setText(R.id.tvUpdateTime, t.getUpdateTime())
+//        if (TextUtils.isEmpty(t.statusname)) {
+//            holder.setVisibility(R.id.tvStatus, false)
+//        } else {
+//            holder.setVisibility(R.id.tvStatus, true)
+//            holder.setText(R.id.tvStatus, t.statusname)
+//            holder.setBackgroundColor(R.id.tvStatus, t.getStatusColor(context))
+//        }
+//        holder.setText(R.id.tvUpdateTime, t.getUpdateTime())
         holder.setText(R.id.tvTitle, t.roadtitle)
         holder.setText(R.id.tvContent, t.content)
         holder.setTypeface(R.id.tvOccTime, typeface)

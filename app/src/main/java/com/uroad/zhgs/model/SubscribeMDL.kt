@@ -7,14 +7,11 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.AbsoluteSizeSpan
-import com.amap.api.col.sln3.it
 import com.uroad.zhgs.R
-import com.uroad.zhgs.enumeration.EventType
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.utils.TimeUtil
 import java.text.SimpleDateFormat
 import java.util.*
-import android.text.format.DateFormat.getDateFormat
 
 
 /**
@@ -75,7 +72,7 @@ class SubscribeMDL {
     var statusname: String? = null
     var statuscolor: String? = null
     var updatetime: String? = null
-    var isuseful:Int?=0
+    var isuseful: Int? = 0
     /*1170004 拥堵 显示格式跟拥堵详情一致
     * "eventid": "330515349170521",
 		"shortname": "练杭高速",
@@ -136,6 +133,8 @@ eventtype	事件类型
             if (it == MapDataType.TRAFFIC_JAM.code) return R.mipmap.ic_menu_event_yd_p
             if (it == MapDataType.CONSTRUCTION.code) return R.mipmap.ic_menu_event_shig_p
             if (it == MapDataType.CONTROL.code) return R.mipmap.ic_menu_event_gz_p
+            if (it == MapDataType.BAD_WEATHER.code) return R.mipmap.ic_menu_event_eltq_p
+            if (it == MapDataType.TRAFFIC_INCIDENT.code) return R.mipmap.ic_menu_event_jtsj_p
         }
         return 0
     }
@@ -310,6 +309,14 @@ eventtype	事件类型
             SubscribeMDL.SubType.Emergencies.code -> {
                 markerIcon = R.mipmap.ic_marker_sg_icon
                 markerBigIco = R.mipmap.ic_marker_sg_big_icon
+            }
+            SubscribeMDL.SubType.BadWeather.code -> {
+                markerIcon = R.mipmap.ic_marker_eltq_icon
+                markerBigIco = R.mipmap.ic_marker_eltq_big_icon
+            }
+            SubscribeMDL.SubType.TrafficIncident.code -> {
+                markerIcon = R.mipmap.ic_marker_jtsj_icon
+                markerBigIco = R.mipmap.ic_marker_jtsj_big_icon
             }
             else -> {
                 markerIcon = R.mipmap.ic_marker_shig_icon
