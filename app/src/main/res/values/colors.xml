@@ -58,4 +58,7 @@
     <color name="color_normal">#dfa42c</color>
 
     <color name="myHarvestTab">#fff601</color>
+
+    <color name="notice_bg">#FCF7E7</color>
+    <color name="notice_textColor"> #EE8B32</color>
 </resources>

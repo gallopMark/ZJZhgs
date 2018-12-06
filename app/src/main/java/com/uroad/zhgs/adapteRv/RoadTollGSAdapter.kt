@@ -20,31 +20,20 @@ class RoadTollGSAdapter(context: Context, mDatas: MutableList<RoadTollGSMDL>)
     private val colorF7 = ContextCompat.getColor(context, R.color.color_f7)
 
     private var selectPos: Int = 0
-    override fun getItemViewType(position: Int): Int {
-        return mDatas[position].type
-    }
 
-    override fun bindView(viewType: Int): Int {
-        if (viewType == 0) return R.layout.item_roadtoll_gshis
-        return R.layout.item_roadtoll_gs
-    }
+    override fun bindView(viewType: Int): Int = R.layout.item_roadtoll_gs
 
     override fun onBindHoder(holder: RecyclerHolder, t: RoadTollGSMDL, position: Int) {
-        when (holder.itemViewType) {
-            0 -> holder.setText(R.id.tv, t.shortname)
-            else -> {
-                holder.setText(R.id.tv, t.shortname)
-                if (position == selectPos) {
-                    holder.setVisibility(R.id.ivSelect, View.VISIBLE)
-                    holder.setTextColor(R.id.tv, colorBlack)
-                    holder.itemView.setBackgroundColor(colorFC)
-                } else {
-                    holder.setVisibility(R.id.ivSelect, View.INVISIBLE)
-                    holder.setTextColor(R.id.tv, colorGray)
-                    holder.itemView.setBackgroundColor(colorF7)
-                }
-            }
+        if (position == selectPos) {
+            holder.setVisibility(R.id.ivSelect, View.VISIBLE)
+            holder.setTextColor(R.id.tv, colorBlack)
+            holder.itemView.setBackgroundColor(colorFC)
+        } else {
+            holder.setVisibility(R.id.ivSelect, View.INVISIBLE)
+            holder.setTextColor(R.id.tv, colorGray)
+            holder.itemView.setBackgroundColor(colorF7)
         }
+        holder.setText(R.id.tv, t.shortname)
     }
 
     fun setSelectPos(position: Int) {

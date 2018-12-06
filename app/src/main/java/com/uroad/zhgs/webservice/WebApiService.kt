@@ -752,6 +752,15 @@ class WebApiService {
             put("useruuid", useruuid)
             put("activityid", activityid)
         }
+
+        /*站点管制详情*/
+        const val POI_SITE_CONTROL = "getPoiControlDetails"
+
+        fun poiSiteControlParams(stationcode: String?, longitude: Double, latitude: Double) = getBaseParams().apply {
+            put("stationcode", stationcode)
+            put("longitude", longitude.toString())
+            put("latitude", latitude.toString())
+        }
     }
 
 }

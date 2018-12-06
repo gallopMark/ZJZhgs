@@ -62,10 +62,15 @@ class HighwayMDL {
 
         fun getIcon(): Int {
             eventtype?.let {
-                if (it == "1006001") return R.mipmap.ic_menu_event_sg_p
-                if (it == "1006002") return R.mipmap.ic_menu_event_shig_p
-                if (it == "1006003") return R.mipmap.ic_menu_event_gz_p
-                if (it == "1006004") return R.mipmap.ic_menu_jtss_spot_p
+                if (it == MapDataType.ACCIDENT.code) return R.mipmap.ic_menu_event_sg_p
+                if (it == MapDataType.TRAFFIC_JAM.code) return R.mipmap.ic_menu_event_yd_p
+                if (it == MapDataType.CONSTRUCTION.code) return R.mipmap.ic_menu_event_shig_p
+                if (it == MapDataType.CONTROL.code) return R.mipmap.ic_menu_event_gz_p
+                if (it == MapDataType.BAD_WEATHER.code) return R.mipmap.ic_menu_event_eltq_p
+                if (it == MapDataType.TRAFFIC_INCIDENT.code) return R.mipmap.ic_menu_event_jtsj_p
+                if (it == MapDataType.SNAPSHOT_RESPONSE.code) return R.mipmap.ic_menu_jtss_spot_p
+                if (it == MapDataType.SITE_CONTROL.code) return R.mipmap.ic_menu_event_zdgz_p
+                if (it == MapDataType.SERVICE_AREA.code) return R.mipmap.ic_menu_jtss_service_p
             }
             return 0
         }

@@ -20,6 +20,7 @@ class LocationMDL {
     var n_code: String? = null
 
     class Phone {
+        var itemType = 1
         var phone: String? = null
         var phonename: String? = null
     }

@@ -134,6 +134,9 @@
         <activity android:name=".activity.NewsMainActivity" />
 
         <activity
+            android:name=".activity.NoticeListActivity"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".activity.RoadNavigationActivity"
             android:launchMode="singleTop"
             android:theme="@style/TranslucentTheme"

@@ -1,5 +1,7 @@
 package com.uroad.zhgs.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.util.ArrayMap
 import android.support.v7.widget.LinearLayoutManager
@@ -68,7 +70,7 @@ class HighwayPreviewFragment : BasePageFragment() {
                 getCCTVDetailsById(cctvIds)
             }
         })
-        tvChange.setOnClickListener { _ ->
+        tvChange.setOnClickListener {
             val text = tvPoiname.text.split(" - ")
             if (text.size >= 2) {
                 val name = "${text[1]} - ${text[0]}"
@@ -193,11 +195,11 @@ class HighwayPreviewFragment : BasePageFragment() {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
                     mdl?.rtmpIp?.let {
-                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                        openActivityForResult(VideoPlayerActivity::class.java, Bundle().apply {
                             putBoolean("isLive", true)
                             putString("url", it)
                             putString("title", shortName)
-                        })
+                        }, 345)
                     }
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
@@ -209,5 +211,12 @@ class HighwayPreviewFragment : BasePageFragment() {
                 onHttpError(e)
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 345 && resultCode == Activity.RESULT_OK) {
+            showLongToast("播放结束")
+        }
     }
 }

@@ -6,7 +6,6 @@ package com.uroad.zhgs.model
  * @describe
  */
 class RoadTollGSMDL {
-    var type: Int = 1
     var roadoldid: String? = null
     var shortname: String? = null
     var pois: MutableList<Poi>? = null

@@ -1,5 +1,7 @@
 package com.uroad.zhgs.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
@@ -56,11 +58,11 @@ class HighwaySnapFragment : BasePageRefreshRvFragment() {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
                     mdl?.rtmpIp?.let {
-                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                        openActivityForResult(VideoPlayerActivity::class.java, Bundle().apply {
                             putBoolean("isLive", true)
                             putString("url", it)
                             putString("title", shortName)
-                        })
+                        }, 345)
                     }
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
@@ -116,5 +118,12 @@ class HighwaySnapFragment : BasePageRefreshRvFragment() {
 
     override fun pullToLoadMore() {
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 345 && resultCode == Activity.RESULT_OK) {
+            showLongToast("播放结束")
+        }
     }
 }

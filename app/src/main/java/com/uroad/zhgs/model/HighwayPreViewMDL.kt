@@ -144,6 +144,8 @@ class HighwayPreViewMDL {
                     if (it == MapDataType.TRAFFIC_JAM.code) return R.mipmap.ic_menu_event_yd_p
                     if (it == MapDataType.CONSTRUCTION.code) return R.mipmap.ic_menu_event_shig_p
                     if (it == MapDataType.CONTROL.code) return R.mipmap.ic_menu_event_gz_p
+                    if (it == MapDataType.BAD_WEATHER.code) return R.mipmap.ic_menu_event_eltq_p
+                    if (it == MapDataType.TRAFFIC_INCIDENT.code) return R.mipmap.ic_menu_event_jtsj_p
                 }
                 return 0
             }

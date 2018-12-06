@@ -84,8 +84,8 @@
             android:layout_marginTop="@dimen/margin_15"
             android:background="@color/color_f7"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_15"
-            android:paddingTop="@dimen/margin_15">
+            android:paddingTop="@dimen/margin_15"
+            android:paddingBottom="@dimen/margin_15">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvPics"
@@ -100,25 +100,27 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_15"
                 android:textColor="@color/appTextColor"
-                android:textSize="@dimen/font_16" />
+                android:textSize="@dimen/font_16"
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
             android:text="@string/rescue_fee_tips"
-            android:textSize="@dimen/font_14"
-            android:textColor="@color/colorOrange" />
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/font_14" />
 
         <TextView
+            android:id="@+id/tvRemarkTips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginRight="@dimen/margin_10"
             android:text="@string/rescue_fee_charge_basis"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/font_14" />
@@ -128,30 +130,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginRight="@dimen/margin_10"
             android:textColor="@color/darkgrey"
             android:textSize="@dimen/font_14" />
 
         <TextView
+            android:id="@+id/tvNoticeTips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginRight="@dimen/margin_10"
             android:text="@string/rescue_fee_notice"
             android:textColor="@color/colorAccent"
-            android:textSize="@dimen/font_14" />
+            android:textSize="@dimen/font_14"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvNotice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginRight="@dimen/margin_10"
             android:textColor="@color/darkgrey"
-            android:textSize="@dimen/font_14" />
+            android:textSize="@dimen/font_14"
+            android:visibility="gone" />
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

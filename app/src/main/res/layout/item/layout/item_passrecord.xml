@@ -41,17 +41,6 @@
                 android:maxLines="1"
                 android:textColor="@color/appTextColor"
                 android:textSize="@dimen/font_14" />
-
-            <TextView
-                android:id="@+id/tvMileage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_4"
-                android:drawableLeft="@mipmap/ic_point_mileage"
-                android:drawablePadding="@dimen/margin_5"
-                android:gravity="center"
-                android:textColor="@color/appTextColor"
-                android:textSize="@dimen/font_14" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +51,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvMoney"
+                android:id="@+id/tvMileage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/appTextColor"
@@ -71,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/pass_money"
+                android:text="@string/pass_mileage"
                 android:textColor="@color/color_99"
                 android:textSize="@dimen/font_14" />
         </LinearLayout>

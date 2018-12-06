@@ -14,7 +14,6 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
 import kotlinx.android.synthetic.main.activity_videoplay.*
-import org.jetbrains.anko.startActivity
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import java.lang.ref.WeakReference
 
@@ -43,6 +42,7 @@ class VideoPlayerActivity : BaseActivity() {
                         if (activity.isPlaying) activity.times--
                         sendEmptyMessageDelayed(CODE_MSG, 1000)
                     } else {
+                        activity.setResult(RESULT_OK)
                         activity.finish()
                     }
                 }
@@ -104,11 +104,18 @@ class VideoPlayerActivity : BaseActivity() {
     }
 
     private fun openVideoFromX5Web() {
-        openActivity(X5WebViewActivity::class.java, Bundle().apply {
+        openActivityForResult(X5WebViewActivity::class.java, Bundle().apply {
             putString("url", url)
             putString("title", title)
             putBoolean("isSnapShot", true)
-        })
+        }, 345)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 345 && resultCode == RESULT_OK) {
+            setResult(RESULT_OK)
+        }
         finish()
     }
 

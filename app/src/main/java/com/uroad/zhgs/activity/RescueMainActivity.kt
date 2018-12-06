@@ -28,6 +28,7 @@ import com.uroad.zhgs.dialog.MaterialDialog
 import kotlinx.android.synthetic.main.activity_rescue_main.*
 import com.uroad.zhgs.model.LocationMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
+import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
@@ -129,10 +130,9 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
     }
 
     override fun setListener() {
-        ivLocation.setOnClickListener { _ -> currLocation?.let { amap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.latitude, it.longitude), amap.cameraPosition.zoom, 0f, 0f))) } }
+        ivLocation.setOnClickListener { currLocation?.let { location -> amap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), amap.cameraPosition.zoom, 0f, 0f))) } }
         btTopPostage.setOnClickListener { openActivity(RescueFeeActivity::class.java) }
         btRescueCall.setOnClickListener { PhoneUtils.call(this@RescueMainActivity, getString(R.string.rescue_default_phone)) }
-        tvMorePhone.setOnClickListener { openActivity(HighWayHotlineActivity::class.java) }
     }
 
     override fun onResume() {
@@ -142,7 +142,7 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
     }
 
     override fun afterLocation(location: AMapLocation) {
-        //  amap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), amap.cameraPosition.zoom, 0f, 0f)))
+        amap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude),19f, 0f, 0f)))
         currLocation = location
         request(location.longitude, location.latitude)
         closeLocation()
@@ -157,7 +157,7 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
             override fun onPreExecute() {
                 startAnim()
                 tvCurrLocation.visibility = View.GONE
-                llInfo.visibility = View.INVISIBLE
+                llInfo.visibility = View.GONE
                 rlOutLine.visibility = View.GONE
             }
 
@@ -195,7 +195,7 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
             //电话求助
             btCallHelp.setOnClickListener { PhoneUtils.call(this@RescueMainActivity, getString(R.string.rescue_default_phone)) }
             //自助救援
-            btRescue.setOnClickListener { _ ->
+            btRescue.setOnClickListener {
                 showTipsDialog(getString(R.string.dialog_default_title),
                         "本功能预计年底开放，敬请期待", getString(R.string.i_got_it))
 //                openActivityForResult(RescueRequestActivity::class.java, Bundle().apply {
@@ -210,7 +210,7 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
 //                }, 1)
             }
         } else {
-            llInfo.visibility = View.INVISIBLE
+            llInfo.visibility = View.GONE
             tvCurrLocation.visibility = View.GONE
             rlOutLine.visibility = View.VISIBLE
             outLine(mdl)
@@ -245,7 +245,7 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
     private fun outLine(mdl: LocationMDL) {
         val text = resources.getString(R.string.rescue_main_outline_service_tips)
         val ss = SpannableString(text).apply {
-            val start = text.indexOf("请")
+            val start = text.indexOf("请") + 1
             val end = text.length
             val clickSpan = object : ClickableSpan() {
                 override fun onClick(view: View?) {
@@ -262,7 +262,19 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
         tvOutLineTips.text = ss
         val list = ArrayList<LocationMDL.Phone>()
         mdl.phone?.let { list.addAll(it) }
-        rvPhone.adapter = PhoneAdapter(this, list)
+        list.add(LocationMDL.Phone().apply {
+            itemType = 2
+            phonename = "更多电话"
+        })
+        rvPhone.adapter = PhoneAdapter(this, list).apply {
+            setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
+                override fun onItemClick(adapter: BaseRecyclerAdapter, holder: BaseRecyclerAdapter.RecyclerHolder, view: View, position: Int) {
+                    if ((position in 0 until list.size) && list[position].itemType == 2) {
+                        openActivity(HighWayHotlineActivity::class.java)
+                    }
+                }
+            })
+        }
     }
 
     private class HelpMDL {
@@ -271,14 +283,17 @@ class RescueMainActivity : BaseLocationActivity(), AMap.OnCameraChangeListener {
 
     private inner class PhoneAdapter(context: Context, mDatas: MutableList<LocationMDL.Phone>)
         : BaseArrayRecyclerAdapter<LocationMDL.Phone>(context, mDatas) {
-        override fun bindView(viewType: Int): Int = R.layout.item_rescue_phone
+        override fun getItemViewType(position: Int): Int = mDatas[position].itemType
+        override fun bindView(viewType: Int): Int = if (viewType == 1) R.layout.item_rescue_phone else R.layout.item_rescuephone_more
 
         override fun onBindHoder(holder: RecyclerHolder, t: LocationMDL.Phone, position: Int) {
-            holder.setText(R.id.tvPhoneName, t.phonename)
-            holder.setText(R.id.tvPhone, t.phone)
-            holder.setOnClickListener(R.id.ivCall, View.OnClickListener { if (!TextUtils.isEmpty(t.phone)) PhoneUtils.call(this@RescueMainActivity, t.phone) })
-            if (position == itemCount - 1) holder.setVisibility(R.id.vUnderLine, false)
-            else holder.setVisibility(R.id.vUnderLine, true)
+            if (holder.itemViewType == 1) {
+                holder.setText(R.id.tvPhoneName, t.phonename)
+                holder.setText(R.id.tvPhone, t.phone)
+                holder.setOnClickListener(R.id.ivCall, View.OnClickListener { if (!TextUtils.isEmpty(t.phone)) PhoneUtils.call(this@RescueMainActivity, t.phone) })
+            } else {
+                holder.setText(R.id.tvMore, t.phonename)
+            }
         }
     }
 

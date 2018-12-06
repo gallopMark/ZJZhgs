@@ -134,7 +134,6 @@ class RoadTollSearchActivity : BaseLocationActivity() {
         }
         if (list.size > 0) {
             historyMDL = RoadTollGSMDL().apply {
-                type = 0
                 shortname = "我的历史"
                 pois = list
             }
@@ -201,7 +200,6 @@ class RoadTollSearchActivity : BaseLocationActivity() {
         if (gsData.size > 0) {
             llDefault.visibility = View.VISIBLE
             tvEmpty.visibility = View.GONE
-            gsData.addAll(mdLs)
             gsAdapter.setSelectPos(0)
             gsData[0].pois?.let {
                 zdData.addAll(it)

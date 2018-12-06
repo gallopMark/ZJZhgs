@@ -50,7 +50,7 @@ class EventMDL : ClusterItem, MutilItem, Serializable {
     var statusname: String? = null
     var statuscolor: String? = null
     var updatetime: String? = null
-    var isuseful:Int?=0
+    var isuseful: Int? = 0
 
     var markerIcon: Int = 0
     var markerBigIco: Int = 0
@@ -81,7 +81,8 @@ class EventMDL : ClusterItem, MutilItem, Serializable {
             if (it == MapDataType.TRAFFIC_JAM.code) return R.mipmap.ic_menu_event_yd_p
             if (it == MapDataType.CONSTRUCTION.code) return R.mipmap.ic_menu_event_shig_p
             if (it == MapDataType.CONTROL.code) return R.mipmap.ic_menu_event_gz_p
-            if (it == MapDataType.SNAPSHOT.code) return R.mipmap.ic_menu_jtss_spot_p
+            if (it == MapDataType.BAD_WEATHER.code) return R.mipmap.ic_menu_event_eltq_p
+            if (it == MapDataType.TRAFFIC_INCIDENT.code) return R.mipmap.ic_menu_event_jtsj_p
         }
         return 0
     }

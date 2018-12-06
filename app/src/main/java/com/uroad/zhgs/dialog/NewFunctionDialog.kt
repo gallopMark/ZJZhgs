@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -40,9 +41,7 @@ class NewFunctionDialog(private val context: Activity)
             val btIKnow = contentView.findViewById<Button>(R.id.btIKnow)
             ivPic.setImageResource(R.mipmap.ic_new_functions_bg)
             btIKnow.setOnClickListener { dismiss() }
-            val width = (DisplayUtils.getWindowWidth(context) * 0.75).toInt()
-            val height = (DisplayUtils.getWindowHeight(context) * 0.75).toInt()
-            window.setLayout(width, height)
+            window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
             window.setGravity(Gravity.CENTER)
         }
     }

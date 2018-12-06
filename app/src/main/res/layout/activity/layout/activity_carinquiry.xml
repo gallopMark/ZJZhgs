@@ -31,9 +31,9 @@
                 android:layout_marginBottom="@dimen/margin_10"
                 android:background="@drawable/bg_corners_white_5dp"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/margin_30"
+                android:paddingLeft="@dimen/margin_10"
                 android:paddingTop="@dimen/margin_10"
-                android:paddingRight="@dimen/margin_30"
+                android:paddingRight="@dimen/margin_10"
                 android:paddingBottom="@dimen/margin_10">
 
                 <TextView
@@ -139,8 +139,6 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_15"
-                            android:layout_marginRight="@dimen/margin_10"
                             android:lineSpacingExtra="@dimen/margin_3"
                             android:text="@string/carInquiry_bottom_tips"
                             android:textColor="@color/blow_gray"

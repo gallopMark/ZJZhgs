@@ -3,6 +3,7 @@ package com.uroad.zhgs.activity
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
+import android.view.View
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
@@ -109,7 +110,14 @@ class RescueFeeActivity : BaseActivity() {
             workTypes.addAll(it)
             picAdapter.notifyDataSetChanged()
         }
-        tvRemark.text = mdl.chargebasis
+        if (!TextUtils.isEmpty(mdl.chargebasis)) {
+            tvRemarkTips.visibility = View.VISIBLE
+            tvRemark.visibility = View.VISIBLE
+            tvRemark.text = mdl.chargebasis
+        } else {
+            tvRemarkTips.visibility = View.GONE
+            tvRemark.visibility = View.GONE
+        }
         typeAdapter.setOnItemSelectedListener(object : RFCarCategoryAdapter.OnItemSelectedListener {
             override fun onItemSelected(position: Int) {
                 types[position].dictcode?.let { cartypeCode = it }
@@ -139,6 +147,9 @@ class RescueFeeActivity : BaseActivity() {
     private fun clearText() {
         tvMoney.text = ""
         tvNotice.text = ""
+        tvMoney.visibility = View.GONE
+        tvNoticeTips.visibility = View.GONE
+        tvNotice.visibility = View.GONE
     }
 
     //获取资费内容
@@ -153,16 +164,29 @@ class RescueFeeActivity : BaseActivity() {
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, RescueFeeContentMDL::class.java)
-                    tvMoney.text = mdl?.money
-                    tvNotice.text = mdl?.notice
+                    if (mdl == null) onJsonParseError()
+                    else updateText(mdl)
                 } else {
+                    tvMoney.visibility = View.VISIBLE
                     tvMoney.text = GsonUtils.getMsg(data)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-
+                onHttpError(e)
             }
         })
+    }
+
+    private fun updateText(mdl: RescueFeeContentMDL) {
+        if (!TextUtils.isEmpty(mdl.money)) {
+            tvMoney.visibility = View.VISIBLE
+            tvMoney.text = mdl.money
+        }
+        if (!TextUtils.isEmpty(mdl.notice)) {
+            tvNoticeTips.visibility = View.VISIBLE
+            tvNotice.visibility = View.VISIBLE
+            tvNotice.text = mdl.notice
+        }
     }
 }

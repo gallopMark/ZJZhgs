@@ -1,10 +1,13 @@
 package com.uroad.zhgs.fragment
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.util.ArrayMap
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -51,11 +54,13 @@ class NavStandardFragment : BaseLocationFragment() {
     private var fromHome: Boolean = false
     private var isOpenLocation = false
     private var location: AMapLocation? = null
+    private var longitude: Double = 0.toDouble()
+    private var latitude: Double = 0.toDouble()
     private lateinit var aMap: AMap
     private lateinit var myLocationView: View
     private lateinit var animationDrawable: AnimationDrawable
     private var targetLatLng: LatLng? = null
-    private val map = ArrayMap<Int, Boolean>()
+    private val checkMap = ArrayMap<String, Boolean>()
     private var mClusterSize: Int = 0
     private var mClusterDistance: Double = 0.0
     private val clusterMap = ArrayMap<String, ArrayList<CustomClusterItem>>()
@@ -178,6 +183,14 @@ class NavStandardFragment : BaseLocationFragment() {
                         markerIcon = R.mipmap.ic_marker_sg_icon
                         markerBigIcon = R.mipmap.ic_marker_sg_big_icon
                     }
+                    SubscribeMDL.SubType.TrafficIncident.code -> {
+                        markerIcon = R.mipmap.ic_marker_jtsj_icon
+                        markerBigIcon = R.mipmap.ic_marker_jtsj_big_icon
+                    }
+                    SubscribeMDL.SubType.BadWeather.code -> {
+                        markerIcon = R.mipmap.ic_marker_eltq_icon
+                        markerBigIcon = R.mipmap.ic_marker_eltq_big_icon
+                    }
                     else -> {
                         markerIcon = R.mipmap.ic_marker_shig_icon
                         markerBigIcon = R.mipmap.ic_marker_shig_big_icon
@@ -212,18 +225,28 @@ class NavStandardFragment : BaseLocationFragment() {
     override fun afterLocation(location: AMapLocation) {
         isOpenLocation = true
         this.location = location
+        this.longitude = location.longitude
+        this.latitude = location.latitude
         this.targetLatLng = LatLng(location.latitude, location.longitude)
         aMap.addMarker(createOptions(LatLng(location.latitude, location.longitude), location.city, location.address, BitmapDescriptorFactory.fromView(myLocationView)))
         if (!fromHome) {
             aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), aMap.cameraPosition.zoom, 0f, 0f)))
-            //路况导航-地图模式默认开启图层：事故、管制、施工、拥堵
-//            aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(CurrApplication.APP_LATLNG, aMap.cameraPosition.zoom, 0f, 0f)))
-            onEvent(1, true)
-            onEvent(2, true)
-            onEvent(4, true)
-            onEvent(5, true)
+            loadDefault()
         }
         closeLocation()
+    }
+
+    override fun locationFailure() {
+        loadDefault()
+    }
+
+    //路况导航-地图模式默认开启图层：事故、管制、拥堵、恶劣天气、监控
+    private fun loadDefault() {
+        getMapDataByType(MapDataType.ACCIDENT.code)
+        getMapDataByType(MapDataType.CONTROL.code)
+        getMapDataByType(MapDataType.TRAFFIC_JAM.code)
+        getMapDataByType(MapDataType.BAD_WEATHER.code)
+        getMapDataByType(MapDataType.SNAPSHOT.code)
     }
 
     //启动帧动画
@@ -259,120 +282,30 @@ class NavStandardFragment : BaseLocationFragment() {
         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nowLocation, scaleValue))
     }
 
-    fun onEvent(type: Int, isChecked: Boolean) {
-        map[type] = isChecked
-        when (type) {
-            1 -> {   //点击事故菜单
-                if (isChecked) {
-                    getMapDataByType(MapDataType.ACCIDENT.code)
-                } else {
-                    statusMap[MapDataType.ACCIDENT.code]?.dispose()
-                    clusterMap.remove(MapDataType.ACCIDENT.code)
-                    onReCluster()
+    fun onEvent(codeType: String, isChecked: Boolean) {
+        if (TextUtils.isEmpty(codeType)) return
+        checkMap[codeType] = isChecked
+        if (isChecked) {
+            getMapDataByType(codeType)
+        } else {
+            statusMap[codeType]?.dispose()
+            if (codeType == MapDataType.WEATHER.code) {
+                for (marker in weatherMarkers) {
+                    marker.remove() //移除当前Marker
+                    marker.destroy()
                 }
-            }
-            2 -> {  //点击管制菜单
-                if (isChecked) {
-                    getMapDataByType(MapDataType.CONTROL.code)
-                } else {
-                    statusMap[MapDataType.CONTROL.code]?.dispose()
-                    clusterMap.remove(MapDataType.CONTROL.code)
-                    onReCluster()
-                }
-            }
-            3 -> {  //点击施工菜单
-                if (isChecked) {
-                    getMapDataByType(MapDataType.CONSTRUCTION.code)
-                } else {
-                    statusMap[MapDataType.CONSTRUCTION.code]?.dispose()
-                    clusterMap.remove(MapDataType.CONSTRUCTION.code)
-                    onReCluster()
-                }
-            }
-            4 -> {  //点击拥堵菜单
-                if (isChecked) {
-                    getMapDataByType(MapDataType.TRAFFIC_JAM.code)
-                } else {
-                    statusMap[MapDataType.TRAFFIC_JAM.code]?.dispose()
-                    clusterMap.remove(MapDataType.TRAFFIC_JAM.code)
-                    onReCluster()
-                }
-            }
-            5 -> {    //点击监控菜单
-                if (isChecked) {
-                    getMapDataByType(MapDataType.SNAPSHOT.code)
-                } else {
-                    statusMap[MapDataType.SNAPSHOT.code]?.dispose()
-                    clusterMap.remove(MapDataType.SNAPSHOT.code)
-                    onReCluster()
-                }
-            }
-            6 -> {      //点击天气菜单
-                if (isChecked) {
-                    getMapDataByType(MapDataType.WEATHER.code)
-                } else {
-                    statusMap[MapDataType.WEATHER.code]?.dispose()
-                    for (marker in weatherMarkers) {
-                        marker.remove() //移除当前Marker
-                        marker.destroy()
-                    }
-                }
-            }
-            7 -> {   //点击维修店
-                if (isChecked) {
-                    getMapDataByType(MapDataType.REPAIR_SHOP.code)
-                } else {
-                    statusMap[MapDataType.REPAIR_SHOP.code]?.dispose()
-                    clusterMap.remove(MapDataType.REPAIR_SHOP.code)
-                    onReCluster()
-                }
-            }
-            8 -> {  //加油站
-                if (isChecked) {
-                    getMapDataByType(MapDataType.GAS_STATION.code)
-                } else {
-                    statusMap[MapDataType.GAS_STATION.code]?.dispose()
-                    clusterMap.remove(MapDataType.GAS_STATION.code)
-                    onReCluster()
-                }
-            }
-            9 -> {  //景点
-                if (isChecked) {
-                    getMapDataByType(MapDataType.SCENIC.code)
-                } else {
-                    statusMap[MapDataType.SCENIC.code]?.dispose()
-                    clusterMap.remove(MapDataType.SCENIC.code)
-                    onReCluster()
-                }
-            }
-            10 -> {  //服务区
-                if (isChecked) {
-                    getMapDataByType(MapDataType.SERVICE_AREA.code)
-                } else {
-                    statusMap[MapDataType.SERVICE_AREA.code]?.dispose()
-                    clusterMap.remove(MapDataType.SERVICE_AREA.code)
-                    onReCluster()
-                }
-            }
-            11 -> { //收费站
-                if (isChecked) {
-                    getMapDataByType(MapDataType.TOLL_GATE.code)
-                } else {
-                    statusMap[MapDataType.TOLL_GATE.code]?.dispose()
-                    clusterMap.remove(MapDataType.TOLL_GATE.code)
-                    onReCluster()
-                }
+            } else {
+                clusterMap.remove(codeType)
+                onReCluster()
             }
         }
     }
 
     private fun getMapDataByType(type: String) {
-        targetLatLng?.let {
-            val body = ApiService.createRequestBody(WebApiService.mapDataByTypeParams(type, it.longitude, it.latitude, "", ""), WebApiService.MAP_DATA)
-            val disposable = RxHttpManager.createApi(ApiService::class.java).doPost(body).compose(Transformer.switchSchedulers())
-                    .subscribe({ data -> onSuccess(type, data) }, { e -> onError(e) }, {}, { startAnim() })
-            statusMap[type] = disposable
-        }
+        val body = ApiService.createRequestBody(WebApiService.mapDataByTypeParams(type, longitude, latitude, "", ""), WebApiService.MAP_DATA)
+        val disposable = RxHttpManager.createApi(ApiService::class.java).doPost(body).compose(Transformer.switchSchedulers())
+                .subscribe({ data -> onSuccess(type, data) }, { e -> onError(e) }, {}, { startAnim() })
+        statusMap[type] = disposable
     }
 
     /*接口数据返回*/
@@ -394,8 +327,11 @@ class NavStandardFragment : BaseLocationFragment() {
 
     //根据不同类型进行解析数据
     private fun updateData(type: String, data: String?) {
-        if (type == MapDataType.ACCIDENT.code || type == MapDataType.CONTROL.code
-                || type == MapDataType.CONSTRUCTION.code) {   //事件类型
+        if (type == MapDataType.ACCIDENT.code
+                || type == MapDataType.CONTROL.code
+                || type == MapDataType.CONSTRUCTION.code
+                || type == MapDataType.BAD_WEATHER.code
+                || type == MapDataType.TRAFFIC_INCIDENT.code) {   //事件类型
             onEventData(type, data)
         } else if (type == MapDataType.TRAFFIC_JAM.code) {  //拥堵类型
             onTrafficJamData(type, data)
@@ -420,69 +356,95 @@ class NavStandardFragment : BaseLocationFragment() {
     //事件类型数据处理
     private fun onEventData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, EventMDL::class.java)
-        val markerIcon: Int
-        val markerBigIco: Int
-        when (type) {
-            MapDataType.ACCIDENT.code -> {
-                markerIcon = R.mipmap.ic_marker_sg_icon
-                markerBigIco = R.mipmap.ic_marker_sg_big_icon
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else {
+            val markerIcon: Int
+            val markerBigIco: Int
+            when (type) {
+                MapDataType.ACCIDENT.code -> {
+                    markerIcon = R.mipmap.ic_marker_sg_icon
+                    markerBigIco = R.mipmap.ic_marker_sg_big_icon
+                }
+                MapDataType.CONTROL.code -> {
+                    markerIcon = R.mipmap.ic_marker_gz_icon
+                    markerBigIco = R.mipmap.ic_marker_gz_big_icon
+                }
+                MapDataType.BAD_WEATHER.code -> {
+                    markerIcon = R.mipmap.ic_marker_eltq_icon
+                    markerBigIco = R.mipmap.ic_marker_eltq_big_icon
+                }
+                MapDataType.TRAFFIC_INCIDENT.code -> {
+                    markerIcon = R.mipmap.ic_marker_jtsj_icon
+                    markerBigIco = R.mipmap.ic_marker_jtsj_big_icon
+                }
+                else -> {
+                    markerIcon = R.mipmap.ic_marker_shig_icon
+                    markerBigIco = R.mipmap.ic_marker_shig_big_icon
+                }
             }
-            MapDataType.CONTROL.code -> {
-                markerIcon = R.mipmap.ic_marker_gz_icon
-                markerBigIco = R.mipmap.ic_marker_gz_big_icon
+            for (item in dataMDLs) {
+                item.markerIcon = markerIcon
+                item.markerBigIco = markerBigIco
             }
-            else -> {
-                markerIcon = R.mipmap.ic_marker_shig_icon
-                markerBigIco = R.mipmap.ic_marker_shig_big_icon
-            }
+            cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
         }
-        for (item in dataMDLs) {
-            item.markerIcon = markerIcon
-            item.markerBigIco = markerBigIco
-        }
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     /*拥堵类型数据处理*/
     private fun onTrafficJamData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, TrafficJamMDL::class.java)
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     /*监控快拍数据处理*/
     private fun onSnapShotData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, SnapShotMDL::class.java)
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     /*附近维修店数据类型处理*/
     private fun onRepairShopData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, RepairShopMDL::class.java)
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     /*附近加油站数据类型处理*/
     private fun onGasStationData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, GasStationMDL::class.java)
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     /*附近景点类型数据处理*/
     private fun onScenicData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, ScenicMDL::class.java)
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     /*附近服务区类型数据处理*/
     private fun onServiceData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, ServiceMDL::class.java)
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     /*附近收费站类型数据处理*/
     private fun onTollGateData(type: String, data: String?) {
         val dataMDLs = GsonUtils.fromDataToList(data, TollGateMDL::class.java)
-        cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
+        val isChecked = checkMap[type]
+        if (dataMDLs.size == 0 && isChecked != null && isChecked) showShortToast(context.getString(R.string.NoDataAtAll))
+        else cluster(type, ArrayList<ClusterItem>().apply { addAll(dataMDLs) })
     }
 
     //进行点聚合
@@ -526,6 +488,14 @@ class NavStandardFragment : BaseLocationFragment() {
             MapDataType.SERVICE_AREA.code -> {
                 markerIcon = R.mipmap.ic_marker_service_icon
                 markerBigIco = R.mipmap.ic_marker_service_big_icon
+            }
+            MapDataType.BAD_WEATHER.code -> {
+                markerIcon = R.mipmap.ic_marker_eltq_icon
+                markerBigIco = R.mipmap.ic_marker_eltq_big_icon
+            }
+            MapDataType.TRAFFIC_INCIDENT.code -> {
+                markerIcon = R.mipmap.ic_marker_jtsj_icon
+                markerBigIco = R.mipmap.ic_marker_jtsj_big_icon
             }
             else -> {
                 markerIcon = R.mipmap.ic_marker_toll_icon
@@ -942,11 +912,11 @@ class NavStandardFragment : BaseLocationFragment() {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
                     mdl?.rtmpIp?.let {
-                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                        openActivityForResult(VideoPlayerActivity::class.java, Bundle().apply {
                             putBoolean("isLive", true)
                             putString("url", it)
                             putString("title", shortName)
-                        })
+                        }, 345)
                     }
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
@@ -958,6 +928,13 @@ class NavStandardFragment : BaseLocationFragment() {
                 onHttpError(e)
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 345 && resultCode == Activity.RESULT_OK) {
+            showLongToast("播放结束")
+        }
     }
 
     override fun onResume() {

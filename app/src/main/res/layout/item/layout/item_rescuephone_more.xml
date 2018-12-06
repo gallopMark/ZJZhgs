@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvMore"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="@dimen/margin_14"
+    android:gravity="center"
+    android:text="@string/rescue_main_more_phone"
+    android:textColor="@color/darkgrey"
+    android:textSize="@dimen/font_14" />

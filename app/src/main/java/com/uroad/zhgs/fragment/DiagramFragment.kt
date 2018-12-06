@@ -1,7 +1,9 @@
 package com.uroad.zhgs.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
@@ -9,6 +11,7 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
+import com.amap.api.location.AMapLocation
 import com.uroad.library.utils.VersionUtils
 import com.uroad.library.utils.ZipUtils
 import com.uroad.rxhttp.RxHttpManager
@@ -16,12 +19,14 @@ import com.uroad.rxhttp.download.DownloadListener
 import com.uroad.zhgs.activity.LoginActivity
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoPlayerActivity
-import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.CCTVDetailRvDialog
 import com.uroad.zhgs.dialog.EventDetailRvDialog
+import com.uroad.zhgs.dialog.SiteControlDetailRvDialog
 import com.uroad.zhgs.dialog.TrafficJamDetailRvDialog
 import com.uroad.zhgs.enumeration.DiagramEventType
+import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.utils.DiagramUtils
@@ -36,30 +41,23 @@ import kotlinx.android.synthetic.main.fragment_diagram.*
  * Copyright  2018年 浙江综合交通大数据开发有限公司.
  * 说明：路况导航（简图模式）
  */
-class DiagramFragment : BaseFragment() {
-    private enum class PoiType(val code: String) {
-        /**
-         * 事件1006001
-        施工1006002
-        管制1006003
-        快拍 1004001
-        服务区 1003001
-        收费站 100200
-         */
-        ACCIDENT("1006001"),
-        CONSTRUCTION("1006002"),
-        CONTROL("1006003"),
-        SNAPSHOT("1006004"),
-        TRAFFIC_JAM("1006005"),
-        SERVICE_AREA("1003001"),
-        TOLLGATE("1002001")
-    }
+class DiagramFragment : BaseLocationFragment() {
+    private var longitude: Double = 0.toDouble()
+    private var latitude: Double = 0.toDouble()
 
     override fun setBaseLayoutResID(): Int = R.layout.fragment_diagram
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         initSettings()
         initWebView()
+        requestLocationPermissions(object : RequestLocationPermissionCallback {
+            override fun doAfterGrand() {
+                openLocation()
+            }
+
+            override fun doAfterDenied() {
+            }
+        })
     }
 
     @SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
@@ -98,6 +96,12 @@ class DiagramFragment : BaseFragment() {
         webView.webChromeClient = MWebChromeClient()
     }
 
+    override fun afterLocation(location: AMapLocation) {
+        this.longitude = location.longitude
+        this.latitude = location.latitude
+        closeLocation()
+    }
+
     inner class JavascriptInterface {
         //        @android.webkit.JavascriptInterface
 //        fun refreshpage() {  // 2．页面刷新
@@ -107,14 +111,17 @@ class DiagramFragment : BaseFragment() {
         @android.webkit.JavascriptInterface
         fun uroadplus_showPOI(poitype: String, poiid: String) {
             //只对事故、管制、施工和快拍进行处理
-            if (poitype == PoiType.ACCIDENT.code ||
-                    poitype == PoiType.CONSTRUCTION.code ||
-                    poitype == PoiType.CONTROL.code) {
+            if (poitype == MapDataType.ACCIDENT.code ||
+                    poitype == MapDataType.CONSTRUCTION.code ||
+                    poitype == MapDataType.CONTROL.code ||
+                    poitype == MapDataType.TRAFFIC_INCIDENT.code) {
                 getEventDetailsById(poiid)
-            } else if (poitype == PoiType.TRAFFIC_JAM.code) {
+            } else if (poitype == MapDataType.TRAFFIC_JAM.code) {  //拥堵
                 getJamEventDetailsById(poiid)
-            } else if (poitype == PoiType.SNAPSHOT.code) {
+            } else if (poitype == MapDataType.SNAPSHOT_RESPONSE.code) {  //快拍
                 getCCTVDetailsById(poiid)
+            } else if (poitype == MapDataType.SITE_CONTROL.code) {  //站点管制
+                getPoiControlDetails(poiid)
             }
         }
     }
@@ -144,7 +151,7 @@ class DiagramFragment : BaseFragment() {
 
     private fun onEventDetail(mdLs: MutableList<EventMDL>) {
         if (mdLs.size == 0) {
-            showShortToast("暂无数据哟~")
+            showShortToast(context.getString(R.string.NoDataAtAll))
             return
         }
         val dialog = EventDetailRvDialog(context, mdLs)
@@ -251,7 +258,7 @@ class DiagramFragment : BaseFragment() {
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, TrafficJamMDL::class.java)
                     if (mdLs.size == 0) {
-                        showShortToast("暂无数据哟~")
+                        showShortToast(context.getString(R.string.NoDataAtAll))
                     } else {
                         onTrafficJamDetail(mdLs)
                     }
@@ -328,11 +335,11 @@ class DiagramFragment : BaseFragment() {
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, RtmpMDL::class.java)
                     mdl?.rtmpIp?.let {
-                        openActivity(VideoPlayerActivity::class.java, Bundle().apply {
+                        openActivityForResult(VideoPlayerActivity::class.java, Bundle().apply {
                             putBoolean("isLive", true)
                             putString("url", it)
                             putString("title", shortName)
-                        })
+                        }, 345)
                     }
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
@@ -344,6 +351,38 @@ class DiagramFragment : BaseFragment() {
                 onHttpError(e)
             }
         })
+    }
+
+    /*站点管制详情*/
+    private fun getPoiControlDetails(stationcode: String?) {
+        doRequest(WebApiService.POI_SITE_CONTROL, WebApiService.poiSiteControlParams(stationcode, longitude, latitude), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                showLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                endLoading()
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, SiteControlMDL::class.java)
+                    if (mdLs.size == 0) {
+                        showShortToast(context.getString(R.string.NoDataAtAll))
+                    } else {
+                        onSiteControlDetail(mdLs)
+                    }
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                endLoading()
+                onHttpError(e)
+            }
+        })
+    }
+
+    private fun onSiteControlDetail(mdLs: MutableList<SiteControlMDL>) {
+        SiteControlDetailRvDialog(context, mdLs).show()
     }
 
     private inner class MWebViewClient : WebViewClient() {
@@ -439,36 +478,35 @@ class DiagramFragment : BaseFragment() {
         loadEvent(DiagramEventType.Construction.code, 0)  //默认关闭施工
         loadEvent(DiagramEventType.Control.code, 1)
         loadEvent(DiagramEventType.TollGate.code, 1)
-        loadEvent(DiagramEventType.TrafficJam.code, 0) //默认关闭拥堵
+        loadEvent(DiagramEventType.TrafficJam.code, 1) //
         loadEvent(DiagramEventType.PileNumber.code, 0)  //桩号默认关闭
         loadEvent(DiagramEventType.ServiceArea.code, 1)
         loadEvent(DiagramEventType.Snapshot.code, 1)
+        loadEvent(DiagramEventType.BadWeather.code, 1)  //恶劣天气
+        loadEvent(DiagramEventType.TrafficIncident.code, 1)  //交通事件
+        loadEvent(DiagramEventType.StationControl.code, 1)
     }
 
-    fun onEvent(type: Int, isChecked: Boolean) {
+    fun onEvent(codeType: String, isChecked: Boolean) {
         val isDisplay = if (isChecked) 1 else 0
-        when (type) {
-            1 -> loadEvent(DiagramEventType.Accident.code, isDisplay) //事故是否选中
-            2 -> loadEvent(DiagramEventType.Control.code, isDisplay) //管制
-            3 -> loadEvent(DiagramEventType.Construction.code, isDisplay) //施工
-            4 -> loadEvent(DiagramEventType.TrafficJam.code, isDisplay) //拥堵
-            5 -> loadEvent(DiagramEventType.PileNumber.code, isDisplay)//桩号
-            6 -> loadEvent(DiagramEventType.TollGate.code, isDisplay) //收费站
-            7 -> loadEvent(DiagramEventType.ServiceArea.code, isDisplay) //服务区
-            8 -> loadEvent(DiagramEventType.Snapshot.code, isDisplay) //快拍
-        }
+        loadEvent(codeType, isDisplay)
     }
 
     //isdisplay	是否展示	1显示0隐藏
     private fun loadEvent(poiType: String, isDisplay: Int) {
-        loadJs("uroadplus_web_showPOILayer", "'$poiType','$isDisplay'")
+//        loadJs("uroadplus_web_showPOILayer", "'$poiType','$isDisplay'")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("uroadplus_web_showPOILayer('$poiType','$isDisplay')", null)
+        } else {
+            webView.loadUrl("javascript:uroadplus_web_showPOILayer('$poiType','$isDisplay')")
+        }
     }
 
     //事件1006001 施工1006002 管制1006005 快拍 1004001 服务区 1003001 收费站 1002001 桩号 1001001
-    private fun loadJs(funName: String, data: String) {
-        val js = "javascript:$funName($data)"
-        webView.loadUrl(js)
-    }
+//    private fun loadJs(funName: String, data: String) {
+//        val js = "javascript:$funName($data)"
+//        webView.loadUrl(js)
+//    }
 
     //SVG简图交互-刷新简图
 //    private fun refreshSVG() {
@@ -478,10 +516,25 @@ class DiagramFragment : BaseFragment() {
 
     //SVG简图交互-放大缩小简图
     fun enlargeSVG() {
-        webView.loadUrl("javascript:enlargeSVG()")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("enlargeSVG()", null)
+        } else {
+            webView.loadUrl("javascript:enlargeSVG()")
+        }
     }
 
     fun narrowSVG() {
-        webView.loadUrl("javascript:narrowSVG()")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("narrowSVG()", null)
+        } else {
+            webView.loadUrl("javascript:narrowSVG()")
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 345 && resultCode == Activity.RESULT_OK){
+            showLongToast("播放结束")
+        }
     }
 }

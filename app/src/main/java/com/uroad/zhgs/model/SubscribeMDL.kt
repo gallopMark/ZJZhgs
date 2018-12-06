@@ -50,7 +50,9 @@ class SubscribeMDL {
         Control("1170003"),
         TrafficJam("1170004"),
         RescueProgress("1170005"),
-        RescuePay("1170006")
+        RescuePay("1170006"),
+        BadWeather("1170007"),  //恶劣天气
+        TrafficIncident("1170008")  //交通事件
     }
 
     /**

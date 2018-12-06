@@ -13,6 +13,7 @@ poitype	poi类型	事件 event
 快拍 cctv
 服务区 servicearea
 收费站 station
+//公告:notice   恶劣天气:weather  交通事件：traffic  站点管制：stationControl
 isdisplay	是否展示	1显示0隐藏
  */
 enum class DiagramEventType(val code: String) {
@@ -23,5 +24,9 @@ enum class DiagramEventType(val code: String) {
     Snapshot("cctv"),
     ServiceArea("servicearea"),
     TollGate("station"),
-    PileNumber("stake")
+    PileNumber("stake"),
+    Notice("notice"),
+    BadWeather("weather"),
+    TrafficIncident("traffic"),
+    StationControl("stationControl")
 }

@@ -315,17 +315,22 @@
     <string name="roadNavigation_menu_standard">标准地图</string>
     <string name="roadNavigation_menu_diagram">简图模式</string>
     <string name="roadNavigation_menu_event">事件</string>
-    <string name="roadNavigation_menu_event_sg">事故</string>
+    <string name="roadNavigation_menu_event_gg">\u3000公告\u3000</string>
+    <string name="roadNavigation_menu_event_sg">\u3000事故\u3000</string>
     <string name="roadNavigation_menu_event_gz">管制</string>
-    <string name="roadNavigation_menu_event_shig">施工</string>
-    <string name="roadNavigation_menu_event_yd">拥堵</string>
+    <string name="roadNavigation_menu_event_dlgz">道路管制</string>
+    <string name="roadNavigation_menu_event_zdgz">站点管制</string>
+    <string name="roadNavigation_menu_event_eltq">恶劣天气</string>
+    <string name="roadNavigation_menu_event_jtsj">交通事件</string>
+    <string name="roadNavigation_menu_event_shig">\u3000施工\u3000</string>
+    <string name="roadNavigation_menu_event_yd">\u3000拥堵\u3000</string>
     <string name="roadNavigation_menu_jtss">交通设施</string>
-    <string name="roadNavigation_menu_pile">桩号</string>
-    <string name="roadNavigation_menu_toll">收费站</string>
-    <string name="roadNavigation_menu_service">服务区</string>
-    <string name="roadNavigation_menu_spot">监控</string>
+    <string name="roadNavigation_menu_pile">\u3000桩号\u3000</string>
+    <string name="roadNavigation_menu_toll">\u2000收费站\u2000</string>
+    <string name="roadNavigation_menu_service">\u2000服务区\u2000</string>
+    <string name="roadNavigation_menu_spot">\u3000监控\u3000</string>
     <string name="roadNavigation_menu_other">其他</string>
-    <string name="roadNavigation_menu_weather">天气</string>
+    <string name="roadNavigation_menu_weather">\u3000天气\u3000</string>
     <string name="roadNavigation_menu_repair">维修点</string>
     <string name="roadNavigation_menu_list">\u3000列表</string>
     <string name="roadNavigation_menu_gas">加油站</string>
@@ -390,7 +395,7 @@
     <string name="changepassword_newPW2_hint">请再次输入新密码</string>
     <string name="changepassword_finish">完成</string>
     <string name="feedback_title">意见反馈</string>
-    <string name="feedback_content_hint">请输入意见反馈，我们将为你不断改进</string>
+    <string name="feedback_content_hint">请输入您的问题或建议，我们会认真对待并不断优化功能</string>
     <string name="feedback_commit">提交反馈</string>
 
     <!--我的车辆 start-->
@@ -549,6 +554,7 @@
     <string name="customer_service">小智问问</string>
     <string name="pass_record_small_tips">通行数据逐步完善中，查询结果仅供参考，实际通行费用请以实际支付为准</string>
     <string name="pass_money">通行费</string>
+    <string name="pass_mileage">行驶里程</string>
     <string name="car_inquiry_tips">换卡、套牌、冲卡</string>
     <string name="car_inquiry_empty">没有找到相关记录</string>
     <string name="dialog_authentication_title">请选择认证方式</string>
@@ -574,5 +580,8 @@
     <string name="empty_my_passRecord">完成实名认证与车辆绑定就可查询车辆通行记录了哦~</string>
     <string name="empty_cars_inPassRecord">您暂未绑定车辆，使用本功能，请先绑定车辆</string>
     <string name="empty_my_tracks">开启app定位权限，我们将自动为您记录足迹点。</string>
+
+    <string name="noticeList_title">通告</string>
+    <string name="NoDataAtAll">暂无数据哟~</string>
 </resources>
 

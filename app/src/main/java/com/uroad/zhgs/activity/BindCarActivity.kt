@@ -18,6 +18,8 @@ import com.uroad.zhgs.widget.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.activity_bindcar.*
 import android.widget.*
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.method.ReplacementTransformationMethod
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.CarNoType
@@ -149,6 +151,8 @@ class BindCarActivity : BaseActivity() {
     private var carId = ""
     private var detailMDL: CarDetailMDL? = null
     private var usercarid: String = ""
+    private var enginno: String? = ""
+    private var realenginno: String? = ""
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_bindcar)
@@ -178,6 +182,7 @@ class BindCarActivity : BaseActivity() {
         initNumTv()
         initEtNum()
         initRv()
+        initEngineNo()
         checkbox.setOnCheckedChangeListener { _, isChecked -> isdefault = if (isChecked) 1 else 0 }
         btSubmit.setOnClickListener { onSubmit() }
     }
@@ -242,6 +247,33 @@ class BindCarActivity : BaseActivity() {
         rvCarType.adapter = lxAdapter
         axAdapter = BindCarActivity.AxisAdapter(this, axDatas)
         rvAxis.adapter = axAdapter
+    }
+
+    private fun initEngineNo() {
+        etEnginno.transformationMethod = object : ReplacementTransformationMethod() {
+            override fun getOriginal(): CharArray {
+                return charArrayOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
+            }
+
+            override fun getReplacement(): CharArray {
+                return charArrayOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
+            }
+        }
+        etEnginno.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(cs: CharSequence, p1: Int, p2: Int, p3: Int) {
+                if (!TextUtils.equals(cs.toString(), enginno)) {
+                    realenginno = cs.toString()
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
     }
 
     override fun initData() {
@@ -382,6 +414,8 @@ class BindCarActivity : BaseActivity() {
 
     private fun updateCarData(mdl: CarDetailMDL) {
         detailMDL = mdl
+        enginno = mdl.enginno
+        realenginno = mdl.realenginno
         mdl.usercarid?.let { usercarid = it }
         etNumType.setText(mdl.getCarNum()[0])
         etCarNum.setText(mdl.getCarNum()[1])
@@ -460,7 +494,7 @@ class BindCarActivity : BaseActivity() {
     private fun bindCar() {
         val params = HashMap<String, String?>().apply {
             put("carno", "${etNumType.text}${etCarNum.text.toString().toUpperCase()}")
-            put("enginno", etEnginno.text.toString())
+            put("enginno", realenginno?.toUpperCase())
             put("carcategory", carcategory)
             put("cartype", cartype)
             put("userid", getUserId())

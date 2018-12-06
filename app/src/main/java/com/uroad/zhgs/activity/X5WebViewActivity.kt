@@ -37,6 +37,7 @@ class X5WebViewActivity : BaseActivity() {
                         activity.times--
                         sendEmptyMessageDelayed(CODE_MSG, 1000)
                     } else {
+                        activity.setResult(RESULT_OK)
                         activity.finish()
                     }
                 }

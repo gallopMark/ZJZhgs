@@ -1,8 +1,6 @@
 package com.uroad.zhgs.model
 
 import android.text.TextUtils
-import com.amap.api.col.sln3.it
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,55 +37,51 @@ class PassRecordMDL {
     var money: Double? = null
     var d_fee_length: String? = null
 
-//    fun getEnDateTime(): String {
-//        var text = ""
-//        n_en_date?.let {
-//            try {
-//                val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-//                val date = format.parse(it)
-//                text += SimpleDateFormat("MM.dd", Locale.getDefault()).format(date)
-//            } catch (e: Exception) {
-//            }
-//        }
-//        if (!TextUtils.isEmpty(text)) text += "\u2000"
-//        n_en_time?.let {
-//            if (it.length >= 6) {
-//                text += "${it.substring(0, 2)}:"
-//                text += "${it.substring(2, 4)}:"
-//                text += it.substring(4, it.length)
-//            } else if (it.length == 5) {
-//                text += "${it.substring(0, 1)}:"
-//                text += "${it.substring(1, 3)}:"
-//                text += it.substring(3, it.length)
-//            }
-//        }
-//        return text
-//    }
-//
-//    fun getExDateTime(): String {
-//        var text = ""
-//        n_ex_date?.let {
-//            try {
-//                val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-//                val date = format.parse(it)
-//                text += SimpleDateFormat("MM.dd", Locale.getDefault()).format(date)
-//            } catch (e: Exception) {
-//            }
-//        }
-//        if (!TextUtils.isEmpty(text)) text += "\u2000"
-//        n_ex_time?.let {
-//            if (it.length >= 6) {
-//                text += "${it.substring(0, 2)}:"
-//                text += "${it.substring(2, 4)}:"
-//                text += it.substring(4, it.length)
-//            } else if (it.length == 5) {
-//                text += "${it.substring(0, 1)}:"
-//                text += "${it.substring(1, 3)}:"
-//                text += it.substring(3, it.length)
-//            }
-//        }
-//        return text
-//    }
+    fun getEnDateTime(): String {
+        var text = ""
+        n_en_date?.let {
+            try {
+                val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+                val date = format.parse(it)
+                text += SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+            } catch (e: Exception) {
+            }
+        }
+        if (!TextUtils.isEmpty(text)) text += "\u2000"
+        n_en_time?.let {
+            if (it.length >= 6) {
+                text += "${it.substring(0, 2)}:"
+                text += it.substring(2, 4)
+            } else if (it.length == 5) {
+                text += "${it.substring(0, 1)}:"
+                text += it.substring(1, 3)
+            }
+        }
+        return text
+    }
+
+    fun getExDateTime(): String {
+        var text = ""
+        n_ex_date?.let {
+            try {
+                val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+                val date = format.parse(it)
+                text += SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+            } catch (e: Exception) {
+            }
+        }
+        if (!TextUtils.isEmpty(text)) text += "\u2000"
+        n_ex_time?.let {
+            if (it.length >= 6) {
+                text += "${it.substring(0, 2)}:"
+                text += it.substring(2, 4)
+            } else if (it.length == 5) {
+                text += "${it.substring(0, 1)}:"
+                text += it.substring(1, 3)
+            }
+        }
+        return text
+    }
 //
 //    fun getMoney(): String {
 //        money?.let {

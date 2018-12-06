@@ -7,9 +7,11 @@ import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import com.amap.api.col.sln3.bd
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.PassRecordMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
+import java.math.BigDecimal
 import java.text.DecimalFormat
 
 /**
@@ -20,15 +22,14 @@ import java.text.DecimalFormat
 class PassRecordAdapter(context: Activity, mDatas: MutableList<PassRecordMDL>)
     : BaseArrayRecyclerAdapter<PassRecordMDL>(context, mDatas) {
     private val colorGray = ContextCompat.getColor(context, R.color.color_99)
-    private val ts18 = context.resources.getDimensionPixelOffset(R.dimen.font_18)
+    private val ts16 = context.resources.getDimensionPixelOffset(R.dimen.font_16)
 
     override fun bindView(viewType: Int): Int = R.layout.item_passrecord
 
     override fun onBindHoder(holder: RecyclerHolder, t: PassRecordMDL, position: Int) {
-        holder.setText(R.id.tvEnter, getEnterInfo(t.n_en_station_name, t.n_en_date))
-        holder.setText(R.id.tvExit, getExitInfo(t.n_ex_station_name, t.n_ex_date))
+        holder.setText(R.id.tvEnter, getEnterInfo(t.n_en_station_name, t.getEnDateTime()))
+        holder.setText(R.id.tvExit, getExitInfo(t.n_ex_station_name, t.getExDateTime()))
         holder.setText(R.id.tvMileage, getMileageInfo(t.d_fee_length))
-        holder.setText(R.id.tvMoney, getMoneyInfo(t.money))
     }
 
     private fun getEnterInfo(enStation: String?, enDate: String?): SpannableString {
@@ -48,21 +49,26 @@ class PassRecordAdapter(context: Activity, mDatas: MutableList<PassRecordMDL>)
     }
 
     private fun getMileageInfo(length: String?): SpannableString {
-        var mile = "里程\u3000"
+        var mile = ""
+        length?.let { mile += it }
         val start = mile.length
-        length?.let { mile += "${it}Km" }
-        return SpannableString(mile).apply { setSpan(ForegroundColorSpan(colorGray), start, mile.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE) }
+        mile += "Km"
+        return SpannableString(mile).apply {
+            setSpan(StyleSpan(Typeface.BOLD), 0, start, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(AbsoluteSizeSpan(ts16, false), start, mile.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 
-    private fun getMoneyInfo(money: Double?): CharSequence {
-        var moneyInfo = "0.00元"
-        money?.let {
-            val df = DecimalFormat(".00")
-            moneyInfo = "${df.format(it)}元"
-        }
-        return SpannableString(moneyInfo).apply {
-            setSpan(StyleSpan(Typeface.BOLD), 0, moneyInfo.length - 1, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(AbsoluteSizeSpan(ts18, false), moneyInfo.length - 1, moneyInfo.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-    }
+//    private fun getMoneyInfo(money: Double?): CharSequence {
+//        var moneyInfo = "0.00元"
+//        money?.let {
+//            val bigDecimal = BigDecimal(it)
+//            val value = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
+//            moneyInfo = "${value}元"
+//        }
+//        return SpannableString(moneyInfo).apply {
+//            setSpan(StyleSpan(Typeface.BOLD), 0, moneyInfo.length - 1, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+//            setSpan(AbsoluteSizeSpan(ts18, false), moneyInfo.length - 1, moneyInfo.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+//        }
+//    }
 }
