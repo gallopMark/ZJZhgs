@@ -15,7 +15,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.uroad.zhgs"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 20181205
         versionName "2.0.4"
@@ -86,7 +86,7 @@ dependencies {
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.0.9'
     implementation 'com.github.chrisbanes:PhotoView:2.1.4'
     implementation 'com.pl:wheelview:0.7.2'
-    implementation 'com.airbnb.android:lottie:2.0.0'
+    implementation 'com.airbnb.android:lottie:2.7.0'
     /*文件下载器*/
     implementation 'com.liulishuo.filedownloader:library:1.7.5'
     implementation files('libs/alipaySdk-20180601.jar')
