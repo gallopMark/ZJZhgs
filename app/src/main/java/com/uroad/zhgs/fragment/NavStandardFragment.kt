@@ -4,8 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
-import android.os.Build
-import android.os.Bundle
+import android.os.*
 import android.support.v4.util.ArrayMap
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -301,10 +300,11 @@ class NavStandardFragment : BaseLocationFragment() {
         }
     }
 
+    /*通过不同枚举类型获取对应数据*/
     private fun getMapDataByType(type: String) {
         val body = ApiService.createRequestBody(WebApiService.mapDataByTypeParams(type, longitude, latitude, "", ""), WebApiService.MAP_DATA)
         val disposable = RxHttpManager.createApi(ApiService::class.java).doPost(body).compose(Transformer.switchSchedulers())
-                .subscribe({ data -> onSuccess(type, data) }, { e -> onError(e) }, {}, { startAnim() })
+                .subscribe({ data -> onSuccess(type, data) }, { e -> onError(type, e) }, {}, { startAnim() })
         statusMap[type] = disposable
     }
 
@@ -315,14 +315,20 @@ class NavStandardFragment : BaseLocationFragment() {
         if (GsonUtils.isResultOk(data)) {
             updateData(type, data)
         } else {
-            showShortToast(GsonUtils.getMsg(data))
+            val isChecked = checkMap[type]
+            if (isChecked != null && isChecked) {
+                showShortToast(GsonUtils.getMsg(data))
+            }
         }
     }
 
     /*访问异常*/
-    private fun onError(e: Throwable) {
+    private fun onError(type: String, e: Throwable) {
         stopAnim()
-        onHttpError(e)
+        val isChecked = checkMap[type]
+        if (isChecked != null && isChecked) {
+            onHttpError(e)
+        }
     }
 
     //根据不同类型进行解析数据
@@ -948,7 +954,12 @@ class NavStandardFragment : BaseLocationFragment() {
     }
 
     override fun onDestroyView() {
+        dispose()
         mapView.onDestroy()
         super.onDestroyView()
+    }
+
+    private fun dispose() {
+        for ((_, disposable) in statusMap) if (!disposable.isDisposed) disposable.dispose()
     }
 }
