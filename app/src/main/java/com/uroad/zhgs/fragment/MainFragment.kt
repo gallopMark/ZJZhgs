@@ -299,6 +299,7 @@ class MainFragment : BaseLocationFragment() {
                 }
             }).show()
             isShowAuthDialog = true
+            AppLocalHelper.saveAuth(context)
         }
     }
 

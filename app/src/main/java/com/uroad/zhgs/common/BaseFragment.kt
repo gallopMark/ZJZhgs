@@ -333,6 +333,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     fun openActivity(c: Class<*>, bundle: Bundle?, uri: Uri?) {
+        if (activity == null) return
         val intent = Intent(context, c)
         bundle?.let { intent.putExtras(it) }
         uri?.let { intent.data = it }
@@ -348,6 +349,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     fun openActivity(intent: Intent, bundle: Bundle?, uri: Uri?) {
+        if (activity == null) return
         bundle?.let { intent.putExtras(it) }
         uri?.let { intent.data = uri }
         startActivity(intent)
@@ -362,6 +364,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     fun openActivityForResult(c: Class<*>, bundle: Bundle?, uri: Uri?, requestCode: Int) {
+        if (activity == null) return
         val intent = Intent(context, c)
         bundle?.let { intent.putExtras(it) }
         uri?.let { intent.data = it }
@@ -377,6 +380,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     fun openActivityForResult(intent: Intent, bundle: Bundle?, uri: Uri?, requestCode: Int) {
+        if (activity == null) return
         bundle?.let { intent.putExtras(it) }
         uri?.let { intent.data = it }
         startActivityForResult(intent, requestCode)

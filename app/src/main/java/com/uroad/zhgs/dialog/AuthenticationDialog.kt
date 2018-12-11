@@ -22,7 +22,6 @@ class AuthenticationDialog(private val context: Activity) : Dialog(context, R.st
     override fun show() {
         super.show()
         initView()
-        setOnDismissListener { AppLocalHelper.saveAuth(context) }
     }
 
     private fun initView() {

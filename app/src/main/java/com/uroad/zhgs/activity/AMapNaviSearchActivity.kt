@@ -68,17 +68,17 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
                 if (mDatas.size == 0) llHistoryData.visibility = View.GONE
             })
             holder.itemView.setOnClickListener {
-                isCustomSetText1 = true
-                isCustomSetText2 = true
+                isStartSetText = true
+                isEndSetText = true
                 etMyLocation.setText(RouteSearchHelper.getStartPos(t))
                 etMyLocation.setSelection(etMyLocation.text.length)
                 etEndPos.setText(RouteSearchHelper.getEndPos(t))
                 etEndPos.setSelection(etEndPos.text.length)
-                val startPoint = RouteSearchHelper.getStartPoint(t)
-                val endPoint = RouteSearchHelper.getEndPoint(t)
+                startPoint = RouteSearchHelper.getStartPoint(t)
+                endPoint = RouteSearchHelper.getEndPoint(t)
                 if (startPoint != null && endPoint != null) {
                     llHistoryData.visibility = View.GONE
-                    doRouteSearch(startPoint, endPoint)
+                    startPoint?.let { start -> endPoint?.let { end -> doRouteSearch(start, end) } }
                 }
             }
         }
@@ -90,12 +90,15 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
     private var currLocation: AMapLocation? = null
     private var isLocationComplete = false
     private lateinit var handler: Handler
-    private var isCustomSetText1 = false
-    private var isCustomSetText2 = false
+    private var isStartSetText = false
+    private var isEndSetText = false
     private var isFirstSetText = true
     private var startPoint: LatLonPoint? = null
     private var endPoint: LatLonPoint? = null
-    private var disposable: Disposable? = null
+    private var startKey: String? = ""
+    private var endKey: String? = ""
+    private var startDisposable: Disposable? = null
+    private var endDisposable: Disposable? = null
     private var popupWindow: PopupWindow? = null
     private lateinit var mAMapNavi: AMapNavi
     private val routeOverLayList = ArrayList<RouteOverLay>()
@@ -271,12 +274,17 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
                 if (!TextUtils.isEmpty(content.trim())) {
                     when {
                         isFirstSetText -> isFirstSetText = false
-                        isCustomSetText1 -> isCustomSetText1 = false
+                        isStartSetText -> isStartSetText = false
                         else -> {
-                            cancelSearchPop()
-                            doPoiSearch(content, 1)
+                            startPoint = null
+                            startKey = content
+                            handler.removeCallbacks(startPoiRunnable)
+                            handler.postDelayed(startPoiRunnable, 500)
                         }
                     }
+                } else {
+                    startPoint = null
+                    handler.removeCallbacks(startPoiRunnable)
                 }
             }
 
@@ -292,12 +300,17 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
             override fun onTextChanged(s: CharSequence, p1: Int, p2: Int, p3: Int) {
                 val content = s.toString()
                 if (!TextUtils.isEmpty(content.trim())) {
-                    if (isCustomSetText2) {
-                        isCustomSetText2 = false
+                    if (isEndSetText) {
+                        isEndSetText = false
                     } else {
-                        cancelSearchPop()
-                        doPoiSearch(content, 2)
+                        endPoint = null
+                        endKey = content
+                        handler.removeCallbacks(endPoiRunnable)
+                        handler.postDelayed(endPoiRunnable, 500)
                     }
+                } else {
+                    endPoint = null
+                    handler.removeCallbacks(endPoiRunnable)
                 }
             }
 
@@ -305,8 +318,8 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
             }
         })
         ivChange.setOnClickListener {
-            isCustomSetText1 = true
-            isCustomSetText2 = true
+            isStartSetText = true
+            isEndSetText = true
             val temp = startPoint
             startPoint = endPoint
             endPoint = temp
@@ -329,20 +342,46 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
         closeLocation()
     }
 
-    private fun cancelSearchPop() {
-        disposable?.let { if (!it.isDisposed) it.dispose() }
+    private val startPoiRunnable = Runnable {
+        cancelStartSearch()
+        startPoiSearch(startKey)
+    }
+
+    private val endPoiRunnable = Runnable {
+        cancelEndSearch()
+        endPoiSearch(endKey)
+    }
+
+    private fun cancelStartSearch() {
+        startDisposable?.dispose()
         popupWindow?.let {
             it.dismiss()
             popupWindow = null
         }
     }
 
-    private fun doPoiSearch(keyWord: String, type: Int) {
+    private fun cancelEndSearch() {
+        endDisposable?.dispose()
+        popupWindow?.let {
+            it.dismiss()
+            popupWindow = null
+        }
+    }
+
+    private fun startPoiSearch(keyWord: String?) {
         val query = PoiSearch.Query(keyWord, "", "")
         val poiSearch = PoiSearch(this, query)
-        addDisposable(Observable.fromCallable { poiSearch.searchPOI() }
+        startDisposable = Observable.fromCallable { poiSearch.searchPOI() }
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ poiResult -> poiResult?.pois?.let { showPopupWindow(it, type) } }, {}, {}, { disposable = it }))
+                .subscribe({ poiResult -> poiResult?.pois?.let { showPopupWindow(it, 1) } }, {})
+    }
+
+    private fun endPoiSearch(keyWord: String?) {
+        val query = PoiSearch.Query(keyWord, "", "")
+        val poiSearch = PoiSearch(this, query)
+        endDisposable = Observable.fromCallable { poiSearch.searchPOI() }
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ poiResult -> poiResult?.pois?.let { showPopupWindow(it, 2) } }, {})
     }
 
     private fun showPopupWindow(poiItems: ArrayList<PoiItem>, type: Int) {
@@ -387,13 +426,13 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
                 if (position in 0 until items.size) {
                     if (type == 1) {
                         startPoint = items[position].latLonPoint
-                        isCustomSetText1 = true
+                        isStartSetText = true
                         etMyLocation.setText(items[position].title)
                         etMyLocation.setSelection(etMyLocation.text.length)
                         startPoint?.let { start -> endPoint?.let { doRouteSearch(start, it) } }
                     } else {
                         endPoint = items[position].latLonPoint
-                        isCustomSetText2 = true
+                        isEndSetText = true
                         etEndPos.setText(items[position].title)
                         etEndPos.setSelection(etEndPos.text.length)
                         endPoint?.let { end -> startPoint?.let { doRouteSearch(it, end) } }
@@ -416,7 +455,6 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
         this.endPoint = endPoint
         if (flHistory.visibility != View.GONE) flHistory.visibility = View.GONE
         RouteSearchHelper.saveContent(this, etMyLocation.text.toString(), startPoint, etEndPos.text.toString(), endPoint)
-        cancelSearchPop()
         val start = ArrayList<NaviLatLng>().apply { add(NaviLatLng(startPoint.latitude, startPoint.longitude)) }
         val end = ArrayList<NaviLatLng>().apply { add(NaviLatLng(endPoint.latitude, endPoint.longitude)) }
         InputMethodUtils.hideSoftInput(this)
@@ -464,10 +502,11 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
 
     override fun onDestroy() {
         InputMethodUtils.hideSoftInput(this)
-        popupWindow?.dismiss()
+        cancelStartSearch()
+        cancelEndSearch()
+        handler.removeCallbacksAndMessages(null)
         mAMapNavi.destroy()
         mapView.onDestroy()
-        handler.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
 }
