@@ -34,6 +34,7 @@ import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
 import com.uroad.zhgs.enumeration.MapDataType
+import com.uroad.zhgs.helper.RoadNaviLayerHelper
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.utils.AndroidBase64Utils
 import com.uroad.zhgs.utils.GsonUtils
@@ -241,11 +242,22 @@ class NavStandardFragment : BaseLocationFragment() {
 
     //路况导航-地图模式默认开启图层：事故、管制、拥堵、恶劣天气、监控
     private fun loadDefault() {
-        getMapDataByType(MapDataType.ACCIDENT.code)
-        getMapDataByType(MapDataType.CONTROL.code)
-        getMapDataByType(MapDataType.TRAFFIC_JAM.code)
-        getMapDataByType(MapDataType.BAD_WEATHER.code)
-        getMapDataByType(MapDataType.SNAPSHOT.code)
+        if (RoadNaviLayerHelper.isMapAccidentChecked(context))
+            getMapDataByType(MapDataType.ACCIDENT.code)
+        if (RoadNaviLayerHelper.isMapConstructionChecked(context))
+            getMapDataByType(MapDataType.CONSTRUCTION.code)
+        if (RoadNaviLayerHelper.isMapControlChecked(context))
+            getMapDataByType(MapDataType.CONTROL.code)
+        if (RoadNaviLayerHelper.isMapJamChecked(context))
+            getMapDataByType(MapDataType.TRAFFIC_JAM.code)
+        if (RoadNaviLayerHelper.isMapBadWeatherChecked(context))
+            getMapDataByType(MapDataType.BAD_WEATHER.code)
+        if (RoadNaviLayerHelper.isMapTrafficAccChecked(context))
+            getMapDataByType(MapDataType.TRAFFIC_INCIDENT.code)
+        if (RoadNaviLayerHelper.isMapMonitorChecked(context))
+            getMapDataByType(MapDataType.SNAPSHOT.code)
+        if (RoadNaviLayerHelper.isMapWeatherChecked(context))
+            getMapDataByType(MapDataType.WEATHER.code)
     }
 
     //启动帧动画
@@ -680,18 +692,10 @@ class NavStandardFragment : BaseLocationFragment() {
                 val mdl = cluster.getObject() as TrafficJamMDL
                 val dialog = TrafficJamDetailDialog(context, mdl)
                 dialog.setOnViewClickListener(object : TrafficJamDetailDialog.OnViewClickListener {
-                    override fun onViewClick(dataMDL: TrafficJamMDL, type: Int) {
+                    override fun onViewClick(dataMDL: TrafficJamMDL) {
                         if (!isLogin()) openActivity(LoginActivity::class.java)
                         else {
-                            when (type) {
-                                1 -> {  //点击了“有用”
-                                    saveIsUseful(cluster, dataMDL, 1, dialog)
-                                }
-                                2 -> {  //点击了“没用”
-                                    saveIsUseful(cluster, dataMDL, 2, dialog)
-                                }
-                                else -> dataMDL.eventid?.let { saveSubscribe(cluster, dataMDL, dialog) }
-                            }
+                            dataMDL.eventid?.let { saveSubscribe(cluster, dataMDL, dialog) }
                             dialog.dismiss()
                         }
                     }
@@ -829,13 +833,8 @@ class NavStandardFragment : BaseLocationFragment() {
     }
 
     //是否有用
-    private fun saveIsUseful(cluster: Cluster, dataMDL: MutilItem, type: Int, dialog: Dialog) {
-        val eventId = if (dataMDL is EventMDL) {
-            dataMDL.eventid
-        } else {
-            (dataMDL as TrafficJamMDL).eventid
-        }
-        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(eventId, getUserId(), type), object : HttpRequestCallback<String>() {
+    private fun saveIsUseful(cluster: Cluster, dataMDL: EventMDL, type: Int, dialog: EventDetailDialog) {
+        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(dataMDL.eventid, getUserId(), type), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading()
             }
@@ -843,16 +842,9 @@ class NavStandardFragment : BaseLocationFragment() {
             override fun onSuccess(data: String?) {
                 endLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    if (dataMDL is EventMDL) {
-                        dataMDL.isuseful = type
-                        cluster.setObject(dataMDL)
-                        (dialog as EventDetailDialog).updateMDL(dataMDL)
-                    } else {
-                        val mdl = dataMDL as TrafficJamMDL
-                        mdl.isuseful = type
-                        cluster.setObject(mdl)
-                        (dialog as TrafficJamDetailDialog).updateMDL(dataMDL)
-                    }
+                    dataMDL.isuseful = type
+                    cluster.setObject(dataMDL)
+                    dialog.updateMDL(dataMDL)
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
                 }

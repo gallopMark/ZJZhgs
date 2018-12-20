@@ -57,6 +57,7 @@ class TrafficJamMDL : MutilItem, ClusterItem, Serializable {
     var content: String? = null
     var updatetime: String? = null
     var eventstatus: String? = null
+    var source: String? = null
     var isuseful: Int? = 0
 
     var markerIcon: Int = R.mipmap.ic_marker_yd_icon

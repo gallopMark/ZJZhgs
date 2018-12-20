@@ -19,7 +19,7 @@ public class ZipUtils {
      * @param zipFileString ZIP的名称
      * @param outPathString 要解压缩路径
      */
-    public static void UnZipFolder(String zipFileString, String outPathString) {
+    public static String UnZipFolder(String zipFileString, String outPathString) {
         ZipInputStream inZip = null;
         ZipEntry zipEntry;
         String szName;
@@ -52,6 +52,7 @@ public class ZipUtils {
                     fos.close();
                 }
             }
+            return outPathString;
         } catch (Exception e) {
             if (fos != null) {
                 try {
@@ -68,6 +69,7 @@ public class ZipUtils {
                 }
             }
         }
+        return null;
     }
 
     public static void UnZipFolder(String zipFileString, String outPathString, String szName) {

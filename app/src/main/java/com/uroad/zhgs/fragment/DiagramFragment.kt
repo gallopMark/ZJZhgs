@@ -27,13 +27,17 @@ import com.uroad.zhgs.dialog.SiteControlDetailRvDialog
 import com.uroad.zhgs.dialog.TrafficJamDetailRvDialog
 import com.uroad.zhgs.enumeration.DiagramEventType
 import com.uroad.zhgs.enumeration.MapDataType
+import com.uroad.zhgs.helper.RoadNaviLayerHelper
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.utils.DiagramUtils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_diagram.*
 
 /**
@@ -159,8 +163,8 @@ class DiagramFragment : BaseLocationFragment() {
             override fun onViewClick(dataMDL: EventMDL, position: Int, type: Int) {
                 if (!isLogin()) openActivity(LoginActivity::class.java)
                 else when (type) {
-                    1 -> saveIsUseful(dataMDL, 1, 1, position, dialog)
-                    2 -> saveIsUseful(dataMDL, 1, 2, position, dialog)
+                    1 -> saveIsUseful(dataMDL, 1, position, dialog)
+                    2 -> saveIsUseful(dataMDL, 2, position, dialog)
                     3 -> saveSubscribe(dataMDL, 1, position, dialog)
                 }
             }
@@ -169,13 +173,8 @@ class DiagramFragment : BaseLocationFragment() {
     }
 
     /*是否有用*/
-    private fun saveIsUseful(item: MutilItem, itemType: Int, type: Int, position: Int, dialog: Dialog) {
-        val eventId: String? = if (itemType == 1) {
-            (item as EventMDL).eventid
-        } else {
-            (item as TrafficJamMDL).eventid
-        }
-        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(eventId, getUserId(), type), object : HttpRequestCallback<String>() {
+    private fun saveIsUseful(dataMDL: EventMDL, type: Int, position: Int, dialog: EventDetailRvDialog) {
+        doRequest(WebApiService.SAVE_IS_USEFUL, WebApiService.isUsefulParams(dataMDL.eventid, getUserId(), type), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading()
             }
@@ -183,15 +182,8 @@ class DiagramFragment : BaseLocationFragment() {
             override fun onSuccess(data: String?) {
                 endLoading()
                 if (GsonUtils.isResultOk(data)) {
-                    if (itemType == 1) {
-                        val mdl = item as EventMDL
-                        mdl.isuseful = type
-                        (dialog as EventDetailRvDialog).notifyItemChanged(position, mdl)
-                    } else {
-                        val mdl = item as TrafficJamMDL
-                        mdl.isuseful = type
-                        (dialog as TrafficJamDetailRvDialog).notifyItemChanged(position, mdl)
-                    }
+                    dataMDL.isuseful = type
+                    dialog.notifyItemChanged(position, dataMDL)
                 } else {
                     showShortToast(GsonUtils.getMsg(data))
                 }
@@ -277,13 +269,9 @@ class DiagramFragment : BaseLocationFragment() {
     /*拥堵详情*/
     private fun onTrafficJamDetail(mdLs: MutableList<TrafficJamMDL>) {
         TrafficJamDetailRvDialog(context, mdLs).setOnViewClickListener(object : TrafficJamDetailRvDialog.OnViewClickListener {
-            override fun onViewClick(mdl: TrafficJamMDL, position: Int, type: Int, dialog: TrafficJamDetailRvDialog) {
+            override fun onViewClick(mdl: TrafficJamMDL, position: Int, dialog: TrafficJamDetailRvDialog) {
                 if (!isLogin()) openActivity(LoginActivity::class.java)
-                else when (type) {
-                    1 -> saveIsUseful(mdl, 2, 1, position, dialog)
-                    2 -> saveIsUseful(mdl, 2, 2, position, dialog)
-                    3 -> saveSubscribe(mdl, 2, position, dialog)
-                }
+                else saveSubscribe(mdl, 2, position, dialog)
             }
         }).show()
     }
@@ -395,6 +383,11 @@ class DiagramFragment : BaseLocationFragment() {
             return true
         }
 
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            loadEventByNotes()
+        }
+
         override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
             handler.proceed()
         }
@@ -434,7 +427,7 @@ class DiagramFragment : BaseLocationFragment() {
     private fun updateData(mdl: AppConfigMDL) {
         val verLocal = DiagramUtils.getVersionLocal(context)
         if (VersionUtils.isNeedUpdate(mdl.conf_ver, verLocal)) {  //判断服务器版本是否大于本地保存的版本号
-            DiagramUtils.deleteAllFile()   //先删除文件夹下所有文件
+            deleteDiagramFiles()  //先删除文件夹下所有文件
             doDownload(mdl.url)
         } else {
             if (DiagramUtils.diagramExists()) {
@@ -444,6 +437,14 @@ class DiagramFragment : BaseLocationFragment() {
             }
         }
         DiagramUtils.saveVersionSer(context, mdl.conf_ver)  //保存服务器版本号到本地
+    }
+
+    /*简图版本升级 删除旧版本的简图所有文件*/
+    private fun deleteDiagramFiles() {
+        addDisposable(Observable.fromCallable { DiagramUtils.deleteAllFile() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({}, {}))
     }
 
     //下载简图
@@ -458,8 +459,7 @@ class DiagramFragment : BaseLocationFragment() {
             }
 
             override fun onFinish(filePath: String) {
-                ZipUtils.UnZipFolder(filePath, CurrApplication.DIAGRAM_PATH)
-                if (DiagramUtils.diagramExists()) loadUrl()
+                unZipFile(filePath)
             }
 
             override fun onError(e: Throwable, errorMsg: String?) {
@@ -472,19 +472,81 @@ class DiagramFragment : BaseLocationFragment() {
         }))
     }
 
+    /*解压zip简图文件 异步解压避免ARN*/
+    private fun unZipFile(filePath: String) {
+        addDisposable(Observable.fromCallable { ZipUtils.UnZipFolder(filePath, CurrApplication.DIAGRAM_PATH) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    endLoading()
+                    if (DiagramUtils.diagramExists()) loadUrl()
+                }, {
+                    endLoading()
+                    showShortToast("解压失败")
+                }, {}, { showLoading("解压简图文件…") }))
+    }
+
     private fun loadUrl() {
         webView.loadUrl(DiagramUtils.diagramUrl())
-        loadEvent(DiagramEventType.Accident.code, 1)
-        loadEvent(DiagramEventType.Construction.code, 0)  //默认关闭施工
-        loadEvent(DiagramEventType.Control.code, 1)
-        loadEvent(DiagramEventType.TollGate.code, 1)
-        loadEvent(DiagramEventType.TrafficJam.code, 1) //
-        loadEvent(DiagramEventType.PileNumber.code, 0)  //桩号默认关闭
-        loadEvent(DiagramEventType.ServiceArea.code, 1)
-        loadEvent(DiagramEventType.Snapshot.code, 1)
-        loadEvent(DiagramEventType.BadWeather.code, 1)  //恶劣天气
-        loadEvent(DiagramEventType.TrafficIncident.code, 1)  //交通事件
-        loadEvent(DiagramEventType.StationControl.code, 1)
+    }
+
+    /*从上次记录的按钮状态控制显示或隐藏*/
+    private fun loadEventByNotes() {
+        if (RoadNaviLayerHelper.isDiagramAccidentChecked(context)) {
+            loadEvent(DiagramEventType.Accident.code, 1)
+        } else {
+            loadEvent(DiagramEventType.Accident.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramConstructionChecked(context)) {
+            loadEvent(DiagramEventType.Construction.code, 1)
+        } else {
+            loadEvent(DiagramEventType.Construction.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramControlChecked(context)) {
+            loadEvent(DiagramEventType.Control.code, 1)
+        } else {
+            loadEvent(DiagramEventType.Control.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramTollChecked(context)) {
+            loadEvent(DiagramEventType.TollGate.code, 1)
+        } else {
+            loadEvent(DiagramEventType.TollGate.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramJamChecked(context)) {
+            loadEvent(DiagramEventType.TrafficJam.code, 1)
+        } else {
+            loadEvent(DiagramEventType.TrafficJam.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramPileChecked(context)) {  //桩号默认关闭
+            loadEvent(DiagramEventType.PileNumber.code, 1)
+        } else {
+            loadEvent(DiagramEventType.PileNumber.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramServiceChecked(context)) {
+            loadEvent(DiagramEventType.ServiceArea.code, 1)
+        } else {
+            loadEvent(DiagramEventType.ServiceArea.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramMonitorChecked(context)) {
+            loadEvent(DiagramEventType.Snapshot.code, 1)
+        } else {
+            loadEvent(DiagramEventType.Snapshot.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramBadWeatherChecked(context)) { //恶劣天气
+            loadEvent(DiagramEventType.BadWeather.code, 1)
+        } else {
+            loadEvent(DiagramEventType.BadWeather.code, 0)
+        }
+        if (RoadNaviLayerHelper.isDiagramTrafficAccChecked(context)) { //交通事件
+            loadEvent(DiagramEventType.TrafficIncident.code, 1)
+        } else {
+            loadEvent(DiagramEventType.TrafficIncident.code, 0)
+        }
+        if(RoadNaviLayerHelper.isDiagramSiteControlChecked(context)){
+            loadEvent(DiagramEventType.StationControl.code, 1)
+        } else {
+            loadEvent(DiagramEventType.StationControl.code, 0)
+        }
     }
 
     fun onEvent(codeType: String, isChecked: Boolean) {
@@ -533,7 +595,7 @@ class DiagramFragment : BaseLocationFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 345 && resultCode == Activity.RESULT_OK){
+        if (requestCode == 345 && resultCode == Activity.RESULT_OK) {
             showLongToast("播放结束")
         }
     }

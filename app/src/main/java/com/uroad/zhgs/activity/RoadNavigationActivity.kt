@@ -22,6 +22,7 @@ import com.uroad.zhgs.dialog.NewFunctionDialog
 import com.uroad.zhgs.enumeration.DiagramEventType
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.helper.AppLocalHelper
+import com.uroad.zhgs.helper.RoadNaviLayerHelper
 import com.uroad.zhgs.model.NewsMDL
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
@@ -139,17 +140,17 @@ class RoadNavigationActivity : BaseActivity() {
 
     //简图默认显示图层：事故、管制、施工、收费站、服务区、监控，图层图标需默认点亮状态
     private fun diagramChecked() {
-        cbEventSG2.isChecked = true
-        cbEventGZ2.isChecked = true
-        cbEventShiG2.isChecked = false
-        cbEventYD2.isChecked = true
-        cbEventZDGZ.isChecked = true
-        cbEventELTQ2.isChecked = true
-        cbEventJTSG2.isChecked = false
-        cbTrafficPile.isChecked = false
-        cbTrafficToll.isChecked = true
-        cbTrafficService.isChecked = true
-        cbTrafficSpot2.isChecked = true
+        cbEventSG2.isChecked = RoadNaviLayerHelper.isDiagramAccidentChecked(this)
+        cbEventGZ2.isChecked = RoadNaviLayerHelper.isDiagramControlChecked(this)
+        cbEventShiG2.isChecked = RoadNaviLayerHelper.isDiagramConstructionChecked(this)
+        cbEventYD2.isChecked = RoadNaviLayerHelper.isDiagramJamChecked(this)
+        cbEventZDGZ.isChecked = RoadNaviLayerHelper.isDiagramSiteControlChecked(this)
+        cbEventELTQ2.isChecked = RoadNaviLayerHelper.isDiagramBadWeatherChecked(this)
+        cbEventJTSG2.isChecked = RoadNaviLayerHelper.isDiagramTrafficAccChecked(this)
+        cbTrafficPile.isChecked = RoadNaviLayerHelper.isDiagramPileChecked(this)
+        cbTrafficToll.isChecked = RoadNaviLayerHelper.isDiagramTollChecked(this)
+        cbTrafficService.isChecked = RoadNaviLayerHelper.isDiagramServiceChecked(this)
+        cbTrafficSpot2.isChecked = RoadNaviLayerHelper.isDiagramMonitorChecked(this)
     }
 
     private fun highFragments(transaction: FragmentTransaction) {
@@ -171,25 +172,82 @@ class RoadNavigationActivity : BaseActivity() {
         val onCheckChangeListener = CompoundButton.OnCheckedChangeListener { cb, isChecked ->
             //   if (drawerLayout.isDrawerOpen(Gravity.END)) drawerLayout.closeDrawer(Gravity.END)
             when (cb.id) {
-                R.id.cbEventSG -> onStandardEvent(MapDataType.ACCIDENT.code, isChecked)
-                R.id.cbEventGZ -> onStandardEvent(MapDataType.CONTROL.code, isChecked)
-                R.id.cbEventShiG -> onStandardEvent(MapDataType.CONSTRUCTION.code, isChecked)
-                R.id.cbEventYD -> onStandardEvent(MapDataType.TRAFFIC_JAM.code, isChecked)  //TRAFFIC_JAM  地图才有
-                R.id.cbTrafficSpot1 -> onStandardEvent(MapDataType.SNAPSHOT.code, isChecked)  //地图快拍
-                R.id.cbOtherWeather -> onStandardEvent(MapDataType.WEATHER.code, isChecked) //WEATHER    地图才有
-                R.id.cbEventELTQ -> onStandardEvent(MapDataType.BAD_WEATHER.code, isChecked)  //恶劣天气
-                R.id.cbEventJTSG -> onStandardEvent(MapDataType.TRAFFIC_INCIDENT.code, isChecked)  //交通事件
-                R.id.cbEventSG2 -> onDiagramEvent(DiagramEventType.Accident.code, isChecked) //简图
-                R.id.cbEventGZ2 -> onDiagramEvent(DiagramEventType.Control.code, isChecked)
-                R.id.cbEventShiG2 -> onDiagramEvent(DiagramEventType.Construction.code, isChecked)
-                R.id.cbEventYD2 -> onDiagramEvent(DiagramEventType.TrafficJam.code, isChecked)
-                R.id.cbTrafficPile -> onDiagramEvent(DiagramEventType.PileNumber.code, isChecked)   //桩号  简图才有
-                R.id.cbTrafficToll -> onDiagramEvent(DiagramEventType.TollGate.code, isChecked)
-                R.id.cbTrafficService -> onDiagramEvent(DiagramEventType.ServiceArea.code, isChecked)
-                R.id.cbTrafficSpot2 -> onDiagramEvent(DiagramEventType.Snapshot.code, isChecked)
-                R.id.cbEventELTQ2 -> onDiagramEvent(DiagramEventType.BadWeather.code, isChecked)
-                R.id.cbEventJTSG2 -> onDiagramEvent(DiagramEventType.TrafficIncident.code, isChecked)
-                R.id.cbEventZDGZ -> onDiagramEvent(DiagramEventType.StationControl.code, isChecked)
+                R.id.cbEventSG -> {
+                    RoadNaviLayerHelper.onMapAccidentChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.ACCIDENT.code, isChecked)
+                }
+                R.id.cbEventGZ -> {
+                    RoadNaviLayerHelper.onMapControlChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.CONTROL.code, isChecked)
+                }
+                R.id.cbEventShiG -> {
+                    RoadNaviLayerHelper.onMapConstructionChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.CONSTRUCTION.code, isChecked)
+                }
+                R.id.cbEventYD -> {
+                    RoadNaviLayerHelper.onMapJamChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.TRAFFIC_JAM.code, isChecked)
+                }
+                R.id.cbTrafficSpot1 -> {
+                    RoadNaviLayerHelper.onMapMonitorChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.SNAPSHOT.code, isChecked)  //地图快拍
+                }
+                R.id.cbOtherWeather -> {
+                    RoadNaviLayerHelper.onMapWeatherChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.WEATHER.code, isChecked) //WEATHER    地图才有
+                }
+                R.id.cbEventELTQ -> {
+                    RoadNaviLayerHelper.onMapBadWeatherChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.BAD_WEATHER.code, isChecked)  //恶劣天气
+                }
+                R.id.cbEventJTSG -> {
+                    RoadNaviLayerHelper.onMapTrafficAccChecked(this@RoadNavigationActivity, isChecked)
+                    onStandardEvent(MapDataType.TRAFFIC_INCIDENT.code, isChecked)  //交通事件
+                }
+                R.id.cbEventSG2 -> {
+                    RoadNaviLayerHelper.onDiagramAccidentChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.Accident.code, isChecked) //简图
+                }
+                R.id.cbEventGZ2 -> {
+                    RoadNaviLayerHelper.onDiagramControlChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.Control.code, isChecked)
+                }
+                R.id.cbEventShiG2 -> {
+                    RoadNaviLayerHelper.onDiagramConstructionChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.Construction.code, isChecked)
+                }
+                R.id.cbEventYD2 -> {
+                    RoadNaviLayerHelper.onDiagramJamChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.TrafficJam.code, isChecked)
+                }
+                R.id.cbTrafficPile -> {
+                    RoadNaviLayerHelper.onDiagramPileChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.PileNumber.code, isChecked)   //桩号  简图才有
+                }
+                R.id.cbTrafficToll -> {
+                    RoadNaviLayerHelper.onDiagramTollChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.TollGate.code, isChecked)
+                }
+                R.id.cbTrafficService -> {
+                    RoadNaviLayerHelper.onDiagramServiceChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.ServiceArea.code, isChecked)
+                }
+                R.id.cbTrafficSpot2 -> {
+                    RoadNaviLayerHelper.onDiagramMonitorChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.Snapshot.code, isChecked)
+                }
+                R.id.cbEventELTQ2 -> {
+                    RoadNaviLayerHelper.onDiagramBadWeatherChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.BadWeather.code, isChecked)
+                }
+                R.id.cbEventJTSG2 -> {
+                    RoadNaviLayerHelper.onDiagramTrafficAccChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.TrafficIncident.code, isChecked)
+                }
+                R.id.cbEventZDGZ -> {
+                    RoadNaviLayerHelper.onDiagramSiteControlChecked(this@RoadNavigationActivity, isChecked)
+                    onDiagramEvent(DiagramEventType.StationControl.code, isChecked)
+                }
             }
         }
         cbEventSG.setOnCheckedChangeListener(onCheckChangeListener)  //地图（事故）
@@ -220,13 +278,14 @@ class RoadNavigationActivity : BaseActivity() {
 
     //路况导航-地图模式默认开启图层：交通事件、施工默认关闭，其他开启
     private fun openDefaultLayer() {
-        cbEventSG.isChecked = true
-        cbEventGZ.isChecked = true
-        cbEventShiG.isChecked = false
-        cbEventYD.isChecked = true
-        cbEventELTQ.isChecked = true
-        cbEventJTSG.isChecked = false
-        cbTrafficSpot1.isChecked = true
+        cbEventSG.isChecked = RoadNaviLayerHelper.isMapAccidentChecked(this)
+        cbEventGZ.isChecked = RoadNaviLayerHelper.isMapControlChecked(this)
+        cbEventShiG.isChecked = RoadNaviLayerHelper.isMapConstructionChecked(this)
+        cbEventYD.isChecked = RoadNaviLayerHelper.isMapJamChecked(this)
+        cbEventELTQ.isChecked = RoadNaviLayerHelper.isMapBadWeatherChecked(this)
+        cbEventJTSG.isChecked = RoadNaviLayerHelper.isMapTrafficAccChecked(this)
+        cbTrafficSpot1.isChecked = RoadNaviLayerHelper.isMapMonitorChecked(this)
+        cbOtherWeather.isChecked = RoadNaviLayerHelper.isMapWeatherChecked(this)
     }
 
     //地图回调

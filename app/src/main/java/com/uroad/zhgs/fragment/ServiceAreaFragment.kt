@@ -3,7 +3,6 @@ package com.uroad.zhgs.fragment
 import android.view.View
 import com.amap.api.location.AMapLocation
 import com.uroad.zhgs.adapteRv.ServiceAreaAdapter
-import com.uroad.zhgs.common.BaseRefreshRvFragment
 import com.uroad.zhgs.common.BaseRefreshRvLocationFragment
 import com.uroad.zhgs.model.ServiceAreaMDL
 import com.uroad.zhgs.model.ServiceMDL

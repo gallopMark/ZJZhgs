@@ -196,37 +196,19 @@
         android:layout_height="@dimen/margin_50">
 
         <TextView
-            android:id="@+id/tvUseful"
+            android:id="@+id/tvSource"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/ic_useful_default"
-            android:drawablePadding="@dimen/margin_10"
-            android:gravity="center"
-            android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
-            android:text="@string/userful"
-            android:textSize="@dimen/font_16" />
-
-        <TextView
-            android:id="@+id/tvUseless"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_toRightOf="@+id/tvUseful"
-            android:drawableLeft="@mipmap/ic_useless_default"
-            android:drawablePadding="@dimen/margin_10"
-            android:gravity="center"
-            android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10"
-            android:text="@string/useless"
-            android:textSize="@dimen/font_16" />
+            android:textColor="@color/blow_gray"
+            android:textSize="@dimen/font_14" />
 
         <TextView
             android:id="@+id/tvSubscribe"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_gravity="center"
             android:layout_marginRight="@dimen/margin_10"
             android:drawableLeft="@mipmap/ic_subscribe_icon"
             android:drawablePadding="@dimen/margin_10"

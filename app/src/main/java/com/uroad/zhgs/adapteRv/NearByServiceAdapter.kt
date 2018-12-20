@@ -3,6 +3,8 @@ package com.uroad.zhgs.adapteRv
 import android.app.Activity
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
+import android.view.View
 import android.widget.ImageView
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.library.utils.DisplayUtils
@@ -25,8 +27,14 @@ class NearByServiceAdapter(private val context: Activity, mDatas: MutableList<Se
             params.leftMargin = 0
         }
         holder.itemView.layoutParams = params
-        holder.displayImage(R.id.ivPic, t.picurl,R.color.color_f7)
+        holder.displayImage(R.id.ivPic, t.picurl, R.color.color_f7)
         holder.setText(R.id.tvName, t.name)
         holder.setText(R.id.tvDistance, "${t.distance}km")
+        if (TextUtils.isEmpty(t.remark)) {
+            holder.setVisibility(R.id.tvStatus, View.GONE)
+        } else {
+            holder.setVisibility(R.id.tvStatus, View.VISIBLE)
+            holder.setText(R.id.tvStatus, t.remark)
+        }
     }
 }

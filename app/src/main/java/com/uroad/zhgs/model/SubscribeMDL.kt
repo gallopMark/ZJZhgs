@@ -103,6 +103,7 @@ class SubscribeMDL {
     var longtime: String? = null
     var xy: String? = null
     var eventstatus: String? = null
+    var source: String? = null
 
     /*1170005【救援进展】
 roadname	高速名称
@@ -348,6 +349,7 @@ eventtype	事件类型
         mdl.content = content
         mdl.updatetime = content
         mdl.isuseful = isuseful
+        mdl.source = source
         mdl.markerIcon = R.mipmap.ic_marker_yd_icon
         mdl.markerBigIco = R.mipmap.ic_marker_yd_big_icon
         return mdl

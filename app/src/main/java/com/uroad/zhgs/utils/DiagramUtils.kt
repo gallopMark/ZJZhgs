@@ -39,13 +39,18 @@ class DiagramUtils {
             return "file:///${diagramPath()}"
         }
 
-        fun deleteAllFile() {
-            val file = File(CurrApplication.DIAGRAM_PATH)
-            if (file.exists()) {
-                val files = file.listFiles()
-                for (i in 0 until files.size) {
-                    files[i].delete()
+        fun deleteAllFile(): Boolean {
+            return try {
+                val file = File(CurrApplication.DIAGRAM_PATH)
+                if (file.exists()) {
+                    val files = file.listFiles()
+                    for (i in 0 until files.size) {
+                        files[i].delete()
+                    }
                 }
+                true
+            } catch (e: Exception) {
+                false
             }
         }
     }

@@ -14,6 +14,7 @@ import com.uroad.library.utils.ZipUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.rxhttp.RxHttpManager.addDisposable
 import com.uroad.rxhttp.download.DownloadListener
+import com.uroad.rxhttp.interceptor.Transformer
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
@@ -30,6 +31,9 @@ import com.uroad.zhgs.webservice.WebApiService
 import com.youzan.androidsdk.YouzanSDK
 import com.youzan.androidsdk.YouzanToken
 import com.youzan.androidsdkx5.YouZanSDKX5Adapter
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.File
 
 /**
@@ -212,7 +216,7 @@ class CurrApplication : BaseApplication() {
     private fun updateData(mdl: AppConfigMDL) {
         val verLocal = DiagramUtils.getVersionLocal(this)
         if (VersionUtils.isNeedUpdate(mdl.conf_ver, verLocal)) {  //判断服务器版本是否大于本地保存的版本号
-            DiagramUtils.deleteAllFile()   //先删除文件夹下所有文件
+            deleteDiagramFiles()
             doDownload(mdl.url)
         } else {
             if (!DiagramUtils.diagramExists()) {
@@ -222,6 +226,14 @@ class CurrApplication : BaseApplication() {
         DiagramUtils.saveVersionSer(this, mdl.conf_ver)  //保存服务器版本号到本地
     }
 
+    /*简图版本升级 删除旧版本的简图所有文件*/
+    private fun deleteDiagramFiles() {
+        addDisposable(Observable.fromCallable { DiagramUtils.deleteAllFile() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({}, {}))
+    }
+
     //下载简图
     private fun doDownload(url: String?) {
         if (TextUtils.isEmpty(url)) {
@@ -229,13 +241,21 @@ class CurrApplication : BaseApplication() {
         }
         addDisposable(RxHttpManager.downloadFile(url, CurrApplication.DIAGRAM_PATH, null, object : DownloadListener() {
             override fun onFinish(filePath: String) {
-                ZipUtils.UnZipFolder(filePath, CurrApplication.DIAGRAM_PATH)
+                unZipFile(filePath)
             }
 
             override fun onError(e: Throwable?, errorMsg: String?) {
                 handler.postDelayed({ doDownload(url) }, 3000)
             }
         }))
+    }
+
+    /*解压zip简图文件 异步解压避免ARN*/
+    private fun unZipFile(filePath: String) {
+        addDisposable(Observable.fromCallable { ZipUtils.UnZipFolder(filePath, CurrApplication.DIAGRAM_PATH) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({}, {}))
     }
 
     private val activityLifecycleCallbacks = object : ActivityLifecycleCallbacks {

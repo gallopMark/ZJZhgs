@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_nearby_child.*
 /**
  * @author MFB
  * @create 2018/9/26
- * @describe 首页附近收费站
+ * @describe 首页附近服务区
  */
 class NearByServiceCFragment : BaseFragment() {
     private var longitude = CurrApplication.APP_LATLNG.longitude

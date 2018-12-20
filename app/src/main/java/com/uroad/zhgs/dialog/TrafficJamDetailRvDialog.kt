@@ -2,7 +2,6 @@ package com.uroad.zhgs.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -63,8 +62,6 @@ class TrafficJamDetailRvDialog(private val context: Activity,
 
         override fun onBindHoder(holder: RecyclerHolder, t: TrafficJamMDL, position: Int) {
             holder.setVisibility(R.id.ivClose, View.GONE)
-            val tvUseful = holder.obtainView<TextView>(R.id.tvUseful)
-            val tvUseless = holder.obtainView<TextView>(R.id.tvUseless)
             val tvSubscribe = holder.obtainView<TextView>(R.id.tvSubscribe)
             holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_event_yd_p)
             holder.setText(R.id.tvEventName, "拥堵")
@@ -90,30 +87,14 @@ class TrafficJamDetailRvDialog(private val context: Activity,
             distance += "km"
             holder.setText(R.id.tvDistance, SpannableString(distance).apply { setSpan(AbsoluteSizeSpan(ts18, false), 0, distance.indexOf("k"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) })
             holder.setText(R.id.tvDuration, t.getLongTime(ts18, false))
-            if (t.isuseful == 1) {
-                tvUseful.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useful_pressed), null, null, null)
-            } else {
-                tvUseful.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useful_default), null, null, null)
-            }
-            if (t.isuseful == 2) {
-                tvUseless.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useless_pressed), null, null, null)
-            } else {
-                tvUseless.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.mipmap.ic_useless_default), null, null, null)
-            }
-            if (t.isuseful == 1 || t.isuseful == 2) {
-                tvUseful.isEnabled = false
-                tvUseless.isEnabled = false
-            } else {
-                tvUseful.setOnClickListener { onViewClickListener?.onViewClick(t, position, 1, this@TrafficJamDetailRvDialog) }
-                tvUseless.setOnClickListener { onViewClickListener?.onViewClick(t, position, 2, this@TrafficJamDetailRvDialog) }
-            }
+            holder.setText(R.id.tvSource, t.source)
             if (t.subscribestatus == 1) {
                 tvSubscribe.text = context.resources.getString(R.string.usersubscribe_hasSubscribe)
                 tvSubscribe.isEnabled = false
             } else {
                 tvSubscribe.text = context.resources.getString(R.string.usersubscribe_subscribe)
                 tvSubscribe.isEnabled = true
-                tvSubscribe.setOnClickListener { onViewClickListener?.onViewClick(t, position, 3, this@TrafficJamDetailRvDialog) }
+                tvSubscribe.setOnClickListener { onViewClickListener?.onViewClick(t, position, this@TrafficJamDetailRvDialog) }
             }
         }
     }
@@ -124,6 +105,6 @@ class TrafficJamDetailRvDialog(private val context: Activity,
     }
 
     interface OnViewClickListener {
-        fun onViewClick(mdl: TrafficJamMDL, position: Int, type: Int, dialog: TrafficJamDetailRvDialog)
+        fun onViewClick(mdl: TrafficJamMDL, position: Int, dialog: TrafficJamDetailRvDialog)
     }
 }
