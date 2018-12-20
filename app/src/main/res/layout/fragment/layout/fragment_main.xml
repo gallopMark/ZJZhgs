@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include layout="@layout/layout_fragment_main" />
 
-    <LinearLayout
+    <com.uroad.zhgs.widget.DragView
+        android:id="@+id/ivCustomerService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:gravity="right"
-        android:orientation="vertical">
+        android:layout_marginEnd="@dimen/margin_15"
+        android:layout_marginRight="@dimen/margin_15"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:src="@mipmap/ic_home_customer_service"
+        app:dragMarginBottom="@dimen/margin_80"
+        app:layout_constraintBottom_toTopOf="@+id/llRidersWindow"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageView
-            android:id="@+id/ivCustomerService"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_15"
-            android:src="@mipmap/ic_home_customer_service" />
+    <include
+        android:id="@+id/llRidersWindow"
+        layout="@layout/layout_riders_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_15"
+        android:layout_marginRight="@dimen/margin_15"
+        android:layout_marginBottom="@dimen/margin_15"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <include
-            android:id="@+id/llRidersWindow"
-            layout="@layout/layout_riders_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_15"
-            android:visibility="gone" />
-    </LinearLayout>
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
 
 
 

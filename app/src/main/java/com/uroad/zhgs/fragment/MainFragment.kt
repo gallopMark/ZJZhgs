@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import com.amap.api.location.AMapLocation
-import com.uroad.zhgs.common.BaseFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.utils.GsonUtils

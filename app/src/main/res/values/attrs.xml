@@ -37,9 +37,10 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="CustomShapeTextView">
-        <attr name="paintNormalColor" format="reference|color" />
-        <attr name="paintSelectColor" format="reference|color" />
-        <attr name="isFillColor" format="boolean" />
+    <declare-styleable name="DragView">
+        <attr name="dragMarginTop" format="dimension" />
+        <attr name="dragMarginBottom" format="dimension" />
+        <attr name="dragMarginStart" format="dimension" />
+        <attr name="dragMarginEnd" format="dimension" />
     </declare-styleable>
 </resources>
