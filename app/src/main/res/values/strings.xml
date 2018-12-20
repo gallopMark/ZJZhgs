@@ -493,7 +493,7 @@
     <string name="roadToll_select_endPoi_hint">终点</string>
 
     <string name="dialog_bindcar_title">绑定车辆</string>
-    <string name="dialog_bindcar_content">使用本功能，请先绑定车辆</string>
+    <string name="dialog_bindcar_content">行车安全，你我有责，赶紧绑定车辆查询您的车辆诚信等级与诚信分数吧。</string>
     <string name="dialog_bindcar_confirm">绑定车辆</string>
     <string name="dialog_bindcar_cancel">以后再说</string>
 
