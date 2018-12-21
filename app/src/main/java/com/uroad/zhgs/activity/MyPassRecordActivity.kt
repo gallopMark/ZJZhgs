@@ -51,32 +51,32 @@ class MyPassRecordActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_passrecord)
         withTitle(getString(R.string.mine_my_passRecord))
-        initDate()
+//        initDate()
         initRv()
     }
 
-    private fun initDate() {
-        val calendar = Calendar.getInstance()
-        val currYear = calendar.get(Calendar.YEAR)
-        val currMonth = calendar.get(Calendar.MONTH) + 1
-        val monthStr = if (currMonth < 10) "0$currMonth" else currMonth.toString()
-        val currDate = "$currYear.$monthStr"
-        startDate = "$currYear$monthStr"
-        tvCurrentDate.text = currDate
-        flDate.setOnClickListener {
-            CustomDatePickerDialog(this@MyPassRecordActivity).setOnDateSelectedListener(object : CustomDatePickerDialog.OnDateSelectedListener {
-                override fun onDateSelected(year: Int, month: Int, dialog: CustomDatePickerDialog) {
-                    val ms = if (month < 10) "0$month" else month.toString()
-                    startDate = "$year$ms"
-                    val date = "$year.$ms"
-                    tvCurrentDate.text = date
-                    dialog.dismiss()
-                    if (TextUtils.isEmpty(carno) || TextUtils.isEmpty(type)) return
-                    getCurrentRecordData()
-                }
-            }).show()
-        }
-    }
+//    private fun initDate() {
+//        val calendar = Calendar.getInstance()
+//        val currYear = calendar.get(Calendar.YEAR)
+//        val currMonth = calendar.get(Calendar.MONTH) + 1
+//        val monthStr = if (currMonth < 10) "0$currMonth" else currMonth.toString()
+//        val currDate = "$currYear.$monthStr"
+//        startDate = "$currYear$monthStr"
+//        tvCurrentDate.text = currDate
+//        flDate.setOnClickListener {
+//            CustomDatePickerDialog(this@MyPassRecordActivity).setOnDateSelectedListener(object : CustomDatePickerDialog.OnDateSelectedListener {
+//                override fun onDateSelected(year: Int, month: Int, dialog: CustomDatePickerDialog) {
+//                    val ms = if (month < 10) "0$month" else month.toString()
+//                    startDate = "$year$ms"
+//                    val date = "$year.$ms"
+//                    tvCurrentDate.text = date
+//                    dialog.dismiss()
+//                    if (TextUtils.isEmpty(carno) || TextUtils.isEmpty(type)) return
+//                    getCurrentRecordData()
+//                }
+//            }).show()
+//        }
+//    }
 
     private fun initRv() {
         recyclerView.layoutManager = LinearLayoutManager(this).apply { orientation = LinearLayoutManager.VERTICAL }

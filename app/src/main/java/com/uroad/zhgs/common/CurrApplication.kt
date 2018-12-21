@@ -9,12 +9,12 @@ import com.tencent.android.tpush.XGPushManager
 import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
+import com.uroad.ifly.speech.IFlyManager
 import com.uroad.library.utils.VersionUtils
 import com.uroad.library.utils.ZipUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.rxhttp.RxHttpManager.addDisposable
 import com.uroad.rxhttp.download.DownloadListener
-import com.uroad.rxhttp.interceptor.Transformer
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.VideoPlayerActivity
 import com.uroad.zhgs.helper.UserPreferenceHelper
@@ -70,6 +70,7 @@ class CurrApplication : BaseApplication() {
         initXG()
         initUM()
         initYouZan()
+        initIFly()
         initBugly()
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
     }
@@ -182,6 +183,11 @@ class CurrApplication : BaseApplication() {
             this.cookieValue = cookie_value
         }
         YouzanSDK.sync(this, token)
+    }
+
+    /*初始化讯飞语音*/
+    private fun initIFly() {
+        IFlyManager.createUtility(this, getString(R.string.IFLY_APP_ID))
     }
 
     /*初始化tencent bugly*/

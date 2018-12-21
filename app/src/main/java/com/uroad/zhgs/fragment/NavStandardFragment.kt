@@ -3,7 +3,6 @@ package com.uroad.zhgs.fragment
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.drawable.AnimationDrawable
 import android.os.*
 import android.support.v4.util.ArrayMap
 import android.text.TextUtils
@@ -14,13 +13,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.amap.api.location.AMapLocation
+import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.amap.api.maps.model.animation.AlphaAnimation
 import com.amap.api.maps.model.animation.Animation
+import com.uroad.ifly.IFlySynthesizer
 import com.uroad.library.utils.DisplayUtils
+import com.uroad.mqtt.IMqttCallBack
+import com.uroad.mqtt.MqttService
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.rxhttp.interceptor.Transformer
 import com.uroad.zhgs.R
@@ -36,6 +39,8 @@ import com.uroad.zhgs.dialog.*
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.helper.RoadNaviLayerHelper
 import com.uroad.zhgs.model.*
+import com.uroad.zhgs.model.mqtt.NaviEventPushMDL
+import com.uroad.zhgs.model.mqtt.NaviLocUploadMDL
 import com.uroad.zhgs.utils.AndroidBase64Utils
 import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.ApiService
@@ -44,6 +49,8 @@ import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.CustomView
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_nav_standard.*
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.IMqttToken
 
 /**
  *Created by MFB on 2018/8/10.
@@ -52,13 +59,13 @@ import kotlinx.android.synthetic.main.fragment_nav_standard.*
 class NavStandardFragment : BaseLocationFragment() {
 
     private var fromHome: Boolean = false
-    private var isOpenLocation = false
     private var location: AMapLocation? = null
     private var longitude: Double = 0.toDouble()
     private var latitude: Double = 0.toDouble()
     private lateinit var aMap: AMap
-    private lateinit var myLocationView: View
-    private lateinit var animationDrawable: AnimationDrawable
+    private var locationMarker: Marker? = null  //当前位置
+    private var isLoadDefault = false
+    private var isMoveCamera = false
     private var targetLatLng: LatLng? = null
     private val checkMap = ArrayMap<String, Boolean>()
     private var mClusterSize: Int = 0
@@ -67,28 +74,30 @@ class NavStandardFragment : BaseLocationFragment() {
     private val mAddMarkers = ArrayList<Marker>()
     private val weatherMarkers = ArrayList<Marker>()
     private val statusMap = ArrayMap<String, Disposable>()
+    private var mqttService: MqttService? = null
+    private var synthesizer: IFlySynthesizer? = null
+    private var handler: Handler? = null
 
     override fun setBaseLayoutResID(): Int {
         return R.layout.fragment_nav_standard
     }
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
-        myLocationView = layoutInflater.inflate(R.layout.mapview_mylocation2, FrameLayout(context), false)
-        val ivDiffuse = myLocationView.findViewById<ImageView>(R.id.ivDiffuse)
-        animationDrawable = ivDiffuse.drawable as AnimationDrawable
         arguments?.let { fromHome = it.getBoolean("fromHome", false) }
         initTopSearch()
         mapView.onCreate(savedInstanceState)
         initMapView()
         requestLocationPermissions(object : RequestLocationPermissionCallback {
             override fun doAfterGrand() {
-                openLocation()
+                //10秒定位一次
+                openLocation(AMapLocationClientOption().apply { interval = 10 * 1000L })
             }
 
             override fun doAfterDenied() {
                 showDismissLocationDialog()
             }
         })
+        onConnectMQTT()
     }
 
     private fun initTopSearch() {
@@ -130,6 +139,53 @@ class NavStandardFragment : BaseLocationFragment() {
             }
         }
         dealWithFromHome()
+    }
+
+    /*创建mqtt连接*/
+    private fun onConnectMQTT() {
+        if (!isLogin()) return
+        handler = Handler(Looper.getMainLooper())
+        mqttService = ApiService.buildMQTTService(context).apply {
+            connect(object : IMqttCallBack {
+                override fun messageArrived(topic: String?, message: String?, qos: Int) {
+                    when (topic) {
+                        "${ApiService.TOPIC_NAVI_EVENT_PUSH}${getUserUUID()}" -> {
+                            val mdl = GsonUtils.fromJsonToObject(message, NaviEventPushMDL::class.java)
+                            mdl?.content?.let { playVoice(it) }
+                        }
+                    }
+                }
+
+                override fun connectionLost(throwable: Throwable?) {
+                }
+
+                override fun deliveryComplete(deliveryToken: IMqttDeliveryToken?) {
+                }
+
+                override fun connectSuccess(token: IMqttToken?) {
+                    subscribeTopic()
+                }
+
+                override fun connectFailed(token: IMqttToken?, throwable: Throwable?) {
+                    handler?.postDelayed({ connect(this) }, CurrApplication.DELAY_MILLIS)
+                }
+            })
+        }
+    }
+
+    private fun subscribeTopic() {
+        val topic = "${ApiService.TOPIC_NAVI_EVENT_PUSH}${getUserUUID()}"
+        mqttService?.subscribe(topic, 1)
+    }
+
+    /*讯飞语音播放文字*/
+    private fun playVoice(content: String) {
+        synthesizer?.stopSpeaking()
+        if (synthesizer == null) {
+            synthesizer = IFlySynthesizer.create(context, null).apply { startSpeaking(content) }
+        } else {
+            synthesizer?.startSpeaking(content)
+        }
     }
 
     /*地图移动时重新绘制点聚合，或者移除某一功能时*/
@@ -223,21 +279,43 @@ class NavStandardFragment : BaseLocationFragment() {
     }
 
     override fun afterLocation(location: AMapLocation) {
-        isOpenLocation = true
         this.location = location
         this.longitude = location.longitude
         this.latitude = location.latitude
         this.targetLatLng = LatLng(location.latitude, location.longitude)
-        aMap.addMarker(createOptions(LatLng(location.latitude, location.longitude), location.city, location.address, BitmapDescriptorFactory.fromView(myLocationView)))
+        uploadMyLocation(location)
+        attachMyLocation(location)
         if (!fromHome) {
-            aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), aMap.cameraPosition.zoom, 0f, 0f)))
-            loadDefault()
+            if (!isMoveCamera) {
+                aMap.animateCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(location.latitude, location.longitude), aMap.cameraPosition.zoom, 0f, 0f)))
+                isMoveCamera = true
+            }
+            if (!isLoadDefault) loadDefault()
         }
-        closeLocation()
+    }
+
+    /*上传我的当前位置信息*/
+    private fun uploadMyLocation(location: AMapLocation) {
+        if (!isLogin()) return
+        val mdl = NaviLocUploadMDL().apply {
+            this.longitude = location.longitude
+            this.latitude = location.latitude
+            this.reqtime = System.currentTimeMillis()
+        }
+        mqttService?.publish("${ApiService.TOPIC_NAVI_UPLOAD_LOC}${getUserUUID()}", mdl.obtainMessage())
+    }
+
+    /*我的当前位置marker*/
+    private fun attachMyLocation(location: AMapLocation) {
+        locationMarker?.let {
+            it.remove()
+            locationMarker = null
+        }
+        locationMarker = aMap.addMarker(createOptions(LatLng(location.latitude, location.longitude), location.city, location.address, BitmapDescriptorFactory.fromResource(R.mipmap.ic_route_start)))
     }
 
     override fun locationFailure() {
-        loadDefault()
+        if (!isLoadDefault) loadDefault()
     }
 
     //路况导航-地图模式默认开启图层：事故、管制、拥堵、恶劣天气、监控
@@ -258,17 +336,7 @@ class NavStandardFragment : BaseLocationFragment() {
             getMapDataByType(MapDataType.SNAPSHOT.code)
         if (RoadNaviLayerHelper.isMapWeatherChecked(context))
             getMapDataByType(MapDataType.WEATHER.code)
-    }
-
-    //启动帧动画
-    private fun startAnim() {
-        animationDrawable.start()
-    }
-
-    //选择当前动画的第一帧，然后停止
-    private fun stopAnim() {
-        animationDrawable.selectDrawable(0) //选择当前动画的第一帧，然后停止
-        animationDrawable.stop()
+        isLoadDefault = true
     }
 
     //放大地图
@@ -316,13 +384,12 @@ class NavStandardFragment : BaseLocationFragment() {
     private fun getMapDataByType(type: String) {
         val body = ApiService.createRequestBody(WebApiService.mapDataByTypeParams(type, longitude, latitude, "", ""), WebApiService.MAP_DATA)
         val disposable = RxHttpManager.createApi(ApiService::class.java).doPost(body).compose(Transformer.switchSchedulers())
-                .subscribe({ data -> onSuccess(type, data) }, { e -> onError(type, e) }, {}, { startAnim() })
+                .subscribe({ data -> onSuccess(type, data) }, { e -> onError(type, e) })
         statusMap[type] = disposable
     }
 
     /*接口数据返回*/
     private fun onSuccess(type: String, json: String?) {
-        stopAnim()
         val data = AndroidBase64Utils.decodeToString(json)
         if (GsonUtils.isResultOk(data)) {
             updateData(type, data)
@@ -336,7 +403,6 @@ class NavStandardFragment : BaseLocationFragment() {
 
     /*访问异常*/
     private fun onError(type: String, e: Throwable) {
-        stopAnim()
         val isChecked = checkMap[type]
         if (isChecked != null && isChecked) {
             onHttpError(e)
@@ -941,11 +1007,17 @@ class NavStandardFragment : BaseLocationFragment() {
     }
 
     override fun onPause() {
+        synthesizer?.stopSpeaking()
         mapView.onPause()
         super.onPause()
     }
 
     override fun onDestroyView() {
+        synthesizer?.let {
+            it.stopSpeaking()
+            it.destroy()
+        }
+        mqttService?.disconnect()
         dispose()
         mapView.onDestroy()
         super.onDestroyView()

@@ -38,6 +38,9 @@ interface ApiService {
         const val TOPIC_LATLNG_UPDATE = "ZhgsMq/TeamLocUpdate/" //成员位置发送变动后需要通知车队其他人员更新信息
         const val TOPIC_PLACE_UPDATE = "ZhgsMq/TeamPlaceUpdate/" //目的地更新通知车队各成员
         const val TOPIC_MSG_CALLBACK = "ZhgsMq/CallBack/" //接口响应通知操作人结果。   Java后台触发
+
+        const val TOPIC_NAVI_UPLOAD_LOC = "RoadNavi/UploadLocation/" //路况导航上传经纬度主题
+        const val TOPIC_NAVI_EVENT_PUSH = "RoadNavi/EventPush/" //路况导航事件订阅主题
         // const val UPLOAD_URL = "http://zhgs.u-road.com/ZJAppApi/index.php/api/Upload/uploadImg"
         fun createRequestBody(params: Map<String, String?>, method: String?): RequestBody {
             val map = HashMap<String, String?>().apply { put("fun", method) }

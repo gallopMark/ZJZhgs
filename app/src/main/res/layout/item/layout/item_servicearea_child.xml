@@ -15,9 +15,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:drawableStart="@mipmap/ic_menu_jtss_service_p"
             android:drawableLeft="@mipmap/ic_menu_jtss_service_p"
             android:drawablePadding="@dimen/margin_5"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:textColor="@color/blow_gray"
             android:textSize="@dimen/font_16" />
 
@@ -26,11 +27,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_10"
             android:layout_marginLeft="@dimen/margin_10"
             android:layout_weight="1"
-            android:gravity="right"
+            android:drawableEnd="@mipmap/ic_red_point"
+            android:drawableRight="@mipmap/ic_red_point"
+            android:drawablePadding="@dimen/margin_5"
+            android:gravity="end"
             android:textColor="@color/blow_gray"
-            android:textSize="@dimen/font_16" />
+            android:textSize="@dimen/font_16"
+            android:visibility="gone" />
     </LinearLayout>
 
     <View

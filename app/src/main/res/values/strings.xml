@@ -498,7 +498,7 @@
     <string name="dialog_bindcar_cancel">以后再说</string>
 
     <string name="carInquiry_your">您的车辆</string>
-    <string name="carInquiry_bottom_tips">换卡、套牌、冲卡、冒充均等属于违法行为，如出现上述行为将纳入浙江省高速诚信管理体系，影响您的诚信分数。诚信详情请登录高速驾驶行为诚信网查询，高速驾驶需谨慎，行车安全，你我有责。</string>
+    <string name="carInquiry_bottom_tips">通过认证车主信息，可以查询车辆在高速公路上的通行记录，换卡、套牌、冲卡、冒充等均属违法行为，将会纳入浙江省高速诚信管理体系。</string>
 
     <string name="riders_interaction">车友互动</string>
     <string name="riders_myNotice">我的关注</string>

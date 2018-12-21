@@ -2,6 +2,7 @@ package com.uroad.zhgs.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.text.SpannableString
 import android.text.TextUtils
@@ -34,7 +35,7 @@ class CarInquiryActivity : BaseActivity() {
         setBaseContentLayoutWithoutTitle(R.layout.activity_carinquiry)
         requestWindowFullScreen()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            ivBack.layoutParams = (ivBack.layoutParams as FrameLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@CarInquiryActivity) }
+            ivBack.layoutParams = (ivBack.layoutParams as ConstraintLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@CarInquiryActivity) }
         ivBack.setOnClickListener { onBackPressed() }
         setImage()
     }

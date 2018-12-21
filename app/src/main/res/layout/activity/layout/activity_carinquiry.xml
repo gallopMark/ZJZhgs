@@ -125,8 +125,8 @@
                                     android:id="@+id/tvScore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textStyle="bold"
-                                    android:textSize="@dimen/font_24" />
+                                    android:textSize="@dimen/font_24"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/tvStatus"
@@ -153,6 +153,7 @@
         android:id="@+id/ivBack"
         android:layout_width="@dimen/margin_50"
         android:layout_height="@dimen/margin_50"
+        android:contentDescription="@string/goBack"
         android:scaleType="center"
         android:src="@mipmap/ic_back_white" />
 </FrameLayout>

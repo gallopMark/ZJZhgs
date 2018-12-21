@@ -26,7 +26,7 @@ public class MqttService {
     private int timeOut;
     private int keepAliveInterval;
     private boolean cleanSession;
-    private boolean autoReconnect = true;
+    private boolean autoReconnect;
     private IMqttCallBack starMQTTCallBack;
 
     /**

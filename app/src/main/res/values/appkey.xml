@@ -37,4 +37,6 @@ client_secret:9b5e478f350a12c9601345a7101d0057 隐藏 复制
 授权店铺id：42093087-->
     <string name="PRAISE_CLIENT_ID">06a9f7b8179539accf</string>
     <string name="PRAISE_CLIENT_SECRET">9b5e478f350a12c9601345a7101d0057</string>
+    <!--讯飞语音appId-->
+    <string name="IFLY_APP_ID">5c1b5cab</string>
 </resources>

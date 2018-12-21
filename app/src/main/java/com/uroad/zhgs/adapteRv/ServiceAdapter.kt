@@ -1,6 +1,8 @@
 package com.uroad.zhgs.adapteRv
 
 import android.content.Context
+import android.text.TextUtils
+import android.view.View
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.ServiceMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
@@ -14,6 +16,11 @@ class ServiceAdapter(context: Context, mDatas: MutableList<ServiceMDL>)
 
     override fun onBindHoder(holder: RecyclerHolder, t: ServiceMDL, position: Int) {
         holder.setText(R.id.tvName, t.name)
-        holder.setText(R.id.tvRemark, t.remark)
+        if(TextUtils.isEmpty(t.remark)){
+            holder.setVisibility(R.id.tvRemark, View.GONE)
+        } else {
+            holder.setText(R.id.tvRemark, t.remark)
+            holder.setVisibility(R.id.tvRemark, View.VISIBLE)
+        }
     }
 }

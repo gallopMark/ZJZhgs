@@ -45,6 +45,7 @@ android {
                     'src/main/res/layout',
                     'src/main/res'
             ]
+            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
     signingConfigs {
@@ -79,6 +80,7 @@ dependencies {
     implementation project(':ijkplayer')
     implementation project(':cameraLibrary')
     implementation project(':sharelib')
+    implementation project(':IflyVoice')
     implementation 'top.zibin:Luban:1.1.8'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
     //没有使用特殊Header，可以不加这行
