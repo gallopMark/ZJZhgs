@@ -168,7 +168,7 @@ abstract class BasePageFragment : Fragment() {
         val cLoadView = CurrencyLoadView(context)
         val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
         cLoadView.layoutParams = params
-        if (!NetworkUtils.isConnected(context)) cLoadView.setState(CurrencyLoadView.STATE_NONETWORK)
+        if (!NetworkUtils.isConnected(context)) cLoadView.setState(CurrencyLoadView.STATE_NO_NETWORK)
         else cLoadView.setState(CurrencyLoadView.STATE_ERROR)
         cLoadView.setOnRetryListener(object : CurrencyLoadView.OnRetryListener {
             override fun onRetry(view: View) {

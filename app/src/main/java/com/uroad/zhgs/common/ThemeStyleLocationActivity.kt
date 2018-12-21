@@ -81,7 +81,7 @@ abstract class ThemeStyleLocationActivity : BaseLocationActivity() {
         val cLoadView = CurrencyLoadView(this)
         val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
         cLoadView.layoutParams = params
-        if (!NetworkUtils.isConnected(this)) cLoadView.setState(CurrencyLoadView.STATE_NONETWORK)
+        if (!NetworkUtils.isConnected(this)) cLoadView.setState(CurrencyLoadView.STATE_NO_NETWORK)
         else cLoadView.setState(CurrencyLoadView.STATE_ERROR)
         cLoadView.setOnRetryListener(object : CurrencyLoadView.OnRetryListener {
             override fun onRetry(view: View) {

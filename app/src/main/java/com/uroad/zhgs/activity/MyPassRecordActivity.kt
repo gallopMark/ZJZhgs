@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.widget.PopupWindowCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
@@ -19,7 +18,6 @@ import com.uroad.library.utils.NetworkUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.PassRecordAdapter
 import com.uroad.zhgs.common.BaseActivity
-import com.uroad.zhgs.dialog.CustomDatePickerDialog
 import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.model.CarMDL
 import com.uroad.zhgs.model.PassRecordMDL
@@ -31,7 +29,6 @@ import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.CurrencyLoadView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_passrecord.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -244,7 +241,7 @@ class MyPassRecordActivity : BaseActivity() {
 //    }
 
     private fun onError() {
-        if (!NetworkUtils.isConnected(this)) loadView.setState(CurrencyLoadView.STATE_NONETWORK)
+        if (!NetworkUtils.isConnected(this)) loadView.setState(CurrencyLoadView.STATE_NO_NETWORK)
         else loadView.setState(CurrencyLoadView.STATE_ERROR)
         loadView.setOnRetryListener(object : CurrencyLoadView.OnRetryListener {
             override fun onRetry(view: View) {

@@ -13,19 +13,12 @@ import com.uroad.zhgs.R
 
 class CurrencyLoadView : FrameLayout {
     private val mContext: Context
-    private lateinit var loadingView: View
-    private lateinit var errorView: View
-    private lateinit var emptyView: View
-    private lateinit var mLoadingTv: TextView
-    private lateinit var mErrorTv: TextView
-    private lateinit var tvReload: TextView
-    private lateinit var mEmptyTv: TextView
     private var onRetryListener: OnRetryListener? = null
 
     companion object {
         const val STATE_IDEA = 0
         const val STATE_LOADING = 1
-        const val STATE_NONETWORK = 2
+        const val STATE_NO_NETWORK = 2
         const val STATE_ERROR = 3
         const val STATE_EMPTY = 4
         const val STATE_GONE = 5
@@ -33,103 +26,101 @@ class CurrencyLoadView : FrameLayout {
 
     constructor(context: Context) : super(context) {
         mContext = context
-        init(context)
+        setState(STATE_IDEA)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         mContext = context
-        init(context)
+        setState(STATE_IDEA)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         mContext = context
-        init(context)
-    }
-
-    private fun init(context: Context) {
-        loadingView = LayoutInflater.from(context).inflate(R.layout.layout_loading, LinearLayout(context), false)
-        errorView = LayoutInflater.from(context).inflate(R.layout.layout_error, LinearLayout(context), false)
-        emptyView = LayoutInflater.from(context).inflate(R.layout.layout_empty, LinearLayout(context), false)
-        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-        params.gravity = Gravity.CENTER
-        addView(loadingView, params)
-        addView(errorView)
-        addView(emptyView, params.apply {
-            leftMargin = mContext.resources.getDimensionPixelOffset(R.dimen.margin_30)
-            rightMargin = mContext.resources.getDimensionPixelOffset(R.dimen.margin_30)
-        })
         setState(STATE_IDEA)
-        findViews()
     }
 
-    private fun findViews() {
-        mLoadingTv = findViewById(R.id.mLoadingTv)
-        mErrorTv = findViewById(R.id.mErrorTv)
-        tvReload = findViewById(R.id.tvReload)
-        mEmptyTv = findViewById(R.id.mEmptyTv)
-        tvReload.setOnClickListener {
+    fun setLoadingText(text: CharSequence?) {
+        val mLoadingTv = findViewById<TextView>(R.id.mLoadingTv)
+        mLoadingTv?.text = text
+    }
+
+    fun setEmptyIco(resId: Int) {
+        val mEmptyTv = findViewById<TextView>(R.id.mEmptyTv)
+        val drawableTop = ContextCompat.getDrawable(mContext, resId)
+        mEmptyTv?.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
+    }
+
+    fun setEmptyText(text: CharSequence?) {
+        val mEmptyTv = findViewById<TextView>(R.id.mEmptyTv)
+        mEmptyTv?.text = text
+    }
+
+    fun setErrorText(text: CharSequence?) {
+        val mErrorTv = findViewById<TextView>(R.id.mErrorTv)
+        mErrorTv?.text = text
+    }
+
+    fun setErrorIcon(resId: Int) {
+        val mErrorTv = findViewById<TextView>(R.id.mErrorTv)
+        val drawableTop = ContextCompat.getDrawable(mContext, resId)
+        mErrorTv?.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
+    }
+
+    fun setState(state: Int) {
+        when (state) {
+            STATE_IDEA -> onIdea()
+            STATE_LOADING -> onLoading()
+            STATE_NO_NETWORK -> onError(1)
+            STATE_ERROR -> onError(2)
+            STATE_EMPTY -> onEmpty()
+            STATE_GONE -> visibility = View.GONE
+        }
+    }
+
+    private fun onIdea() {
+        clearViews()
+        visibility = View.GONE
+    }
+
+    private fun onLoading() {
+        val view = LayoutInflater.from(mContext).inflate(R.layout.layout_loading, LinearLayout(context), false)
+        clearViews()
+        addView(view, FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER })
+        visibility = View.VISIBLE
+    }
+
+    private fun onError(type: Int) {
+        val view = LayoutInflater.from(mContext).inflate(R.layout.layout_error, LinearLayout(context), false)
+        clearViews()
+        addView(view)
+        visibility = View.VISIBLE
+        if (type == 1) {
+            setErrorText(resources.getString(R.string.nonetwork))
+            setErrorIcon(R.mipmap.ic_nonetwork)
+        } else {
+            setErrorText(resources.getString(R.string.connect_error))
+            setErrorIcon(R.mipmap.ic_nonetwork)
+        }
+        findViewById<TextView>(R.id.tvReload).setOnClickListener {
             setState(STATE_IDEA)
             onRetryListener?.onRetry(this@CurrencyLoadView)
         }
     }
 
-    fun setLoadingText(text: CharSequence?) {
-        mLoadingTv.text = text
+    private fun onEmpty() {
+        val view = LayoutInflater.from(context).inflate(R.layout.layout_empty, LinearLayout(context), false)
+        addView(view, FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).apply {
+            gravity = Gravity.CENTER
+            leftMargin = mContext.resources.getDimensionPixelOffset(R.dimen.margin_30)
+            rightMargin = mContext.resources.getDimensionPixelOffset(R.dimen.margin_30)
+        })
+        clearViews()
+        addView(view)
+        visibility = View.VISIBLE
     }
 
-    fun setEmptyIco(resId: Int) {
-        val drawableTop = ContextCompat.getDrawable(mContext, resId)
-        mEmptyTv.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
-    }
-
-    fun setEmptyText(text: CharSequence?) {
-        mEmptyTv.text = text
-    }
-
-    fun setErrorText(text: CharSequence?) {
-        mErrorTv.text = text
-    }
-
-    fun setErrorIcon(resId: Int) {
-        val drawableTop = ContextCompat.getDrawable(mContext, resId)
-        mErrorTv.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
-    }
-
-    fun setState(state: Int) {
-        when (state) {
-            STATE_IDEA -> visibility = View.GONE
-            STATE_LOADING -> {
-                errorView.visibility = View.GONE
-                emptyView.visibility = View.GONE
-                loadingView.visibility = View.VISIBLE
-                visibility = View.VISIBLE
-            }
-            STATE_NONETWORK -> {
-                loadingView.visibility = View.GONE
-                emptyView.visibility = View.GONE
-                errorView.visibility = View.VISIBLE
-                visibility = View.VISIBLE
-                setErrorText(resources.getString(R.string.nonetwork))
-                setErrorIcon(R.mipmap.ic_nonetwork)
-            }
-            STATE_ERROR -> {
-                loadingView.visibility = View.GONE
-                emptyView.visibility = View.GONE
-                errorView.visibility = View.VISIBLE
-                visibility = View.VISIBLE
-                setErrorText(resources.getString(R.string.connect_error))
-                setErrorIcon(R.mipmap.ic_connect_error)
-            }
-            STATE_EMPTY -> {
-                loadingView.visibility = View.GONE
-                errorView.visibility = View.GONE
-                emptyView.visibility = View.VISIBLE
-                visibility = View.VISIBLE
-            }
-            STATE_GONE -> {
-                visibility = View.GONE
-            }
-        }
+    private fun clearViews() {
+        removeAllViews()
     }
 
     interface OnRetryListener {

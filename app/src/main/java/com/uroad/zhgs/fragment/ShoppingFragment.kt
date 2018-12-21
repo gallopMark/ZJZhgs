@@ -137,7 +137,7 @@ class ShoppingFragment : BaseFragment() {
     private fun onPageError() {
         wvLayout.visibility = View.GONE
         if (!NetworkUtils.isConnected(context))
-            clv.setState(CurrencyLoadView.STATE_NONETWORK)
+            clv.setState(CurrencyLoadView.STATE_NO_NETWORK)
         else
             clv.setState(CurrencyLoadView.STATE_ERROR)
     }
