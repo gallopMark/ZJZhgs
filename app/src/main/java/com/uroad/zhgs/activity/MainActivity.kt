@@ -17,6 +17,7 @@ import com.uroad.zhgs.fragment.MainFragment
 import com.uroad.zhgs.fragment.MineFragment
 import com.uroad.zhgs.fragment.PraiseFragment
 import com.uroad.zhgs.helper.AppLocalHelper
+import com.uroad.zhgs.model.AuthMDL
 import com.uroad.zhgs.model.YouZanMDL
 import com.uroad.zhgs.model.sys.AppConfigMDL
 import com.uroad.zhgs.model.sys.SysConfigMDL
@@ -136,10 +137,10 @@ class MainActivity : BaseActivity() {
                 if (GsonUtils.isResultOk(data)) {
                     val mdLs = GsonUtils.fromDataToList(data, AppConfigMDL::class.java)
                     for (item in mdLs) {
-                        if (TextUtils.equals(item.confid, AppConfigMDL.Type.SYSTEM_VER.CODE)) {
-                            checkAppVer(item)
-                        } else if (TextUtils.equals(item.confid, AppConfigMDL.Type.ANDROID_VER.CODE)) {
-                            versionTips(item)
+                        when {
+                            TextUtils.equals(item.confid, AppConfigMDL.Type.SYSTEM_VER.CODE) -> checkAppVer(item)
+                            TextUtils.equals(item.confid, AppConfigMDL.Type.ANDROID_VER.CODE) -> versionTips(item)
+                            TextUtils.equals(item.confid, AppConfigMDL.Type.AUTH_VER.CODE) -> checkAuthVersion(item)
                         }
                     }
                 } else {
@@ -168,12 +169,12 @@ class MainActivity : BaseActivity() {
                     AppLocalHelper.saveSysVer(this@MainActivity, configMDL.conf_ver)
                     configure(mdLs)
                 } else {
-                    handler.postDelayed({ getAppConfig() }, CurrApplication.DELAY_MILLIS)
+                    handler.postDelayed({ getSysConfig(configMDL) }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ getAppConfig() }, CurrApplication.DELAY_MILLIS)
+                handler.postDelayed({ getSysConfig(configMDL) }, CurrApplication.DELAY_MILLIS)
             }
         })
     }
@@ -226,6 +227,66 @@ class MainActivity : BaseActivity() {
                     }
                 }
             }).show()
+        }
+    }
+
+    private fun checkAuthVersion(configMDL: AppConfigMDL) {
+        val currVer = AppLocalHelper.getAuthVer(this)
+        if (VersionUtils.isNeedUpdate(configMDL.conf_ver, currVer)) {
+            onAuthentication(configMDL)
+        }
+    }
+
+    private fun onAuthentication(configMDL: AppConfigMDL) {
+        doRequest(WebApiService.AUTH_VER, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    AppLocalHelper.saveAuthVer(this@MainActivity, configMDL.conf_ver)
+                    val mdLs = GsonUtils.fromDataToList(data, AuthMDL::class.java)
+                    authConfigure(mdLs)
+                } else {
+                    handler.postDelayed({ onAuthentication(configMDL) }, CurrApplication.DELAY_MILLIS)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ onAuthentication(configMDL) }, CurrApplication.DELAY_MILLIS)
+            }
+        })
+    }
+
+    private fun authConfigure(mdLs: MutableList<AuthMDL>) {
+        for (item in mdLs) {
+            when {
+                TextUtils.equals(item.funckey, AuthMDL.Type.TXJL.CODE) -> {
+                    if (item.identityauthentication == 2) {
+                        AppLocalHelper.saveAuthTXJL(this, true)
+                    } else {
+                        AppLocalHelper.saveAuthTXJL(this, false)
+                    }
+                }
+                TextUtils.equals(item.funckey, AuthMDL.Type.CYZD.CODE) -> {
+                    if (item.identityauthentication == 2) {
+                        AppLocalHelper.saveAuthCYZD(this, true)
+                    } else {
+                        AppLocalHelper.saveAuthCYZD(this, false)
+                    }
+                }
+                TextUtils.equals(item.funckey, AuthMDL.Type.GSJY.CODE) -> {
+                    if (item.identityauthentication == 2) {
+                        AppLocalHelper.saveAuthGSJY(this, true)
+                    } else {
+                        AppLocalHelper.saveAuthGSJY(this, false)
+                    }
+                }
+                TextUtils.equals(item.funckey, AuthMDL.Type.BLFB.CODE) -> {
+                    if (item.identityauthentication == 2) {
+                        AppLocalHelper.saveAuthBLFB(this, true)
+                    } else {
+                        AppLocalHelper.saveAuthBLFB(this, false)
+                    }
+                }
+            }
         }
     }
 

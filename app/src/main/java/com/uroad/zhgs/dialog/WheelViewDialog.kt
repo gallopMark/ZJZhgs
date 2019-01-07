@@ -17,11 +17,11 @@ import java.util.ArrayList
 class WheelViewDialog(private val context: Activity) : Dialog(context, R.style.supportDialog) {
 
     private var onItemSelectListener: OnItemSelectListener? = null
-    private var data: ArrayList<String>? = null
+    private var data: ArrayList<String?>? = null
     private var defaultIndex: Int = -1
-    private var selected: Int = -1
+    private var selected: Int = 0
 
-    fun withData(data: ArrayList<String>): WheelViewDialog {
+    fun withData(data: ArrayList<String?>): WheelViewDialog {
         this.data = data
         return this
     }
@@ -41,7 +41,7 @@ class WheelViewDialog(private val context: Activity) : Dialog(context, R.style.s
         data?.let { initView(it) }
     }
 
-    private fun initView(data: ArrayList<String>) {
+    private fun initView(data: ArrayList<String?>) {
         window?.let { window ->
             val contentView = LayoutInflater.from(context).inflate(R.layout.dialog_wheelview, LinearLayout(context), false)
             val tvCancel = contentView.findViewById<TextView>(R.id.tvCancel)
@@ -77,6 +77,6 @@ class WheelViewDialog(private val context: Activity) : Dialog(context, R.style.s
     }
 
     interface OnItemSelectListener {
-        fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog)
+        fun onItemSelect(position: Int, text: String?, dialog: WheelViewDialog)
     }
 }

@@ -109,6 +109,10 @@ public class IFlySynthesizer implements InitListener {
         return speechSynthesizer.getParameter(key);
     }
 
+    public boolean isSpeaking() {
+        return speechSynthesizer.isSpeaking();
+    }
+
     public void stopSpeaking() {
         speechSynthesizer.stopSpeaking();
     }

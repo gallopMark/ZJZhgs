@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_corners_5dp"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
     <ImageView
         android:id="@+id/ivPic"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <Button
-        android:id="@+id/btIKnow"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/transparent"
-        android:paddingTop="@dimen/margin_30"
-        android:paddingBottom="@dimen/margin_30"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_16" />
-</FrameLayout>
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_new_functions_bg" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivPic"
+        android:layout_alignLeft="@+id/ivPic"
+        android:layout_alignRight="@+id/ivPic"
+        android:layout_marginTop="@dimen/minus_5"
+        android:layout_centerHorizontal="true"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="@dimen/margin_4"
+            android:layout_marginTop="@dimen/margin_15"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textSize="@dimen/font_14"
+            android:minHeight="@dimen/margin_130"
+            android:text="@string/invoice_rise_tips" />
+
+        <TextView
+            android:id="@+id/tvIKnow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_button_rectangle"
+            android:gravity="center"
+            android:text="@string/i_got_it"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_16" />
+    </LinearLayout>
+</RelativeLayout>

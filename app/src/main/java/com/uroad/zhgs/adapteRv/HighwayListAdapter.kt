@@ -13,6 +13,7 @@ import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.HighwayMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
+import java.math.BigDecimal
 
 /**
  *Created by MFB on 2018/8/16.
@@ -96,8 +97,8 @@ class HighwayListAdapter(private val context: Activity, mDatas: MutableList<High
             }
         }
         val paint = Paint().apply { textSize = context.resources.getDimension(R.dimen.font_12) }
-        val w = (DisplayUtils.getWindowWidth(context) - dp5 * 2) - paint.measureText(content) - dp5 * (count - 1)
-        val width = if (w > 0) (w / (roadUp.size - count)).toInt()
+        val w = ((DisplayUtils.getWindowWidth(context) - dp5 * 2) - paint.measureText(content) - dp5 * (count - 1))
+        val width = if (w > 0) Math.floor(w.toDouble() / (roadUp.size - count)).toInt()
         else DisplayUtils.dip2px(context, 2f)
         for (i in 0 until roadUp.size) {
             val view = LayoutInflater.from(context).inflate(R.layout.item_highway_site, llSite, false)

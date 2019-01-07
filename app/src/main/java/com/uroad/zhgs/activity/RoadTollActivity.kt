@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import com.uroad.library.utils.BitmapUtils
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.zhgs.R
@@ -64,11 +65,12 @@ class RoadTollActivity : BaseActivity() {
         setBaseContentLayoutWithoutTitle(R.layout.activity_roadtoll)
         requestWindowFullScreen()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            ivBack.layoutParams = (ivBack.layoutParams as FrameLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@RoadTollActivity) }
+            ivBack.layoutParams = (ivBack.layoutParams as RelativeLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@RoadTollActivity) }
         ivBack.setOnClickListener { onBackPressed() }
         setTopImage()
         initHistoryRv()
         initRv()
+        tvFeedback.setOnClickListener { openActivity(FeedbackActivity::class.java, Bundle().apply { putBoolean("isFromRoad", true) }) }
     }
 
     //重新计算图片高度 避免图片压缩

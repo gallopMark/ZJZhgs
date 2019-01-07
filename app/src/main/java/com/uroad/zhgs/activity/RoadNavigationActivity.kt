@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.layout_menu_right.*
 import android.widget.*
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.CurrApplication
-import com.uroad.zhgs.dialog.NewFunctionDialog
 import com.uroad.zhgs.enumeration.DiagramEventType
 import com.uroad.zhgs.enumeration.MapDataType
 import com.uroad.zhgs.helper.AppLocalHelper
@@ -61,9 +60,6 @@ class RoadNavigationActivity : BaseActivity() {
             } else {
                 setCurrentTab(2)
             }
-        }
-        if (AppLocalHelper.isFirstNav(this)) {
-            NewFunctionDialog(this).show()
         }
         handler = Handler(Looper.getMainLooper())
     }

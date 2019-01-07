@@ -2,7 +2,6 @@ package com.uroad.zhgs.activity
 
 import android.os.Build
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 import android.text.SpannableString
 import android.text.TextUtils
@@ -16,6 +15,7 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.WheelViewDialog
+import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.CarInquiryMDL
 import com.uroad.zhgs.model.CarMDL
 import com.uroad.zhgs.utils.GsonUtils
@@ -35,7 +35,7 @@ class CarInquiryActivity : BaseActivity() {
         setBaseContentLayoutWithoutTitle(R.layout.activity_carinquiry)
         requestWindowFullScreen()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            ivBack.layoutParams = (ivBack.layoutParams as ConstraintLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@CarInquiryActivity) }
+            ivBack.layoutParams = (ivBack.layoutParams as FrameLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@CarInquiryActivity) }
         ivBack.setOnClickListener { onBackPressed() }
         setImage()
     }
@@ -55,6 +55,17 @@ class CarInquiryActivity : BaseActivity() {
             this.width = width2
             this.height = (width2 * 0.66).toInt()
         }
+    }
+
+    override fun setListener() {
+        tvPassRecord.setOnClickListener {
+            if (AppLocalHelper.isAuthTXJL(this@CarInquiryActivity) && !isAuth()) {
+                showTipsDialog(getString(R.string.dialog_default_title), getString(R.string.without_auth))
+            } else {
+                openActivity(MyPassRecordActivity::class.java)
+            }
+        }
+        tvMyCar.setOnClickListener { openActivity(MyCar2Activity::class.java) }
     }
 
     override fun initData() {
@@ -79,16 +90,16 @@ class CarInquiryActivity : BaseActivity() {
         }
         if (cars.size > 1) {
             tvSelectCar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_arrow_down_default, 0)
-            val data = ArrayList<String>().apply {
+            val data = ArrayList<String?>().apply {
                 for (item in cars) {
-                    item.carno?.let { add(it) }
+                    add(item.carno)
                 }
             }
             tvSelectCar.setOnClickListener {
                 if (data.size < 2) return@setOnClickListener
                 WheelViewDialog(this).withData(data).default(index)
                         .withListener(object : WheelViewDialog.OnItemSelectListener {
-                            override fun onItemSelect(position: Int, text: String, dialog: WheelViewDialog) {
+                            override fun onItemSelect(position: Int, text: String?, dialog: WheelViewDialog) {
                                 index = position
                                 tvSelectCar.text = text
                                 post()

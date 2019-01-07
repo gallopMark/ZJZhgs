@@ -466,24 +466,24 @@ abstract class BasePageFragment : Fragment() {
         }
     }
 
-    fun getUserId(): String {
+    fun getUserId(): String? {
         return UserPreferenceHelper.getUserId(context)
     }
 
-    fun getUserUUID(): String = UserPreferenceHelper.getUserUUID(context)
-    fun getRealName(): String {
+    fun getUserUUID(): String? = UserPreferenceHelper.getUserUUID(context)
+    fun getRealName(): String? {
         return UserPreferenceHelper.getRealName(context)
     }
 
-    fun getCardNo(): String {
+    fun getCardNo(): String? {
         return UserPreferenceHelper.getCardNo(context)
     }
 
-    fun getPhone(): String {
+    fun getPhone(): String? {
         return UserPreferenceHelper.getPhone(context)
     }
 
-    fun getUserName(): String {
+    fun getUserName(): String? {
         return UserPreferenceHelper.getUserName(context)
     }
 
@@ -491,7 +491,7 @@ abstract class BasePageFragment : Fragment() {
         return UserPreferenceHelper.getStatus(context)
     }
 
-    fun getIconFile(): String {
+    fun getIconFile(): String? {
         return UserPreferenceHelper.getIconFile(context)
     }
 

@@ -400,6 +400,23 @@ abstract class BaseFragment : Fragment() {
         })
     }
 
+    fun showTipsDialog(title: CharSequence?, message: CharSequence) {
+        showTipsDialog(title, message, resources.getString(R.string.dialog_button_confirm))
+    }
+
+    open fun showTipsDialog(title: CharSequence?, message: CharSequence, textConfirm: CharSequence) {
+        showTipsDialog(title, message, textConfirm, null)
+    }
+
+    open fun showTipsDialog(title: CharSequence?, message: CharSequence, textConfirm: CharSequence, listener: MaterialDialog.ButtonClickListener?) {
+        val dialog = MaterialDialog(context)
+        dialog.setTitle(title)
+        dialog.setMessage(message)
+        dialog.hideDivider()
+        dialog.setPositiveButton(textConfirm, listener)
+        dialog.show()
+    }
+
     open fun showDialog(title: String?, message: String,
                         textCancel: String, textConfirm: String,
                         cancelListener: MaterialDialog.ButtonClickListener?,
@@ -461,24 +478,24 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    fun getUserId(): String {
+    fun getUserId(): String? {
         return UserPreferenceHelper.getUserId(context)
     }
 
-    fun getUserUUID(): String = UserPreferenceHelper.getUserUUID(context)
-    fun getRealName(): String {
+    fun getUserUUID(): String? = UserPreferenceHelper.getUserUUID(context)
+    fun getRealName(): String? {
         return UserPreferenceHelper.getRealName(context)
     }
 
-    fun getCardNo(): String {
+    fun getCardNo(): String? {
         return UserPreferenceHelper.getCardNo(context)
     }
 
-    fun getPhone(): String {
+    fun getPhone(): String? {
         return UserPreferenceHelper.getPhone(context)
     }
 
-    fun getUserName(): String {
+    fun getUserName(): String? {
         return UserPreferenceHelper.getUserName(context)
     }
 
@@ -486,7 +503,7 @@ abstract class BaseFragment : Fragment() {
         return UserPreferenceHelper.getStatus(context)
     }
 
-    fun getIconFile(): String {
+    fun getIconFile(): String? {
         return UserPreferenceHelper.getIconFile(context)
     }
 

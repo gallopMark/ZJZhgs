@@ -14,6 +14,7 @@ import com.uroad.zhgs.activity.RidersDetailActivity
 import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.dialog.RidersAgreementDialog
 import com.uroad.zhgs.enumeration.NewsType
+import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.HtmlMDL
 import com.uroad.zhgs.model.RidersDetailMDL
 import com.uroad.zhgs.model.RidersMsgMDL
@@ -127,14 +128,18 @@ class RidesOrganizeFragment : BaseLocationFragment() {
     }
 
     private fun withResult() {
-        val mdl = msgMDL
-        if (mdl == null)  //不存在车队
-            openActivity(RidersEditActivity::class.java)  //同意，则进入创建组队页面
-        else {
-            if (mdl.type == 1) { //已加入车队
-                showShortToast("你已加入车队，暂时不能再次创建")
-            } else {
-                openActivity(RidersEditActivity::class.java)
+        if (AppLocalHelper.isAuthCYZD(context) && !isAuth()) {
+            showTipsDialog(context.getString(R.string.dialog_default_title), context.getString(R.string.without_auth))
+        } else {
+            val mdl = msgMDL
+            if (mdl == null)  //不存在车队
+                openActivity(RidersEditActivity::class.java)  //同意，则进入创建组队页面
+            else {
+                if (mdl.type == 1) { //已加入车队
+                    showShortToast("你已加入车队，暂时不能再次创建")
+                } else {
+                    openActivity(RidersEditActivity::class.java)
+                }
             }
         }
     }

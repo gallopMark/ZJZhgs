@@ -59,7 +59,9 @@ class MainFragment : BaseLocationFragment() {
         btNavigation.setOnClickListener { openActivity(RoadNavigationActivity::class.java) }
         btRescue.setOnClickListener {
             if (!isLogin()) openActivity(LoginActivity::class.java)
-            else checkRescue()
+            else if (AppLocalHelper.isAuthGSJY(context) && !isAuth()) {
+                showTipsDialog(context.getString(R.string.dialog_default_title), context.getString(R.string.without_auth))
+            } else checkRescue()
         }
         initWeatherOther()
         initMenu()

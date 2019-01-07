@@ -108,7 +108,7 @@ abstract class BaseActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
                 //两个 flag 要结合使用，表示让应用的主体内容占用系统状态栏的空间
-                window.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 window.statusBarColor = Color.TRANSPARENT
                 //导航栏颜色也可以正常设置
@@ -595,25 +595,25 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    fun getUserId(): String {
+    fun getUserId(): String? {
         return UserPreferenceHelper.getUserId(this)
     }
 
-    fun getUserUUID(): String = UserPreferenceHelper.getUserUUID(this)
+    fun getUserUUID(): String? = UserPreferenceHelper.getUserUUID(this)
 
-    fun getRealName(): String {
+    fun getRealName(): String? {
         return UserPreferenceHelper.getRealName(this)
     }
 
-    fun getCardNo(): String {
+    fun getCardNo(): String? {
         return UserPreferenceHelper.getCardNo(this)
     }
 
-    fun getPhone(): String {
+    fun getPhone(): String? {
         return UserPreferenceHelper.getPhone(this)
     }
 
-    fun getUserName(): String {
+    fun getUserName(): String? {
         return UserPreferenceHelper.getUserName(this)
     }
 
@@ -621,7 +621,7 @@ abstract class BaseActivity : AppCompatActivity() {
         return UserPreferenceHelper.getStatus(this)
     }
 
-    fun getIconFile(): String {
+    fun getIconFile(): String? {
         return UserPreferenceHelper.getIconFile(this)
     }
 

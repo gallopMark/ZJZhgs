@@ -120,7 +120,7 @@ class DiagramFragment : BaseLocationFragment() {
                     poitype == MapDataType.CONTROL.code ||
                     poitype == MapDataType.TRAFFIC_INCIDENT.code) {
                 getEventDetailsById(poiid)
-            } else if (poitype == MapDataType.TRAFFIC_JAM.code) {  //拥堵
+            } else if (poitype == MapDataType.DIAGRAM_JAM.code) {  //拥堵
                 getJamEventDetailsById(poiid)
             } else if (poitype == MapDataType.SNAPSHOT_RESPONSE.code) {  //快拍
                 getCCTVDetailsById(poiid)

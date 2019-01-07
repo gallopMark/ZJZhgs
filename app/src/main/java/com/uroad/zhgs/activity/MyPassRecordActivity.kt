@@ -18,6 +18,7 @@ import com.uroad.library.utils.NetworkUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.adapteRv.PassRecordAdapter
 import com.uroad.zhgs.common.BaseActivity
+import com.uroad.zhgs.dialog.CustomDatePickerDialog
 import com.uroad.zhgs.dialog.MaterialDialog
 import com.uroad.zhgs.model.CarMDL
 import com.uroad.zhgs.model.PassRecordMDL
@@ -29,6 +30,7 @@ import com.uroad.zhgs.webservice.WebApiService
 import com.uroad.zhgs.widget.CurrencyLoadView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_passrecord.*
+import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -39,6 +41,8 @@ import kotlin.collections.ArrayList
 class MyPassRecordActivity : BaseActivity() {
     private var carno: String? = null
     private var startDate: String? = null
+    private var endDate: String? = null
+    private val point = "."
     private var type: String? = null
     private val cars = ArrayList<CarMDL>()
     private var selected: Int = 0
@@ -48,30 +52,111 @@ class MyPassRecordActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_passrecord)
         withTitle(getString(R.string.mine_my_passRecord))
-//        initDate()
+        initDate()
         initRv()
     }
 
-//    private fun initDate() {
+    private fun initDate() {
+        val calendar = Calendar.getInstance()
+        initEndDate(calendar)
+        initStartDate(calendar)
+    }
+
+    private fun initEndDate(calendar: Calendar) {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val monthStr = if (month < 10) "0$month" else month.toString()
+        endDate = "$year$monthStr"
+        val currDate = "$year$point$monthStr"
+        tvEndDate.text = currDate
+    }
+
+    private fun initStartDate(calendar: Calendar) {
+        calendar.add(Calendar.MONTH, -2)
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val monthStr = if (month < 10) "0$month" else month.toString()
+        startDate = "$year$monthStr"
+        val dDate = "$year$point$monthStr"
+        tvStartDate.text = dDate
+    }
+
+    private fun onSelectDate(viewType: Int) {
+        CustomDatePickerDialog(this@MyPassRecordActivity).setOnDateSelectedListener(object : CustomDatePickerDialog.OnDateSelectedListener {
+            override fun onDateSelected(year: Int, month: Int, dialog: CustomDatePickerDialog) {
+                val monthStr = if (month < 10) "0$month" else month.toString()
+                val date = "$year$point$monthStr"
+                if (viewType == 1) {
+                    startDate = "$year$monthStr"
+                    tvStartDate.text = date
+                } else {
+                    endDate = "$year$monthStr"
+                    tvEndDate.text = date
+                }
+                dialog.dismiss()
+            }
+        }).show()
+    }
+
+//    private fun onSelectStartDate() {
+//        CustomDatePickerDialog(this@MyPassRecordActivity).setOnDateSelectedListener(object : CustomDatePickerDialog.OnDateSelectedListener {
+//            override fun onDateSelected(year: Int, month: Int, dialog: CustomDatePickerDialog) {
+//                if (isDateOk(year, month)) {
+//                    val endDate = tvEndDate.text.toString()
+//                    if (!TextUtils.isEmpty(endDate)) {
+//                        val endYear = (endDate.split(point)[0]).toInt()
+//                        val endMonth = (endDate.split(point)[1]).toInt()
+//                        if (year > endYear || (year == endYear && month > endMonth)) {
+//                            showLongToast("开始日期不能大于结束日期")
+//                        } else {
+//                            val monthStr = if (month < 10) "0$month" else month.toString()
+//                            startDate = "$year$monthStr"
+//                            val dDate = "$year$point$monthStr"
+//                            tvStartDate.text = dDate
+//                            dialog.dismiss()
+//                        }
+//                    }
+//                }
+//            }
+//        }).show()
+//    }
+//
+//    private fun onSelectEndDate() {
+//        CustomDatePickerDialog(this@MyPassRecordActivity).setOnDateSelectedListener(object : CustomDatePickerDialog.OnDateSelectedListener {
+//            override fun onDateSelected(year: Int, month: Int, dialog: CustomDatePickerDialog) {
+//                if (isDateOk(year, month)) {
+//                    val startDate = tvStartDate.text.toString()
+//                    if (!TextUtils.isEmpty(startDate)) {
+//                        val startYear = (startDate.split(point)[0]).toInt()
+//                        val startMonth = (startDate.split(point)[1]).toInt()
+//                        if (year < startYear || (year == startYear && month < startMonth)) {
+//                            showLongToast("结束日期必须大于开始日期")
+//                        } else {
+//                            val monthStr = if (month < 10) "0$month" else month.toString()
+//                            endDate = "$year$monthStr"
+//                            val dDate = "$year$point$monthStr"
+//                            tvEndDate.text = dDate
+//                            dialog.dismiss()
+//                        }
+//                    }
+//                }
+//            }
+//        }).show()
+//    }
+//
+//    /*判断选择的年月是否在当前年份内*/
+//    private fun isDateOk(year: Int, month: Int): Boolean {
 //        val calendar = Calendar.getInstance()
 //        val currYear = calendar.get(Calendar.YEAR)
 //        val currMonth = calendar.get(Calendar.MONTH) + 1
-//        val monthStr = if (currMonth < 10) "0$currMonth" else currMonth.toString()
-//        val currDate = "$currYear.$monthStr"
-//        startDate = "$currYear$monthStr"
-//        tvCurrentDate.text = currDate
-//        flDate.setOnClickListener {
-//            CustomDatePickerDialog(this@MyPassRecordActivity).setOnDateSelectedListener(object : CustomDatePickerDialog.OnDateSelectedListener {
-//                override fun onDateSelected(year: Int, month: Int, dialog: CustomDatePickerDialog) {
-//                    val ms = if (month < 10) "0$month" else month.toString()
-//                    startDate = "$year$ms"
-//                    val date = "$year.$ms"
-//                    tvCurrentDate.text = date
-//                    dialog.dismiss()
-//                    if (TextUtils.isEmpty(carno) || TextUtils.isEmpty(type)) return
-//                    getCurrentRecordData()
-//                }
-//            }).show()
+//        return if (year > currYear) {
+//            showLongToast("年份无效，请重新选择")
+//            false
+//        } else {
+//            if (month > currMonth) {
+//                showLongToast("月份无效，请重新选择")
+//                false
+//            } else true
 //        }
 //    }
 
@@ -81,47 +166,63 @@ class MyPassRecordActivity : BaseActivity() {
         recyclerView.adapter = adapter
     }
 
+    override fun setListener() {
+        flStartDate.setOnClickListener { onSelectDate(1) }
+        flEndDate.setOnClickListener { onSelectDate(2) }
+        tvSearch.setOnClickListener { getCurrentRecordData() }
+    }
+
     override fun initData() {
         if (!isAuth()) {
-            val dialog = MaterialDialog(this)
-            dialog.setTitle(getString(R.string.dialog_default_title))
-            dialog.setMessage(getString(R.string.empty_my_passRecord))
-            dialog.hideDivider()
-            dialog.setPositiveButton(getString(R.string.i_got_it), object : MaterialDialog.ButtonClickListener {
-                override fun onClick(v: View, dialog: AlertDialog) {
-                    dialog.dismiss()
-                }
-            })
-            dialog.setOnDismissListener { finish() }
-            dialog.show()
+            onUnauthorized()
         } else {
-            doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), ""), object : HttpRequestCallback<String>() {
-                override fun onPreExecute() {
-                    setPageLoading()
-                }
-
-                override fun onSuccess(data: String?) {
-                    if (GsonUtils.isResultOk(data)) {
-                        val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
-                        if (mdLs.size > 0)
-                            updateCars(mdLs)
-                        else onEmptyCar()
-                    } else {
-                        showShortToast(GsonUtils.getMsg(data))
-                    }
-                }
-
-                override fun onFailure(e: Throwable, errorMsg: String?) {
-                    setPageError()
-                }
-            })
+            getMyCars()
         }
+    }
+
+    /*未实名认证弹窗*/
+    private fun onUnauthorized() {
+        val dialog = MaterialDialog(this)
+        dialog.setTitle(getString(R.string.dialog_default_title))
+        dialog.setMessage(getString(R.string.empty_my_passRecord))
+        dialog.hideDivider()
+        dialog.setPositiveButton(getString(R.string.i_got_it), object : MaterialDialog.ButtonClickListener {
+            override fun onClick(v: View, dialog: AlertDialog) {
+                dialog.dismiss()
+            }
+        })
+        dialog.setOnDismissListener { finish() }
+        dialog.show()
+    }
+
+    /*获取我的车辆*/
+    private fun getMyCars() {
+        doRequest(WebApiService.MYCAR, WebApiService.myCarParams(getUserId(), ""), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                setPageLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdLs = GsonUtils.fromDataToList(data, CarMDL::class.java)
+                    if (mdLs.size > 0)
+                        updateCars(mdLs)
+                    else onEmptyCar()
+                } else {
+                    showShortToast(GsonUtils.getMsg(data))
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                setPageError()
+            }
+        })
     }
 
     private fun onEmptyCar() {
         val dialog = MaterialDialog(this)
         dialog.setTitle(getString(R.string.dialog_default_title))
-        dialog.setMessage(getString(R.string.empty_cars_inPassRecord))
+        dialog.setMessage(getString(R.string.dialog_bindcar_content))
         dialog.hideDivider()
         dialog.setPositiveButton(getString(R.string.i_got_it), object : MaterialDialog.ButtonClickListener {
             override fun onClick(v: View, dialog: AlertDialog) {
@@ -192,7 +293,7 @@ class MyPassRecordActivity : BaseActivity() {
 
     //获取通行记录
     private fun getCurrentRecordData() {
-        doRequest(WebApiService.PASS_RECORD, WebApiService.passRecordParams(carno, startDate, type), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.PASS_RECORD, WebApiService.passRecordParams(carno, startDate, endDate, type), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 llContent.visibility = View.GONE
                 loadView.setState(CurrencyLoadView.STATE_LOADING)

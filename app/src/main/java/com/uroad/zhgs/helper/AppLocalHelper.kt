@@ -13,7 +13,6 @@ class AppLocalHelper {
         private const val APP_FILE = "app_prefs"
         private const val FIRST_INSTALL = "first_install"  //是否是第一次安装，用于启动页是否展示引导图
         private const val LAYER = "layer"   //路况导航，保存用户点击的图层，下次进入导航打开上次的图层
-        private const val FIRST_NAV = "firstNav"
         private const val AGREE_RIDERS = "agree_riders"  //是否同意了“车友组队出行服务协议”
         private const val NAVI_VRE = "navi_ver" //首页菜单版本
         private const val NAVI_DATA = "navi_data"  //首页版本数据
@@ -25,6 +24,12 @@ class AppLocalHelper {
         private const val ALIVE_URL = "alive_url"  //直播url
         private const val BREAK_RULES_URL = "break_rules_url"  //违章查询url
         private const val AUTHENTICATION = "Authentication" //是否弹过认证对话框
+        private const val AUTH_VER = "auth_ver"  //功能是否需要实名认证
+        private const val AUTH_TXJL = "auth_txjl" //通行记录是否要实名认证
+        private const val AUTH_CYZD = "auth_cyzd"   //车友组队是否要实名认证
+        private const val AUTH_GSJY = "auth_gsjy" //高速救援是否要实名认证
+        private const val AUTH_BLFB = "auth_blfb" //爆料发布是否要实名认证
+        private const val NAVIGATE_VER = "navigationVer" //新功能内容版本
 
         private fun getPrefs(context: Context): SharedPreferences = context.getSharedPreferences(APP_FILE, Context.MODE_PRIVATE)
 
@@ -36,9 +41,9 @@ class AppLocalHelper {
 
         fun getLayer(context: Context): Int = getPrefs(context).getInt(LAYER, 1)
 
-        fun saveNav(context: Context, isFirstNav: Boolean) = getPrefs(context).edit().putBoolean(FIRST_NAV, isFirstNav).apply()
+        fun saveNavVersion(context: Context, version: String?) = getPrefs(context).edit().putString(NAVIGATE_VER, version).apply()
 
-        fun isFirstNav(context: Context): Boolean = getPrefs(context).getBoolean(FIRST_NAV, true)
+        fun getNavVersion(context: Context): String? = getPrefs(context).getString(NAVIGATE_VER, "")
 
         fun saveAgreeRiders(context: Context, isAgree: Boolean) = getPrefs(context).edit().putBoolean(AGREE_RIDERS, isAgree).apply()
 
@@ -46,7 +51,7 @@ class AppLocalHelper {
 
         fun saveFootprint(context: Context, userId: String?, adCode: String?) {
             if (TextUtils.isEmpty(userId)) return
-            var spHistory = getPrefs(context).getString(userId, "")
+            var spHistory: String? = getPrefs(context).getString(userId, "")
             if (TextUtils.isEmpty(spHistory)) {
                 spHistory = adCode
             } else {
@@ -56,12 +61,9 @@ class AppLocalHelper {
         }
 
         fun containsFootprint(context: Context, userId: String?, adCode: String?): Boolean {
-            val spHistory = getPrefs(context).getString(userId, "")
-            return if (TextUtils.isEmpty(spHistory)) {
-                false
-            } else {
-                spHistory.split(",").contains(adCode)
-            }
+            val spHistory: String? = getPrefs(context).getString(userId, "")
+            spHistory?.let { return it.split(",").contains(adCode) }
+            return false
         }
 
         fun saveNaviVer(context: Context, ver: String?) = getPrefs(context).edit().putString(NAVI_VRE, ver).apply()
@@ -74,6 +76,8 @@ class AppLocalHelper {
         fun getSvgVer(context: Context): String? = getPrefs(context).getString(SVG_VER, "1.0")
         fun saveSysVer(context: Context, ver: String?) = getPrefs(context).edit().putString(SYS_VER, ver).apply()
         fun getSysVer(context: Context): String? = getPrefs(context).getString(SYS_VER, "1.0")
+        fun saveAuthVer(context: Context, ver: String?) = getPrefs(context).edit().putString(AUTH_VER, ver).apply()
+        fun getAuthVer(context: Context) = getPrefs(context).getString(AUTH_VER, "0.0")
 
         fun saveVoiceMax(context: Context, max: Int) = getPrefs(context).edit().putInt(VOICE_MAX_SEC, max).apply()
         fun getVoiceMax(context: Context) = getPrefs(context).getInt(VOICE_MAX_SEC, 20)
@@ -88,5 +92,14 @@ class AppLocalHelper {
 
         fun saveAuth(context: Context) = getPrefs(context).edit().putBoolean(AUTHENTICATION, true).apply()
         fun isAuth(context: Context) = getPrefs(context).getBoolean(AUTHENTICATION, false)
+
+        fun isAuthTXJL(context: Context) = getPrefs(context).getBoolean(AUTH_TXJL, false)
+        fun saveAuthTXJL(context: Context, needAuth: Boolean) = getPrefs(context).edit().putBoolean(AUTH_TXJL, needAuth).apply()
+        fun isAuthCYZD(context: Context) = getPrefs(context).getBoolean(AUTH_CYZD, false)
+        fun saveAuthCYZD(context: Context, needAuth: Boolean) = getPrefs(context).edit().putBoolean(AUTH_CYZD, needAuth).apply()
+        fun isAuthGSJY(context: Context) = getPrefs(context).getBoolean(AUTH_GSJY, false)
+        fun saveAuthGSJY(context: Context, needAuth: Boolean) = getPrefs(context).edit().putBoolean(AUTH_GSJY, needAuth).apply()
+        fun isAuthBLFB(context: Context) = getPrefs(context).getBoolean(AUTH_BLFB, false)
+        fun saveAuthBLFB(context: Context, needAuth: Boolean) = getPrefs(context).edit().putBoolean(AUTH_BLFB, needAuth).apply()
     }
 }

@@ -27,6 +27,7 @@ class UserPreferenceHelper {
         const val ISFOLLOW = "isfollow"
         const val QRCODE = "QRCode"
         const val ISAUTH = "isAuth"
+        const val AIMLESS_NAV = "AimlessNav"
 
         private fun from(context: Context): SharedPreferences {
             return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
@@ -53,17 +54,17 @@ class UserPreferenceHelper {
             }.apply()
         }
 
-        fun getUserId(context: Context): String {
+        fun getUserId(context: Context): String? {
             return from(context).getString(USER_ID, "")
         }
 
-        fun getUserUUID(context: Context): String = from(context).getString(USER_UUID, "")
-        fun getPushID(context: Context): String = from(context).getString(PUSH_ID, "")
+        fun getUserUUID(context: Context): String? = from(context).getString(USER_UUID, "")
+        fun getPushID(context: Context): String? = from(context).getString(PUSH_ID, "")
         fun saveRealName(context: Context, realName: String) {
             from(context).edit().putString(REAL_NAME, realName).apply()
         }
 
-        fun getRealName(context: Context): String {
+        fun getRealName(context: Context): String? {
             return from(context).getString(REAL_NAME, "")
         }
 
@@ -71,7 +72,7 @@ class UserPreferenceHelper {
             from(context).edit().putString(CARD_NO, cardNo).apply()
         }
 
-        fun getCardNo(context: Context): String {
+        fun getCardNo(context: Context): String? {
             return from(context).getString(CARD_NO, "")
         }
 
@@ -79,7 +80,7 @@ class UserPreferenceHelper {
             from(context).edit().putString(PHONE, phone).apply()
         }
 
-        fun getPhone(context: Context): String {
+        fun getPhone(context: Context): String? {
             return from(context).getString(PHONE, "")
         }
 
@@ -87,11 +88,11 @@ class UserPreferenceHelper {
             from(context).edit().putString(USER_NAME, userName).apply()
         }
 
-        fun getUserName(context: Context): String {
+        fun getUserName(context: Context): String? {
             return from(context).getString(USER_NAME, "")
         }
 
-        fun getUserPassword(context: Context): String {
+        fun getUserPassword(context: Context): String? {
             return from(context).getString(USER_PASSWORD, "")
         }
 
@@ -103,7 +104,7 @@ class UserPreferenceHelper {
             from(context).edit().putString(ICON_FILE, iconFile).apply()
         }
 
-        fun getIconFile(context: Context): String {
+        fun getIconFile(context: Context): String? {
             return from(context).getString(ICON_FILE, "")
         }
 
@@ -124,10 +125,10 @@ class UserPreferenceHelper {
         }
 
         fun saveQRCode(context: Context, qrCode: String) = from(context).edit().putString(QRCODE, qrCode).apply()
-        fun getQRCode(context: Context): String = from(context).getString(QRCODE, "")
+        fun getQRCode(context: Context): String? = from(context).getString(QRCODE, "")
 
         fun saveRequestCode(context: Context, requestCode: String?) = from(context).edit().putString(REQUEST_CODE, requestCode).apply()
-        fun getRequestCode(context: Context): String = from(context).getString(REQUEST_CODE, "")
+        fun getRequestCode(context: Context): String? = from(context).getString(REQUEST_CODE, "")
 
         fun saveFollow(context: Context, isFollow: Boolean) = from(context).edit().putBoolean(ISFOLLOW, isFollow).apply()
         fun isFollow(context: Context): Boolean = from(context).getBoolean(ISFOLLOW, true)
@@ -137,5 +138,8 @@ class UserPreferenceHelper {
 
         fun saveAuth(context: Context, isAuth: Boolean) = from(context).edit().putBoolean(ISAUTH, isAuth).apply()
         fun isAuth(context: Context): Boolean = from(context).getBoolean(ISAUTH, false)
+
+        fun isAimlessNav(context: Context) = from(context).getBoolean(AIMLESS_NAV, true)
+        fun saveAimlessNav(context: Context, isAimlessNav: Boolean) = from(context).edit().putBoolean(AIMLESS_NAV, isAimlessNav).apply()
     }
 }

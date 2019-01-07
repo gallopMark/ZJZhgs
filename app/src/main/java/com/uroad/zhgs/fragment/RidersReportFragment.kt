@@ -34,6 +34,7 @@ import com.uroad.zhgs.activity.CameraActivity
 import com.uroad.zhgs.activity.RidersReportActivity
 import com.uroad.zhgs.activity.VideoActivity
 import com.uroad.zhgs.common.CameraFragment
+import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.rxbus.MessageEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.layout_empty.*
@@ -199,10 +200,14 @@ class RidersReportFragment : CameraFragment() {
         }
         rlContainer.setOnClickListener { if (isOpen) closeMenu() }
         val listener = View.OnClickListener {
-            when (it.id) {
-                R.id.ivVoice -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_VOICE })
-                R.id.ivVideo -> onVideoRecord()
-                else -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_DEFAULT })
+            if (AppLocalHelper.isAuthBLFB(context) && !isAuth()) {
+                showTipsDialog(context.getString(R.string.dialog_default_title), context.getString(R.string.without_auth))
+            } else {
+                when (it.id) {
+                    R.id.ivVoice -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_VOICE })
+                    R.id.ivVideo -> onVideoRecord()
+                    else -> openActivity(Intent(context, RidersReportActivity::class.java).apply { type = RidersReportActivity.TYPE_DEFAULT })
+                }
             }
             closeMenu()
         }

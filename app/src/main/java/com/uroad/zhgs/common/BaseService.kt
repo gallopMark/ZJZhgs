@@ -68,7 +68,7 @@ abstract class BaseService : Service() {
         }
     }
 
-    fun getUserId(): String = UserPreferenceHelper.getUserId(this)
+    fun getUserId(): String? = UserPreferenceHelper.getUserId(this)
 
     fun isLogin(): Boolean = UserPreferenceHelper.isLogin(this)
     override fun onDestroy() {

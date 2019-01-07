@@ -22,7 +22,7 @@ class DiagramUtils {
             getSharedPreferences(context).edit().putString(VER, version).apply()
         }
 
-        fun getVersionLocal(context: Context): String {
+        fun getVersionLocal(context: Context): String? {
             return getSharedPreferences(context).getString(VER, "")
         }
 

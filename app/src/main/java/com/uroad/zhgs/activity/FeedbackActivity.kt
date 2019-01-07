@@ -8,15 +8,13 @@ import android.support.v7.widget.GridLayoutManager
 import android.text.TextUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.rxhttp.RxHttpManager
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
-import com.uroad.zhgs.model.AddPicItem
-import com.uroad.zhgs.model.MutilItem
-import com.uroad.zhgs.model.PicMDL
-import com.uroad.zhgs.model.UploadMDL
+import com.uroad.zhgs.model.*
 import com.uroad.zhgs.photopicker.data.ImagePicker
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
@@ -36,12 +34,39 @@ import java.io.File
  */
 class FeedbackActivity : BaseActivity() {
 
+    private var isFromRoad = false
+    private val data = ArrayList<FeedbackTypeMDL>()
+    private lateinit var typeAdapter: FBTypeAdapter
     private val picData = ArrayList<MutilItem>()
     private val addItem = AddPicItem()
     private lateinit var picAdapter: AddPicAdapter
+    private var fdtype: String? = ""
     private var imageUrls: String = ""
 
-    class AddPicAdapter(private val context: Activity, mDatas: MutableList<MutilItem>)
+    private inner class FBTypeAdapter(context: Activity,
+                                      data: MutableList<FeedbackTypeMDL>)
+        : BaseArrayRecyclerAdapter<FeedbackTypeMDL>(context, data) {
+        private var selectIndex = 0
+
+        override fun bindView(viewType: Int): Int = R.layout.item_feedbacktype
+
+        override fun onBindHoder(holder: RecyclerHolder, t: FeedbackTypeMDL, position: Int) {
+            val tv = holder.obtainView<TextView>(R.id.tv)
+            tv.text = t.dictname
+            tv.isSelected = selectIndex == position
+            holder.itemView.setOnClickListener {
+                fdtype = t.dictcode
+                setSelectIndex(position)
+            }
+        }
+
+        fun setSelectIndex(position: Int) {
+            selectIndex = position
+            notifyDataSetChanged()
+        }
+    }
+
+    private class AddPicAdapter(private val context: Activity, mDatas: MutableList<MutilItem>)
         : BaseArrayRecyclerAdapter<MutilItem>(context, mDatas) {
         private val size = (DisplayUtils.getWindowWidth(context) - DisplayUtils.dip2px(context, 44f)) / 3
         private var onItemOptionListener: OnItemOptionListener? = null
@@ -84,11 +109,58 @@ class FeedbackActivity : BaseActivity() {
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_feedback)
         withTitle(resources.getString(R.string.feedback_title))
+        intent.extras?.let { isFromRoad = it.getBoolean("isFromRoad", false) }
         initRv()
         btSubmit.setOnClickListener { onSubmit() }
     }
 
+    override fun initData() {
+        doRequest(WebApiService.FEEDBACK_TYPE, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+            override fun onPreExecute() {
+                setPageLoading()
+            }
+
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    setPageEndLoading()
+                    val mdLs = GsonUtils.fromDataToList(data, FeedbackTypeMDL::class.java)
+                    updateUI(mdLs)
+                } else {
+                    setPageError()
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                setPageError()
+            }
+        })
+    }
+
+    private fun updateUI(mdLs: MutableList<FeedbackTypeMDL>) {
+        this.data.clear()
+        this.data.addAll(mdLs)
+        var selectIndex = 0
+        if (isFromRoad) {
+            val index = data.indexOf(FeedbackTypeMDL().apply { dictcode = FeedbackTypeMDL.Type.ROAD.CODE })
+            if (index >= 0) selectIndex = index
+        } else {
+            for (i in 0 until data.size) {
+                if (TextUtils.equals(data[i].dictcode, FeedbackTypeMDL.Type.OTHER.CODE) ||
+                        TextUtils.isEmpty(data[i].dictcode)) {
+                    selectIndex = i
+                    break
+                }
+            }
+        }
+        if (selectIndex in 0 until data.size) fdtype = data[selectIndex].dictcode
+        typeAdapter.setSelectIndex(selectIndex)
+    }
+
     private fun initRv() {
+        rvType.addItemDecoration(GridSpacingItemDecoration(3, DisplayUtils.dip2px(this, 10f), false))
+        rvType.layoutManager = GridLayoutManager(this, 4).apply { orientation = GridLayoutManager.VERTICAL }
+        typeAdapter = FBTypeAdapter(this, data)
+        rvType.adapter = typeAdapter
         rvPics.addItemDecoration(GridSpacingItemDecoration(3, DisplayUtils.dip2px(this, 10f), false))
         rvPics.layoutManager = GridLayoutManager(this, 3).apply { orientation = GridLayoutManager.VERTICAL }
         picData.add(addItem)
@@ -181,7 +253,7 @@ class FeedbackActivity : BaseActivity() {
     }
 
     private fun commit(content: String) {
-        doRequest(WebApiService.FEEDBACK, WebApiService.feedbackParams(getUserId(), content, imageUrls), object : HttpRequestCallback<String>() {
+        doRequest(WebApiService.FEEDBACK, WebApiService.feedbackParams(getUserId(), content, imageUrls, fdtype), object : HttpRequestCallback<String>() {
             override fun onPreExecute() {
                 showLoading("正在提交…")
             }

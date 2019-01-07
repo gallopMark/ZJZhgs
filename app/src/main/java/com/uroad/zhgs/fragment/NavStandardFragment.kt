@@ -22,6 +22,7 @@ import com.amap.api.maps.model.animation.AlphaAnimation
 import com.amap.api.maps.model.animation.Animation
 import com.uroad.ifly.IFlySynthesizer
 import com.uroad.library.utils.DisplayUtils
+import com.uroad.library.utils.VersionUtils
 import com.uroad.mqtt.IMqttCallBack
 import com.uroad.mqtt.MqttService
 import com.uroad.rxhttp.RxHttpManager
@@ -37,12 +38,15 @@ import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
 import com.uroad.zhgs.enumeration.MapDataType
+import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.helper.RoadNaviLayerHelper
+import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.model.*
 import com.uroad.zhgs.model.mqtt.NaviEventPushMDL
 import com.uroad.zhgs.model.mqtt.NaviLocUploadMDL
 import com.uroad.zhgs.utils.AndroidBase64Utils
 import com.uroad.zhgs.utils.GsonUtils
+import com.uroad.zhgs.utils.PackageInfoUtils
 import com.uroad.zhgs.webservice.ApiService
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
@@ -76,7 +80,8 @@ class NavStandardFragment : BaseLocationFragment() {
     private val statusMap = ArrayMap<String, Disposable>()
     private var mqttService: MqttService? = null
     private var synthesizer: IFlySynthesizer? = null
-    private var handler: Handler? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private var isPause = false
 
     override fun setBaseLayoutResID(): Int {
         return R.layout.fragment_nav_standard
@@ -143,8 +148,8 @@ class NavStandardFragment : BaseLocationFragment() {
 
     /*创建mqtt连接*/
     private fun onConnectMQTT() {
-        if (!isLogin()) return
-        handler = Handler(Looper.getMainLooper())
+        /*未登录或关闭无目的导航功能让*/
+        if (!isLogin() || !UserPreferenceHelper.isAimlessNav(context)) return
         mqttService = ApiService.buildMQTTService(context).apply {
             connect(object : IMqttCallBack {
                 override fun messageArrived(topic: String?, message: String?, qos: Int) {
@@ -167,7 +172,7 @@ class NavStandardFragment : BaseLocationFragment() {
                 }
 
                 override fun connectFailed(token: IMqttToken?, throwable: Throwable?) {
-                    handler?.postDelayed({ connect(this) }, CurrApplication.DELAY_MILLIS)
+                    handler.postDelayed({ connect(this) }, CurrApplication.DELAY_MILLIS)
                 }
             })
         }
@@ -180,6 +185,7 @@ class NavStandardFragment : BaseLocationFragment() {
 
     /*讯飞语音播放文字*/
     private fun playVoice(content: String) {
+        if (isPause) return
         synthesizer?.stopSpeaking()
         if (synthesizer == null) {
             synthesizer = IFlySynthesizer.create(context, null).apply { startSpeaking(content) }
@@ -1001,12 +1007,41 @@ class NavStandardFragment : BaseLocationFragment() {
         }
     }
 
+    override fun initData() {
+        val localVer = AppLocalHelper.getNavVersion(context)
+        val currVer = PackageInfoUtils.getVersionName(context)
+        if (TextUtils.isEmpty(localVer) || VersionUtils.isNeedUpdate(currVer, localVer)) {
+            getNewFunctionContent()
+        }
+    }
+
+    private fun getNewFunctionContent() {
+        doRequest(WebApiService.NEW_FUNCTION_CONTENT, WebApiService.newFuncContentParams(PackageInfoUtils.getVersionName(context)), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, HtmlMDL::class.java)
+                    if (mdl == null) handler.postDelayed({ getNewFunctionContent() }, CurrApplication.DELAY_MILLIS)
+                    else {
+                        NewFunctionDialog(context, mdl.htmlcontent).show()
+                        AppLocalHelper.saveNavVersion(context, PackageInfoUtils.getVersionName(context))
+                    }
+                } else handler.postDelayed({ getNewFunctionContent() }, CurrApplication.DELAY_MILLIS)
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ getNewFunctionContent() }, CurrApplication.DELAY_MILLIS)
+            }
+        })
+    }
+
     override fun onResume() {
+        isPause = false
         mapView.onResume()
         super.onResume()
     }
 
     override fun onPause() {
+        isPause = true
         synthesizer?.stopSpeaking()
         mapView.onPause()
         super.onPause()
@@ -1018,6 +1053,7 @@ class NavStandardFragment : BaseLocationFragment() {
             it.destroy()
         }
         mqttService?.disconnect()
+        handler.removeCallbacksAndMessages(null)
         dispose()
         mapView.onDestroy()
         super.onDestroyView()

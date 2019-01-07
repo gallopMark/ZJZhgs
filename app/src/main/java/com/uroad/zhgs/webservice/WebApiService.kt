@@ -398,10 +398,11 @@ class WebApiService {
         content	内容	否
         picurls	图片链接	是
          */
-        fun feedbackParams(userid: String?, content: String?, picurls: String?) = getBaseParams().apply {
+        fun feedbackParams(userid: String?, content: String?, picurls: String?, fdtype: String?) = getBaseParams().apply {
             put("userid", userid)
             put("content", content)
             put("picurls", picurls)
+            put("fdtype", fdtype)
         }
 
         //1.40 获取轴数
@@ -433,7 +434,7 @@ class WebApiService {
         userid	用户ID	否
         isuseful	是否有用	否	1-有用，2-无用，3-两者都没选择
          */
-        fun isUsefulParams(eventid: String?, userid: String, isuseful: Int) = getBaseParams().apply {
+        fun isUsefulParams(eventid: String?, userid: String?, isuseful: Int) = getBaseParams().apply {
             put("eventid", eventid)
             put("userid", userid)
             put("isuseful", isuseful.toString())
@@ -560,7 +561,7 @@ class WebApiService {
         //1、是否有车队或者邀请
         const val CHECK_RIDERS = "checkCarTeamSituation"
 
-        fun checkRidersParams(userid: String) = getBaseParams().apply { put("userid", userid) }
+        fun checkRidersParams(userid: String?) = getBaseParams().apply { put("userid", userid) }
         //2、创建&修改车队
         const val CREATE_CAR_TEAM = "creatCarTeam"
 
@@ -630,7 +631,7 @@ class WebApiService {
         //9、拒绝邀请
         const val REFUSE_INVITE = "refuseInvitation"
 
-        fun refuseInviteParams(userid: String) = getBaseParams().apply { put("userid", userid) }
+        fun refuseInviteParams(userid: String?) = getBaseParams().apply { put("userid", userid) }
 
         //10、邀请用户
         const val INVITE_RIDERS = "inviteUser"
@@ -704,9 +705,17 @@ class WebApiService {
         //通行记录
         const val PASS_RECORD = "getCurrentRecordData"
 
-        fun passRecordParams(carno: String?, startdate: String?, type: String?) = getBaseParams().apply {
+        /**
+         * 参数项	名称	是否可为空	备注
+        carno	车牌号	否
+        startdate	开始日期	否	格式 yyyymm
+        enddate	结束日期	否	格式 yyyymm
+        type	车辆类型	否	1000002 客车 ； 1000003 货车
+         */
+        fun passRecordParams(carno: String?, startdate: String?, enddate: String?, type: String?) = getBaseParams().apply {
             put("carno", carno)
             put("startdate", startdate)
+            put("enddate", enddate)
             put("type", type)
         }
 
@@ -761,6 +770,14 @@ class WebApiService {
             put("longitude", longitude.toString())
             put("latitude", latitude.toString())
         }
+
+        const val AUTH_VER = "funcAuthentication"
+
+        const val NEW_FUNCTION_CONTENT = "getNewFunctionContent"
+
+        fun newFuncContentParams(con_ver: String?) = getBaseParams().apply { put("con_ver", con_ver) }
+
+        const val FEEDBACK_TYPE = "getfbtype"
     }
 
 }

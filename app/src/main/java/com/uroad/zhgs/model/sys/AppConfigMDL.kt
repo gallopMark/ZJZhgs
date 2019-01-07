@@ -5,7 +5,8 @@ class AppConfigMDL {
         NAV_MENU_VER("1"),
         ANDROID_VER("2"),
         DIAGRAM_VER("5"),
-        SYSTEM_VER("6")
+        SYSTEM_VER("6"),
+        AUTH_VER("7")
     }
 
     var confid: String? = null

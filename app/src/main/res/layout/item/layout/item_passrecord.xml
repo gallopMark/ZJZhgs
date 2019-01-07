@@ -54,7 +54,7 @@
                 android:id="@+id/tvMileage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/appTextColor"
+                android:textColor="@color/color_33"
                 android:textSize="@dimen/font_24" />
 
             <TextView

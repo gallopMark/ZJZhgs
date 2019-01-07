@@ -11,6 +11,7 @@ import com.amap.api.col.sln3.bd
 import com.uroad.zhgs.R
 import com.uroad.zhgs.model.PassRecordMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
+import com.uroad.zhgs.utils.TypefaceUtils
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -19,7 +20,7 @@ import java.text.DecimalFormat
  * @create 2018/11/1
  * @describe 通行记录列表适配器
  */
-class PassRecordAdapter(context: Activity, mDatas: MutableList<PassRecordMDL>)
+class PassRecordAdapter(private val context: Activity, mDatas: MutableList<PassRecordMDL>)
     : BaseArrayRecyclerAdapter<PassRecordMDL>(context, mDatas) {
     private val colorGray = ContextCompat.getColor(context, R.color.color_99)
     private val ts16 = context.resources.getDimensionPixelOffset(R.dimen.font_16)
@@ -30,6 +31,7 @@ class PassRecordAdapter(context: Activity, mDatas: MutableList<PassRecordMDL>)
         holder.setText(R.id.tvEnter, getEnterInfo(t.n_en_station_name, t.getEnDateTime()))
         holder.setText(R.id.tvExit, getExitInfo(t.n_ex_station_name, t.getExDateTime()))
         holder.setText(R.id.tvMileage, getMileageInfo(t.d_fee_length))
+        holder.setTypeface(R.id.tvMileage, TypefaceUtils.dinCondensed(context))
     }
 
     private fun getEnterInfo(enStation: String?, enDate: String?): SpannableString {
@@ -54,7 +56,7 @@ class PassRecordAdapter(context: Activity, mDatas: MutableList<PassRecordMDL>)
         val start = mile.length
         mile += "Km"
         return SpannableString(mile).apply {
-            setSpan(StyleSpan(Typeface.BOLD), 0, start, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            //            setSpan(StyleSpan(Typeface.BOLD), 0, start, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
             setSpan(AbsoluteSizeSpan(ts16, false), start, mile.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }

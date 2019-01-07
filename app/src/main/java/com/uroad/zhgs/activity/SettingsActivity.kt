@@ -53,18 +53,22 @@ class SettingsActivity : BaseActivity() {
     private fun init() {
         if (!isLogin()) {
             llTopSettings.visibility = View.GONE
+            llAimlessNav.visibility = View.GONE
             llChangePW.visibility = View.GONE
             btLogout.visibility = View.GONE
         } else {
             llTopSettings.visibility = View.VISIBLE
+            llAimlessNav.visibility = View.VISIBLE
             llChangePW.visibility = View.VISIBLE
             btLogout.visibility = View.VISIBLE
         }
         checkBox.isChecked = UserPreferenceHelper.isFollow(this)
+        cbAimlessNav.isChecked = UserPreferenceHelper.isAimlessNav(this)
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             val isFollow = if (isChecked) 1 else 0
             userSetUp(isFollow)
         }
+        cbAimlessNav.setOnCheckedChangeListener { _, isChecked -> UserPreferenceHelper.saveAimlessNav(this@SettingsActivity, isChecked) }
     }
 
     //清除缓存

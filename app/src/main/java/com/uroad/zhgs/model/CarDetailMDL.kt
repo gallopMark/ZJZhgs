@@ -32,6 +32,8 @@ class CarDetailMDL {
     var carheight: String? = null
     var axisnum: String? = null
     var realenginno: String? = null
+    var gdcartype: String? = null
+    var gdaxisnum: String? = null
 
     fun getCarNum(): Array<String?> {
         val array = arrayOfNulls<String>(2)

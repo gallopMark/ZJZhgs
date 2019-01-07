@@ -7,4 +7,5 @@ class HtmlMDL {
     var id: String? = null
     var title: String? = null
     var html: String? = null
+    var htmlcontent: String? = null
 }
