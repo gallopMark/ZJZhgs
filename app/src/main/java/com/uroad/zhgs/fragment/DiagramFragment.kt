@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
@@ -48,6 +49,8 @@ import kotlinx.android.synthetic.main.fragment_diagram.*
 class DiagramFragment : BaseLocationFragment() {
     private var longitude: Double = 0.toDouble()
     private var latitude: Double = 0.toDouble()
+    private val handler = Handler()
+    private var isLoadEventByNotes = false
 
     override fun setBaseLayoutResID(): Int = R.layout.fragment_diagram
 
@@ -385,13 +388,17 @@ class DiagramFragment : BaseLocationFragment() {
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
+            resetLayer()
             loadEventByNotes()
+//            handler.postDelayed({
+//                resetLayer()
+//                loadEventByNotes()
+//            }, 500)
         }
 
         override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
             handler.proceed()
         }
-
     }
 
     inner class MWebChromeClient : WebChromeClient() {
@@ -487,7 +494,9 @@ class DiagramFragment : BaseLocationFragment() {
     }
 
     private fun loadUrl() {
+        webView.visibility = View.INVISIBLE
         webView.loadUrl(DiagramUtils.diagramUrl())
+        handler.postDelayed({ if (!isLoadEventByNotes) loadEventByNotes() }, 15 * 1000L)
     }
 
     /*从上次记录的按钮状态控制显示或隐藏*/
@@ -542,16 +551,27 @@ class DiagramFragment : BaseLocationFragment() {
         } else {
             loadEvent(DiagramEventType.TrafficIncident.code, 0)
         }
-        if(RoadNaviLayerHelper.isDiagramSiteControlChecked(context)){
+        if (RoadNaviLayerHelper.isDiagramSiteControlChecked(context)) {
             loadEvent(DiagramEventType.StationControl.code, 1)
         } else {
             loadEvent(DiagramEventType.StationControl.code, 0)
         }
+        isLoadEventByNotes = true
     }
 
     fun onEvent(codeType: String, isChecked: Boolean) {
         val isDisplay = if (isChecked) 1 else 0
         loadEvent(codeType, isDisplay)
+    }
+
+    private fun resetLayer() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("uroadplus_web_resetLayer()", null)
+        } else {
+            webView.loadUrl("javascript:uroadplus_web_resetLayer()")
+        }
+        webView.visibility = View.VISIBLE
+//        handler.postDelayed({ webView.visibility = View.VISIBLE }, 1000)
     }
 
     //isdisplay	是否展示	1显示0隐藏
