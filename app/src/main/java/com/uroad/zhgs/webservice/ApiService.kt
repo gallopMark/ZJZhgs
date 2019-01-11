@@ -19,7 +19,7 @@ import retrofit2.http.*
  */
 interface ApiService {
     companion object {
-        var isDebug = false
+        var isDebug = true
         // http://zhgs.u-road.com/ZJAppApi/index.php/api/
         //http://10.126.241.9
         // http://zjzhgs.u-road.com:11001  zhgs.u-road.com  http://zjgd.u-road.com/ZJAppApi/index.php/api
