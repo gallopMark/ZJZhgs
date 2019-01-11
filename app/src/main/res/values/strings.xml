@@ -491,8 +491,10 @@
     <string name="roadToll_search">查询</string>
     <string name="roadToll_startPoi_hint">请输入起点收费站名称</string>
     <string name="roadToll_select_startPoi_hint">起点</string>
+    <string name="roadToll_startPoi_tips">请选择起点</string>
     <string name="roadToll_endPoi_hint">请输入终点收费站名称</string>
     <string name="roadToll_select_endPoi_hint">终点</string>
+    <string name="roadToll_endPoi_tips">请选择终点</string>
 
     <string name="dialog_bindcar_title">绑定车辆</string>
     <string name="dialog_bindcar_content">行车安全，你我有责，赶紧绑定车辆查询您的车辆诚信等级与诚信分数吧。</string>

@@ -154,9 +154,9 @@ class RoadTollActivity : BaseActivity() {
 
     private fun onSearch() {
         if (TextUtils.isEmpty(startPoiId) || TextUtils.isEmpty(etStart.text.toString())) {
-            showShortToast(getString(R.string.roadToll_select_startPoi_hint))
+            showShortToast(getString(R.string.roadToll_startPoi_tips))
         } else if (TextUtils.isEmpty(endPoiId) || TextUtils.isEmpty(etEnd.text.toString())) {
-            showShortToast(getString(R.string.roadToll_select_endPoi_hint))
+            showShortToast(getString(R.string.roadToll_endPoi_tips))
         } else {
             val startPoi = RoadTollGSMDL.Poi().apply {
                 poiid = startPoiId

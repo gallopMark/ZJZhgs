@@ -5,11 +5,13 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.view.View
+import com.umeng.analytics.MobclickAgent
 import com.uroad.imageloader_v4.ImageLoaderV4
 import com.uroad.zhgs.*
 import com.uroad.zhgs.activity.*
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
+import com.uroad.zhgs.enumeration.UMEvent
 import com.uroad.zhgs.model.ActivityMDL
 import kotlinx.android.synthetic.main.fragment_mine.*
 
@@ -49,7 +51,10 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         tvPassRecord.setOnClickListener(this)
         tvMyTracks.setOnClickListener(this)
         tvMyCode.setOnClickListener(this)
-        tvSettings.setOnClickListener { openActivity(SettingsActivity::class.java) }
+        tvSettings.setOnClickListener {
+            MobclickAgent.onEvent(context, UMEvent.SETTINGS.CODE)
+            openActivity(SettingsActivity::class.java)
+        }
     }
 
     override fun onClick(v: View) {
@@ -57,40 +62,65 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             openActivity(LoginActivity::class.java)
         } else {
             when (v.id) {
-                R.id.tvShopping -> openActivity(YouZanUserActivity::class.java)
-                R.id.tvMyBurst -> openActivity(MyRidersReportActivity::class.java)  //我的报料
-                R.id.tvMySubscribe -> openActivity(UserSubscribeActivity::class.java)  //我的订阅
-                R.id.tvRescueRecord -> openActivity(RescueRecordActivity::class.java)  //救援记录
-                R.id.rlMessage -> openActivity(UserMsgActivity::class.java) //消息中心
-                R.id.tvMyCar -> openActivity(MyCar2Activity::class.java) //我的车辆
-                R.id.tvPassRecord -> openActivity(MyPassRecordActivity::class.java) //通行记录
-                R.id.tvMyTracks -> openActivity(MyTracksActivity::class.java) //我的足迹
-                R.id.tvMyCode -> {
-                    val activityMDL = CurrApplication.activityMDL
-                    if (activityMDL == null) openActivity(MyInvitationCodeActivity::class.java) //我的邀请码
-                    else {   //如果有活动
-                        if (TextUtils.equals(activityMDL.transitionstype, ActivityMDL.Type.H5.code)) {  //跳转h5
-                            var content = activityMDL.transitionscontent
-                            if (content == null || content.isEmpty()) return
-                            if (activityMDL.islogin == 1) {  //需要登录
-                                if (isLogin()) {
-                                    content += if (!content.contains("?"))  //是否已经拼了参数
-                                        "?activityid=${activityMDL.activityid}&useruuid=${getUserId()}"
-                                    else
-                                        "&activityid=${activityMDL.activityid}&useruuid=${getUserId()}"
-                                    openWebActivity(content, "")
-                                } else {
-                                    openActivity(LoginActivity::class.java)
-                                }
-                            } else {
-                                openWebActivity(content, "")
-                            }
-                        } else if (TextUtils.equals(activityMDL.transitionstype, ActivityMDL.Type.NATIVE.code)) {
-                            if (!isLogin()) openActivity(LoginActivity::class.java)
-                            else openActivity(InviteCourtesyActivity::class.java, Bundle().apply { putString("activityId", activityMDL.activityid) })
-                        }
-                    }
+                R.id.tvShopping -> { //我的商城
+                    MobclickAgent.onEvent(context, UMEvent.MY_SHOPPING.CODE)
+                    openActivity(YouZanUserActivity::class.java)
                 }
+                R.id.tvMyBurst -> {//我的报料
+                    MobclickAgent.onEvent(context, UMEvent.MY_REPORT.CODE)
+                    openActivity(MyRidersReportActivity::class.java)
+                }
+                R.id.tvMySubscribe -> {//我的订阅
+                    MobclickAgent.onEvent(context, UMEvent.MY_SUBSCRIBE.CODE)
+                    openActivity(UserSubscribeActivity::class.java)
+                }
+                R.id.tvRescueRecord -> {//救援记录
+                    MobclickAgent.onEvent(context, UMEvent.RESCUE_RECORD.CODE)
+                    openActivity(RescueRecordActivity::class.java)
+                }
+                R.id.rlMessage -> {//消息中心
+                    MobclickAgent.onEvent(context, UMEvent.MESSAGE_CENTER.CODE)
+                    openActivity(UserMsgActivity::class.java)
+                }
+                R.id.tvMyCar -> {//我的车辆
+                    MobclickAgent.onEvent(context, UMEvent.MY_CAR.CODE)
+                    openActivity(MyCar2Activity::class.java)
+                }
+                R.id.tvPassRecord -> {//通行记录
+                    MobclickAgent.onEvent(context, UMEvent.PASS_RECORD.CODE)
+                    openActivity(MyPassRecordActivity::class.java)
+                }
+                R.id.tvMyTracks -> {//我的足迹
+                    MobclickAgent.onEvent(context, UMEvent.MY_FOOTPRINT.CODE)
+                    openActivity(MyTracksActivity::class.java)
+                }
+                R.id.tvMyCode -> { //我的邀请码
+                    MobclickAgent.onEvent(context, UMEvent.MY_INVITATION_CODE.CODE)
+                    whenClickMyCode()
+                }
+            }
+        }
+    }
+
+    private fun whenClickMyCode() {
+        val activityMDL = CurrApplication.activityMDL
+        if (activityMDL == null) openActivity(MyInvitationCodeActivity::class.java)
+        else {   //如果有活动
+            if (TextUtils.equals(activityMDL.transitionstype, ActivityMDL.Type.H5.code)) {  //跳转h5
+                val content = activityMDL.transitionscontent
+                if (content == null || content.isEmpty()) return
+                if (activityMDL.islogin == 1) {  //需要登录
+                    if (isLogin()) {
+                        openWebActivity(content, "")
+                    } else {
+                        openActivity(LoginActivity::class.java)
+                    }
+                } else {
+                    openWebActivity(content, "")
+                }
+            } else if (TextUtils.equals(activityMDL.transitionstype, ActivityMDL.Type.NATIVE.code)) {
+                if (!isLogin()) openActivity(LoginActivity::class.java)
+                else openActivity(InviteCourtesyActivity::class.java, Bundle().apply { putString("activityId", activityMDL.activityid) })
             }
         }
     }

@@ -11,11 +11,13 @@ import android.text.style.ForegroundColorSpan
 import android.util.TypedValue
 import android.view.View
 import android.widget.RelativeLayout
+import com.umeng.analytics.MobclickAgent
 import com.uroad.zhgs.R
 import com.uroad.zhgs.R.id.flBaseContent
 import com.uroad.zhgs.activity.MyNearByActivity
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.BaseLocationFragment
+import com.uroad.zhgs.enumeration.UMEvent
 import kotlinx.android.synthetic.main.fragment_mainnearby.*
 
 /**
@@ -62,23 +64,29 @@ class MainNearByFragment : BaseLocationFragment() {
                     tvNearByToll.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     tvNearByToll.isSelected = true
                     setTab(1)
+                    MobclickAgent.onEvent(context, UMEvent.NEARME_TOLL_GATE.CODE)
                 }
                 R.id.tvNearByService -> {
                     tvNearByService.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     tvNearByService.isSelected = true
                     setTab(2)
+                    MobclickAgent.onEvent(context, UMEvent.NEARME_SERVICE_AREA.CODE)
                 }
                 R.id.tvNearByScenic -> {
                     tvNearByScenic.setTextSize(TypedValue.COMPLEX_UNIT_PX, ts16)
                     tvNearByScenic.isSelected = true
                     setTab(3)
+                    MobclickAgent.onEvent(context, UMEvent.NEARME_SCENIC.CODE)
                 }
             }
         }
         tvNearByToll.setOnClickListener(listener)
         tvNearByService.setOnClickListener(listener)
         tvNearByScenic.setOnClickListener(listener)
-        tvNearByMore.setOnClickListener { openActivity(MyNearByActivity::class.java, Bundle().apply { putInt("type", 4) }) }
+        tvNearByMore.setOnClickListener {
+            MobclickAgent.onEvent(context, UMEvent.NEARME_MORE.CODE)
+            openActivity(MyNearByActivity::class.java, Bundle().apply { putInt("type", 4) })
+        }
     }
 
     private fun initFragments() {

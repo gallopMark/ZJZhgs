@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import com.umeng.analytics.MobclickAgent
 import com.uroad.library.utils.DisplayUtils
 import com.uroad.library.utils.VersionUtils
 import com.uroad.zhgs.R
@@ -18,6 +19,7 @@ import com.uroad.zhgs.adaptervp.MainMenuVpAdapter
 import com.uroad.zhgs.common.BaseFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.BindCarDialog
+import com.uroad.zhgs.enumeration.UMEvent
 import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.CarMDL
 import com.uroad.zhgs.model.sys.AppConfigMDL
@@ -135,21 +137,51 @@ class MainMenuFragment : BaseFragment() {
                 override fun onPageItemClick(page: Int, itemPos: Int, mdl: MainMenuMDL) {
                     val key = mdl.menukey?.toLowerCase()
                     when {
-                        TextUtils.equals(key, MainMenuMDL.LJLF) -> openActivity(RoadTollActivity::class.java)  //路径路费
-                        TextUtils.equals(key, MainMenuMDL.FWQ) -> openActivity(ServiceAreaActivity::class.java) //服务区
-                        TextUtils.equals(key, MainMenuMDL.GSRX) -> openActivity(HighWayHotlineActivity::class.java) //高速热线
-                        TextUtils.equals(key, MainMenuMDL.ZXSC) -> onShopClickListener?.onShopClick()
-                        TextUtils.equals(key, MainMenuMDL.CYBL) -> if (!isLogin()) openActivity(LoginActivity::class.java)
-                        else openActivity(RidersInteractionActivity::class.java)
-                        TextUtils.equals(key, MainMenuMDL.WZCX) -> CurrApplication.BREAK_RULES_URL?.let { openWebActivity(it, mdl.menuname) }  //违法查询
-                        TextUtils.equals(key, MainMenuMDL.GSZX) -> openActivity(NewsMainActivity::class.java)  //高速资讯
-                        TextUtils.equals(key, MainMenuMDL.CXCX) -> if (!isLogin()) openActivity(LoginActivity::class.java)
-                        else getMyCar()
-                        TextUtils.equals(key, MainMenuMDL.GSZB) -> CurrApplication.ALIVE_URL?.let {
-                            openActivity(X5WebViewActivity::class.java, Bundle().apply {
-                                putString("url", it)
-                                putString("title", mdl.menuname)
-                            })
+                        TextUtils.equals(key, MainMenuMDL.LJLF) -> {//路径路费
+                            MobclickAgent.onEvent(context, UMEvent.ROAD_TOLL.CODE)
+                            openActivity(RoadTollActivity::class.java)
+                        }
+                        TextUtils.equals(key, MainMenuMDL.FWQ) -> {//服务区
+                            MobclickAgent.onEvent(context, UMEvent.SERVICE_AREA.CODE)
+                            openActivity(ServiceAreaActivity::class.java)
+                        }
+                        TextUtils.equals(key, MainMenuMDL.GSRX) -> {//高速热线
+                            MobclickAgent.onEvent(context, UMEvent.HIGHWAY_HOTLINE.CODE)
+                            openActivity(HighWayHotlineActivity::class.java)
+                        }
+                        TextUtils.equals(key, MainMenuMDL.ZXSC) -> {
+                            onShopClickListener?.onShopClick()
+                        }
+                        TextUtils.equals(key, MainMenuMDL.CYBL) -> {
+                            if (!isLogin()) openActivity(LoginActivity::class.java)
+                            else {
+                                MobclickAgent.onEvent(context, UMEvent.RIDERS_REPORT.CODE)
+                                openActivity(RidersInteractionActivity::class.java)
+                            }
+                        }
+                        TextUtils.equals(key, MainMenuMDL.WZCX) -> {//违法查询
+                            MobclickAgent.onEvent(context, UMEvent.ILLEGAL_INQUIRY.CODE)
+                            CurrApplication.BREAK_RULES_URL?.let { openWebActivity(it, mdl.menuname) }
+                        }
+                        TextUtils.equals(key, MainMenuMDL.GSZX) -> {//高速资讯
+                            MobclickAgent.onEvent(context, UMEvent.LATEST_NEWS_MORE.CODE)
+                            openActivity(NewsMainActivity::class.java)
+                        }
+                        TextUtils.equals(key, MainMenuMDL.CXCX) -> { //诚信查询
+                            if (!isLogin()) openActivity(LoginActivity::class.java)
+                            else {
+                                MobclickAgent.onEvent(context, UMEvent.INTEGRITY_INQUIRY.CODE)
+                                getMyCar()
+                            }
+                        }
+                        TextUtils.equals(key, MainMenuMDL.GSZB) -> {
+                            MobclickAgent.onEvent(context, UMEvent.HIGHWAY_ALIVE.CODE)
+                            CurrApplication.ALIVE_URL?.let {
+                                openActivity(X5WebViewActivity::class.java, Bundle().apply {
+                                    putString("url", it)
+                                    putString("title", mdl.menuname)
+                                })
+                            }
                         }
                     }
                 }

@@ -11,12 +11,14 @@ import com.uroad.zhgs.utils.GsonUtils
 import com.uroad.zhgs.webservice.HttpRequestCallback
 import com.uroad.zhgs.webservice.WebApiService
 import android.text.TextUtils
+import com.umeng.analytics.MobclickAgent
 import com.uroad.zhgs.activity.*
 import com.uroad.mqtt.IMqttCallBack
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseLocationFragment
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.*
+import com.uroad.zhgs.enumeration.UMEvent
 import com.uroad.zhgs.helper.AppLocalHelper
 import com.uroad.zhgs.model.mqtt.AddTeamMDL
 import com.uroad.zhgs.utils.ClipboardUtils
@@ -56,13 +58,7 @@ class MainFragment : BaseLocationFragment() {
     override fun setBaseLayoutResID(): Int = R.layout.fragment_main
 
     override fun setUp(view: View, savedInstanceState: Bundle?) {
-        btNavigation.setOnClickListener { openActivity(RoadNavigationActivity::class.java) }
-        btRescue.setOnClickListener {
-            if (!isLogin()) openActivity(LoginActivity::class.java)
-            else if (AppLocalHelper.isAuthGSJY(context) && !isAuth()) {
-                showTipsDialog(context.getString(R.string.dialog_default_title), context.getString(R.string.without_auth))
-            } else checkRescue()
-        }
+        initTopButton()
         initWeatherOther()
         initMenu()
         initSubscribe()
@@ -71,6 +67,22 @@ class MainFragment : BaseLocationFragment() {
         initRefresh()
         /*未申请位置权限，则申请*/
         if (!hasLocationPermissions()) applyLocationPermissions()
+    }
+
+    private fun initTopButton() {
+        btNavigation.setOnClickListener {
+            MobclickAgent.onEvent(context, UMEvent.ROAD_NAVIGATION.CODE)
+            openActivity(RoadNavigationActivity::class.java)
+        }
+        btRescue.setOnClickListener {
+            if (!isLogin()) openActivity(LoginActivity::class.java)
+            else if (AppLocalHelper.isAuthGSJY(context) && !isAuth()) {
+                showTipsDialog(context.getString(R.string.dialog_default_title), context.getString(R.string.without_auth))
+            } else {
+                MobclickAgent.onEvent(context, UMEvent.HIGHWAY_RESCUE.CODE)
+                checkRescue()
+            }
+        }
     }
 
     private fun applyLocationPermissions() {
@@ -236,7 +248,10 @@ class MainFragment : BaseLocationFragment() {
     }
 
     override fun setListener() {
-        ivCustomerService.setOnClickListener { CurrApplication.WISDOM_URL?.let { url -> openWebActivity(url, context.getString(R.string.customer_service)) } }
+        dragView.setOnClickListener {
+            MobclickAgent.onEvent(context, UMEvent.XIAOZHI_ASKS.CODE)
+            CurrApplication.WISDOM_URL?.let { url -> openWebActivity(url, context.getString(R.string.customer_service)) }
+        }
     }
 
     override fun afterLocation(location: AMapLocation) {

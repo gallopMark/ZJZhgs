@@ -3,4 +3,6 @@
     <item name="toolbar" type="id" />
     <item name="toolbar_title" type="id" />
     <item name="toolbar_options" type="id" />
+
+    <item name="dragView" type="id"/>
 </resources>

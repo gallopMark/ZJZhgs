@@ -8,11 +8,13 @@ import android.support.v4.app.FragmentTransaction
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
+import com.umeng.analytics.MobclickAgent
 import com.uroad.library.utils.VersionUtils
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.dialog.VersionDialog
+import com.uroad.zhgs.enumeration.UMEvent
 import com.uroad.zhgs.fragment.MainFragment
 import com.uroad.zhgs.fragment.MineFragment
 import com.uroad.zhgs.fragment.PraiseFragment
@@ -66,6 +68,7 @@ class MainActivity : BaseActivity() {
                 }
             }
             2 -> {
+                MobclickAgent.onEvent(this, UMEvent.SHOPPING_MALL.CODE)
                 val praiseFragment = supportFragmentManager.findFragmentByTag(TAG_PRAISE)
                 if (praiseFragment == null) {
                     transaction.add(R.id.content, PraiseFragment(), TAG_PRAISE)

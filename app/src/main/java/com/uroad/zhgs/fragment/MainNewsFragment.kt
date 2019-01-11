@@ -6,10 +6,12 @@ import android.os.Looper
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.RelativeLayout
+import com.umeng.analytics.MobclickAgent
 import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.NewsMainActivity
 import com.uroad.zhgs.adapteRv.NewsAdapter
 import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.enumeration.UMEvent
 import com.uroad.zhgs.model.NewsMDL
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
 import com.uroad.zhgs.utils.GsonUtils
@@ -37,7 +39,10 @@ class MainNewsFragment : BaseFragment() {
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         flBaseContent.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
         initRv()
-        tvMore.setOnClickListener { openActivity(NewsMainActivity::class.java) }//更多资讯
+        tvMore.setOnClickListener {
+            MobclickAgent.onEvent(context, UMEvent.LATEST_NEWS_MORE.CODE)
+            openActivity(NewsMainActivity::class.java)  //更多资讯
+        }
         handler = Handler(Looper.getMainLooper())
     }
 

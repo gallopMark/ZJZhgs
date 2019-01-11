@@ -48,9 +48,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/to"
             android:layout_marginLeft="@dimen/margin_5"
             android:layout_marginRight="@dimen/margin_5"
+            android:text="@string/to"
             android:textColor="@color/appTextColor"
             android:textSize="@dimen/font_16" />
 
@@ -84,13 +84,13 @@
             android:id="@+id/tvSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_corners_accent_5dp"
-            android:text="@string/search"
-            android:paddingLeft="@dimen/margin_12"
-            android:paddingRight="@dimen/margin_12"
-            android:paddingTop="@dimen/margin_5"
-            android:paddingBottom="@dimen/margin_5"
             android:layout_gravity="center"
+            android:background="@drawable/bg_corners_accent_5dp"
+            android:paddingLeft="@dimen/margin_12"
+            android:paddingTop="@dimen/margin_5"
+            android:paddingRight="@dimen/margin_12"
+            android:paddingBottom="@dimen/margin_5"
+            android:text="@string/search"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/font_14" />
     </LinearLayout>
@@ -112,7 +112,8 @@
             android:paddingBottom="@dimen/margin_5"
             android:text="@string/pass_record_small_tips"
             android:textColor="@color/colorOrange"
-            android:textSize="@dimen/font_13" />
+            android:textSize="@dimen/font_13"
+            android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

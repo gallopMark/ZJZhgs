@@ -9,11 +9,13 @@ import android.support.v4.content.ContextCompat
 import android.text.*
 import android.view.View
 import com.tencent.android.tpush.XGPushManager
+import com.umeng.analytics.MobclickAgent
 import com.uroad.library.utils.DeviceUtils
 import com.uroad.library.utils.SecurityUtil
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
 import com.uroad.zhgs.common.CurrApplication
+import com.uroad.zhgs.enumeration.UMEvent
 import com.uroad.zhgs.enumeration.VerificationCode
 import com.uroad.zhgs.helper.UserPreferenceHelper
 import com.uroad.zhgs.model.UserMDL
@@ -83,6 +85,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener {
                 }
             }
             R.id.btRegister -> {
+                MobclickAgent.onEvent(this, UMEvent.REGISTER.CODE)
                 register()
             }
             R.id.tvBottom -> {
