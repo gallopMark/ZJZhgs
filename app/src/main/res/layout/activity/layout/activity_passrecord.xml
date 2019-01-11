@@ -112,8 +112,7 @@
             android:paddingBottom="@dimen/margin_5"
             android:text="@string/pass_record_small_tips"
             android:textColor="@color/colorOrange"
-            android:textSize="@dimen/font_13"
-            android:visibility="gone" />
+            android:textSize="@dimen/font_13" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
