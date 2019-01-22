@@ -778,6 +778,12 @@ class WebApiService {
         fun newFuncContentParams(con_ver: String?) = getBaseParams().apply { put("con_ver", con_ver) }
 
         const val FEEDBACK_TYPE = "getfbtype"
+
+        const val APPEAL_LIST = "getComplaintData"
+
+        fun appealListParams(phone: String?) = getBaseParams().apply { put("phone", phone) }
+
+        const val SERVICE_ICON = "getServiceAreaIcon"
     }
 
 }

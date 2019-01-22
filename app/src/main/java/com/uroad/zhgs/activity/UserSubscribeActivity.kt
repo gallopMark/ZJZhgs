@@ -52,6 +52,7 @@ class UserSubscribeActivity : BaseRefreshRvActivity(), RecyclerTouchListener.Rec
                 finishLoad()
                 if (GsonUtils.isResultOk(data)) {
                     setPageEndLoading()
+                    finishLoad()
                     isFirstLoad = false
                     val mdLs = GsonUtils.fromDataToList(data, SubscribeMDL::class.java)
                     updateData(mdLs)

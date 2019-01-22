@@ -25,19 +25,21 @@ class ImageCropActivity : BaseActivity(), CropImageView.OnBitmapSaveCompleteList
 
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayout(R.layout.activity_photopicker_imagecrop)
-        withOption("移动和缩放")
+        withTitle("移动和缩放")
         withOption("完成")
         val imagePath = intent.getStringExtra("imagePath")
         //获取需要的参数
-        mOutputX = intent.extras.getInt("outPutX")
-        mOutputY = intent.extras.getInt("outPutY")
-        isSaveRectangle = intent.extras.getBoolean("isSaveRectangle")
-        val focusWidth = intent.extras.getInt("focusWidth")
-        val focusHeight = intent.extras.getInt("focusHeight")
+        intent.extras?.let {
+            mOutputX = it.getInt("outPutX")
+            mOutputY = it.getInt("outPutY")
+            isSaveRectangle = it.getBoolean("isSaveRectangle")
+            val focusWidth = it.getInt("focusWidth")
+            val focusHeight = it.getInt("focusHeight")
+            cropImageView.focusWidth = focusWidth
+            cropImageView.focusHeight = focusHeight
+        }
         if (isSaveRectangle) cropImageView.focusStyle = CropImageView.Style.RECTANGLE
         else cropImageView.focusStyle = CropImageView.Style.CIRCLE
-        cropImageView.focusWidth = focusWidth
-        cropImageView.focusHeight = focusHeight
         //缩放图片
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
@@ -55,10 +57,10 @@ class ImageCropActivity : BaseActivity(), CropImageView.OnBitmapSaveCompleteList
         val height = options.outHeight
         var inSampleSize = 1
         if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
-                inSampleSize = width / reqWidth
+            inSampleSize = if (width > height) {
+                width / reqWidth
             } else {
-                inSampleSize = height / reqHeight
+                height / reqHeight
             }
         }
         return inSampleSize

@@ -31,12 +31,17 @@ import kotlinx.android.synthetic.main.activity_carinquiry.*
 class CarInquiryActivity : BaseActivity() {
     private val cars = ArrayList<CarMDL>()
     private var index: Int = 0
+    override fun requestWindow() {
+        requestWindowFullScreen()
+    }
+
     override fun setUp(savedInstanceState: Bundle?) {
         setBaseContentLayoutWithoutTitle(R.layout.activity_carinquiry)
-        requestWindowFullScreen()
+        mContentOptions.text = getString(R.string.appeal_search)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            ivBack.layoutParams = (ivBack.layoutParams as FrameLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@CarInquiryActivity) }
-        ivBack.setOnClickListener { onBackPressed() }
+            contentToolbar.layoutParams = (contentToolbar.layoutParams as FrameLayout.LayoutParams).apply { topMargin = DisplayUtils.getStatusHeight(this@CarInquiryActivity) }
+        contentToolbar.setNavigationOnClickListener { onBackPressed() }
+        mContentOptions.setOnClickListener { openActivity(AppealListActivity::class.java) }
         setImage()
     }
 

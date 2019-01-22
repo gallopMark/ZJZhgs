@@ -11,6 +11,7 @@ import com.uroad.zhgs.R
 import com.uroad.zhgs.activity.NewsMainActivity
 import com.uroad.zhgs.adapteRv.NewsAdapter
 import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.enumeration.UMEvent
 import com.uroad.zhgs.model.NewsMDL
 import com.uroad.zhgs.rv.BaseRecyclerAdapter
@@ -72,13 +73,13 @@ class MainNewsFragment : BaseFragment() {
                     val mdLs = GsonUtils.fromDataToList(data, NewsMDL::class.java)
                     updateData(mdLs)
                 } else {
-                    handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
+                    handler.postDelayed({ initData() }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
                 onRequestCallback?.callback()
-                handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
+                handler.postDelayed({ initData() }, CurrApplication.DELAY_MILLIS)
             }
         })
     }

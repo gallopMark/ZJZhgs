@@ -27,14 +27,19 @@ class NearByServiceAdapter(private val context: Activity, mDatas: MutableList<Se
             params.leftMargin = 0
         }
         holder.itemView.layoutParams = params
+        if (!TextUtils.isEmpty(t.closestatus)) {
+            holder.setVisibility(R.id.tvStatus, View.VISIBLE)
+            holder.setText(R.id.tvStatus, t.closestatus)
+        } else {
+            if (!TextUtils.isEmpty(t.oilstatusnews)) {
+                holder.setVisibility(R.id.tvStatus, View.VISIBLE)
+                holder.setText(R.id.tvStatus, t.oilstatusnews)
+            } else {
+                holder.setVisibility(R.id.tvStatus, View.GONE)
+            }
+        }
         holder.displayImage(R.id.ivPic, t.picurl, R.color.color_f7)
         holder.setText(R.id.tvName, t.name)
         holder.setText(R.id.tvDistance, "${t.distance}km")
-        if (TextUtils.isEmpty(t.remark)) {
-            holder.setVisibility(R.id.tvStatus, View.GONE)
-        } else {
-            holder.setVisibility(R.id.tvStatus, View.VISIBLE)
-            holder.setText(R.id.tvStatus, t.remark)
-        }
     }
 }

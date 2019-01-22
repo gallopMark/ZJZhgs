@@ -107,7 +107,7 @@ class MainOtherFragment : BaseFragment(), WeatherSearch.OnWeatherSearchListener 
             tv_temperature.text = temperature
             tv_city.text = result.city
         } else {
-            handler.postDelayed({ weatherSearch?.searchWeatherAsyn() }, MainFragment.DELAY_MILLIS)
+            handler.postDelayed({ weatherSearch?.searchWeatherAsyn() }, CurrApplication.DELAY_MILLIS)
         }
     }
 

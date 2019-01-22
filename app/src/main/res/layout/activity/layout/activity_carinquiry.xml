@@ -192,11 +192,16 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <ImageView
-        android:id="@+id/ivBack"
-        android:layout_width="@dimen/margin_50"
-        android:layout_height="@dimen/margin_50"
-        android:contentDescription="@string/goBack"
-        android:scaleType="center"
-        android:src="@mipmap/ic_back_white" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/contentToolbar"
+        style="@style/AppToolBarStyle"
+        android:background="@color/transparent"
+        app:navigationIcon="@mipmap/ic_back_white">
+
+        <TextView
+            android:id="@+id/mContentOptions"
+            style="@style/ToolbarOptionsView"
+            android:textColor="@color/white" />
+    </android.support.v7.widget.Toolbar>
+
 </FrameLayout>

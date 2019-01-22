@@ -12,6 +12,7 @@ import com.uroad.zhgs.activity.RescuePayActivity
 import com.uroad.zhgs.activity.RoadNavigationActivity
 import com.uroad.zhgs.adaptervp.UserSubscribePageAdapter
 import com.uroad.zhgs.common.BaseFragment
+import com.uroad.zhgs.common.CurrApplication
 import com.uroad.zhgs.model.SubscribeMDL
 import com.uroad.zhgs.rxbus.MessageEvent
 import com.uroad.zhgs.utils.GsonUtils
@@ -107,13 +108,13 @@ class MainSubscribeFragment : BaseFragment() {
                     val mdLs = GsonUtils.fromDataToList(data, SubscribeMDL::class.java)
                     updateData(mdLs)
                 } else {
-                    handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
+                    handler.postDelayed({ initData() }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
                 //加载失败，延迟三秒重新加载
-                handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
+                handler.postDelayed({ initData() }, CurrApplication.DELAY_MILLIS)
             }
         })
     }

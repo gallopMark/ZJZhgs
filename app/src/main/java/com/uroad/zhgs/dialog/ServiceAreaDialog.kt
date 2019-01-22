@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ class ServiceAreaDialog(private val context: Activity, private val dataMDL: Serv
             window.setContentView(contentView)
             val ivClose = contentView.findViewById<ImageView>(R.id.ivClose)
             val ivIcon = contentView.findViewById<ImageView>(R.id.ivIcon)
+            val tvStatus = contentView.findViewById<TextView>(R.id.tvStatus)
             val tvName = contentView.findViewById<TextView>(R.id.tvName)
             val tvDistance = contentView.findViewById<TextView>(R.id.tvDistance)
             val tvAddress = contentView.findViewById<TextView>(R.id.tvAddress)
@@ -52,6 +54,17 @@ class ServiceAreaDialog(private val context: Activity, private val dataMDL: Serv
             ivClose.setOnClickListener { dismiss() }
             ivIcon.setImageResource(R.mipmap.ic_menu_jtss_service_p)
             tvName.text = dataMDL.name
+            if (!TextUtils.isEmpty(dataMDL.closestatus)) {
+                tvStatus.visibility = View.VISIBLE
+                tvStatus.text = dataMDL.closestatus
+            } else {
+                if (!TextUtils.isEmpty(dataMDL.oilstatusnews)) {
+                    tvStatus.visibility = View.VISIBLE
+                    tvStatus.text = dataMDL.oilstatusnews
+                } else {
+                    tvStatus.visibility = View.GONE
+                }
+            }
             var distance = ""
             dataMDL.distance?.let { distance += it }
             distance += "km"

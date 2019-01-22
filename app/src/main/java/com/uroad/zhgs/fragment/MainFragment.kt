@@ -42,6 +42,7 @@ class MainFragment : BaseLocationFragment() {
     private var latitude = CurrApplication.APP_LATLNG.latitude
     private val handler = Handler()
     private var isShowAuthDialog = false
+    private var isNeedRefresh = false
 
     /*数据加载失败，通过handler延迟 重新加载数据*/
     companion object {
@@ -50,7 +51,6 @@ class MainFragment : BaseLocationFragment() {
         const val TAG_SUBSCRIBE = "subscribe"
         const val TAG_NEARBY = "nearby"
         const val TAG_NEWS = "news"
-        const val DELAY_MILLIS = 3000L
         const val UPDATE_TIME = 5 * 60 * 1000L  //我的附近，定时5分钟刷新一次
     }
 
@@ -214,11 +214,15 @@ class MainFragment : BaseLocationFragment() {
     /*下拉刷新 重新打开定位，刷新我的附近，我的订阅，最新资讯*/
     private fun initRefresh() {
         refreshLayout.isEnableLoadMore = false
-        refreshLayout.setOnRefreshListener {
-            if (hasLocationPermissions()) openLocation()
-            updateSubscribe()
-            updateNews()
-        }
+        refreshLayout.setOnRefreshListener { onRefresh() }
+    }
+
+    private fun onRefresh() {
+        if (hasLocationPermissions()) openLocation()
+        updateSubscribe()
+        updateMenu()
+        updateNews()
+        isNeedRefresh = false
     }
 
     private fun removeSubscribe() {
@@ -242,10 +246,16 @@ class MainFragment : BaseLocationFragment() {
         }
     }
 
+    private fun updateMenu() {
+        val fragment = childFragmentManager.findFragmentByTag(TAG_MENU)
+        if (fragment != null && fragment is MainMenuFragment) fragment.initData()
+    }
+
     private fun updateNews() {
         val fragment = childFragmentManager.findFragmentByTag(TAG_NEWS)
         if (fragment != null && fragment is MainNewsFragment) fragment.initData()
     }
+
 
     override fun setListener() {
         dragView.setOnClickListener {
@@ -278,7 +288,7 @@ class MainFragment : BaseLocationFragment() {
     override fun locationFailure() {
         //如果第一次定位成功，再次定位时失败了，则不显示定位定位失败页，避免我的附近数据无法查阅
         if (!isLocationSuccess) onLocationFailure()
-        else handler.postDelayed({ nearByRun }, DELAY_MILLIS)
+        else handler.postDelayed({ nearByRun }, CurrApplication.DELAY_MILLIS)
     }
 
     private fun onLocationFailure() {
@@ -297,7 +307,7 @@ class MainFragment : BaseLocationFragment() {
             updateSubscribe()
             onAuthStatus()
         }
-        updateNews() //返回到首页刷新资讯
+        if (isNeedRefresh) onRefresh()  //返回首页刷新数据
         checkCarTeamSituation()
         clipboard()
     }
@@ -334,12 +344,12 @@ class MainFragment : BaseLocationFragment() {
                         val mdl = GsonUtils.fromDataBean(data, RidersMsgMDL::class.java)
                         mdl?.let { updateCarTeam(it) }
                     } else {
-                        handler.postDelayed({ checkCarTeamSituation() }, DELAY_MILLIS)
+                        handler.postDelayed({ checkCarTeamSituation() }, CurrApplication.DELAY_MILLIS)
                     }
                 }
 
                 override fun onFailure(e: Throwable, errorMsg: String?) {
-                    handler.postDelayed({ checkCarTeamSituation() }, DELAY_MILLIS)
+                    handler.postDelayed({ checkCarTeamSituation() }, CurrApplication.DELAY_MILLIS)
                 }
             })
         }
@@ -414,11 +424,11 @@ class MainFragment : BaseLocationFragment() {
     private fun refuseInvitation() {
         doRequest(WebApiService.REFUSE_INVITE, WebApiService.refuseInviteParams(getUserId()), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
-                if (!GsonUtils.isResultOk(data)) handler.postDelayed({ refuseInvitation() }, DELAY_MILLIS)
+                if (!GsonUtils.isResultOk(data)) handler.postDelayed({ refuseInvitation() }, CurrApplication.DELAY_MILLIS)
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ refuseInvitation() }, DELAY_MILLIS)
+                handler.postDelayed({ refuseInvitation() }, CurrApplication.DELAY_MILLIS)
             }
         })
     }
@@ -523,14 +533,19 @@ class MainFragment : BaseLocationFragment() {
                         }
                     }
                 } else {
-                    handler.postDelayed({ getCarTeamData(inToken) }, DELAY_MILLIS)
+                    handler.postDelayed({ getCarTeamData(inToken) }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ getCarTeamData(inToken) }, DELAY_MILLIS)
+                handler.postDelayed({ getCarTeamData(inToken) }, CurrApplication.DELAY_MILLIS)
             }
         })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isNeedRefresh = true
     }
 
     override fun onDestroyView() {

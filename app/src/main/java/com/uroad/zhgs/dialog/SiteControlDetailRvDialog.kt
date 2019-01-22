@@ -5,12 +5,15 @@ import android.app.Dialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.uroad.zhgs.R
+import com.uroad.zhgs.enumeration.SiteType
 import com.uroad.zhgs.model.SiteControlMDL
 import com.uroad.zhgs.rv.BaseArrayRecyclerAdapter
 
@@ -68,6 +71,18 @@ class SiteControlDetailRvDialog(private val context: Activity,
             }
             holder.setText(R.id.tvEnterDirection, t.direction1)
             holder.setText(R.id.tvExitDirection, t.direction2)
+            if (TextUtils.equals(t.pointtype, SiteType.HUB_STATION.CODE)) {
+                holder.setVisibility(R.id.llReportOut, View.VISIBLE)
+                holder.displayImage(R.id.ivIcon2, t.picurl, R.color.color_f2)
+                holder.setText(R.id.tvHinge, t.snname)
+                if (!TextUtils.isEmpty(t.reportout)) {
+                    holder.setText(R.id.tvDetail, t.reportout)
+                } else {
+                    holder.setText(R.id.tvDetail, "暂无事件")
+                }
+            } else {
+                holder.setVisibility(R.id.llReportOut, View.GONE)
+            }
         }
     }
 }

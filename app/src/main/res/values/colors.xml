@@ -61,4 +61,9 @@
 
     <color name="notice_bg">#FCF7E7</color>
     <color name="notice_textColor"> #EE8B32</color>
+
+    <color name="ToBeAudited">#fab41e</color>
+    <color name="InAudit">#049bed</color>
+    <color name="AuditFinish">#12d464</color>
+    <color name="AuditFailure">#eb1f1f</color>
 </resources>

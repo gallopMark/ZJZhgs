@@ -22,6 +22,10 @@ class MainMenuVpAdapter(private val context: Activity,
         this.onPageItemClickListener = onPageItemClickListener
     }
 
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
+    }
+
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
     override fun getCount(): Int = arrayMap.size
 
@@ -29,7 +33,6 @@ class MainMenuVpAdapter(private val context: Activity,
         val view = LayoutInflater.from(context).inflate(R.layout.item_main_menu_rv, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.isNestedScrollingEnabled = false
-        recyclerView.layoutManager = GridLayoutManager(context, 4).apply { orientation = GridLayoutManager.VERTICAL }
         val page = position
         val mdLs = arrayMap[page]
         val data = ArrayList<MainMenuMDL>()

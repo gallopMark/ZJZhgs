@@ -18,7 +18,6 @@ class MainMenuAdapter(private val context: Context, mDatas: MutableList<MainMenu
     override fun onBindHoder(holder: RecyclerHolder, t: MainMenuMDL, position: Int) {
         val tvMenu = holder.obtainView<TextView>(R.id.tvMenu)
         tvMenu.text = t.menuname
-        val iconName = t.iconname?.toLowerCase()
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         if (position > 3) {
             params.topMargin = DisplayUtils.dip2px(context, 10f)
@@ -26,18 +25,24 @@ class MainMenuAdapter(private val context: Context, mDatas: MutableList<MainMenu
             params.topMargin = 0
         }
         holder.itemView.layoutParams = params
-        val drawable = when {
-            TextUtils.equals(iconName, MainMenuMDL.LJLF_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_ljlf)
-            TextUtils.equals(iconName, MainMenuMDL.FWQ_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_service)
-            TextUtils.equals(iconName, MainMenuMDL.GSRX_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_gsrx)
-            TextUtils.equals(iconName, MainMenuMDL.ZXSC_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_zxsc)
-            TextUtils.equals(iconName, MainMenuMDL.CYBL_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_share)
-            TextUtils.equals(iconName, MainMenuMDL.WZCX_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_wzcx)
-            TextUtils.equals(iconName, MainMenuMDL.GSZX_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_gszx)
-            TextUtils.equals(iconName, MainMenuMDL.CXCX_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_cxcx)
-            TextUtils.equals(iconName, MainMenuMDL.GSZB_ICON) -> ContextCompat.getDrawable(context, R.mipmap.ic_menu_gszb)
-            else -> null
+        val iconName = t.iconname?.toLowerCase()
+        when {
+            TextUtils.equals(iconName, MainMenuMDL.LJLF_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_ljlf)
+            TextUtils.equals(iconName, MainMenuMDL.FWQ_ICON) -> {
+                if (!TextUtils.isEmpty(t.serviceIcon)) {
+                    holder.displayImage(R.id.ivIcon, t.serviceIcon, R.mipmap.ic_menu_service)
+                } else {
+                    holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_service)
+                }
+            }
+            TextUtils.equals(iconName, MainMenuMDL.GSRX_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_gsrx)
+            TextUtils.equals(iconName, MainMenuMDL.ZXSC_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_zxsc)
+            TextUtils.equals(iconName, MainMenuMDL.CYBL_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_share)
+            TextUtils.equals(iconName, MainMenuMDL.WZCX_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_wzcx)
+            TextUtils.equals(iconName, MainMenuMDL.GSZX_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_gszx)
+            TextUtils.equals(iconName, MainMenuMDL.CXCX_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_cxcx)
+            TextUtils.equals(iconName, MainMenuMDL.GSZB_ICON) -> holder.setImageResource(R.id.ivIcon, R.mipmap.ic_menu_gszb)
+            else -> holder.setImageResource(R.id.ivIcon, 0)
         }
-        tvMenu.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
     }
 }

@@ -1,6 +1,11 @@
 package com.uroad.zhgs.model.sys
 
 class MainMenuMDL {
+
+    class ServiceIcon {
+        var icon: String? = null
+    }
+
     companion object {
         const val LJLF = "ljlf" //路径路费
         const val FWQ = "fwq"   //服务区
@@ -25,4 +30,16 @@ class MainMenuMDL {
     var menukey: String? = null
     var menuname: String? = null
     var iconname: String? = null
+    var serviceIcon: String? = null
+
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            !is MainMenuMDL -> false
+            else -> this === other || menukey == other.menukey
+        }
+    }
+
+    override fun hashCode(): Int {
+        return 31 + (menukey?.hashCode() ?: 0)
+    }
 }

@@ -2,18 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/margin_10">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_10"
+        android:paddingTop="@dimen/margin_10"
+        android:paddingRight="@dimen/margin_10">
 
         <ImageView
             android:id="@+id/ivIcon"
-            android:layout_width="@dimen/margin_50"
-            android:layout_height="@dimen/margin_50"
+            android:layout_width="@dimen/margin_45"
+            android:layout_height="@dimen/margin_45"
             android:layout_gravity="center" />
 
         <LinearLayout
@@ -51,8 +53,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_20"
-        android:layout_marginBottom="@dimen/margin_10"
-        android:orientation="horizontal">
+        android:layout_marginBottom="@dimen/margin_20"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_10"
+        android:paddingRight="@dimen/margin_10">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -98,6 +102,59 @@
                 android:layout_marginTop="@dimen/margin_5"
                 android:textColor="@color/color_99"
                 android:textSize="@dimen/font_15" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llReportOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            style="@style/Divider_f7_1dp"
+            android:layout_marginTop="@dimen/margin_10" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingTop="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <ImageView
+                android:id="@+id/ivIcon2"
+                android:layout_width="@dimen/margin_45"
+                android:layout_height="@dimen/margin_45"
+                android:layout_gravity="center" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvHinge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/appTextColor"
+                    android:textSize="@dimen/font_16" />
+
+                <TextView
+                    android:id="@+id/tvDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_4"
+                    android:gravity="center|left"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/font_14" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

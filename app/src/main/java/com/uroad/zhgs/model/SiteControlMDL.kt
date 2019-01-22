@@ -25,4 +25,8 @@ class SiteControlMDL {
     var direction1: String? = null
     var direction2: String? = null
     var distance: String? = null
+    var sfzname: String? = null
+    var snname: String? = null
+    var pointtype: String? = null
+    var reportout: String? = null
 }

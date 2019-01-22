@@ -37,6 +37,8 @@ import kotlinx.android.synthetic.main.fragment_mainmenu.*
 class MainMenuFragment : BaseFragment() {
 
     private lateinit var handler: Handler
+    private val arrayMap = ArrayMap<Int, MutableList<MainMenuMDL>>()
+    private lateinit var adapter: MainMenuVpAdapter
     private var onShopClickListener: OnShopClickListener? = null
     fun setOnShopClickListener(onShopClickListener: OnShopClickListener) {
         this.onShopClickListener = onShopClickListener
@@ -47,11 +49,75 @@ class MainMenuFragment : BaseFragment() {
     override fun setUp(view: View, savedInstanceState: Bundle?) {
         flBaseContent.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
         initPageRv()
+        loadLocal()
         handler = Handler(Looper.getMainLooper())
     }
 
     /*菜单列表*/
     private fun initPageRv() {
+        adapter = MainMenuVpAdapter(context, arrayMap).apply {
+            setOnPageItemClickListener(object : MainMenuVpAdapter.OnPageItemClickListener {
+                override fun onPageItemClick(page: Int, itemPos: Int, mdl: MainMenuMDL) {
+                    onMenuClick(mdl)
+                }
+            })
+        }
+        viewPager.adapter = adapter
+    }
+
+    private fun onMenuClick(mdl: MainMenuMDL) {
+        val key = mdl.menukey?.toLowerCase()
+        when {
+            TextUtils.equals(key, MainMenuMDL.LJLF) -> {//路径路费
+                MobclickAgent.onEvent(context, UMEvent.ROAD_TOLL.CODE)
+                openActivity(RoadTollActivity::class.java)
+            }
+            TextUtils.equals(key, MainMenuMDL.FWQ) -> {//服务区
+                MobclickAgent.onEvent(context, UMEvent.SERVICE_AREA.CODE)
+                openActivity(ServiceAreaActivity::class.java)
+            }
+            TextUtils.equals(key, MainMenuMDL.GSRX) -> {//高速热线
+                MobclickAgent.onEvent(context, UMEvent.HIGHWAY_HOTLINE.CODE)
+                openActivity(HighWayHotlineActivity::class.java)
+            }
+            TextUtils.equals(key, MainMenuMDL.ZXSC) -> {
+                onShopClickListener?.onShopClick()
+            }
+            TextUtils.equals(key, MainMenuMDL.CYBL) -> {
+                if (!isLogin()) openActivity(LoginActivity::class.java)
+                else {
+                    MobclickAgent.onEvent(context, UMEvent.RIDERS_REPORT.CODE)
+                    openActivity(RidersInteractionActivity::class.java)
+                }
+            }
+            TextUtils.equals(key, MainMenuMDL.WZCX) -> {//违法查询
+                MobclickAgent.onEvent(context, UMEvent.ILLEGAL_INQUIRY.CODE)
+                CurrApplication.BREAK_RULES_URL?.let { openWebActivity(it, mdl.menuname) }
+            }
+            TextUtils.equals(key, MainMenuMDL.GSZX) -> {//高速资讯
+                MobclickAgent.onEvent(context, UMEvent.LATEST_NEWS_MORE.CODE)
+                openActivity(NewsMainActivity::class.java)
+            }
+            TextUtils.equals(key, MainMenuMDL.CXCX) -> { //诚信查询
+                if (!isLogin()) openActivity(LoginActivity::class.java)
+                else {
+                    MobclickAgent.onEvent(context, UMEvent.INTEGRITY_INQUIRY.CODE)
+                    getMyCar()
+                }
+            }
+            TextUtils.equals(key, MainMenuMDL.GSZB) -> {
+                MobclickAgent.onEvent(context, UMEvent.HIGHWAY_ALIVE.CODE)
+                CurrApplication.ALIVE_URL?.let {
+                    openActivity(X5WebViewActivity::class.java, Bundle().apply {
+                        putString("url", it)
+                        putString("title", mdl.menuname)
+                    })
+                }
+            }
+        }
+    }
+
+    private fun loadLocal() {
         val data = AppLocalHelper.getNaviData(context)
         if (!TextUtils.isEmpty(data)) {
             val mdLs = GsonUtils.fromJsonToList(data, MainMenuMDL::class.java)
@@ -60,6 +126,10 @@ class MainMenuFragment : BaseFragment() {
     }
 
     override fun initData() {
+        getMenuConfig()
+    }
+
+    private fun getMenuConfig() {
         doRequest(WebApiService.APP_CONFIG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
                 if (GsonUtils.isResultOk(data)) {
@@ -71,12 +141,12 @@ class MainMenuFragment : BaseFragment() {
                         }
                     }
                 } else {
-                    handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
+                    handler.postDelayed({ initData() }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ initData() }, MainFragment.DELAY_MILLIS)
+                handler.postDelayed({ initData() }, CurrApplication.DELAY_MILLIS)
             }
         })
     }
@@ -86,6 +156,8 @@ class MainMenuFragment : BaseFragment() {
         val currVer = AppLocalHelper.getNaviVer(context)
         if (VersionUtils.isNeedUpdate(configMDL.conf_ver, currVer)) {
             updateMenu(configMDL)
+        } else {
+            getServiceAreaIcon()
         }
     }
 
@@ -98,19 +170,58 @@ class MainMenuFragment : BaseFragment() {
                     AppLocalHelper.saveNaviVer(context, configMDL.conf_ver)
                     AppLocalHelper.saveNaviData(context, GsonUtils.getData(data))
                     updatePageRv(mdLs)
+                    getServiceAreaIcon()
                 } else {
-                    handler.postDelayed({ updateMenu(configMDL) }, MainFragment.DELAY_MILLIS)
+                    handler.postDelayed({ updateMenu(configMDL) }, CurrApplication.DELAY_MILLIS)
                 }
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.postDelayed({ updateMenu(configMDL) }, MainFragment.DELAY_MILLIS)
+                handler.postDelayed({ updateMenu(configMDL) }, CurrApplication.DELAY_MILLIS)
             }
         })
     }
 
+    /*获取服务区图标（主要是显示服务区缺油或关闭状态等）*/
+    private fun getServiceAreaIcon() {
+        doRequest(WebApiService.SERVICE_ICON, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
+            override fun onSuccess(data: String?) {
+                if (GsonUtils.isResultOk(data)) {
+                    val mdl = GsonUtils.fromDataBean(data, MainMenuMDL.ServiceIcon::class.java)
+                    mdl?.icon?.let { updateServiceIcon(it) }
+                } else {
+                    handler.postDelayed({ getServiceAreaIcon() }, CurrApplication.DELAY_MILLIS)
+                }
+            }
+
+            override fun onFailure(e: Throwable, errorMsg: String?) {
+                handler.postDelayed({ getServiceAreaIcon() }, CurrApplication.DELAY_MILLIS)
+            }
+        })
+    }
+
+    private fun updateServiceIcon(icon: String) {
+        loop@ for ((_, v) in arrayMap) {
+            for (i in 0 until v.size) {
+                if (TextUtils.equals(v[i].menukey, MainMenuMDL.FWQ)) {
+                    v[i].serviceIcon = icon
+                    break@loop
+                }
+            }
+        }
+        adapter.notifyDataSetChanged()
+    }
+
     private fun updatePageRv(mdLs: MutableList<MainMenuMDL>) {
         llIndicator.removeAllViews()
+        divider(mdLs)
+        adapter.notifyDataSetChanged()
+        if (arrayMap.size <= 1) return
+        addIndications()
+    }
+
+    private fun divider(mdLs: MutableList<MainMenuMDL>) {
+        arrayMap.clear()
         val totalCount = mdLs.size
         val pageSize = 8
         val m = totalCount % pageSize
@@ -119,7 +230,6 @@ class MainMenuFragment : BaseFragment() {
         } else {
             totalCount / pageSize
         }
-        val arrayMap = ArrayMap<Int, MutableList<MainMenuMDL>>()
         for (i in 1..pageCount) {
             val list = if (m == 0) {
                 mdLs.subList((i - 1) * pageSize, pageSize * i)
@@ -132,62 +242,9 @@ class MainMenuFragment : BaseFragment() {
             }
             arrayMap[i - 1] = list
         }
-        viewPager.adapter = MainMenuVpAdapter(context, arrayMap).apply {
-            setOnPageItemClickListener(object : MainMenuVpAdapter.OnPageItemClickListener {
-                override fun onPageItemClick(page: Int, itemPos: Int, mdl: MainMenuMDL) {
-                    val key = mdl.menukey?.toLowerCase()
-                    when {
-                        TextUtils.equals(key, MainMenuMDL.LJLF) -> {//路径路费
-                            MobclickAgent.onEvent(context, UMEvent.ROAD_TOLL.CODE)
-                            openActivity(RoadTollActivity::class.java)
-                        }
-                        TextUtils.equals(key, MainMenuMDL.FWQ) -> {//服务区
-                            MobclickAgent.onEvent(context, UMEvent.SERVICE_AREA.CODE)
-                            openActivity(ServiceAreaActivity::class.java)
-                        }
-                        TextUtils.equals(key, MainMenuMDL.GSRX) -> {//高速热线
-                            MobclickAgent.onEvent(context, UMEvent.HIGHWAY_HOTLINE.CODE)
-                            openActivity(HighWayHotlineActivity::class.java)
-                        }
-                        TextUtils.equals(key, MainMenuMDL.ZXSC) -> {
-                            onShopClickListener?.onShopClick()
-                        }
-                        TextUtils.equals(key, MainMenuMDL.CYBL) -> {
-                            if (!isLogin()) openActivity(LoginActivity::class.java)
-                            else {
-                                MobclickAgent.onEvent(context, UMEvent.RIDERS_REPORT.CODE)
-                                openActivity(RidersInteractionActivity::class.java)
-                            }
-                        }
-                        TextUtils.equals(key, MainMenuMDL.WZCX) -> {//违法查询
-                            MobclickAgent.onEvent(context, UMEvent.ILLEGAL_INQUIRY.CODE)
-                            CurrApplication.BREAK_RULES_URL?.let { openWebActivity(it, mdl.menuname) }
-                        }
-                        TextUtils.equals(key, MainMenuMDL.GSZX) -> {//高速资讯
-                            MobclickAgent.onEvent(context, UMEvent.LATEST_NEWS_MORE.CODE)
-                            openActivity(NewsMainActivity::class.java)
-                        }
-                        TextUtils.equals(key, MainMenuMDL.CXCX) -> { //诚信查询
-                            if (!isLogin()) openActivity(LoginActivity::class.java)
-                            else {
-                                MobclickAgent.onEvent(context, UMEvent.INTEGRITY_INQUIRY.CODE)
-                                getMyCar()
-                            }
-                        }
-                        TextUtils.equals(key, MainMenuMDL.GSZB) -> {
-                            MobclickAgent.onEvent(context, UMEvent.HIGHWAY_ALIVE.CODE)
-                            CurrApplication.ALIVE_URL?.let {
-                                openActivity(X5WebViewActivity::class.java, Bundle().apply {
-                                    putString("url", it)
-                                    putString("title", mdl.menuname)
-                                })
-                            }
-                        }
-                    }
-                }
-            })
-        }
-        if (arrayMap.size <= 1) return
+    }
+
+    private fun addIndications() {
         val indicators = ArrayList<ImageView>()
         for (i in 0 until arrayMap.size) {
             val imageView = ImageView(context).apply { layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { rightMargin = DisplayUtils.dip2px(context, 5f) } }

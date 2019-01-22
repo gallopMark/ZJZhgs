@@ -593,5 +593,20 @@
     <string name="mapRoute_emptyTruckTips">绑定货车我们将结合\n城市限行、限高、限总重量信息进行路径规划。</string>
     <string name="gotoBindCar">去绑定车辆</string>
     <string name="IWantFeedback">我要反馈</string>
+
+    <string name="appeal_search">申诉查询</string>
+    <string name="appeal_empty_list">尚无申诉记录，如需申诉请前往浙江省高速公路诚信系统</string>
+    <string name="appeal_list_title">申诉列表</string>
+    <string name="appeal_detail_title">申诉详情</string>
+    <string name="appeal_audit_progress">审核进度</string>
+    <string name="appeal_content">申诉内容</string>
+    <string name="appeal_license">车牌号码：</string>
+    <string name="appeal_carColor">车辆颜色：</string>
+    <string name="appeal_illegalType">违规类型：</string>
+    <string name="appeal_illegalTime">违规时间：</string>
+    <string name="appeal_illegalAddress">违规地点：</string>
+    <string name="appeal_userInfo">申诉人信息</string>
+    <string name="appeal_user">申诉人：</string>
+    <string name="appeal_time">申诉时间：</string>
 </resources>
 

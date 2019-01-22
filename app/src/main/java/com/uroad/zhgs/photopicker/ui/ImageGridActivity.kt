@@ -52,7 +52,7 @@ class ImageGridActivity : BaseActivity() {
     private val folders = ArrayList<ImageFolder>()
     private lateinit var folderAdapter: ImageFolderAdapter
     private val mDatas = ArrayList<ImageItem>()
-    private lateinit var adapter: ImageGridAdapter
+    private lateinit var gridAdapter: ImageGridAdapter
     private var isLoadData: Boolean = false
     private var cameraPath: String? = null
     private var isMutily: Boolean = false
@@ -100,8 +100,8 @@ class ImageGridActivity : BaseActivity() {
         rvFolder.adapter = folderAdapter
         recyclerView.addItemDecoration(GridSpacingItemDecoration(3, DisplayUtils.dip2px(this, 2f), false))
         recyclerView.layoutManager = GridLayoutManager(this, 3)
-        adapter = ImageGridAdapter(this, mDatas, isMutily, limit)
-        recyclerView.adapter = adapter
+        gridAdapter = ImageGridAdapter(this, mDatas, isMutily, limit)
+        recyclerView.adapter = gridAdapter
         if (!hasPermission()) {
             applyPermissions()
         } else {
@@ -134,7 +134,7 @@ class ImageGridActivity : BaseActivity() {
                     if (folders.size > 0) {
                         tvText.text = folders[0].name
                         mDatas.addAll(folders[0].mediaItems)
-                        adapter.notifyDataSetChanged()
+                        gridAdapter.notifyDataSetChanged()
                     }
                 }, {
                     loadView.setState(CurrencyLoadView.STATE_GONE)
@@ -176,12 +176,12 @@ class ImageGridActivity : BaseActivity() {
                     mDatas.add(ImageItem().apply { showCamera = true })
                 }
                 mDatas.addAll(folders[position].mediaItems)
-                adapter.notifyDataSetChanged()
+                gridAdapter.notifyDataSetChanged()
                 tvText.text = folders[position].name
                 closeFolder()
             }
         })
-        adapter.setOnImageItemClickListener(object : ImageGridAdapter.OnImageItemClickListener {
+        gridAdapter.setOnImageItemClickListener(object : ImageGridAdapter.OnImageItemClickListener {
             override fun onCamera() {
                 if (hasCamera()) takePhoto()
                 else {
@@ -349,7 +349,7 @@ class ImageGridActivity : BaseActivity() {
             images?.let { dealWith(it) }
             when (resultCode) {
                 RESULT_OK -> images?.let { onResult(it) }
-                RESULT_CANCELED -> images?.let { adapter.setSelects(it) }
+                RESULT_CANCELED -> images?.let { gridAdapter.setSelects(it) }
             }
         } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
             onResult(ArrayList<ImageItem>().apply { add(ImageItem().apply { path = data?.getStringExtra("crop_image") }) })

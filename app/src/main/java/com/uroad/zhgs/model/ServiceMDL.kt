@@ -60,7 +60,10 @@ class ServiceMDL : MutilItem, ClusterItem, Serializable {
     var parkstatusname: String? = null
     var oil_arr: MutableList<String>? = null
     var service_arr: MutableList<String>? = null
-    var remark:String?=null
+    var remark: String? = null
+    var oilstatusnews: String? = null
+    var closestatus: String? = null
+    var hasactivitynews:String?=null
 
     var markerIcon: Int = R.mipmap.ic_marker_service_icon
     var markerBigIco: Int = R.mipmap.ic_marker_service_big_icon

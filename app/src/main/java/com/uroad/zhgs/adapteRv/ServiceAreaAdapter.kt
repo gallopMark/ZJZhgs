@@ -4,6 +4,7 @@ import android.app.Activity
 import android.support.v4.util.ArrayMap
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import com.uroad.imageloader_v4.ImageLoaderV4
@@ -31,6 +32,18 @@ class ServiceAreaAdapter(private val context: Activity, mDatas: MutableList<Serv
         val ivIcon = holder.obtainView<ImageView>(R.id.ivIcon)
         ImageLoaderV4.getInstance().displayImage(context, t.picurl, ivIcon)
         holder.setText(R.id.tvShortname, t.shortname)
+        if (!TextUtils.isEmpty(t.serviceoilstatus)) {
+            holder.setText(R.id.tvOilStatus, t.serviceoilstatus)
+            holder.setVisibility(R.id.tvOilStatus, View.VISIBLE)
+        } else {
+            holder.setVisibility(R.id.tvOilStatus, View.GONE)
+        }
+        if (!TextUtils.isEmpty(t.serviceclosestatus)) {
+            holder.setText(R.id.tvCloseStatus, t.serviceclosestatus)
+            holder.setVisibility(R.id.tvCloseStatus, View.VISIBLE)
+        } else {
+            holder.setVisibility(R.id.tvCloseStatus, View.GONE)
+        }
         holder.setText(R.id.tvCount, "${t.getServiceList().size}")
         val recyclerView = holder.obtainView<RecyclerView>(R.id.recyclerView)
         recyclerView.isNestedScrollingEnabled = false

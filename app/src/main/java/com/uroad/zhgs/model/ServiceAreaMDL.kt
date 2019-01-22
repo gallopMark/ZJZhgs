@@ -8,6 +8,8 @@ class ServiceAreaMDL {
     var roadoldid: String? = null
     var shortname: String? = null
     var picurl: String? = null
+    var serviceoilstatus:String?=null
+    var serviceclosestatus:String?=null
     var service: MutableList<ServiceMDL>? = null
 
     fun getServiceList(): MutableList<ServiceMDL> {
