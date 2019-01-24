@@ -314,7 +314,7 @@ class MainFragment : BaseLocationFragment() {
 
     /*登录之后（用户未实名认证提示用户）*/
     private fun onAuthStatus() {
-        if (!isAuth() && !AppLocalHelper.isAuth(context) && !isShowAuthDialog) {
+        if (!AppLocalHelper.isAuth(context) && !isShowAuthDialog) {
             AuthenticationDialog(context).onViewClickListener(object : AuthenticationDialog.OnViewClickListener {
                 override fun onViewClick(type: Int, dialog: AuthenticationDialog) {
                     when (type) {
