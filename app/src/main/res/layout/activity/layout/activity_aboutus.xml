@@ -1,89 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_f7"
-    android:orientation="vertical">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:gravity="center"
+        android:layout_height="match_parent"
+        android:background="@color/color_f7"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_login_logo" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_20"
-            android:text="@string/app_name"
-            android:textColor="@color/appTextColor"
-            android:textSize="@dimen/font_16" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_login_logo" />
 
-        <TextView
-            android:id="@+id/tvVersionCode"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20"
+                android:text="@string/app_name"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <TextView
+                android:id="@+id/tvVersionCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_14" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:textColor="@color/appTextColor"
-            android:textSize="@dimen/font_14" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvGotoScore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/margin_14"
+                android:text="@string/aboutUs_goto_score"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <TextView
+                android:id="@+id/tvTermsOfUse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/margin_14"
+                android:text="@string/aboutUs_termsOfUser"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+
+            <TextView
+                android:id="@+id/tvPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/margin_14"
+                android:text="@string/aboutUs_privacyState"
+                android:textColor="@color/appTextColor"
+                android:textSize="@dimen/font_16" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/llCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/llPhone"
+                android:layout_alignLeft="@+id/tvSupport"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/aboutUs_customer_tips"
+                    android:textColor="@color/gainsboro"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/aboutUs_customer"
+                    android:textColor="@color/gainsboro"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/llEmail"
+                android:layout_alignLeft="@+id/tvSupport"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/aboutUs_phone_tips"
+                    android:textColor="@color/gainsboro"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/aboutUs_phone"
+                    android:textColor="@color/gainsboro"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tvCopyright"
+                android:layout_alignLeft="@+id/tvSupport"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/aboutUs_email_tips"
+                    android:textColor="@color/gainsboro"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/aboutUs_email"
+                    android:textColor="@color/gainsboro"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvCopyright"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_alignLeft="@+id/tvSupport"
+                android:layout_above="@+id/tvSupport"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:text="@string/aboutUs_copyright"
+                android:textColor="@color/gainsboro"
+                android:textSize="@dimen/font_12" />
+
+            <TextView
+                android:id="@+id/tvSupport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:text="@string/aboutUs_technical_support"
+                android:textColor="@color/gainsboro"
+                android:textSize="@dimen/font_12" />
+        </RelativeLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.4"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvGotoScore"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:background="@color/white"
-            android:gravity="center"
-            android:padding="@dimen/margin_14"
-            android:text="@string/aboutUs_goto_score"
-            android:textColor="@color/appTextColor"
-            android:textSize="@dimen/font_16" />
-
-        <TextView
-            android:id="@+id/tvTermsOfUse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:background="@color/white"
-            android:gravity="center"
-            android:padding="@dimen/margin_14"
-            android:text="@string/aboutUs_termsOfUser"
-            android:textColor="@color/appTextColor"
-            android:textSize="@dimen/font_16" />
-
-        <TextView
-            android:id="@+id/tvPrivacy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_1"
-            android:background="@color/white"
-            android:gravity="center"
-            android:padding="@dimen/margin_14"
-            android:text="@string/aboutUs_privacyState"
-            android:textColor="@color/appTextColor"
-            android:textSize="@dimen/font_16" />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/margin_5"
-        android:text="@string/aboutUs_technical_support"
-        android:textColor="@color/gainsboro"
-        android:textSize="@dimen/font_12" />
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

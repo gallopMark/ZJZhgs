@@ -41,7 +41,7 @@ class SplashActivity : BaseActivity() {
                     if (!activity.isGoMain) activity.openMain()
                 } else {
                     activity.tvJump.visibility = View.VISIBLE
-                    val delayText = "跳过\u2000" + activity.delayMillis + "s"
+                    val delayText = "${activity.getString(R.string.jump)}\u2000${activity.delayMillis}s"
                     activity.tvJump.text = delayText
                     activity.delayMillis--
                     sendEmptyMessageDelayed(activity.updateCode, 1000)
@@ -107,10 +107,10 @@ class SplashActivity : BaseActivity() {
     private fun getWelComeJpg() {
         doRequest(WebApiService.WELCOME_JPG, WebApiService.getBaseParams(), object : HttpRequestCallback<String>() {
             override fun onSuccess(data: String?) {
-                handler.removeCallbacks(runMain)  //请求成功，移除跳转首页
+                removeTask()//请求成功，移除跳转首页
                 if (GsonUtils.isResultOk(data)) {
                     val mdl = GsonUtils.fromDataBean(data, WelComeMDL::class.java)
-                    if (mdl == null) handler.postDelayed({ if (!isGoMain) openMain() }, 1000)
+                    if (mdl == null) openMain()
                     else updateData(mdl)
                 } else {
                     openMain()
@@ -118,8 +118,6 @@ class SplashActivity : BaseActivity() {
             }
 
             override fun onFailure(e: Throwable, errorMsg: String?) {
-                handler.removeCallbacks(runMain)
-                handler.post { if (!isGoMain) openMain() }
             }
         })
         /*5秒钟请求无响应直接跳转首页*/
@@ -128,17 +126,22 @@ class SplashActivity : BaseActivity() {
 
     private val runMain = Runnable { if (!isGoMain) openMain() }
 
+    private fun removeTask() {
+        handler.removeCallbacks(runMain)
+    }
+
     private fun updateData(comeMDL: WelComeMDL) {
-        comeMDL.adtime?.let { delayMillis = it }
         ImageLoaderV4.getInstance().displayImage(this, comeMDL.jpgurl, ivPic, object : IImageLoaderListener {
             override fun onLoadingFailed(url: String?, target: ImageView?, exception: Exception?) {
-                handler.post { if (!isGoMain) openMain() }
             }
 
             override fun onLoadingComplete(url: String?, target: ImageView?) {
+                removeTask()
+                this@SplashActivity.delayMillis = comeMDL.adtime ?: 3
                 handler.sendEmptyMessage(updateCode)
             }
         })
+        handler.postDelayed(runMain, 5000L)
     }
 
     private fun openMain() {

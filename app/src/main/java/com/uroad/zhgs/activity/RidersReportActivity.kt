@@ -33,7 +33,7 @@ class RidersReportActivity : ThemeStyleActivity() {
                     .replace(R.id.container, RidersReportVideoFragment().apply { arguments = intent.extras })
                     .commit()
             else -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, RidersReportDefaultFragment())
+                    .replace(R.id.container, RidersReportDefaultFragment().apply { arguments = intent.extras })
                     .commit()
         }
     }

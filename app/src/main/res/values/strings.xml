@@ -454,6 +454,13 @@
     <string name="aboutUs_goto_score">去评分</string>
     <string name="aboutUs_termsOfUser">使用条款</string>
     <string name="aboutUs_privacyState">隐私声明</string>
+    <string name="aboutUs_customer_tips">客服联系人：</string>
+    <string name="aboutUs_customer">王小姐</string>
+    <string name="aboutUs_phone_tips">客服电话：</string>
+    <string name="aboutUs_phone">0571–28890386</string>
+    <string name="aboutUs_email_tips">客服邮箱：</string>
+    <string name="aboutUs_email">trafficbigdata@aliyun.com</string>
+    <string name="aboutUs_copyright">版权所有：浙江综合交通大数据开发有限公司</string>
     <string name="aboutUs_technical_support">技术支持：广州优路加信息科技有限公司</string>
     <!--关于我们 end-->
     <string name="trafficjam_startTime">开始时间</string>
@@ -556,7 +563,7 @@
     <string name="thatsOk">不用了</string>
     <string name="join">加入</string>
     <string name="customer_service">小智问问</string>
-    <string name="pass_record_small_tips">通行数据逐步完善中，查询结果仅供参考，实际通行费用请以实际支付为准</string>
+    <string name="pass_record_small_tips">通行数据逐步完善中，查询结果仅供参考</string>
     <string name="pass_money">通行费</string>
     <string name="pass_mileage">行驶里程</string>
     <string name="car_inquiry_tips">换卡、套牌、冲卡</string>
@@ -608,5 +615,6 @@
     <string name="appeal_userInfo">申诉人信息</string>
     <string name="appeal_user">申诉人：</string>
     <string name="appeal_time">申诉时间：</string>
+    <string name="jump">跳过</string>
 </resources>
 

@@ -504,16 +504,23 @@ class RidersReportFollowFragment : CameraFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 123 && resultCode == Activity.RESULT_OK && data != null) {
+            val type = data.getStringExtra("TYPE")
             val url = data.getStringExtra("url")
-            val firstFrame = data.getStringExtra("firstFrame")
-            openActivity(Intent(context, RidersReportActivity::class.java)
-                    .apply {
-                        type = RidersReportActivity.TYPE_VIDEO
-                        putExtras(Bundle().apply {
-                            putString("url", url)
-                            putString("firstFrame", firstFrame)
-                        })
+            if (TextUtils.equals(type, "PHOTO")) {
+                openActivity(Intent(context, RidersReportActivity::class.java).apply {
+                    this.type = RidersReportActivity.TYPE_DEFAULT
+                    putExtras(Bundle().apply { putString("url", url) })
+                })
+            } else {
+                val firstFrame = data.getStringExtra("firstFrame")
+                openActivity(Intent(context, RidersReportActivity::class.java).apply {
+                    this.type = RidersReportActivity.TYPE_VIDEO
+                    putExtras(Bundle().apply {
+                        putString("url", url)
+                        putString("firstFrame", firstFrame)
                     })
+                })
+            }
         }
     }
 

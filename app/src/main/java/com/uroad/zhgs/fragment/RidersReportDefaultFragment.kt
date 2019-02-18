@@ -66,6 +66,13 @@ class RidersReportDefaultFragment : BaseLocationFragment(), View.OnClickListener
         picData.add(addItem)
         picAdapter = RidersReportPicAdapter(context, picData)
         rvPics.adapter = picAdapter
+        arguments?.let {
+            val url = it.getString("url")
+            picData.remove(addItem)
+            picData.add(PicMDL().apply { path = url })
+            if (picData.size < 3) picData.add(addItem)
+            picAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun setListener() {

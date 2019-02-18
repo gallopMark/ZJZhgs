@@ -3,7 +3,6 @@ package com.uroad.zhgs.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import com.tencent.android.tpush.XGPushManager
 import com.uroad.library.utils.DataCleanManager

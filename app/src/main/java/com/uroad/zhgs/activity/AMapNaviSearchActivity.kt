@@ -470,18 +470,20 @@ class AMapNaviSearchActivity : BaseLocationActivity() {
     }
 
     private fun startPoiSearch(keyWord: String?) {
-        val query = PoiSearch.Query(keyWord, "", "")
-        val poiSearch = PoiSearch(this, query)
-        startDisposable = Observable.fromCallable { poiSearch.searchPOI() }
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        startDisposable = Observable.fromCallable {
+            val query = PoiSearch.Query(keyWord, "", "")
+            val poiSearch = PoiSearch(this, query)
+            poiSearch.searchPOI()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ poiResult -> poiResult?.pois?.let { showPopupWindow(it, 1) } }, {})
     }
 
     private fun endPoiSearch(keyWord: String?) {
-        val query = PoiSearch.Query(keyWord, "", "")
-        val poiSearch = PoiSearch(this, query)
-        endDisposable = Observable.fromCallable { poiSearch.searchPOI() }
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        endDisposable = Observable.fromCallable {
+            val query = PoiSearch.Query(keyWord, "", "")
+            val poiSearch = PoiSearch(this, query)
+            poiSearch.searchPOI()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ poiResult -> poiResult?.pois?.let { showPopupWindow(it, 2) } }, {})
     }
 

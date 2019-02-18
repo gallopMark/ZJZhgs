@@ -3,6 +3,7 @@ package com.uroad.zhgs.activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.text.TextUtils
 import com.uroad.cameralibrary.listener.JCameraListener
 import com.uroad.zhgs.R
 import com.uroad.zhgs.common.BaseActivity
@@ -31,20 +32,28 @@ class CameraActivity : BaseActivity(), JCameraListener {
         setBaseContentLayoutWithoutTitle(R.layout.activity_camera)
         jCameraView.setSaveVideoPath(CurrApplication.VIDEO_PATH)
         jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_HIGH)
-        jCameraView.setFeatures(JCameraView.BUTTON_STATE_ONLY_RECORDER)
+        jCameraView.setFeatures(JCameraView.BUTTON_STATE_BOTH)
         jCameraView.setDuration(CurrApplication.VIDEO_MAX_SEC * 1000)
         jCameraView.setJCameraLisenter(this)
         jCameraView.setLeftClickListener { onBackPressed() }
     }
 
     override fun captureSuccess(bitmap: Bitmap?) {
-
+        val imageFile = compressImage(bitmap)
+        if (imageFile != null) {
+            setResult(RESULT_OK, Intent().apply {
+                putExtra("TYPE", "PHOTO")
+                putExtra("url", imageFile.absolutePath)
+            })
+            finish()
+        }
     }
 
     override fun recordSuccess(url: String?, firstFrame: Bitmap?) {
         val firstFrameFile = compressImage(firstFrame)
         if (url != null && firstFrame != null && firstFrameFile != null) {
             setResult(RESULT_OK, Intent().apply {
+                putExtra("TYPE", "VIDEO")
                 putExtra("url", url)
                 putExtra("firstFrame", firstFrameFile.absolutePath)
             })
@@ -71,14 +80,20 @@ class CameraActivity : BaseActivity(), JCameraListener {
         //图片名
         val filename = format.format(date)
         val file = File(CurrApplication.VIDEO_PATH, "$filename.png")
-        val fos: FileOutputStream?
+        var fos: FileOutputStream? = null
         try {
-            fos = FileOutputStream(file)
-            fos.write(outStream.toByteArray())
-            fos.flush()
-            fos.close()
+            fos = FileOutputStream(file).apply {
+                write(outStream.toByteArray())
+                flush()
+                close()
+            }
         } catch (e: Exception) {
             return null
+        } finally {
+            try {
+                fos?.close()
+            } catch (e: Exception) {
+            }
         }
         return file
     }
